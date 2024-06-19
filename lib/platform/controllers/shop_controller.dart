@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/events/replay_event_bus.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -52,6 +53,7 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
   RxList filteredGrade = RxList.empty(growable: true);
 
   RxBool isSelectAllItems = RxBool(true);
+  RxBool isSelectNftItems = RxBool(false);
   RxBool isFilteredItems = RxBool(false);
   RxBool dataGetLoading = RxBool(false);
 
@@ -117,6 +119,10 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
   void onInit() async {
     initController();
 
+    ReplayEventBus.instance.stream.listen((event) {
+      moveToAll();
+    });
+
     super.onInit();
   }
 
@@ -167,6 +173,16 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
   void moveToETC() {
     tabController.animateTo(6);
     selectedCategory.value = 'DISPOSABLE';
+    initItemsFilter();
+    getShopItemsList();
+  }
+
+  void moveToAll() {
+    print('moveToAll');
+    tabController.animateTo(0);
+    selectedCategory.value = 'ALL';
+    initItemsFilter();
+    onSelectNftFilter();
     getShopItemsList();
   }
 
@@ -281,6 +297,7 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
       // selectedCategory.value = newFilteredCategory;
       selectedGrade.value = newFilteredGrade;
       isSelectAllItems.value = false;
+      isSelectNftItems.value = false;
     } else {
       initItemsFilter();
     }
@@ -289,8 +306,10 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void initItemsFilter() {
-    selectedGrade.value = [];
+    filteredGrade.clear();
+    selectedGrade.clear();
     isSelectAllItems.value = true;
+    isSelectNftItems.value = false;
   }
 
   void onSelectCategory(category) {
@@ -300,36 +319,58 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
 
   void onSelectGrade(grade) {
     isSelectAllItems.value = false;
+    isSelectNftItems.value = false;
+
     if (selectedGrade.any((element) => element == grade)) {
       selectedGrade.removeWhere((item) => item == grade);
     } else {
       selectedGrade.add(grade);
     }
-    if (selectedCategory.value == 'ALL' && selectedGrade.isEmpty) isSelectAllItems.value = true;
+    if (selectedCategory.value == 'ALL' && selectedGrade.isEmpty) {
+      isSelectAllItems.value = true;
+      isSelectNftItems.value = false;
+    }
   }
 
   void onSelectAllItems() {
     initItemsFilter();
     isSelectAllItems.value = true;
+    isSelectNftItems.value = false;
+  }
+
+  void onSelectNftFilter() {
+    initItemsFilter();
+    isSelectAllItems.value = false;
+    isSelectNftItems.value = true;
   }
 
   void getShopItemsList() async {
     dataGetLoading.value = true;
-    await ShopService.getShopItems(isSelectedSortValue.value['value'], selectedGrade.join(','), selectedCategory.value == 'ALL' ? '' : selectedCategory.value,
-        successCallback: (List<ShopItemModel> items) {
-      // List newSelectedCategory = [...selectedCategory];
-      List newSelectedGrade = [...selectedGrade];
-      shopItemsList.value = items;
-      if (selectedGrade.join(',') != '') {
-        isFilteredItems.value = true;
-        // filteredCategory.value = newSelectedCategory;
-        filteredGrade.value = newSelectedGrade;
-      } else {
-        isSelectAllItems.value = true;
-        isFilteredItems.value = false;
-      }
+    await ShopService.getShopItems(
+      isSelectedSortValue.value['value'],
+      selectedGrade.join(','),
+      selectedCategory.value == 'ALL' ? '' : selectedCategory.value,
+      isSelectNftItems.value ? 'NFT' : null,
+      successCallback: (List<ShopItemModel> items) {
+        // List newSelectedCategory = [...selectedCategory];
+        List newSelectedGrade = [...selectedGrade];
+        shopItemsList.value = items;
+        if (selectedGrade.join(',') != '') {
+          isFilteredItems.value = true;
+          // filteredCategory.value = newSelectedCategory;
+          filteredGrade.value = newSelectedGrade;
+        } else if (isSelectNftItems.value) {
+          filteredGrade.clear();
+          isSelectAllItems.value = false;
+          isFilteredItems.value = true;
+        } else {
+          filteredGrade.clear();
+          isSelectAllItems.value = true;
+          isFilteredItems.value = false;
+        }
 
-      dataGetLoading.value = false;
-    });
+        dataGetLoading.value = false;
+      },
+    );
   }
 }

@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 
 Color getItemGradeColor(String itemGrade) {
   switch (itemGrade) {
     case 'POOR':
-      return gradePoorColor;
+      return AppColorData.regular().colorTextTertiary;
     case 'COMMON':
-      return gradeCommonColor;
+      return AppColorData.regular().colorPointBluegray;
     case 'UNCOMMON':
-      return gradeUncommonColor;
+      return AppColorData.regular().colorPointGreen;
     case 'RARE':
-      return gradeRareColor;
+      return AppColorData.regular().colorPointCyan;
     case 'EPIC':
-      return gradeEpicColor;
+      return AppColorData.regular().colorPointPurple;
     case 'LEGEND':
-      return gradeLegendColor;
+      return AppColorData.regular().colorPointYellow;
   }
   return gradePoorColor;
 }
@@ -55,4 +56,32 @@ Widget getItemGradeCircleIcon(String itemGrade) {
       return iconGradeCircleLegend;
   }
   return iconGradeCirclePoor;
+}
+
+String removeSerialNumberString(String nftName) {
+  // 정규 표현식 패턴 생성
+  RegExp regExp = RegExp(r"(.+)\s+#\d+");
+
+  // 패턴에 맞는 첫 번째 문자열 추출
+  Match? match = regExp.firstMatch(nftName);
+
+  if (match != null) {
+    return match.group(1)!;
+  } else {
+    return nftName;
+  }
+}
+
+String extractSerialNumberString(String nftName) {
+  // 정규 표현식 패턴 생성
+  RegExp regExp = RegExp(r"#\d+");
+
+  // 패턴에 맞는 첫 번째 문자열 추출
+  Match? match = regExp.firstMatch(nftName);
+
+  if (match != null) {
+    return match.group(0)!;
+  } else {
+    return nftName;
+  }
 }

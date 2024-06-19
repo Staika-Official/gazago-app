@@ -6,10 +6,14 @@ import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/components/gazago_button.dart';
+import 'package:gaza_go/presentations/components/view_solscan_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class InventoryItemDetail extends StatelessWidget {
@@ -47,13 +51,13 @@ class InventoryItemDetail extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 22.0.sp, right: 22.0.sp, bottom: controller.isShoe.value ? 120.sp : 22.0.sp),
+                  padding: EdgeInsets.only(left: 22.0.sp, right: 22.0.sp, bottom: controller.selectedItem.value.publishType == 'NFT' ? 120.sp : 22.0.sp),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: subBg02Color,
+                          color: AppColorData.regular().colorBgTertiary,
                           border: Border.all(
                             width: 2.sp,
                             color: Colors.black,
@@ -62,12 +66,12 @@ class InventoryItemDetail extends StatelessWidget {
                             Radius.circular(14.sp),
                           ),
                           boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              offset: Offset(0, 1.sp),
-                              blurRadius: 1.0,
-                              spreadRadius: 0.0,
-                            ),
+                            const BoxShadow(
+                              color: Color(0xFF000000),
+                              blurRadius: 0,
+                              offset: Offset(0, 4),
+                              spreadRadius: 0,
+                            )
                           ],
                         ),
                         child: SizedBox(
@@ -90,7 +94,7 @@ class InventoryItemDetail extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 16.sp),
+                                          padding: EdgeInsets.only(top: 10.0.sp, left: 16.sp, right: 16.sp, bottom: controller.requestDetailFromWallet.value ? 28 : 10),
                                           child: Column(
                                             children: [
                                               SizedBox(
@@ -98,7 +102,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                 child: Stack(
                                                   children: [
                                                     if (controller.selectedItem.value.publishType == 'NFT')
-                                                      Positioned.fill(left: 24.sp, right: 24.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
+                                                      Positioned.fill(left: 5.sp, right: 5.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
                                                     Center(
                                                       child: SizedBox(
                                                         child: controller.selectedItem.value.itemImageUrl.contains('.svg')
@@ -121,25 +125,29 @@ class InventoryItemDetail extends StatelessWidget {
                                                   ],
                                                 ),
                                               ),
-                                              if (controller.selectedItem.value.nftId != null)
+                                              if (controller.selectedItem.value.serialNumber != null && controller.selectedItem.value.serialNumber != '')
                                                 Container(
                                                   margin: EdgeInsets.only(top: 10.sp, bottom: 10.sp),
-                                                  padding: EdgeInsets.symmetric(horizontal: 15.sp, vertical: 8.sp),
+                                                  padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                                                   decoration: BoxDecoration(
-                                                    border: Border.all(color: deepGrayColor),
+                                                    border: Border.all(color: AppColorData.regular().colorBorderTertiary),
                                                     borderRadius: BorderRadius.circular(30),
                                                   ),
-                                                  child: StyledText(
-                                                    '#${controller.selectedItem.value.nftId!}',
-                                                    fontSize: 14,
-                                                    lineHeight: 14,
-                                                    fontWeight: 600,
-                                                    color: deepGrayColor,
+                                                  child: Text(
+                                                    '#${controller.selectedItem.value.serialNumber ?? ''}',
+                                                    style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
+                                                          color: AppColorData.regular().colorTextTertiary,
+                                                        ),
                                                   ),
                                                 ),
+                                              if (controller.selectedItem.value.publishType == 'NFT')
+                                                ViewSolscanButton(
+                                                  onTap: () => controller.moveToSolscan(controller.selectedItem.value.nftTokenAddress),
+                                                ),
                                               if (controller.isShoe.value)
-                                                SizedBox(
-                                                  height: 27.sp,
+                                                Container(
+                                                  margin: const EdgeInsets.only(top: 32),
+                                                  height: 36,
                                                   child: Stack(
                                                     children: [
                                                       Row(
@@ -147,63 +155,53 @@ class InventoryItemDetail extends StatelessWidget {
                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                         children: [
                                                           Expanded(
-                                                            child: ClipRRect(
-                                                              child: SizedBox(
-                                                                child: Stack(
-                                                                  children: [
-                                                                    Container(
-                                                                      decoration: BoxDecoration(
-                                                                        color: gaugeGrayColor,
-                                                                        border: Border.all(
-                                                                          width: 2.sp,
-                                                                          color: Colors.black,
-                                                                        ),
-                                                                        borderRadius: BorderRadius.all(
-                                                                          Radius.circular(50.sp),
-                                                                        ),
-                                                                        boxShadow: const [
-                                                                          BoxShadow(
-                                                                            color: Colors.black,
-                                                                            offset: Offset(0, 0),
-                                                                            blurRadius: 0.0,
-                                                                            spreadRadius: 0.0,
-                                                                          ),
-                                                                        ],
+                                                            child: SizedBox(
+                                                              child: Stack(
+                                                                children: [
+                                                                  Container(
+                                                                    decoration: BoxDecoration(
+                                                                      color: gaugeGrayColor,
+                                                                      border: Border.all(
+                                                                        width: 2.sp,
+                                                                        color: Colors.black,
                                                                       ),
+                                                                      borderRadius: BorderRadius.all(
+                                                                        Radius.circular(50.sp),
+                                                                      ),
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                          color: Color(0xFF000000),
+                                                                          blurRadius: 0,
+                                                                          offset: Offset(0, 2),
+                                                                          spreadRadius: 0,
+                                                                        )
+                                                                      ],
                                                                     ),
-                                                                    controller.selectedItem.value.durability! > 1.0
-                                                                        ? LayoutBuilder(
-                                                                            builder: (context, constraints) {
-                                                                              return Container(
-                                                                                width: controller.selectedItem.value.durability! > 20
-                                                                                    ? constraints.maxWidth / (100 / controller.selectedItem.value.durability!)
-                                                                                    : controller.selectedItem.value.durability! < 2
-                                                                                        ? 0
-                                                                                        : 34,
-                                                                                decoration: BoxDecoration(
-                                                                                  color: controller.selectedItem.value.durability! <= 30 ? textRedColor : purpleColor,
-                                                                                  border: Border.all(
-                                                                                    width: 2.sp,
-                                                                                    color: Colors.black,
-                                                                                  ),
-                                                                                  borderRadius: BorderRadius.all(
-                                                                                    Radius.circular(30.sp),
-                                                                                  ),
-                                                                                  boxShadow: [
-                                                                                    BoxShadow(
-                                                                                      color: Colors.black.withOpacity(0.5),
-                                                                                      offset: Offset(4.sp, 0),
-                                                                                      blurRadius: 4.0,
-                                                                                      spreadRadius: 0.0,
-                                                                                    ),
-                                                                                  ],
+                                                                  ),
+                                                                  controller.selectedItem.value.durability! > 1.0
+                                                                      ? LayoutBuilder(
+                                                                          builder: (context, constraints) {
+                                                                            return Container(
+                                                                              width: controller.selectedItem.value.durability! > 20
+                                                                                  ? constraints.maxWidth / (100 / controller.selectedItem.value.durability!)
+                                                                                  : controller.selectedItem.value.durability! < 2
+                                                                                      ? 0
+                                                                                      : 34,
+                                                                              decoration: BoxDecoration(
+                                                                                color: controller.selectedItem.value.durability! <= 30 ? textRedColor : AppColorData.regular().colorPointPurple,
+                                                                                border: Border.all(
+                                                                                  width: 2.sp,
+                                                                                  color: Colors.black,
                                                                                 ),
-                                                                              );
-                                                                            },
-                                                                          )
-                                                                        : Container(),
-                                                                  ],
-                                                                ),
+                                                                                borderRadius: BorderRadius.all(
+                                                                                  Radius.circular(30.sp),
+                                                                                ),
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                        )
+                                                                      : Container(),
+                                                                ],
                                                               ),
                                                             ),
                                                           ),
@@ -222,28 +220,45 @@ class InventoryItemDetail extends StatelessWidget {
                                                                   padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
                                                                   child: iconShoes,
                                                                 ),
-                                                                StyledText(
-                                                                  '신발 내구도',
-                                                                  fontFamily: 'Montserrat',
-                                                                  fontWeight: 800,
-                                                                  fontSize: 15,
-                                                                  lineHeight: 21,
-                                                                  color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
-                                                                ),
+                                                                Text('내구도 저항',
+                                                                    style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
+                                                                          color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
+                                                                        )),
                                                                 Padding(
-                                                                  padding: EdgeInsets.only(left: 5.0.sp),
-                                                                  child: StyledText(
-                                                                    formatDecimalPlaces(controller.selectedItem.value.durability!, 2),
-                                                                    fontWeight: 800,
-                                                                    fontSize: 14,
-                                                                    lineHeight: 15,
-                                                                    color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
-                                                                  ),
+                                                                  padding: EdgeInsets.only(left: 2.0.sp),
+                                                                  child: Text(formatDecimalPlaces(controller.selectedItem.value.durability!, 2),
+                                                                      style: AppTextStyleData.regular().enBodySemiboldMd.copyWith(
+                                                                            color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
+                                                                          )),
                                                                 ),
                                                               ],
                                                             ),
                                                           ),
                                                         ],
+                                                      ),
+                                                      Positioned(
+                                                        top: 0,
+                                                        right: 0,
+                                                        child: GestureDetector(
+                                                          onTap: () => controller.isDisableButton.value ? null : controller.showShoesRepairPopup(controller.selectedItem.value.id, context),
+                                                          child: Container(
+                                                            width: 36,
+                                                            height: 36,
+                                                            padding: const EdgeInsets.all(2),
+                                                            decoration: ShapeDecoration(
+                                                              color: AppColorData.regular().colorPointPurple,
+                                                              shape: RoundedRectangleBorder(
+                                                                side: const BorderSide(width: 2),
+                                                                borderRadius: BorderRadius.circular(999),
+                                                              ),
+                                                            ),
+                                                            child: Center(
+                                                              child: SizedBox(
+                                                                child: iconPlusThin,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -251,16 +266,16 @@ class InventoryItemDetail extends StatelessWidget {
                                               Padding(
                                                 padding: EdgeInsets.only(top: 20.0.sp),
                                                 child: Container(
-                                                  decoration: const BoxDecoration(
-                                                    color: subBg01Color,
-                                                    borderRadius: BorderRadius.all(
+                                                  decoration: BoxDecoration(
+                                                    color: AppColorData.regular().colorBgPrimary,
+                                                    borderRadius: const BorderRadius.all(
                                                       Radius.circular(12),
                                                     ),
                                                   ),
                                                   child: Column(
                                                     children: [
                                                       Padding(
-                                                        padding: EdgeInsets.symmetric(vertical: 24.0.sp),
+                                                        padding: const EdgeInsets.only(top: 12, bottom: 16),
                                                         child: Row(
                                                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                           children: [
@@ -268,29 +283,25 @@ class InventoryItemDetail extends StatelessWidget {
                                                               Expanded(
                                                                 child: Column(
                                                                   children: [
-                                                                    StyledText(
+                                                                    Text(
                                                                       formatDecimalPlaces(controller.selectedItem.value.itemStat!.goProfit!, 0),
-                                                                      fontSize: 26,
-                                                                      lineHeight: 26,
-                                                                      color: skyBlueColor,
-                                                                      fontWeight: 500,
-                                                                      letterSpacing: -.1,
+                                                                      style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
+                                                                            color: AppColorData.regular().colorPointCyan,
+                                                                          ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      padding: EdgeInsets.only(top: 3.sp),
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         children: [
-                                                                          iconShopReward,
+                                                                          iconShopRewardPng,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
-                                                                            child: const StyledText(
-                                                                              'GO 보상',
-                                                                              color: skyBlueColor,
-                                                                              fontSize: 12,
-                                                                              lineHeight: 14,
-                                                                              fontWeight: 500,
-                                                                              letterSpacing: -.1,
+                                                                            child: Text(
+                                                                              'GO 적립량',
+                                                                              style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                                                                    color: AppColorData.regular().colorPointCyan,
+                                                                                  ),
                                                                             ),
                                                                           ),
                                                                         ],
@@ -301,12 +312,13 @@ class InventoryItemDetail extends StatelessWidget {
                                                               ),
                                                             if (controller.selectedItem.value.itemStat != null &&
                                                                 controller.selectedItem.value.itemStat!.goProfit! > 0 &&
-                                                                controller.selectedItem.value.itemStat!.luck! < 1 &&
-                                                                (controller.selectedItem.value.itemStat!.durability! > 0 || controller.selectedItem.value.itemStat!.stamina! > 0))
+                                                                (controller.selectedItem.value.itemStat!.durability! > 0 ||
+                                                                    controller.selectedItem.value.itemStat!.stamina! > 0 ||
+                                                                    controller.selectedItem.value.itemStat!.luck! > 0))
                                                               SizedBox(
-                                                                height: 35.sp,
-                                                                child: const VerticalDivider(
-                                                                  color: popupBgColor,
+                                                                height: 42.sp,
+                                                                child: VerticalDivider(
+                                                                  color: AppColorData.regular().colorBorderPrimary,
                                                                   width: 1,
                                                                   thickness: 1,
                                                                 ),
@@ -315,30 +327,26 @@ class InventoryItemDetail extends StatelessWidget {
                                                               Expanded(
                                                                 child: Column(
                                                                   children: [
-                                                                    StyledText(
+                                                                    Text(
                                                                       formatDecimalPlaces(controller.selectedItem.value.itemStat!.durability!, 0),
-                                                                      fontSize: 26,
-                                                                      lineHeight: 26,
-                                                                      fontWeight: 500,
-                                                                      letterSpacing: -.1,
-                                                                      color: const Color(0xFFB0A3FF),
+                                                                      style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
+                                                                            color: AppColorData.regular().colorPointPurple,
+                                                                          ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      padding: EdgeInsets.only(top: 3.sp),
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                                         children: [
-                                                                          iconShopDurabilityLight,
+                                                                          iconShopDurabilityLightPng,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
-                                                                            child: const StyledText(
-                                                                              '내구도',
-                                                                              color: Color(0xFFB0A3FF),
-                                                                              fontSize: 12,
-                                                                              lineHeight: 12,
-                                                                              letterSpacing: -.1,
-                                                                              fontWeight: 600,
+                                                                            child: Text(
+                                                                              '내구도 저항',
+                                                                              style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                                                                    color: AppColorData.regular().colorPointPurple,
+                                                                                  ),
                                                                             ),
                                                                           ),
                                                                         ],
@@ -348,12 +356,12 @@ class InventoryItemDetail extends StatelessWidget {
                                                                 ),
                                                               ),
                                                             if (controller.selectedItem.value.itemStat != null &&
-                                                                controller.selectedItem.value.itemStat!.durability! > 0 &&
-                                                                controller.selectedItem.value.itemStat!.goProfit! < 1)
+                                                                (controller.selectedItem.value.itemStat!.goProfit! > 0 || controller.selectedItem.value.itemStat!.durability! > 0) &&
+                                                                (controller.selectedItem.value.itemStat!.stamina! > 0 || controller.selectedItem.value.itemStat!.luck! > 0))
                                                               SizedBox(
-                                                                height: 35.sp,
-                                                                child: const VerticalDivider(
-                                                                  color: popupBgColor,
+                                                                height: 42.sp,
+                                                                child: VerticalDivider(
+                                                                  color: AppColorData.regular().colorBorderPrimary,
                                                                   width: 1,
                                                                   thickness: 1,
                                                                 ),
@@ -362,30 +370,26 @@ class InventoryItemDetail extends StatelessWidget {
                                                               Expanded(
                                                                 child: Column(
                                                                   children: [
-                                                                    StyledText(
+                                                                    Text(
                                                                       formatDecimalPlaces(controller.selectedItem.value.itemStat!.stamina!, 0),
-                                                                      fontSize: 26,
-                                                                      lineHeight: 26,
-                                                                      fontWeight: 500,
-                                                                      color: lightGreenColor,
-                                                                      letterSpacing: -.1,
+                                                                      style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
+                                                                            color: AppColorData.regular().colorPointYellowgreen,
+                                                                          ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      padding: EdgeInsets.only(top: 3.sp),
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         children: [
+                                                                          iconShopStaminaPng,
                                                                           Padding(
-                                                                            padding: EdgeInsets.only(right: 4.0.sp),
-                                                                            child: iconShopStamina,
-                                                                          ),
-                                                                          const StyledText(
-                                                                            '체력',
-                                                                            color: lightGreenColor,
-                                                                            fontSize: 12,
-                                                                            lineHeight: 12,
-                                                                            fontWeight: 500,
-                                                                            letterSpacing: -.1,
+                                                                            padding: EdgeInsets.only(left: 4.0.sp),
+                                                                            child: Text(
+                                                                              '체력 저항',
+                                                                              style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                                                                    color: AppColorData.regular().colorPointYellowgreen,
+                                                                                  ),
+                                                                            ),
                                                                           ),
                                                                         ],
                                                                       ),
@@ -393,11 +397,15 @@ class InventoryItemDetail extends StatelessWidget {
                                                                   ],
                                                                 ),
                                                               ),
-                                                            if (controller.selectedItem.value.itemStat != null && controller.selectedItem.value.itemStat!.luck! > 0)
+                                                            if (controller.selectedItem.value.itemStat != null &&
+                                                                controller.selectedItem.value.itemStat!.luck! > 0 &&
+                                                                (controller.selectedItem.value.itemStat!.durability! > 0 ||
+                                                                    controller.selectedItem.value.itemStat!.stamina! > 0 ||
+                                                                    controller.selectedItem.value.itemStat!.goProfit! > 0))
                                                               SizedBox(
-                                                                height: 35.sp,
-                                                                child: const VerticalDivider(
-                                                                  color: popupBgColor,
+                                                                height: 42.sp,
+                                                                child: VerticalDivider(
+                                                                  color: AppColorData.regular().colorBorderPrimary,
                                                                   width: 1,
                                                                   thickness: 1,
                                                                 ),
@@ -406,30 +414,26 @@ class InventoryItemDetail extends StatelessWidget {
                                                               Expanded(
                                                                 child: Column(
                                                                   children: [
-                                                                    StyledText(
+                                                                    Text(
                                                                       formatDecimalPlaces(controller.selectedItem.value.itemStat!.luck!, 0),
-                                                                      fontSize: 26,
-                                                                      lineHeight: 26,
-                                                                      fontWeight: 500,
-                                                                      color: pinkColor,
-                                                                      letterSpacing: -.1,
+                                                                      style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
+                                                                            color: AppColorData.regular().colorPointPink,
+                                                                          ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      padding: EdgeInsets.only(top: 3.sp),
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         children: [
+                                                                          iconShopLuckPng,
                                                                           Padding(
-                                                                            padding: EdgeInsets.only(right: 4.0.sp),
-                                                                            child: iconShopLuck,
-                                                                          ),
-                                                                          const StyledText(
-                                                                            '행운',
-                                                                            color: pinkColor,
-                                                                            fontSize: 12,
-                                                                            lineHeight: 12,
-                                                                            fontWeight: 500,
-                                                                            letterSpacing: -.1,
+                                                                            padding: EdgeInsets.only(left: 4.0.sp),
+                                                                            child: Text(
+                                                                              '행운',
+                                                                              style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                                                                    color: AppColorData.regular().colorPointPink,
+                                                                                  ),
+                                                                            ),
                                                                           ),
                                                                         ],
                                                                       ),
@@ -441,30 +445,26 @@ class InventoryItemDetail extends StatelessWidget {
                                                               Expanded(
                                                                 child: Column(
                                                                   children: [
-                                                                    StyledText(
+                                                                    Text(
                                                                       '+${formatDecimalPlaces(controller.selectedItem.value.itemStat!.repairDurability!, 0)}',
-                                                                      fontSize: 26,
-                                                                      lineHeight: 26,
-                                                                      fontWeight: 500,
-                                                                      letterSpacing: -.1,
-                                                                      color: const Color(0xFFB0A3FF),
+                                                                      style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                            color: AppColorData.regular().colorPointPurple,
+                                                                          ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      padding: EdgeInsets.only(top: 3.sp),
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                                         children: [
-                                                                          iconShopDurabilityLight,
+                                                                          iconShopDurabilityLightPng,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
-                                                                            child: const StyledText(
+                                                                            child: Text(
                                                                               '내구도 수리',
-                                                                              color: Color(0xFFB0A3FF),
-                                                                              fontSize: 12,
-                                                                              lineHeight: 12,
-                                                                              letterSpacing: -.1,
-                                                                              fontWeight: 600,
+                                                                              style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                                                                    color: AppColorData.regular().colorPointPurple,
+                                                                                  ),
                                                                             ),
                                                                           ),
                                                                         ],
@@ -477,30 +477,26 @@ class InventoryItemDetail extends StatelessWidget {
                                                               Expanded(
                                                                 child: Column(
                                                                   children: [
-                                                                    StyledText(
+                                                                    Text(
                                                                       '+${formatDecimalPlaces(controller.selectedItem.value.itemStat!.recoveryStamina!, 0)}',
-                                                                      fontSize: 26,
-                                                                      lineHeight: 26,
-                                                                      fontWeight: 500,
-                                                                      letterSpacing: -.1,
-                                                                      color: lightGreenColor,
+                                                                      style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                            color: AppColorData.regular().colorPointYellowgreen,
+                                                                          ),
                                                                     ),
                                                                     Padding(
-                                                                      padding: EdgeInsets.only(top: 8.0.sp),
+                                                                      padding: EdgeInsets.only(top: 3.sp),
                                                                       child: Row(
                                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                                         crossAxisAlignment: CrossAxisAlignment.center,
                                                                         children: [
-                                                                          iconShopStamina,
+                                                                          iconShopStaminaPng,
                                                                           Padding(
                                                                             padding: EdgeInsets.only(left: 4.0.sp),
-                                                                            child: const StyledText(
+                                                                            child: Text(
                                                                               '체력 회복',
-                                                                              color: lightGreenColor,
-                                                                              fontSize: 12,
-                                                                              lineHeight: 12,
-                                                                              letterSpacing: -.1,
-                                                                              fontWeight: 600,
+                                                                              style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
+                                                                                    color: AppColorData.regular().colorPointYellowgreen,
+                                                                                  ),
                                                                             ),
                                                                           ),
                                                                         ],
@@ -719,32 +715,33 @@ class InventoryItemDetail extends StatelessWidget {
                                               ],
                                             ),
                                           ),
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 25.sp, bottom: 40.sp, left: 18.sp, right: 18.sp),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(bottom: 10.sp),
-                                                child: const StyledText(
-                                                  '제품 설명',
-                                                  fontWeight: 600,
-                                                  fontSize: 18,
-                                                  lineHeight: 18,
+                                        if (!controller.requestDetailFromWallet.value)
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 25.sp, bottom: 40.sp, left: 18.sp, right: 18.sp),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(bottom: 10.sp),
+                                                  child: const StyledText(
+                                                    '아이템 설명',
+                                                    fontWeight: 600,
+                                                    fontSize: 18,
+                                                    lineHeight: 18,
+                                                  ),
                                                 ),
-                                              ),
-                                              StyledText(
-                                                controller.selectedItem.value.description.toString(),
-                                                color: lightGrayColor,
-                                                fontWeight: 500,
-                                                fontSize: 14,
-                                                lineHeight: 22,
-                                                letterSpacing: -.1,
-                                              ),
-                                            ],
+                                                StyledText(
+                                                  controller.selectedItem.value.description.toString(),
+                                                  color: lightGrayColor,
+                                                  fontWeight: 500,
+                                                  fontSize: 14,
+                                                  lineHeight: 22,
+                                                  letterSpacing: -.1,
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        if (controller.selectedItem.value.itemCategory != 'DISPOSABLE')
+                                        if (controller.selectedItem.value.itemCategory != 'DISPOSABLE' && !controller.requestDetailFromWallet.value)
                                           controller.selectedItem.value.equipped == true
                                               ? Center(
                                                   child: Padding(
@@ -755,7 +752,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                         border: Border.all(
                                                           width: 1,
                                                           style: BorderStyle.solid,
-                                                          color: deepGrayColor,
+                                                          color: AppColorData.regular().colorTextInteractivePrimaryPressed,
                                                         ),
                                                         borderRadius: BorderRadius.all(
                                                           Radius.circular(30.sp),
@@ -773,15 +770,14 @@ class InventoryItemDetail extends StatelessWidget {
                                                         onTap: null,
                                                         child: Padding(
                                                           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
-                                                          child: const Column(
+                                                          child:  Column(
                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
-                                                              StyledText(
-                                                                '장착중',
-                                                                fontSize: 18,
-                                                                lineHeight: 18,
-                                                                fontWeight: 500,
-                                                                color: deepGrayColor,
+                                                              Text(
+                                                                '장착 중',
+                                                                style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                      color: AppColorData.regular().colorTextInteractivePrimaryPressed,
+                                                                    ),
                                                               ),
                                                             ],
                                                           ),
@@ -797,9 +793,9 @@ class InventoryItemDetail extends StatelessWidget {
                                                       decoration: BoxDecoration(
                                                         color: popupBgColor,
                                                         border: Border.all(
-                                                          width: 1,
+                                                          width: 2,
                                                           style: BorderStyle.solid,
-                                                          color: const Color(0xFF54F5FF),
+                                                          color: AppColorData.regular().colorBorderInteractivePrimary,
                                                         ),
                                                         borderRadius: BorderRadius.all(
                                                           Radius.circular(30.sp),
@@ -817,14 +813,14 @@ class InventoryItemDetail extends StatelessWidget {
                                                         onTap: () => controller.checkEquippedChallengeItem(controller.selectedItem.value.equippedChallengeItem, controller.selectedItem.value.id),
                                                         child: Padding(
                                                           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
-                                                          child: const Column(
+                                                          child:  Column(
                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
-                                                              StyledText(
-                                                                '장착',
-                                                                fontSize: 18,
-                                                                lineHeight: 18,
-                                                                fontWeight: 500,
+                                                              Text(
+                                                                '장착하기',
+                                                                style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                                                      color: AppColorData.regular().colorTextPrimary,
+                                                                    ),
                                                               ),
                                                             ],
                                                           ),
@@ -835,21 +831,22 @@ class InventoryItemDetail extends StatelessWidget {
                                                 ),
                                         if (controller.selectedItem.value.expiredDate != null)
                                           Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.black.withOpacity(.2),
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(vertical: 10.0.sp),
-                                                child: Center(
-                                                  child: StyledText(
-                                                    '아이템 사용 기한: ${formatDateUntilTime(controller.selectedItem.value.expiredDate)} 소멸 예정',
-                                                    color: lightGrayColor,
-                                                    fontSize: 12,
-                                                    fontWeight: 500,
-                                                    letterSpacing: -0.1,
-                                                  ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.black.withOpacity(.2),
+                                            ),
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(vertical: 10.0.sp),
+                                              child: Center(
+                                                child: StyledText(
+                                                  '아이템 사용 기한: ${formatDateUntilTime(controller.selectedItem.value.expiredDate)} 소멸 예정',
+                                                  color: lightGrayColor,
+                                                  fontSize: 12,
+                                                  fontWeight: 500,
+                                                  letterSpacing: -0.1,
                                                 ),
-                                              ))
+                                              ),
+                                            ),
+                                          ),
                                       ],
                                     );
                                   },
@@ -859,324 +856,37 @@ class InventoryItemDetail extends StatelessWidget {
                           ),
                         ),
                       ),
-
-                      // // Go 보상
-                      // if (controller.selectedItem.value.itemStat!.goProfit! > 0)
-                      //   Padding(
-                      //     padding: EdgeInsets.only(top: 16.0.sp),
-                      //     child: Column(
-                      //       children: [
-                      //         Row(
-                      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //           children: [
-                      //             Row(
-                      //               children: [
-                      //                 iconStatGo,
-                      //                 const Padding(
-                      //                   padding: EdgeInsets.only(left: 8.0),
-                      //                   child: StyledText(
-                      //                     'GO 보상',
-                      //                     fontWeight: 500,
-                      //                     fontSize: 14,
-                      //                     lineHeight: 15,
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //             StyledText(
-                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.goProfit!, 0),
-                      //               fontSize: 12,
-                      //               fontWeight: 500,
-                      //               color: skyBlueColor,
-                      //               letterSpacing: -.1,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //         Padding(
-                      //           padding: EdgeInsets.only(top: 8.0.sp),
-                      //           child: ClipRRect(
-                      //             child: SizedBox(
-                      //               height: 11,
-                      //               child: Stack(
-                      //                 children: [
-                      //                   Container(
-                      //                     decoration: BoxDecoration(
-                      //                       color: subBg02Color,
-                      //                       borderRadius: BorderRadius.all(
-                      //                         Radius.circular(50.sp),
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //                   LayoutBuilder(
-                      //                     builder: (context, constraints) {
-                      //                       return Container(
-                      //                         width: constraints.maxWidth / (double.parse(controller.itemGoMax.value) / controller.selectedItem.value.itemStat!.goProfit!),
-                      //                         decoration: BoxDecoration(
-                      //                           color: skyBlueColor,
-                      //                           borderRadius: BorderRadius.all(
-                      //                             Radius.circular(30.sp),
-                      //                           ),
-                      //                         ),
-                      //                       );
-                      //                     },
-                      //                   )
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         )
-                      //       ],
-                      //     ),
-                      //   ),
-                      // // 내구도
-                      // if (controller.selectedItem.value.itemStat!.durability! > 0)
-                      //   Padding(
-                      //     padding: EdgeInsets.only(top: 20.0.sp),
-                      //     child: Column(
-                      //       children: [
-                      //         Row(
-                      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //           children: [
-                      //             Row(
-                      //               children: [
-                      //                 iconStatDurabilityLight,
-                      //                 const Padding(
-                      //                   padding: EdgeInsets.only(left: 8.0),
-                      //                   child: StyledText(
-                      //                     '내구도',
-                      //                     fontWeight: 500,
-                      //                     fontSize: 14,
-                      //                     lineHeight: 15,
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //             StyledText(
-                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.durability!, 0),
-                      //               fontSize: 12,
-                      //               fontWeight: 500,
-                      //               color: lightPurpleColor,
-                      //               letterSpacing: -.1,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //         Padding(
-                      //           padding: EdgeInsets.only(top: 8.0.sp),
-                      //           child: ClipRRect(
-                      //             child: SizedBox(
-                      //               height: 11,
-                      //               child: Stack(
-                      //                 children: [
-                      //                   Container(
-                      //                     decoration: BoxDecoration(
-                      //                       color: subBg02Color,
-                      //                       borderRadius: BorderRadius.all(
-                      //                         Radius.circular(50.sp),
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //                   LayoutBuilder(
-                      //                     builder: (context, constraints) {
-                      //                       return Container(
-                      //                         width: constraints.maxWidth / (double.parse(controller.itemDurabilityMax.value) / controller.selectedItem.value.itemStat!.durability!),
-                      //                         decoration: BoxDecoration(
-                      //                           color: lightPurpleColor,
-                      //                           borderRadius: BorderRadius.all(
-                      //                             Radius.circular(30.sp),
-                      //                           ),
-                      //                         ),
-                      //                       );
-                      //                     },
-                      //                   )
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         )
-                      //       ],
-                      //     ),
-                      //   ),
-                      // // 체력
-                      // if (controller.selectedItem.value.itemStat!.stamina! > 0)
-                      //   Padding(
-                      //     padding: EdgeInsets.only(top: 16.0.sp),
-                      //     child: Column(
-                      //       children: [
-                      //         Row(
-                      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //           children: [
-                      //             Row(
-                      //               children: [
-                      //                 iconStatStamina,
-                      //                 const Padding(
-                      //                   padding: EdgeInsets.only(left: 8.0),
-                      //                   child: StyledText(
-                      //                     '체력',
-                      //                     fontWeight: 500,
-                      //                     fontSize: 14,
-                      //                     lineHeight: 15,
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //             StyledText(
-                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.stamina!, 0),
-                      //               fontSize: 12,
-                      //               fontWeight: 500,
-                      //               color: lightGreenColor,
-                      //               letterSpacing: -.1,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //         Padding(
-                      //           padding: EdgeInsets.only(top: 8.0.sp),
-                      //           child: ClipRRect(
-                      //             child: SizedBox(
-                      //               height: 11,
-                      //               child: Stack(
-                      //                 children: [
-                      //                   Container(
-                      //                     decoration: BoxDecoration(
-                      //                       color: subBg02Color,
-                      //                       borderRadius: BorderRadius.all(
-                      //                         Radius.circular(50.sp),
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //                   LayoutBuilder(
-                      //                     builder: (context, constraints) {
-                      //                       return Container(
-                      //                         width: constraints.maxWidth / (double.parse(controller.itemHealthMax.value) / controller.selectedItem.value.itemStat!.stamina!),
-                      //                         decoration: BoxDecoration(
-                      //                           color: lightGreenColor,
-                      //                           borderRadius: BorderRadius.all(
-                      //                             Radius.circular(30.sp),
-                      //                           ),
-                      //                         ),
-                      //                       );
-                      //                     },
-                      //                   )
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         )
-                      //       ],
-                      //     ),
-                      //   ),
-                      //
-                      // // 행운
-                      // if (controller.selectedItem.value.itemStat!.luck! > 0)
-                      //   Padding(
-                      //     padding: EdgeInsets.only(top: 16.0.sp),
-                      //     child: Column(
-                      //       children: [
-                      //         Row(
-                      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //           children: [
-                      //             Row(
-                      //               children: [
-                      //                 iconStatLuck,
-                      //                 const Padding(
-                      //                   padding: EdgeInsets.only(left: 8.0),
-                      //                   child: StyledText(
-                      //                     '행운',
-                      //                     fontWeight: 500,
-                      //                     fontSize: 14,
-                      //                     lineHeight: 15,
-                      //                   ),
-                      //                 ),
-                      //               ],
-                      //             ),
-                      //             StyledText(
-                      //               formatDecimalPlaces(controller.selectedItem.value.itemStat!.luck!, 0),
-                      //               fontSize: 12,
-                      //               fontWeight: 500,
-                      //               color: pointPink,
-                      //               letterSpacing: -.1,
-                      //             ),
-                      //           ],
-                      //         ),
-                      //         Padding(
-                      //           padding: EdgeInsets.only(top: 8.0.sp),
-                      //           child: ClipRRect(
-                      //             child: SizedBox(
-                      //               height: 11,
-                      //               child: Stack(
-                      //                 children: [
-                      //                   Container(
-                      //                     decoration: BoxDecoration(
-                      //                       color: subBg02Color,
-                      //                       borderRadius: BorderRadius.all(
-                      //                         Radius.circular(50.sp),
-                      //                       ),
-                      //                     ),
-                      //                   ),
-                      //                   LayoutBuilder(
-                      //                     builder: (context, constraints) {
-                      //                       return Container(
-                      //                         width: constraints.maxWidth / (double.parse(controller.itemLuckMax.value) / controller.selectedItem.value.itemStat!.luck!),
-                      //                         decoration: BoxDecoration(
-                      //                           color: pointPink,
-                      //                           borderRadius: BorderRadius.all(
-                      //                             Radius.circular(30.sp),
-                      //                           ),
-                      //                         ),
-                      //                       );
-                      //                     },
-                      //                   )
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //           ),
-                      //         )
-                      //       ],
-                      //     ),
-                      //   ),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          if (controller.isShoe.value)
+          if (controller.selectedItem.value.publishType == 'NFT')
             Positioned(
-              left: 20,
-              right: 20,
-              bottom: 10,
-              child: InkWell(
-                onTap: () => controller.isDisableButton.value ? null : controller.showShoesRepairPopup(controller.selectedItem.value.id, context),
-                child: Container(
-                  padding: EdgeInsets.all(20.sp),
-                  margin: const EdgeInsets.only(bottom: 20),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: skyBlueColor,
-                    borderRadius: BorderRadius.circular(12.sp),
-                    border: Border.all(
-                      width: 2,
-                      style: BorderStyle.solid,
-                      color: Colors.black,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(0, 4.sp),
-                        blurRadius: 0,
-                        spreadRadius: 0,
-                        color: Colors.black,
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    '신발 내구도 수리하기',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w600,
-                      height: 16.sp / 18.sp,
-                    ),
-                  ),
-                ),
+              left: 0,
+              bottom: 0,
+              child: Container(
+                width: context.mediaQuerySize.width,
+                padding: const EdgeInsets.only(left: 20, top: 12, right: 20, bottom: 36),
+                color: AppColorData.regular().colorBgPrimary,
+                child: Obx(() {
+                  return GazagoButton(
+                    onTap: controller.selectedItem.value.equipped == true
+                        ? controller.requestDetailFromWallet.value
+                            ? () => showItemIsEquippedAlert()
+                            : null
+                        : () => controller.confirmSendNftToStaika(
+                              controller,
+                              controller.selectedItem.value,
+                            ),
+                    buttonText: 'Staika 지갑으로 보내기',
+                    buttonColor: controller.selectedItem.value.equipped == true && !controller.requestDetailFromWallet.value
+                        ? AppColorData.regular().colorBgInteractivePrimaryDisabled
+                        : AppColorData.regular().colorBgInteractivePrimary,
+                    textColor: AppColorData.regular().colorTextInverse,
+                  );
+                }),
               ),
             ),
         ],

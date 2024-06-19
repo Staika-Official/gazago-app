@@ -5,7 +5,7 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 
 class GazagoButton extends StatelessWidget {
   final String buttonText;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final Color textColor;
   final Color buttonColor;
   final Color borderColor;
@@ -14,7 +14,7 @@ class GazagoButton extends StatelessWidget {
   const GazagoButton({
     super.key,
     required this.buttonText,
-    required this.onTap,
+    this.onTap,
     this.textColor = Colors.black,
     this.borderColor = Colors.black,
     this.buttonColor = skyBlueColor,
@@ -26,6 +26,7 @@ class GazagoButton extends StatelessWidget {
     return Material(
       borderRadius: BorderRadius.circular(8.sp),
       child: Container(
+        height: 56,
         decoration: BoxDecoration(
           color: buttonColor,
           border: Border.all(width: 2.sp, color: borderColor, strokeAlign: BorderSide.strokeAlignOutside),
@@ -44,7 +45,7 @@ class GazagoButton extends StatelessWidget {
             onTap: disableButton ? null : onTap,
             borderRadius: BorderRadius.circular(8.sp),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 15.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 20.0.sp),
               child: Center(
                 child: disableButton
                     ? SizedBox(

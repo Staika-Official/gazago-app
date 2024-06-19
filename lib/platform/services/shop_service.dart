@@ -11,8 +11,8 @@ class ShopService {
     return HiveStore.loadString(key: HiveKey.userId.name);
   }
 
-  static Future<void> getShopItems(String sort, String? grades, String? categories, {required Function successCallback, Function? errorCallback}) async {
-    Response res = await ShopApi.getShopItemsList(sort, grades, categories);
+  static Future<void> getShopItems(String sort, String? grades, String? categories, String? publishType, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ShopApi.getShopItemsList(sort, grades, categories, publishType);
     if (res.statusCode == 200) {
       List<ShopItemModel> shopItems = List.empty(growable: true);
       if (res.data.length > 0) {

@@ -113,6 +113,8 @@ enum HiveKey {
   onGetChainWalletBalanceTime,
   bannerAdClick,
   isFailureGetSpendingWallet,
+  collectionIdList,
+  isNewCollection,
 }
 
 enum ResponseStatus {

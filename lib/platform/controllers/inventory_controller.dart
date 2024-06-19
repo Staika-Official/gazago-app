@@ -5,9 +5,11 @@ import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_home_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/events/index.dart';
 import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -15,6 +17,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
 import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/helpers/linear_progress_mixin.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_item_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
@@ -23,8 +26,10 @@ import 'package:gaza_go/platform/models/inventory_item_stat_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
+import 'package:gaza_go/platform/services/nft_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:get/get.dart';
+import 'package:get_event_bus/get_event_bus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin, ActivityMixin, ConsumerItemMixin, GetTickerProviderStateMixin {
@@ -60,6 +65,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   ScrollController badgeScrollController = ScrollController(keepScrollOffset: false);
 
   final Rxn isConsumerItemUsing = Rxn(null);
+  final RxBool requestDetailFromWallet = RxBool(false);
 
   Rx<InventoryBadgeModel> equippedBadge = Rx(
     InventoryBadgeModel(
@@ -194,6 +200,10 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       vsync: this,
       duration: const Duration(seconds: 2),
     );
+
+    Get.bus.on<RefreshNftListEvent>((event) async {
+      refreshController();
+    });
     super.onInit();
   }
 
@@ -292,14 +302,19 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     ];
   }
 
-  void toItemDetail(int itemId) async {
+  void toItemDetail(int itemId, {String? prevRoute}) async {
     await ItemService.getItemDetailInfo(
       itemId,
-      successCallback: (item) {
+      successCallback: (item) async {
         selectedItem.value = item;
         isShoe.value = selectedItem.value.itemCategory == 'SHOES';
         if (selectedItem.value.itemCategory == 'SHOES') {
           currentStat.value = selectedItem.value.durability!;
+        }
+        if (prevRoute == Routes.walletNftList) {
+          requestDetailFromWallet.value = true;
+        } else {
+          requestDetailFromWallet.value = false;
         }
         Get.toNamed(Routes.itemDetail);
       },
@@ -587,5 +602,39 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     DateTime now = DateTime.now().toUtc();
 
     return expiryUTCDateTime.difference(now).inDays;
+  }
+
+  void moveToSolscan(String? tokenAddress) {
+    if (tokenAddress != null) {
+      Get.toNamed(Routes.webView, arguments: {'linkUrl': "https://solscan.io/token/${tokenAddress}${F.isDev ? '?cluster=devnet' : ''}"});
+    } else {
+      Get.toNamed(Routes.webView, arguments: {'linkUrl': "https://solscan.io${F.isDev ? '?cluster=devnet' : ''}"});
+    }
+  }
+
+  void confirmSendNftToStaika(InventoryController controller, InventoryItemModel item) {
+    if (item.nftTokenAddress == null || item.nftTokenAddress == '') {
+      errorBottomSheet('NFT가 민팅 중입니다.\n잠시 후 시도해주세요.');
+      return;
+    }
+    showSendToStaikaConfirmAlert(controller, item);
+  }
+
+  void sendNftToStaika(InventoryItemModel item) {
+    Get.back();
+    NftService.requestTransferNftToStaika(
+      nftId: item.nftId!,
+      userItemId: item.id,
+      successCallback: () {
+        showNftTransferSuccess(isOnChain: false);
+      },
+      errorCallback: (ErrorResponseDataModel error) {
+        if (error.errorCode == 'SOLANA_CUSTOM_EXCEPTION') {
+          showBlockchainNetworkErrorAlert();
+        } else if (error.errorCode == 'NOT_FOUND_WALLET') {
+          showStaikaStatusAlert(hasWallet: false);
+        }
+      },
+    );
   }
 }

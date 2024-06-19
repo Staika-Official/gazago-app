@@ -63,7 +63,7 @@ class Api {
     };
     _dio.options.headers['Content-Type'] = 'application/json; charset=utf-8';
 
-    String headerLang = getx.Get.locale!.languageCode == 'ko' ? 'ko-KR' : 'en-US';
+    String headerLang = getx.Get.locale?.languageCode == 'ko' ? 'ko-KR' : 'en-US';
     _dio.options.headers['Accept-Language'] = headerLang;
 
     if (needsToken) {

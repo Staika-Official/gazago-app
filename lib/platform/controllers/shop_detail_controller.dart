@@ -174,6 +174,7 @@ class ShopDetailController extends GetxController {
     Get.back();
     int itemCount = selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemCount.value : 1;
     loaderController.isLoading.value = true;
+
     await ShopService.fetchPurchaseShopItem(itemId, itemCount, successCallback: (ShopItemPurchaseResponseModel items) {
       loaderController.isLoading.value = false;
       purchaseCompleteItem.value = items;
@@ -186,7 +187,7 @@ class ShopDetailController extends GetxController {
       loaderController.isLoading.value = false;
       if (errorData.status == 422) {
         isShortBalance.value = true;
-        showTikShortBalancePopup(selectedItem.value.tradeSymbol);
+        showShortBalancePopup(selectedItem.value.tradeSymbol);
       } else {
         if (errorData.errorCode == 'PURCHASE_LIMIT_EXCEEDED') {
           itemPurchaseAvailableOnlyOneAlert(errorData.errorMessage);
@@ -214,10 +215,11 @@ class ShopDetailController extends GetxController {
   }
 
   void handleCheckPurchaseAvailable(tradeSymbol) {
+    
     if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) <
         (selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemSumPrice.value : selectedItem.value.price)) {
       isShortBalance.value = true;
-      showTikShortBalancePopup(tradeSymbol);
+      showShortBalancePopup(tradeSymbol);
     } else {
       showItemPurchasePopup(tradeSymbol);
     }
@@ -246,7 +248,7 @@ class ShopDetailController extends GetxController {
         this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!.toString()), tradeSymbol);
   }
 
-  void showTikShortBalancePopup(tradeSymbol) {
+  void showShortBalancePopup(tradeSymbol) {
     itemPurchaseShortBalanceAlert(
         this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.amount!.toString()), tradeSymbol);
   }

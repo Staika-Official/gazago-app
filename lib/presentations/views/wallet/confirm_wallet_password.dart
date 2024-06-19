@@ -123,23 +123,28 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
                         ],
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 12, left: 10),
-                      child: Text(
-                        '• 8~16자로 영문, 숫자, 특수문자가 조합되어 있습니다.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffa4a4a4),
-                        ),
-                      ),
-                    ),
+                    Obx(() {
+                      if (controller.isFocused.value)
+                        return const Padding(
+                          padding: EdgeInsets.only(top: 12, left: 10),
+                          child: Text(
+                            '• 8~16자로 영문, 숫자, 특수문자가 조합되어 있습니다.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xffa4a4a4),
+                            ),
+                          ),
+                        );
+                      else
+                        return SizedBox();
+                    })
                   ],
                 ),
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 36),
               width: double.infinity,
               child: Obx(() {
                 return GazagoButton(

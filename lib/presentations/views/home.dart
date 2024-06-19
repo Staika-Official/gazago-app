@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/collection_controller.dart';
 import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
-import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -47,42 +46,61 @@ class Home extends StatelessWidget {
     }
   ];
 
-  List<Widget> renderNavigation(HomeMenuController controller){
-    return navigation.asMap().entries.map((item)=>
-       InkWell(
-         onTap: () {
-           controller.selectMenu(item.key);
-         },
-         child: Container(
-          key: ValueKey(item.key),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                width: 28.sp,
-                height: 28.sp,
-                child: Center(
-                  child: controller.selectedIndex.value == item.key
-                      ? item.value['selectedIcon']
-                      : item.value['icon'],
-                ),
-              ),
-
-              Padding(
-                padding: EdgeInsets.only(top:4.0.sp),
-                child: Text(
-                  item.value['label'],
-                  style: AppTextStyleData.regular().koCaptionSemiboldMd.copyWith(
-                    color:   controller.selectedIndex.value == item.key ? AppColorData.regular().colorTextBrand : Colors.white,
-                    fontSize: 10.sp,
+  List<Widget> renderNavigation(HomeMenuController controller) {
+    return navigation
+        .asMap()
+        .entries
+        .map(
+          (item) => InkWell(
+            onTap: () {
+              controller.selectMenu(item.key);
+            },
+            child: Container(
+              key: ValueKey(item.key),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      SizedBox(
+                        width: 28,
+                        height: 28,
+                        child: Center(
+                          child: controller.selectedIndex.value == item.key ? item.value['selectedIcon'] : item.value['icon'],
+                        ),
+                      ),
+                      if (controller.hasNewChallenge.value == true && item.key == 0)
+                        Positioned(
+                          top: 0,
+                          right: -2,
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: const Color(0xffFF1414),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        )
+                    ],
                   ),
-                ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      item.value['label'],
+                      style: AppTextStyleData.regular().koCaptionSemiboldMd.copyWith(
+                            color: controller.selectedIndex.value == item.key ? AppColorData.regular().colorTextBrand : Colors.white,
+                            fontSize: 10,
+                          ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-               ),
-       ),
-    ).toList();
+        )
+        .toList();
   }
 
   MovieTween challengeMovie = MovieTween()
@@ -95,15 +113,15 @@ class Home extends StatelessWidget {
     return Container(
       key: controller.bottomNavKey,
       decoration: BoxDecoration(
-        color:  controller.selectedIndex.value == 2
+        color: controller.selectedIndex.value == 2
             ? AppColorData.regular().colorBgPrimary
-            : controller.selectedIndex.value == 1 || controller.selectedIndex.value == 3
-            ? AppColorData.regular().colorBgTertiary
-            : AppColorData.regular().colorBgPrimary,
+            : controller.selectedIndex.value == 1
+                ? AppColorData.regular().colorBgTertiary
+                : AppColorData.regular().colorBgPrimary,
       ),
       child: Container(
         decoration: BoxDecoration(
-          color:  AppColorData.regular().colorBgTertiary,
+          color: AppColorData.regular().colorBgTertiary,
           border: Border.all(
             width: 2.sp,
             color: Colors.black,
@@ -171,9 +189,12 @@ class Home extends StatelessWidget {
               );
             }),
             ClipRRect(
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15.sp),
+                topRight: Radius.circular(15.sp),
+              ),
               child: Padding(
-                padding: EdgeInsets.only(top:8.0.sp, bottom: 20.sp),
+                padding: EdgeInsets.only(top: 8.0.sp, bottom: 28.sp),
                 child: Container(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,7 +269,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get.put(NoticePopupController());
     Get.put(DailyBenefitController());
     Get.put(CollectionController());
     HomeMenuController controller = Get.put(HomeMenuController());

@@ -21,7 +21,7 @@ import 'package:simple_animations/animation_builder/custom_animation_builder.dar
 import 'package:simple_animations/movie_tween/movie_tween.dart';
 
 class ActivityActive extends StatelessWidget {
-  const ActivityActive({super.key});
+  const ActivityActive({Key? key}) : super(key: key);
 
   List<Widget> renderGauge(ExerciseType exerciseType, Color color) {
     List<Widget> gaugeList = List.empty(growable: true);
@@ -890,104 +890,104 @@ class ActivityActive extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(right: controller.exerciseState.value == ExerciseState.ready || controller.exerciseState.value == ExerciseState.paused ? 40.0.sp : 16.sp),
+                                padding: EdgeInsets.only(right: controller.exerciseState.value == ExerciseState.ready || controller.exerciseState.value == ExerciseState.paused ? 40.0.sp : 16.5.sp),
                                 child: CircularButton(
-                                  radius: 48.sp,
+                                  radius: 54.8.sp,
                                   color: Colors.white,
                                   onTap: () => controller.showExerciseMap(const ActivityMap()),
                                   child: SvgPicture.asset(
-                                    'assets/images/activity/ico_map.svg',
-                                    width: 21.sp,
-                                    height: 21.5.sp,
-                                    fit: BoxFit.none,
+                                    'assets/images/activity/ico_exercise_location.svg',
+                                    width: 28.sp,
+                                    height: 28.sp,
+                                    fit: BoxFit.scaleDown,
                                   ),
                                 ),
                               ),
                               [ExerciseState.ongoing].any((state) => controller.exerciseState.value == state)
                                   ? Row(
+                                children: [
+                                  GestureDetector(
+                                    onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedCourse.value, controller: controller),
+                                    onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
+                                    child: Stack(
                                       children: [
-                                        GestureDetector(
-                                          onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedCourse.value, controller: controller),
-                                          onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
-                                          child: Stack(
-                                            children: [
-                                              CircularButton(
-                                                radius: 78.sp,
-                                                color: Colors.white,
-                                                child: SizedBox(
-                                                  width: 21.6.sp,
-                                                  height: 21.6.sp,
-                                                  child: SvgPicture.asset(
-                                                    'assets/images/activity/ico_exercise_stop.svg',
-                                                    width: 21.6.sp,
-                                                    height: 21.6.sp,
-                                                    fit: BoxFit.none,
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                top: 0,
-                                                left: 0,
-                                                child: Container(
-                                                  width: 78.sp,
-                                                  height: 78.sp,
-                                                  padding: EdgeInsets.all(5.sp),
-                                                  child: CircularProgressIndicator(
-                                                    strokeWidth: 6.sp,
-                                                    color: AppColorData.regular().colorTextSuccess,
-                                                    value: controller.stopProgress.value,
-                                                  ),
-                                                ),
-                                              )
-                                            ],
+                                        CircularButton(
+                                          radius: 78.sp,
+                                          color: Colors.white,
+                                          child: SizedBox(
+                                            width: 21.6.sp,
+                                            height: 21.6.sp,
+                                            child: SvgPicture.asset(
+                                              'assets/images/activity/ico_exercise_stop.svg',
+                                              width: 21.6.sp,
+                                                height: 21.6.sp,
+                                              fit: BoxFit.scaleDown,
+                                            ),
                                           ),
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 14.sp),
-                                          child: CircularButton(
-                                            radius: 78.sp,
-                                            color: AppColorData.regular().colorBgWarning,
-                                            onTap: () => controller.pauseExercise(),
-                                            child: SvgPicture.asset(
-                                              'assets/images/activity/ico_pause.svg',
-                                              width: 26.sp,
-                                              height: 30.3.sp,
-                                              fit: BoxFit.none,
+                                        Positioned(
+                                          top: 0,
+                                          left: 0,
+                                          child: Container(
+                                            width: 78.sp,
+                                            height: 78.sp,
+                                            padding: EdgeInsets.all(5.sp),
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 6.sp,
+                                              color: AppColorData.regular().colorTextSuccess,
+                                              value: controller.stopProgress.value,
                                             ),
                                           ),
                                         )
                                       ],
-                                    )
-                                  : CircularButton(
-                                      radius: 88.6.sp,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 14.sp),
+                                    child: CircularButton(
+                                      radius: 78.sp,
                                       color: AppColorData.regular().colorBgWarning,
-                                      onTap: () {
-                                        if (controller.exerciseState.value == ExerciseState.paused) {
-                                          controller.exerciseUpdateThr.throttle(() => controller.continueExercise());
-                                        } else {
-                                          controller.exerciseStartThr.throttle(() => controller.startExercise(controller.selectedExerciseType.value, controller.selectedCourse.value));
-                                        }
-                                      },
+                                      onTap: () => controller.pauseExercise(),
                                       child: SvgPicture.asset(
-                                        'assets/images/activity/ico_play.svg',
-                                        width: 56.sp,
-                                        height: 56.sp,
-                                        fit: BoxFit.none,
+                                        'assets/images/activity/ico_pause.svg',
+                                        width: 26.sp,
+                                        height: 30.3.sp,
+                                        fit: BoxFit.scaleDown,
                                       ),
                                     ),
+                                  )
+                                ],
+                              )
+                                  : CircularButton(
+                                radius: 88.6.sp,
+                                color: AppColorData.regular().colorBgWarning,
+                                onTap: () {
+                                  if (controller.exerciseState.value == ExerciseState.paused) {
+                                    controller.exerciseUpdateThr.throttle(() => controller.continueExercise());
+                                  } else {
+                                    controller.exerciseStartThr.throttle(() => controller.startExercise(controller.selectedExerciseType.value, controller.selectedCourse.value));
+                                  }
+                                },
+                                child: SvgPicture.asset(
+                                  'assets/images/activity/ico_play.svg',
+                                  width: 56.sp,
+                                  height: 56.sp,
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ),
                               Padding(
-                                padding: EdgeInsets.only(left: controller.exerciseState.value == ExerciseState.ready || controller.exerciseState.value == ExerciseState.paused ? 40.0.sp : 16.sp),
+                                padding: EdgeInsets.only(left: controller.exerciseState.value == ExerciseState.ready || controller.exerciseState.value == ExerciseState.paused ? 40.0.sp : 16.5.sp),
                                 child: CircularButton(
-                                  radius: 48.sp,
+                                  radius: 54.8.sp,
                                   color: Colors.white,
                                   onTap: () {
                                     Get.toNamed(Routes.equippedItems);
                                   },
                                   child: SvgPicture.asset(
-                                    'assets/images/activity/ico_item.svg',
-                                    width: 23.3.sp,
-                                    height: 21.sp,
-                                    fit: BoxFit.none,
+                                    'assets/images/activity/ico_exercise_shoe.svg',
+                                    width: 28.sp,
+                                    height: 28.sp,
+                                      fit: BoxFit.scaleDown,
                                   ),
                                 ),
                               ),
@@ -1009,7 +1009,7 @@ class GaugeCursor extends StatelessWidget {
   final Color color;
   final double speed;
 
-  const GaugeCursor({super.key, required this.color, required this.speed});
+  const GaugeCursor({Key? key, required this.color, required this.speed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

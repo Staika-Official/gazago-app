@@ -23,6 +23,8 @@ class InventoryItemModel {
   double? staminaReduceRate;
   String itemImageUrl;
   String? description;
+  String? tokenAddress;
+  String? nftTokenAddress;
   bool? equipped;
   bool? challengeItem;
   bool? equippedChallengeItem;
@@ -52,6 +54,8 @@ class InventoryItemModel {
     required this.itemImageUrl,
     this.itemStat,
     this.description,
+    this.tokenAddress,
+    this.nftTokenAddress,
     this.equipped,
     this.listOrder,
     this.equippedChallengeItem,

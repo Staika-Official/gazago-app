@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -17,6 +18,8 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/mirae/alert_ui_list.dart';
+import 'package:gaza_go/theme/theme.g.dart';
+
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
@@ -58,6 +61,14 @@ Future<bool> compareVersion(String versionString) async {
 String formatDate(String? isoDateString) {
   if (isoDateString != null) {
     return DateFormat("yyyy.MM.dd HH:mm:ss").format(DateTime.parse(isoDateString).toLocal());
+  } else {
+    return '';
+  }
+}
+
+String formatHipenDate(String? isoDateString) {
+  if (isoDateString != null) {
+    return DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.parse(isoDateString).toLocal());
   } else {
     return '';
   }
@@ -121,7 +132,7 @@ String getUiAmountString(int val, int decimalPlaces) {
   return formattedNumber.toString();
 }
 
-String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType = RoundType.round, bool isAutoDecimal = false}) {
+String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType = RoundType.floor, bool isAutoDecimal = false}) {
   num mod = pow(10.0, decimalPlaces);
 
   double? formattedNumber;
@@ -256,19 +267,6 @@ void handleRoute(String route) async {
         }
       });
 
-      // DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$challengeId/$userId');
-
-      // await getChallengeDetail(challengeId);
-      // userDiInfoRef.onValue.listen((DatabaseEvent event) async {
-      //     if(event.snapshot.value != null){
-      //
-      //       Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', challengeId.toString()));
-      //     } else {
-      //       miraeAssetAlert(challengesController, int.parse(challengeId));
-      //     }
-      //
-      //
-      // });
     }
   } else {
     HiveStore.save(key: HiveKey.dynamicLinkRoute.name, value: route);
@@ -280,7 +278,6 @@ Future<void> getChallengeDetail(challengeId) async {
   ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
   await ActivityService.getChallengeDetails(int.parse(challengeId), successCallback: (NewChallengeDetailModel data) async {
     DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$challengeId/$userId');
-
     await userDiInfoRef.get().then((DataSnapshot snapshot) async {
       if (snapshot.exists) {
         Get.find<HomeMenuController>().selectMenu(0);
@@ -414,4 +411,46 @@ double productMinusFeePrice(String price, String fee) {
   result = double.parse(price) - double.parse(fee);
 
   return result;
+}
+
+Color renderDifficultyColor(String difficulty) {
+  Color color = Colors.transparent;
+
+  switch (difficulty) {
+    case 'LEVEL_1':
+      color = AppColorData.regular().colorPointGreen;
+      break;
+    case 'LEVEL_2':
+      color = AppColorData.regular().colorPointCyan;
+      break;
+    case 'LEVEL_3':
+      color = AppColorData.regular().colorPointPurple;
+      break;
+    case 'LEVEL_4':
+      color = AppColorData.regular().colorTextWarning;
+      break;
+  }
+
+  return color;
+}
+
+String renderDifficultyText(String difficulty) {
+  String text = '';
+
+  switch (difficulty) {
+    case 'LEVEL_1':
+      text = 'Easy';
+      break;
+    case 'LEVEL_2':
+      text = 'Normal';
+      break;
+    case 'LEVEL_3':
+      text = 'Hard';
+      break;
+    case 'LEVEL_4':
+      text = 'Extreme';
+      break;
+  }
+
+  return text;
 }
