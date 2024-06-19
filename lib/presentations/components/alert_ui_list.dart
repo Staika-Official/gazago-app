@@ -8157,7 +8157,6 @@ void showNotGpsSensorAlert(ActivityController controller) {
               textAlign: TextAlign.center,
             ),
           ),
-
           StyledText(
             '1.\n절전모드 등 휴대폰 설정에 따라 GPS 수신이 \n원활하지 않을 수 있어요',
             fontWeight: 500,
@@ -8165,7 +8164,6 @@ void showNotGpsSensorAlert(ActivityController controller) {
             lineHeight: 22,
             textAlign: TextAlign.center,
           ),
-
           Padding(
             padding: EdgeInsets.only(top: 12.0.sp),
             child: StyledText(
