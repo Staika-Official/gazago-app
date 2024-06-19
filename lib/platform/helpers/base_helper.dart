@@ -108,18 +108,18 @@ String calculateDuration(String? fromDateString, String? toDateString) {
   return (formattedToDate.difference(formattedFromDate).inDays + 1).toString();
 }
 
-String coordinatesToString(List<LatLng> coordinates) {
+String coordinatesToString(List<NLatLng> coordinates) {
   List<List<double>> coordinateStringList = List.empty(growable: true);
-  for (LatLng coordinate in coordinates) {
+  for (NLatLng coordinate in coordinates) {
     coordinateStringList.add([coordinate.latitude, coordinate.longitude]);
   }
   return coordinateStringList.toString();
 }
 
-List<LatLng> locationListToLatLng(List<dynamic> locationList) {
-  List<LatLng> coordinates = List.empty(growable: true);
+List<NLatLng> locationListToLatLng(List<dynamic> locationList) {
+  List<NLatLng> coordinates = List.empty(growable: true);
   for (List location in locationList) {
-    LatLng coordination = LatLng(location[0], location[1]);
+    NLatLng coordination = NLatLng(location[0], location[1]);
     coordinates.add(coordination);
   }
   return coordinates;

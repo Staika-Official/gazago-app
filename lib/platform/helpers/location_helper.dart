@@ -6,11 +6,11 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:geolocator/geolocator.dart';
 
-bool catchSinglePointAbuse(List<LatLng> locationData) {
+bool catchSinglePointAbuse(List<NLatLng> locationData) {
   final double radius = abusingRadius;
   double abuseRatio = abusingInsideRadiusRatio;
   double percentageInsideRadius = 0;
-  LatLng startingPosition;
+  NLatLng startingPosition;
 
   if (locationData.length > 1) {
     startingPosition = locationData.first;
@@ -50,7 +50,7 @@ Future<List<dynamic>> getLocationsData(int exerciseId) async {
   return completer.future;
 }
 
-void filterCoordinates(LatLng lastPosition, LatLng newPosition, int exerciseId) {
+void filterCoordinates(NLatLng lastPosition, NLatLng newPosition, int exerciseId) {
   double distance = Geolocator.distanceBetween(lastPosition.latitude, lastPosition.longitude, newPosition.latitude, newPosition.longitude);
   if (distance > 10) {
     MemberService.reportAbuse(abusingType: "EXERCISE", exerciseId: exerciseId, description: '직전 좌표와 10 미터 이상 차이가 납니다.');

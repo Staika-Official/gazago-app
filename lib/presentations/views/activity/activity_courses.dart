@@ -88,21 +88,25 @@ class ActivityChallengeCourses extends StatelessWidget {
           alignment: Alignment.topCenter,
           children: [
             NaverMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
-                zoom: 14,
+              onMapReady: (mapController) {
+                controller.onChallengeMapCreated(mapController);
+                mapController.addOverlayAll(
+                  {
+                    if (controller.selectedCourse.value != null) ...renderCircleOverlays(controller.selectedCourse.value),
+                    if (controller.selectedCourse.value != null) ...renderMarkers(controller.selectedCourse.value),
+                  },
+                );
+              },
+              options:  NaverMapViewOptions(
+                nightModeEnable: true,
+                tiltGesturesEnable: false,
+                mapType: NMapType.basic,
+                activeLayerGroups: const [NLayerGroup.mountain],
+                initialCameraPosition: NCameraPosition(
+                  target: NLatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
+                  zoom: 14,
+                ),
               ),
-              circles: [
-                if (controller.selectedCourse.value != null) ...renderCircleOverlays(controller.selectedCourse.value),
-              ],
-              markers: [
-                if (controller.selectedCourse.value != null) ...renderMarkers(controller.selectedCourse.value),
-              ],
-              mapType: MapType.Basic,
-              activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
-              nightModeEnable: true,
-              tiltGestureEnable: false,
-              onMapCreated: controller.onChallengeMapCreated,
             ),
             Positioned(
               bottom: controller.listHeight.value + 14,

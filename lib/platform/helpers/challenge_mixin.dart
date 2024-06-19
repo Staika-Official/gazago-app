@@ -28,8 +28,8 @@ mixin ChallengeMixin {
   final Rxn<ChallengeCourseModel> selectedCourse = Rxn();
   final Rxn<ChallengeModel> selectedChallenge = Rxn();
   late NaverMapController challengeMapController;
-  final RxList<Marker> challengeMarkers = RxList.empty();
-  final RxList<Marker> selectedChallengeMarkers = RxList.empty();
+  final RxList<NMarker> challengeMarkers = RxList.empty();
+  final RxList<NMarker> selectedChallengeMarkers = RxList.empty();
   final Throttling challengeThr = Throttling(duration: const Duration(milliseconds: 500));
 
   RxList<ChallengeCourseModel> get doableCoursesByChallenge {
@@ -246,12 +246,12 @@ mixin ChallengeMixin {
       listHeight.value = listKey.currentContext!.size!.height;
     }
     if (selectedCourse.value?.checkpoints != null && selectedCourse.value!.checkpoints!.isNotEmpty) {
-      List<LatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!);
+      List<NLatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!);
 
-      challengeMapController.moveCamera(
-        CameraUpdate.fitBounds(
-          LatLngBounds.fromLatLngList(markers),
-          padding: 120,
+      challengeMapController.updateCamera(
+        NCameraUpdate.fitBounds(
+          NLatLngBounds.from(markers),
+          padding: EdgeInsets.all(120),
         ),
       );
     }
@@ -260,30 +260,30 @@ mixin ChallengeMixin {
   void selectCourse(ChallengeCourseModel course) {
     selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
-      List<LatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!);
+      List<NLatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!);
 
-      challengeMapController.moveCamera(
-        CameraUpdate.fitBounds(
-          LatLngBounds.fromLatLngList(markers),
-          padding: 120,
+      challengeMapController.updateCamera(
+        NCameraUpdate.fitBounds(
+          NLatLngBounds.from(markers),
+          padding: EdgeInsets.all(120),
         ),
       );
     } else {
-      challengeMapController.moveCamera(
-        CameraUpdate.fitBounds(
-          LatLngBounds.fromLatLngList(
+      challengeMapController.updateCamera(
+        NCameraUpdate.fitBounds(
+          NLatLngBounds.from(
             [
-              LatLng(course.startLat!, course.startLon!),
-              LatLng(course.endLat!, course.endLon!),
+              NLatLng(course.startLat!, course.startLon!),
+              NLatLng(course.endLat!, course.endLon!),
             ],
           ),
-          padding: 80,
+          padding: EdgeInsets.all(80),
         ),
       );
     }
   }
 
-  List<LatLng> getCheckPointsCourse(markers) {
+  List<NLatLng> getCheckPointsCourse(markers) {
     double minLat = markers.map((marker) => marker.lat).reduce((a, b) => a < b ? a : b);
     double maxLat = markers.map((marker) => marker.lat).reduce((a, b) => a > b ? a : b);
     double minLng = markers.map((marker) => marker.lon).reduce((a, b) => a < b ? a : b);
@@ -291,11 +291,11 @@ mixin ChallengeMixin {
 
     // double aspectRatio = (maxLng - minLng) / (maxLat - minLat);
 
-    List<LatLng> outermostCoords = [];
+    List<NLatLng> outermostCoords = [];
 
     outermostCoords = [
-      LatLng(minLat, minLng),
-      LatLng(maxLat, maxLng),
+      NLatLng(minLat, minLng),
+      NLatLng(maxLat, maxLng),
     ];
 
     return outermostCoords;

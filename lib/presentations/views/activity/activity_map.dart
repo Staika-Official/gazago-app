@@ -17,35 +17,40 @@ class ActivityMap extends StatelessWidget {
       children: [
         Obx(() {
           return NaverMap(
-            nightModeEnable: true,
-            mapType: MapType.Basic,
-            activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
-            initialCameraPosition: CameraPosition(
-              target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
-              zoom: 15,
-            ),
-            initLocationTrackingMode: LocationTrackingMode.Follow,
-            circles: [
-              if (controller.selectedCourse.value != null) ...renderCircleOverlays(controller.selectedCourse.value),
-            ],
-            markers: [
-              if (controller.selectedCourse.value != null) ...renderMarkers(controller.selectedCourse.value),
-            ],
-            pathOverlays: (controller.coordinates.length < 10)
-                ? null
-                : {
-                    PathOverlay(
-                      PathOverlayId('path'),
-                      controller.coordinates,
-                      width: 3,
-                      color: Colors.red,
-                      // outlineColor: Colors.white,
-                    )
-                  },
+            onMapReady: (mapController) {
+              mapController.setLocationTrackingMode(NLocationTrackingMode.follow);
+              mapController.addOverlayAll(
+                {
+                  if(controller.selectedCourse.value != null) ...renderCircleOverlays(controller.selectedCourse.value),
+                  if (controller.selectedCourse.value != null) ...renderMarkers(controller.selectedCourse.value),
+                },
+              );
+              if(controller.coordinates.length >= 10) {
+                mapController.addOverlay( NPathOverlay(
+                  id: 'path',
+                  width: 3,
+                  color: Colors.red,
+                  coords: controller.coordinates,
+                  // outlineColor: Colors.white,
+                ));
+              }
+
+            },
+          options:  NaverMapViewOptions(
             locationButtonEnable: true,
             maxZoom: 20,
             minZoom: 8,
-            tiltGestureEnable: false,
+            tiltGesturesEnable: false,
+            nightModeEnable: true,
+            mapType: NMapType.basic,
+            activeLayerGroups: const [NLayerGroup.mountain],
+            initialCameraPosition: NCameraPosition(
+              target: NLatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
+              zoom: 15,
+            ),
+          ),
+
+
           );
         }),
         Positioned(

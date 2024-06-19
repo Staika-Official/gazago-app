@@ -14,20 +14,9 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
+
 class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppbar({super.key});
-  List<Widget> renderWalletItems(WalletMasterController walletMasterController) {
-    return walletMasterController.spendingTokenUiList.map((token) {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 6.sp),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 11.sp,
-              foregroundImage: token.logoUrl != '' && token.logoUrl != null
-                  ? CachedNetworkImageProvider(
-                token.logoUrl!,
-                headers: imageNetworkHeader,
 
   List<Widget> renderWalletItems(WalletMasterController walletMasterController) {
     return walletMasterController.spendingTokenUiList.map((token) {
@@ -70,6 +59,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
       );
     }).toList();
   }
+
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 

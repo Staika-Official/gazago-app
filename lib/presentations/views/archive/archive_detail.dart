@@ -184,7 +184,16 @@ class ArchiveDetail extends StatelessWidget {
                       ? NaverMap(
                       onMapReady: (mapController) {
                         controller.recordMapCreated(mapController, controller.locations);
-                        mapController.
+                        mapController.addOverlayAll(
+                            {if (controller.selectedItem.value.challengeCourse != null) ...renderCircleOverlays(controller.selectedItem.value.challengeCourse), if (controller.selectedItem.value.challengeCourse != null) ...renderMarkers(controller.selectedItem.value.challengeCourse)},
+                        );
+                        mapController.addOverlay( NPathOverlay(
+                          id: 'detail path',
+                          width: 3,
+                          color: Colors.red,
+                          coords: controller.locations.length > 1 ? controller.locations : [const NLatLng(37.5551, 126.9933), const NLatLng(37.5551, 126.9933)],
+                          // outlineColor: Colors.white,
+                        ));
                       },
                     options:  NaverMapViewOptions(
                       nightModeEnable: true,
@@ -194,21 +203,7 @@ class ArchiveDetail extends StatelessWidget {
                       initialCameraPosition: NCameraPosition(
                         target: controller.locations.isNotEmpty ? controller.locations.first : const NLatLng(37.5525, 126.9883), zoom: 10,
                       ),
-                      circles: [
-                        if (controller.selectedItem.value.challengeCourse != null) ...renderCircleOverlays(controller.selectedItem.value.challengeCourse),
-                      ],
-                      markers: [
-                        if (controller.selectedItem.value.challengeCourse != null) ...renderMarkers(controller.selectedItem.value.challengeCourse),
-                      ],
-                      pathOverlays: {
-                        PathOverlay(
-                          PathOverlayId('detail path'),
-                          controller.locations.length > 1 ? controller.locations : [const NLatLng(37.5551, 126.9933), const NLatLng(37.5551, 126.9933)],
-                          width: 3,
-                          color: Colors.red,
-                          // outlineColor: Colors.white,
-                        )
-                      },
+
                     ),
 
                           forceGesture: true,

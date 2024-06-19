@@ -73,10 +73,10 @@ class HiveStore {
     await box.clear();
   }
 
-  static void saveExerciseCoordinate(List<LatLng> coordinates) {
+  static void saveExerciseCoordinate(List<NLatLng> coordinates) {
     final Box box = Hive.box('gazaGo');
     List<List> untypedCoordinateList = List.empty(growable: true);
-    for (LatLng coordinate in coordinates) {
+    for (NLatLng coordinate in coordinates) {
       untypedCoordinateList.add([coordinate.latitude, coordinate.longitude]);
     }
 

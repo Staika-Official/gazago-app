@@ -24,7 +24,7 @@ class ArchiveController extends GetxController with ScrollMixin {
   RxBool stopLoading = RxBool(false);
   RxBool dataGetLoading = RxBool(false);
   Rx<ArchiveDetailItemModel> selectedItem = Rx(ArchiveDetailItemModel());
-  RxList<LatLng> locations = RxList.empty();
+  RxList<NLatLng> locations = RxList.empty();
 
   @override
   void onInit() async {
@@ -150,8 +150,8 @@ class ArchiveController extends GetxController with ScrollMixin {
   Future<void> initialiseLocations() async {
     locations.value = RxList.empty();
     List<dynamic> locationArray = List.empty(growable: true);
-    List<LatLng> coordinates = List.empty(growable: true);
-    LatLng coordinate;
+    List<NLatLng> coordinates = List.empty(growable: true);
+    NLatLng coordinate;
     if (selectedItem.value.locationsStr != null) {
       locationArray = json.decode(selectedItem.value.locationsStr!);
     } else {
@@ -159,9 +159,9 @@ class ArchiveController extends GetxController with ScrollMixin {
     }
     for (List location in locationArray) {
       if (location[0].runtimeType == String || location[1].runtimeType == String) {
-        coordinate = LatLng(double.parse(location[0]), double.parse(location[1]));
+        coordinate = NLatLng(double.parse(location[0]), double.parse(location[1]));
       } else {
-        coordinate = LatLng(location[0], location[1]);
+        coordinate = NLatLng(location[0], location[1]);
       }
 
       coordinates.add(coordinate);

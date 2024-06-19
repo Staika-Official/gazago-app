@@ -46,7 +46,7 @@ mixin ActivityMixin {
       Rx(Position(speed: 0, altitude: 0, accuracy: 0, heading: 0, latitude: 0, longitude: 0, speedAccuracy: 0, timestamp: DateTime.now(), altitudeAccuracy: 0.0, headingAccuracy: 0.0));
   final RxBool isFakeGps = RxBool(false);
   final RxList<UserExerciseModel> exerciseData = RxList.empty();
-  final RxList<LatLng> coordinates = RxList.empty();
+  final RxList<NLatLng> coordinates = RxList.empty();
   final RxInt exerciseTime = RxInt(0);
   final RxInt exerciseSteps = RxInt(0);
   final RxInt prevExerciseSteps = RxInt(0);
@@ -183,7 +183,7 @@ mixin ActivityMixin {
       return RxList.empty();
     } else {
       List<List<double>> partialList = List.empty(growable: true);
-      for (LatLng coordinate in RxList.from(coordinates.sublist(lastUpdatedCoordinateIndex))) {
+      for (NLatLng coordinate in RxList.from(coordinates.sublist(lastUpdatedCoordinateIndex))) {
         partialList.add([coordinate.latitude, coordinate.longitude]);
       }
       return partialList;
@@ -462,18 +462,18 @@ mixin ActivityMixin {
     startPeriodicUpdate();
   }
 
-  Future<RxList<LatLng>> parseCoordinates(int? exerciseId) async {
+  Future<RxList<NLatLng>> parseCoordinates(int? exerciseId) async {
     List<dynamic>? locationsList = HiveStore.load(key: HiveKey.exerciseCoordinates.name);
     if (locationsList != null) {
       return RxList(locationListToLatLng(locationsList));
     } else if (exerciseId != null) {
       List<dynamic> locationArray = List.empty(growable: true);
-      List<LatLng> coordinates = List.empty(growable: true);
+      List<NLatLng> coordinates = List.empty(growable: true);
 
       locationArray = await getLocationsData(exerciseId);
 
       for (List location in locationArray) {
-        LatLng coordinate = LatLng(double.parse(location[0]), double.parse(location[1]));
+        NLatLng coordinate = NLatLng(double.parse(location[0]), double.parse(location[1]));
         coordinates.add(coordinate);
       }
 

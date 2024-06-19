@@ -192,14 +192,15 @@ class ChallengeCourseDetail extends StatelessWidget {
                                                           lineHeight: 13,
                                                           letterSpacing: -.1,
                                                         ),
-                                                  StyledText(
-                                                    ' ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
-                                                    color: lightGrayColor,
-                                                    fontWeight: 500,
-                                                    fontSize: 12,
-                                                    lineHeight: 13,
-                                                    letterSpacing: -.1,
-                                                  ),
+                                                  if(controller.challengeDetails.value.quantity != null)
+                                                    StyledText(
+                                                      ' ${formatDecimalPlaces(controller.challengeDetails.value.quantity!.toDouble(), 0)}명',
+                                                      color: lightGrayColor,
+                                                      fontWeight: 500,
+                                                      fontSize: 12,
+                                                      lineHeight: 13,
+                                                      letterSpacing: -.1,
+                                                    ),
                                                 ],
                                               ),
                                             ),

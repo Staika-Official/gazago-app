@@ -13,12 +13,12 @@ import 'package:get/get.dart';
 class ChallengeMap extends StatelessWidget {
   const ChallengeMap({super.key});
 
-  List<CircleOverlay> renderStartPoint(ActivityController controller) {
-    List<CircleOverlay> centerCircles = controller.allCoursesList
+  List<NCircleOverlay> renderStartPoint(ActivityController controller) {
+    List<NCircleOverlay> centerCircles = controller.allCoursesList
         .map(
-          (challenge) => CircleOverlay(
-            overlayId: 'ChallengeStartCenter${challenge.id!}',
-            center: LatLng(challenge.startLat!, challenge.startLon!),
+          (challenge) => NCircleOverlay(
+            id: 'ChallengeStartCenter${challenge.id!}',
+            center: NLatLng(challenge.startLat!, challenge.startLon!),
             radius: 30,
             color: skyBlueColor,
           ),
@@ -28,12 +28,12 @@ class ChallengeMap extends StatelessWidget {
     return [...centerCircles];
   }
 
-  List<CircleOverlay> renderEndPoint(ActivityController controller) {
-    List<CircleOverlay> centerCircles = controller.allCoursesList
+  List<NCircleOverlay> renderEndPoint(ActivityController controller) {
+    List<NCircleOverlay> centerCircles = controller.allCoursesList
         .map(
-          (challenge) => CircleOverlay(
-            overlayId: 'ChallengeEndCenter${challenge.id!}',
-            center: LatLng(challenge.endLat!, challenge.endLon!),
+          (challenge) => NCircleOverlay(
+            id: 'ChallengeEndCenter${challenge.id!}',
+            center: NLatLng(challenge.endLat!, challenge.endLon!),
             radius: 30.sp,
             color: Colors.red,
           ),
@@ -143,17 +143,23 @@ class ChallengeMap extends StatelessWidget {
             alignment: Alignment.topCenter,
             children: [
               NaverMap(
-                contentPadding: const EdgeInsets.only(bottom: 100),
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
-                  zoom: 14,
+                options:  NaverMapViewOptions(
+                  nightModeEnable: true,
+                  tiltGesturesEnable: false,
+                  contentPadding: const EdgeInsets.only(bottom: 100),
+                  initialCameraPosition: controller.currentLocation.value.latitude > 0 ? NCameraPosition(
+                    target: NLatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
+                    zoom: 14,
+                  ) : NaverMapViewOptions.seoulCityHall,
+                  mapType: NMapType.basic,
+                  activeLayerGroups: const [NLayerGroup.mountain],
                 ),
-                markers: [...controller.challengeMarkers, ...controller.selectedChallengeMarkers],
-                mapType: MapType.Basic,
-                activeLayers: const [MapLayer.LAYER_GROUP_MOUNTAIN],
-                nightModeEnable: true,
-                tiltGestureEnable: false,
-                onMapCreated: controller.onChallengeMapCreated,
+                onMapReady:(mapController){
+                  controller.onChallengeMapCreated(mapController);
+                  mapController.addOverlayAll(
+                    {...controller.challengeMarkers, ...controller.selectedChallengeMarkers},
+                  );
+                } ,
               ),
               Padding(
                 padding: EdgeInsets.only(top: 68.sp),

@@ -83,7 +83,7 @@ List<NMarker> renderMarkers(ChallengeCourseModel? course) {
   }
 }
 
-NMarker getCustomMarker({required String markerType, required ChallengeCourseModel course, OverlayImage? markerIcon, Function(Marker?, Map<String, int?>)? onMarkerTab}) {
+NMarker getCustomMarker({required String markerType, required ChallengeCourseModel course, NOverlayImage? markerIcon, Function(NMarker?, Map<String, int?>)? onMarkerTab}) {
   NMarker startMarker = NMarker(
     id: course.id!.toString(),
     position: NLatLng(course.startLat!, course.startLon!),
@@ -101,26 +101,29 @@ NMarker getCustomMarker({required String markerType, required ChallengeCourseMod
     // subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
     captionOffset: 5,
     icon: markerIcon,
-    width: 20,
-    height: 20,
-    onMarkerTab: onMarkerTab,
+    size: const Size(20,20),
+
+    // Todo: 여기서 마커 클릭 이벤트 처리
+    // onMarkerTab: onMarkerTab,
   );
 
-  Marker endMarker = Marker(
-    markerId: 'end_${course.id!.toString()}',
-    position: LatLng(course.endLat!, course.endLon!),
-    captionText: '도착: ${course.endPointName}',
-    captionColor: const Color(0xFFFF6F75),
-    captionHaloColor: Colors.black,
-    captionTextSize: 16.0.sp,
+  NMarker endMarker = NMarker(
+    id: 'end_${course.id!.toString()}',
+    position: NLatLng(course.endLat!, course.endLon!),
+    caption: NOverlayCaption(
+      text: '도착: ${course.endPointName}',
+      color: const Color(0xFFFF6F75),
+      haloColor: Colors.black,
+      textSize: 16.0.sp,
+    ),
+
     captionOffset: 5,
     // subCaptionText: course.secondName,
     // subCaptionTextSize: 14.sp,
     // subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
     // subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
     icon: markerIcon,
-    width: 20,
-    height: 20,
+    size: const Size(20,20),
   );
 
   switch (markerType) {
@@ -133,17 +136,18 @@ NMarker getCustomMarker({required String markerType, required ChallengeCourseMod
   }
 }
 
-Marker getCheckpointMarker(CheckpointModel checkpoint, OverlayImage? markerIcon) {
-  return Marker(
-    markerId: 'checkpoint_${checkpoint.id!.toString()}',
-    position: LatLng(checkpoint.lat!, checkpoint.lon!),
+NMarker getCheckpointMarker(CheckpointModel checkpoint, NOverlayImage? markerIcon) {
+  return NMarker(
+    id: 'checkpoint_${checkpoint.id!.toString()}',
+    position: NLatLng(checkpoint.lat!, checkpoint.lon!),
     // captionText: checkpoint.name,
     // captionColor: skyBlueColor,
-    captionHaloColor: Colors.black,
-    captionTextSize: 12.0.sp,
+    caption: NOverlayCaption(
+      haloColor: Colors.black,
+      textSize: 12.0.sp, text: '',
+    ),
     captionOffset: 5,
     icon: markerIcon,
-    width: 43,
-    height: 54,
+    size: const Size(43,54),
   );
 }

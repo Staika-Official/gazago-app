@@ -69,9 +69,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
   final Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
-  OverlayImage? startMarker;
-  OverlayImage? endMarker;
-  List<OverlayImage> checkpointMarkers = List.empty(growable: true);
+  NOverlayImage? startMarker;
+  NOverlayImage? endMarker;
+  List<NOverlayImage> checkpointMarkers = List.empty(growable: true);
   RxnInt challengeSelectedIndex = RxnInt(null);
   Control activityLoadControl = Control.play;
   RxBool disableButton = RxBool(false);
@@ -164,24 +164,24 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> loadMakerImages() async {
-    startMarker = await OverlayImage.fromAssetImage(
-      assetName: 'assets/images/activity/ico_challenge_start_marker.png',
+    startMarker = await NOverlayImage.fromAssetImage(
+      'assets/images/activity/ico_challenge_start_marker.png',
     );
 
-    endMarker = await OverlayImage.fromAssetImage(
-      assetName: 'assets/images/activity/ico_challenge_end_marker.png',
+    endMarker = await NOverlayImage.fromAssetImage(
+      'assets/images/activity/ico_challenge_end_marker.png',
     );
 
     int index = 0;
     while (index < 10) {
-      checkpointMarkers.add(await OverlayImage.fromAssetImage(
-        assetName: 'assets/images/activity/ico_challenge_checkpoint_marker_${index + 1}.png',
+      checkpointMarkers.add(await NOverlayImage.fromAssetImage(
+        'assets/images/activity/ico_challenge_checkpoint_marker_${index + 1}.png',
       ));
       index++;
     }
   }
 
-  Marker generateDefaultMarker(ChallengeCourseModel course) {
+  NMarker generateDefaultMarker(ChallengeCourseModel course) {
     return getCustomMarker(
       markerType: "START",
       course: course,
@@ -223,9 +223,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     challengeSelectedIndex.value = course.id!;
     selectedChallengeMarkers.clear();
-    challengeMarkers.removeWhere((element) {
-      return element.markerId == challengeSelectedIndex.value.toString();
-    });
+    // challengeMarkers.removeWhere((NMarker element) {
+    //   return element.id == challengeSelectedIndex.value.toString();
+    // });
 
     selectedChallengeMarkers.add(getCustomMarker(markerType: "START", course: course, markerIcon: startMarker));
 
@@ -238,29 +238,29 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     selectedChallengeMarkers.add(getCustomMarker(markerType: "END", course: course, markerIcon: endMarker));
 
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
-      List<LatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
-      challengeMapController.moveCamera(
-        CameraUpdate.fitBounds(
-          LatLngBounds.fromLatLngList(markers),
-          padding: 120,
+      List<NLatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
+      challengeMapController.updateCamera(
+        NCameraUpdate.fitBounds(
+          NLatLngBounds.from(markers),
+          padding: EdgeInsets.all(120),
         ),
       );
     } else {
-      challengeMapController.moveCamera(
-        CameraUpdate.fitBounds(
-          LatLngBounds.fromLatLngList(
+      challengeMapController.updateCamera(
+        NCameraUpdate.fitBounds(
+          NLatLngBounds.from(
             [
-              LatLng(course.startLat!, course.startLon!),
-              LatLng(course.endLat!, course.endLon!),
+              NLatLng(course.startLat!, course.startLon!),
+              NLatLng(course.endLat!, course.endLon!),
             ],
           ),
-          padding: 100,
+          padding: EdgeInsets.all(100),
         ),
       );
     }
   }
 
-  List<LatLng> getfitBoundCourseMarker(markers) {
+  List<NLatLng> getfitBoundCourseMarker(markers) {
     double minLat = markers.map((marker) => marker.position.latitude).reduce((a, b) => a < b ? a : b);
     double maxLat = markers.map((marker) => marker.position.latitude).reduce((a, b) => a > b ? a : b);
     double minLng = markers.map((marker) => marker.position.longitude).reduce((a, b) => a < b ? a : b);
@@ -268,11 +268,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     // double aspectRatio = (maxLng - minLng) / (maxLat - minLat);
 
-    List<LatLng> outermostCoords = [];
+    List<NLatLng> outermostCoords = [];
 
     outermostCoords = [
-      LatLng(minLat, minLng),
-      LatLng(maxLat, maxLng),
+      NLatLng(minLat, minLng),
+      NLatLng(maxLat, maxLng),
     ];
 
     return outermostCoords;
@@ -837,10 +837,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           locationUpdateTime: DateTime.now(),
         ));
 
-        coordinates.add(LatLng(position.latitude, position.longitude));
+        coordinates.add(NLatLng(position.latitude, position.longitude));
         if (coordinates.isNotEmpty && coordinates.length > 1) {
           //TODO. need to edit filter test
-          filterCoordinates(coordinates.last, LatLng(position.latitude, position.longitude), userState.value.exercise!.id!);
+          filterCoordinates(coordinates.last, NLatLng(position.latitude, position.longitude), userState.value.exercise!.id!);
           exerciseDistance.value = exerciseDistance.value +
               Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
         }
