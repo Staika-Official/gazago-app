@@ -304,7 +304,7 @@ class ShopItemDetail extends StatelessWidget {
                                         color: AppColorData.regular().colorPointPurple,
                                         letterSpacing: -.1,
                                       ),
-                                      const StyledText(
+                                       StyledText(
                                         ' - ',
                                         fontSize: 12,
                                         fontWeight: 500,

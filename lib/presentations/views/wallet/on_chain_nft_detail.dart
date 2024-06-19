@@ -9,7 +9,7 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
-import 'package:skeletons/skeletons.dart';
+
 
 class OnChainNftDetail extends StatelessWidget {
   const OnChainNftDetail({super.key});
@@ -123,68 +123,69 @@ class OnChainNftDetail extends StatelessWidget {
                   ),
                 ],
               )
-            : SkeletonTheme(
-                shimmerGradient: LinearGradient(
-                  colors: [
-                    AppColorData.regular().colorBgSecondary,
-                    AppColorData.regular().colorBgTertiary,
-                    AppColorData.regular().colorBgSecondary,
-                  ],
-                  stops: [
-                    0,
-                    0.5,
-                    1,
-                  ],
-                  begin: Alignment(-2.4, -0.2),
-                  end: Alignment(2.4, 0.2),
-                  tileMode: TileMode.clamp,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: SkeletonLine(
-                          style: SkeletonLineStyle(
-                            height: 230,
-                            maxLength: MediaQuery.of(context).size.width,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-                      for (int i = 0; i < 7; i++)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Row(
-                            children: [
-                              SkeletonLine(
-                                style: SkeletonLineStyle(
-                                  width: 70,
-                                  height: 32,
-                                  maxLength: MediaQuery.of(context).size.width,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 16,
-                              ),
-                              Expanded(
-                                child: SkeletonLine(
-                                  style: SkeletonLineStyle(
-                                    height: 32,
-                                    maxLength: MediaQuery.of(context).size.width,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
+            : Container()
+        // SkeletonTheme(
+        //         shimmerGradient: LinearGradient(
+        //           colors: [
+        //             AppColorData.regular().colorBgSecondary,
+        //             AppColorData.regular().colorBgTertiary,
+        //             AppColorData.regular().colorBgSecondary,
+        //           ],
+        //           stops: [
+        //             0,
+        //             0.5,
+        //             1,
+        //           ],
+        //           begin: Alignment(-2.4, -0.2),
+        //           end: Alignment(2.4, 0.2),
+        //           tileMode: TileMode.clamp,
+        //         ),
+        //         child: Padding(
+        //           padding: const EdgeInsets.all(16),
+        //           child: Column(
+        //             children: [
+        //               Padding(
+        //                 padding: const EdgeInsets.only(bottom: 8),
+        //                 child: SkeletonLine(
+        //                   style: SkeletonLineStyle(
+        //                     height: 230,
+        //                     maxLength: MediaQuery.of(context).size.width,
+        //                     borderRadius: BorderRadius.circular(12),
+        //                   ),
+        //                 ),
+        //               ),
+        //               for (int i = 0; i < 7; i++)
+        //                 Padding(
+        //                   padding: const EdgeInsets.only(top: 16),
+        //                   child: Row(
+        //                     children: [
+        //                       SkeletonLine(
+        //                         style: SkeletonLineStyle(
+        //                           width: 70,
+        //                           height: 32,
+        //                           maxLength: MediaQuery.of(context).size.width,
+        //                           borderRadius: BorderRadius.circular(8),
+        //                         ),
+        //                       ),
+        //                       SizedBox(
+        //                         width: 16,
+        //                       ),
+        //                       Expanded(
+        //                         child: SkeletonLine(
+        //                           style: SkeletonLineStyle(
+        //                             height: 32,
+        //                             maxLength: MediaQuery.of(context).size.width,
+        //                             borderRadius: BorderRadius.circular(8),
+        //                           ),
+        //                         ),
+        //                       ),
+        //                     ],
+        //                   ),
+        //                 ),
+        //             ],
+        //           ),
+        //         ),
+        //       ),
       );
     });
   }

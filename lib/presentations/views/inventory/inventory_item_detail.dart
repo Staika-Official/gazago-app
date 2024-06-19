@@ -770,7 +770,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                         onTap: null,
                                                         child: Padding(
                                                           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
-                                                          child: const Column(
+                                                          child:  Column(
                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
                                                               Text(
@@ -813,7 +813,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                         onTap: () => controller.checkEquippedChallengeItem(controller.selectedItem.value.equippedChallengeItem, controller.selectedItem.value.id),
                                                         child: Padding(
                                                           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 30.sp),
-                                                          child: const Column(
+                                                          child:  Column(
                                                             mainAxisAlignment: MainAxisAlignment.center,
                                                             children: [
                                                               Text(

@@ -8173,7 +8173,7 @@ void showNotGpsSensorAlert(ActivityController controller) {
               fontWeight: 500,
               fontSize: 16,
               lineHeight: 22,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.center, 
             ),
           ),
           Padding(

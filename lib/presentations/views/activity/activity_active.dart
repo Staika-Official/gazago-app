@@ -21,7 +21,7 @@ import 'package:simple_animations/animation_builder/custom_animation_builder.dar
 import 'package:simple_animations/movie_tween/movie_tween.dart';
 
 class ActivityActive extends StatelessWidget {
-  const ActivityActive({super.key});
+  const ActivityActive({Key? key}) : super(key: key);
 
   List<Widget> renderGauge(ExerciseType exerciseType, Color color) {
     List<Widget> gaugeList = List.empty(growable: true);
@@ -905,6 +905,11 @@ class ActivityActive extends StatelessWidget {
                               ),
                               [ExerciseState.ongoing].any((state) => controller.exerciseState.value == state)
                                   ? Row(
+                                children: [
+                                  GestureDetector(
+                                    onTapDown: (tapDownDetail) => controller.onTapDownStop(tapDownDetail, controller.selectedCourse.value, controller: controller),
+                                    onTapUp: (tapUpDetail) => controller.onTapUpStop(tapUpDetail),
+                                    child: Stack(
                                       children: [
                                         CircularButton(
                                           radius: 78.sp,
@@ -920,32 +925,29 @@ class ActivityActive extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 14.sp),
-                                          child: CircularButton(
-                                            radius: 78.sp,
-                                            color: AppColorData.regular().colorBgWarning,
-                                            onTap: () => controller.pauseExercise(),
-                                            child: SvgPicture.asset(
-                                              'assets/images/activity/ico_pause.svg',
-                                              width: 26.sp,
-                                              height: 30.3.sp,
-                                              fit: BoxFit.none,
+                                        Positioned(
+                                          top: 0,
+                                          left: 0,
+                                          child: Container(
+                                            width: 78.sp,
+                                            height: 78.sp,
+                                            padding: EdgeInsets.all(5.sp),
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 6.sp,
+                                              color: AppColorData.regular().colorTextSuccess,
+                                              value: controller.stopProgress.value,
                                             ),
                                           ),
                                         )
                                       ],
-                                    )
-                                  : CircularButton(
-                                      radius: 88.6.sp,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 14.sp),
+                                    child: CircularButton(
+                                      radius: 78.sp,
                                       color: AppColorData.regular().colorBgWarning,
-                                      onTap: () {
-                                        if (controller.exerciseState.value == ExerciseState.paused) {
-                                          controller.exerciseUpdateThr.throttle(() => controller.continueExercise());
-                                        } else {
-                                          controller.exerciseStartThr.throttle(() => controller.startExercise(controller.selectedExerciseType.value, controller.selectedCourse.value));
-                                        }
-                                      },
+                                      onTap: () => controller.pauseExercise(),
                                       child: SvgPicture.asset(
                                         'assets/images/activity/ico_pause.svg',
                                         width: 26.sp,
@@ -1007,7 +1009,7 @@ class GaugeCursor extends StatelessWidget {
   final Color color;
   final double speed;
 
-  const GaugeCursor({super.key, required this.color, required this.speed});
+  const GaugeCursor({Key? key, required this.color, required this.speed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

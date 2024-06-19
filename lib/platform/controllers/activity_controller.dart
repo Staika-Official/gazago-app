@@ -1061,11 +1061,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   @override
   void onResumed() {
-<<<<<<< HEAD
-=======
+
     print('onResumed activity');
     checkNewCollectionStatus();
->>>>>>> dae5603c699177421397b699cecdcc8670b9faf2
+
     if (Get.currentRoute != Routes.login && Get.currentRoute != Routes.loading) {
       getUserState(showLoading: true);
     }
