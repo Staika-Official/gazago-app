@@ -818,7 +818,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       isFakeGps.value = position.isMocked;
       print('position : $position');
       print('position.accuracy : ${position.accuracy}');
-
+      // HiveStore.save(key: HiveKey.currentPosition.name, value: null);
       detectFakeGps();
 
       if (HiveStore.load(key: HiveKey.isDebuggingMode.name) && exerciseState.value == ExerciseState.ongoing) {
@@ -853,16 +853,20 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
               Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
         }
       } else {
+        // HiveStore.save(key: HiveKey.accessToken.name, value: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJramg0MzU3IiwiYXV0aCI6IlJPTEVfQURNSU4sUk9MRV9MT0NBVElPTixST0xFX0xPQ0FUSU9OX1NVUEVSVklTT1IiLCJleHAiOjE3MTg3ODYwNzksInVzZXJJZCI6IjI1NSJ9.rNf30NedosrnS4iPLLgEFR2RCNQSCLsytDqXsM4jLkJB_wKwhC-LQ0PVYnr3gzrDcT031n7cBBWyheYv_Ml9rA');
         // 첼린지 존 찾기(30초마다 요청)
         DateTime now = DateTime.now();
-
-
+        List<String>? prevPosition = HiveStore.load(key: HiveKey.currentPosition.name) != null ? HiveStore.load(key: HiveKey.currentPosition.name).split(',') : null;
+        double prevPositionLat = prevPosition != null ? double.parse(prevPosition[0]) : position.latitude;
+        double prevPositionLng = prevPosition != null ? double.parse(prevPosition[1]) : position.longitude;
         if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0 ) {
-          await findCourses();
+          if(calculateDistance( prevPositionLat, prevPositionLng, position.latitude, position.longitude) > 1){
+            await findCourses();
+          }
           receiveLocationTime.value = now;
         }
       }
-
+      HiveStore.save(key: HiveKey.currentPosition.name, value: '${position.latitude},${position.longitude}');
       locationThr.throttle(() {
         detectChallengeZone(position);
       });
@@ -885,6 +889,28 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         showGpsAlert();
       }
     });
+  }
+
+  double radians(double degree) {
+    return degree * pi / 180;
+  }
+
+  double calculateDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
+    double earthRadius = 6371000;
+    double lat1 = radians(startLatitude);
+    double lon1 = radians(startLongitude);
+    double lat2 = radians(endLatitude);
+    double lon2 = radians(endLongitude);
+
+    double dLat = lat2 - lat1;
+    double dLon = lon2 - lon1;
+
+    double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1) * cos(lat2) *
+            sin(dLon / 2) * sin(dLon / 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    return earthRadius * c;
   }
 
   Future<void> getCurrentLocation() async {

@@ -267,14 +267,15 @@ class Api {
 
   static Future<void> _retryFailedRequest(DioError e, ErrorInterceptorHandler handler) async {
     String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
+    print('accessTokenaccessToken : $accessToken');
     if (accessToken == null) {
       resetToLogin(e, handler);
       return;
     }
 
-    Dio dio = Dio();
+    // Dio dio = Dio();
     e.requestOptions.headers['Authorization'] = 'Bearer $accessToken';
-    await dio
+    await _dio
         .request(
       e.requestOptions.baseUrl + e.requestOptions.path,
       options: Options(
@@ -362,9 +363,9 @@ class Api {
 
     await getDeviceInfo();
 
-    Dio refreshDio = Dio();
-    refreshDio.options.headers['Authorization'] = 'Bearer $refreshToken';
-    await refreshDio.post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {
+    // Dio refreshDio = Dio();
+    _dio.options.headers['Authorization'] = 'Bearer $refreshToken';
+    await _dio.post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {
       'clientId': 'GAZAGO',
       'appVersion': packageInfo.version,
       'deviceId': deviceId,
@@ -388,7 +389,8 @@ class Api {
       HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
       HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
       needToRefreshToken = false;
-
+      print('_retryFailedRequest');
+      print('_retryFailedRequest : res.requestOptions.path ${res.requestOptions.path}');
       await _retryFailedRequest(e, handler);
     }).onError((DioError error, stacktrace) {
       _logger.e(

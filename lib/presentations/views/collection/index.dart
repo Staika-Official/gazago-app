@@ -364,7 +364,7 @@ class CollectionHome extends StatelessWidget {
                                   child: Padding(
                                     padding: EdgeInsets.all(10.0.sp),
                                     child:
-                                        controller.fixedCollection.value.completeQuantity == controller.fixedCollection.value.gatheringConditions.length
+                                        controller.fixedCollection.value.completeQuantity == controller.fixedCollection.value.gatheringConditions.length || controller.fixedCollection.value.alreadyIssued
                                         ? renderCollectionImage(controller.fixedCollection.value.gatheringReward)
                                         : Opacity(
                                           opacity: 0.4,

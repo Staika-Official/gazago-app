@@ -7974,67 +7974,52 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
         insetPadding: EdgeInsets.zero,
         backgroundColor: subBg01Color.withOpacity(.8),
         child: Center(
-            child: Padding(
-          padding: EdgeInsets.all(35.0.sp),
-          child: Container(
-            decoration: BoxDecoration(
-              color: popupBgColor,
-              borderRadius: BorderRadius.all(
-                Radius.circular(12.5.sp),
+            child: Container(
+              width: 316.sp,
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12.5.sp),
+                ),
               ),
-            ),
-            child: Stack(children: [
-              Positioned(
-                  right: 10,
-                  top: 10,
-                  child: InkWell(
-                    onTap: () => Get.back(),
-                    child: iconCloseWhite,
-                  )),
-              Padding(
-                padding: EdgeInsets.all(20.0.sp),
+              child: Padding(
+                padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, top: 36.0.sp, bottom: 24.sp),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(bottom: 20.sp),
-                      child: StyledText(
+                      padding: EdgeInsets.only(bottom: 16.sp),
+                      child: Text(
                         '광고 시청을 위해\n앱 추적 요청을 허용해주세요.',
-                        fontSize: 20,
-                        lineHeight: 29,
-                        fontWeight: 500,
-                        letterSpacing: -.1,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
-                      child: Image.asset(
-                        'assets/images/activity/img_ios_ad_permission.png',
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0.sp),
-                      child: RichText(
+                        style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
+                          color: AppColorData.regular().colorTextPrimary,
+                        ),
                           textAlign: TextAlign.center,
-                          text: TextSpan(
-                            style: TextStyle(color: lightGrayColor, fontWeight: FontWeight.w500, fontSize: 14, height: 22 / 14, letterSpacing: -.1),
-                            children: [
-                              TextSpan(
-                                text: '그림과 같이',
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/activity/img_ios_ad_permission.png',
+                      fit: BoxFit.fitWidth,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 16.0.sp),
+                      child: Text(
+                          '그림과 같이 설정 → 가자고 앱에서\n추적을 허용해 주세요.',
+                              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                color: AppColorData.regular().colorTextSecondary,
                               ),
-                              TextSpan(
-                                text: ' 설정→가자고 앱→추적 허용을\n',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              TextSpan(
-                                text: '선택해주세요.',
-                              ),
-                            ],
-                          )),
+                        textAlign: TextAlign.center,
+                      )
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(top: 4.0.sp, bottom: 28.sp),
+                        child: Text(
+                          '추적 허용이 안 보인다면 ios버전을 확인 해 주세요.',
+                          style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                            color: AppColorData.regular().colorTextTertiary,
+                          ),
+                          textAlign: TextAlign.center,
+                        )
                     ),
                     GazagoButton(
                       onTap: () {
@@ -8046,9 +8031,71 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
                   ],
                 ),
               ),
-            ]),
-          ),
-        )),
+            )),
+      ),
+    ),
+  );
+}
+
+void showIOSDeniedAdPermissionAlert(DailyBenefitController controller) {
+  Get.dialog(
+    barrierColor: Colors.transparent,
+    useSafeArea: false,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: subBg01Color.withOpacity(.8),
+        child: Center(
+            child: Container(
+              width: 316.sp,
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12.5.sp),
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, top: 36.0.sp, bottom: 24.sp),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 16.sp),
+                      child: Text(
+                        '광고 시청을 위해\n앱 추적 요청을 허용해주세요.',
+                        style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
+                          color: AppColorData.regular().colorTextPrimary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/activity/img_ios_ad_denied_permission.png',
+                      fit: BoxFit.fitWidth,
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(top: 16.0.sp, bottom: 28.sp),
+                        child: Text(
+                          '그림과 같이 설정 → 개인정보 보호 및 보안 →\n추적 페이지에서 가자고 앱 추적을 허용해 주세요.',
+                          style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                            color: AppColorData.regular().colorTextSecondary,
+                          ),
+                          textAlign: TextAlign.center,
+                        )
+                    ),
+
+                    GazagoButton(
+                      onTap: () {
+                        controller.moveAppSettings();
+                      },
+                      buttonText: '확인',
+                      buttonColor: skyBlueColor,
+                    ),
+                  ],
+                ),
+              ),
+            )),
       ),
     ),
   );
