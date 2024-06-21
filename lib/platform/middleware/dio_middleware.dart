@@ -273,9 +273,9 @@ class Api {
       return;
     }
 
-    // Dio dio = Dio();
+    Dio dio = Dio();
     e.requestOptions.headers['Authorization'] = 'Bearer $accessToken';
-    await _dio
+    await dio
         .request(
       e.requestOptions.baseUrl + e.requestOptions.path,
       options: Options(
@@ -363,9 +363,9 @@ class Api {
 
     await getDeviceInfo();
 
-    // Dio refreshDio = Dio();
-    _dio.options.headers['Authorization'] = 'Bearer $refreshToken';
-    await _dio.post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {
+    Dio refreshDio = Dio();
+    refreshDio.options.headers['Authorization'] = 'Bearer $refreshToken';
+    await refreshDio.post('${F.baseUrl}/services/uaa/api/sign-in/token', data: {
       'clientId': 'GAZAGO',
       'appVersion': packageInfo.version,
       'deviceId': deviceId,
