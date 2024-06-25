@@ -261,4 +261,18 @@ class F {
         return 'ca-app-pub-3940256099942544/5224354917';
     }
   }
+
+  static String get webWalletUrl {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'https://wallet.stage.staika.io';
+      case Flavor.stage:
+        // return 'http://192.168.88.241:3000';
+        return 'https://wallet.stage.staika.io';
+      case Flavor.prod:
+        return 'https://wallet.staika.io';
+      default:
+        return 'https://wallet.stage.staika.io';
+    }
+  }
 }

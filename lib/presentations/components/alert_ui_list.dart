@@ -3628,7 +3628,7 @@ void showStaikaStatusAlert({required bool hasWallet, TabController? tabControlle
                     child: GazagoButton(
                       onTap: () async {
                         Get.back();
-                        Get.toNamed(Routes.joinTerms, arguments: {'platform': 'wallet'});
+                        Get.toNamed(Routes.createWalletWebview);
                       },
                       buttonText: '만들기',
                       buttonColor: skyBlueColor,
