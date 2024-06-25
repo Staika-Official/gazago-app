@@ -134,7 +134,7 @@ class StaikaAssetItemCoin extends StatelessWidget {
             ),
             onTapButton != null
                 ? Padding(
-                    padding: EdgeInsets.only(left: 16.sp, right: 16.sp, bottom: 11.sp),
+                    padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 11.sp),
                     child: GestureDetector(
                       onTap: onTapButton,
                       child: Container(
