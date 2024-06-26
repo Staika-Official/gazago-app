@@ -8,11 +8,13 @@ class UserBadgesSummariesModel {
   int id;
   String state;
   int badgeComposeConfigId;
+  String imageUrl;
 
   UserBadgesSummariesModel({
     required this.id,
     required this.state,
     required this.badgeComposeConfigId,
+    required this.imageUrl,
 
   });
 

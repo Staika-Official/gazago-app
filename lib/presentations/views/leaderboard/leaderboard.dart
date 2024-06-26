@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_flavorizr/parser/models/config/app.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -13,6 +14,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/leaderboard/calendar_cell.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart' as bs;
@@ -290,7 +292,7 @@ class LeaderboardHome extends StatelessWidget {
     return Container(
       width: double.maxFinite,
       height: 90.sp,
-      color: deepBlackColor,
+      color: AppColorData.regular().colorBgSecondary,
       padding: EdgeInsets.only(top: 8.sp, left: 11.sp, right: 17.sp, bottom: 8.sp),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -441,19 +443,20 @@ class LeaderboardHome extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              StyledText(
+              Text(
                 '${formatDecimalPlaces(myRank.rewardGo, 2, isAutoDecimal: true)} GO',
-                textAlign: TextAlign.right,
-                fontSize: 14,
-                fontWeight: 600,
+                style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
+                  color: AppColorData.regular().colorBaseWhite,
+                  height: 1.1
+                )
               ),
               Padding(padding: EdgeInsets.only(top: 7.sp)),
-              StyledText(
+              Text(
                 '${formatDecimalPlaces(myRank.rewardTik, 0)} TIK',
-                textAlign: TextAlign.right,
-                color: deepGrayColor,
-                fontSize: 14,
-                fontWeight: 500,
+                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                      color: AppColorData.regular().colorBrandgray200,
+                    height: 1.1
+                  )
               ),
             ],
           ),
@@ -465,8 +468,8 @@ class LeaderboardHome extends StatelessWidget {
   Widget renderRanker(RankerModel ranker, BuildContext context) {
     return Container(
       color: subBg01Color,
-      height: 77.sp,
-      padding: EdgeInsets.only(left: 18.sp, right: 17.sp),
+      height: 68.sp,
+      padding: EdgeInsets.only(left: 16.sp, right: 16.sp),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -568,7 +571,9 @@ class LeaderboardHome extends StatelessWidget {
                                   )
                                 : ranker.nickname),
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.white, fontSize: 16.sp, height: 18.sp / 16.sp, fontWeight: FontWeight.w500),
+                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorBaseWhite
+                            ),
                             textAlign: TextAlign.left,
                           ),
                           if (ranker.additionStik != null || ranker.additionTik != null)
@@ -576,11 +581,8 @@ class LeaderboardHome extends StatelessWidget {
                               padding: EdgeInsets.only(top: 6.0.sp),
                               child: Text.rich(
                                 textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontSize: 10.sp,
-                                  height: 11.sp / 10.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: skyBlueColor,
+                                style: AppTextStyleData.regular().enCaptionSemiboldMd.copyWith(
+                                  color: AppColorData.regular().colorTextBrand
                                 ),
                                 ranker.additionStik != null
                                     ? TextSpan(
@@ -588,22 +590,16 @@ class LeaderboardHome extends StatelessWidget {
                                         children: [
                                           const TextSpan(
                                               text: ' STIK',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                              )),
+                                              ),
                                           if (ranker.additionTik != null) const TextSpan(text: ' + '),
                                           if (ranker.additionTik != null)
                                             TextSpan(
                                                 text: formatDecimalPlaces(ranker.additionTik ?? 0, 0),
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                )),
+                                                ),
                                           if (ranker.additionTik != null)
                                             const TextSpan(
                                                 text: ' TIK',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                )),
+                                                ),
                                         ],
                                       )
                                     : ranker.additionTik != null
@@ -612,9 +608,7 @@ class LeaderboardHome extends StatelessWidget {
                                             children: const [
                                               TextSpan(
                                                   text: ' TIK',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                  )),
+                                                  ),
                                             ],
                                           )
                                         : const TextSpan(
@@ -634,28 +628,26 @@ class LeaderboardHome extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              StyledText(
+              Text(
                 '${formatDecimalPlaces(ranker.rewardGo, 2, isAutoDecimal: true)} GO',
+               style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
+                 color: AppColorData.regular().colorBaseWhite
+               ),
                 textAlign: TextAlign.right,
-                fontSize: 14,
-                lineHeight: 14,
-                fontWeight: 600,
-                letterSpacing: -.1,
-                softWrap: false,
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 3.sp),
-                child: StyledText(
-                  '${formatDecimalPlaces(ranker.rewardTik, 0)} TIK',
-                  textAlign: TextAlign.right,
-                  fontSize: 14,
-                  lineHeight: 14,
-                  fontWeight: 500,
-                  letterSpacing: -.1,
-                  color: const Color(0xFFBABABA),
-                  softWrap: false,
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: 3.sp),
+              //   child: StyledText(
+              //     '${formatDecimalPlaces(ranker.rewardTik, 0)} TIK',
+              //     textAlign: TextAlign.right,
+              //     fontSize: 14,
+              //     lineHeight: 14,
+              //     fontWeight: 500,
+              //     letterSpacing: -.1,
+              //     color: const Color(0xFFBABABA),
+              //     softWrap: false,
+              //   ),
+              // ),
             ],
           ),
         ],
@@ -673,16 +665,15 @@ class LeaderboardHome extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 25.0.sp, left: 20.sp, right: 20.sp),
+            padding: EdgeInsets.only(top: 24.0.sp, left: 16.sp, right: 16.sp),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                StyledText(
+                Text(
                   '오늘의 리워드',
-                  color: Colors.white,
-                  fontWeight: 600,
-                  fontSize: 20.sp,
-                  lineHeight: 24.sp,
+                  style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
+                    color: AppColorData.regular().colorBaseWhite
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 5.0.sp),
@@ -701,9 +692,9 @@ class LeaderboardHome extends StatelessWidget {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 8.sp, left: 20.sp, right: 20.sp),
+            margin: EdgeInsets.only(top: 8.sp, left: 16.sp, right: 16.sp),
             decoration: BoxDecoration(
-              color: const Color(0xFF2E3038),
+              color: AppColorData.regular().colorBgSecondary,
               border: Border.all(
                 width: 1,
                 color: const Color(0xFF2E3038),
@@ -713,27 +704,31 @@ class LeaderboardHome extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.all(10.sp),
+              padding: EdgeInsets.symmetric(vertical:12.0.sp, horizontal: 20.sp ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  iconTodayTik,
                   Padding(
-                    padding: EdgeInsets.only(left: 10.0.sp),
+                    padding: EdgeInsets.only(top:3.0.sp),
+                    child: iconTodayTik,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 4.0.sp),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Obx(() {
                           return Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+
                             children: [
-                              StyledText(
+                              Text(
                                 controller.todayTikAmount.value > 0 ? formatDecimalPlaces(controller.todayTikAmount.value, 0) : 0.toString(),
-                                color: Colors.white,
-                                fontWeight: 600,
-                                fontSize: 30,
-                                lineHeight: 34,
+                                style: AppTextStyleData.regular().numHeadingSemiboldLg.copyWith(
+                                  color: AppColorData.regular().colorBaseWhite,
+                                  height: 1.2
+                                ),
                               ),
                               // Padding(
                               //   padding: EdgeInsets.only(left: 2.0.sp),
@@ -865,18 +860,17 @@ class LeaderboardHome extends StatelessWidget {
           //   ),
           // ),
           Container(
-            padding: EdgeInsets.only(top: 30.sp, left: 20.sp, right: 20.sp, bottom: 12.sp),
+            padding: EdgeInsets.only(top: 24.sp, left: 16.sp, right: 20.sp, bottom: 12.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    StyledText(
+                    Text(
                       controller.checkRewardDate.value,
-                      color: Colors.white,
-                      fontSize: 18,
-                      lineHeight: 18,
-                      fontWeight: 600,
+                      style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
+                          color: AppColorData.regular().colorBaseWhite,
+                      ),
                     ),
                     // Padding(
                     //   padding: EdgeInsets.only(left: 10.0.sp),
@@ -919,15 +913,14 @@ class LeaderboardHome extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Obx(() {
-                            return StyledText(
+                            return Text(
                               controller.leaderboardDate.value,
-                              color: lightGrayColor,
-                              fontSize: 14,
-                              lineHeight: 14,
-                              fontWeight: 500,
+                              style: AppTextStyleData.regular().enBodyMediumMd.copyWith(
+                                color: AppColorData.regular().colorTextSecondary
+                              ),
                             );
                           }),
-                          Padding(padding: EdgeInsets.only(left: 8.sp)),
+                          Padding(padding: EdgeInsets.only(left: 4.sp)),
                           iconCalendar,
                           //StyledText(controller.leaderboardDate.value!, color: const Color(0xFF747474), fontSize: 12, fontWeight: 600,),
 

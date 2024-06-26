@@ -7785,7 +7785,7 @@ void showModalWebview(controller, context, {String? title, String linkUrl = ''})
   );
 }
 
-void showModalNoticeWebview(context, {String? title, String linkUrl = ''}) {
+void showModalNoticeWebview({String? title, String linkUrl = ''}) {
   GlobalKey webViewKey = GlobalKey();
   Get.bottomSheet(
     isDismissible: false,
@@ -9046,5 +9046,59 @@ void showNotEnoughGatheringConditionErrorAlert() {
         ),
       ),
     ],
+  );
+}
+
+
+
+
+void showServiceInspectionNotice() {
+  Get.dialog(
+    barrierColor: Colors.transparent,
+    useSafeArea: false,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: subBg01Color.withOpacity(.8),
+        child: Center(
+            child: Container(
+              width: 316.sp,
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12.5.sp),
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, top: 36.0.sp, bottom: 36.sp),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 16.sp),
+                      child: Text(
+                        '서비스 점검중 입니다.',
+                        style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
+                          color: AppColorData.regular().colorTextPrimary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    StyledText(
+                      '이용에 불편을 드려 죄송합니다.',
+                      fontWeight: 500,
+                      fontSize: 16,
+                      lineHeight: 24,
+                      letterSpacing: -.1,
+                      textAlign: TextAlign.center,
+                    ),
+
+                  ],
+                ),
+              ),
+            )),
+      ),
+    ),
   );
 }

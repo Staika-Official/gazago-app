@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/challenge_bottom_sheet/company_crew_challenge.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 import 'challenge_bottom_sheet/code_challenge.dart';
@@ -207,7 +208,7 @@ Widget renderParticipateInChallenge() {
     child: Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.0.sp, vertical: (userState == 'COMPLETE' || userState == 'INCOMPLETE') ? 5.sp : 20.sp),
+          padding: EdgeInsets.only(top:(userState == 'COMPLETE' || userState == 'INCOMPLETE') ? 5.sp : 22.0.sp, bottom:(userState == 'COMPLETE' || userState == 'INCOMPLETE') ? 5.sp : 15.sp, left: 16.sp, right: 16.sp),
           child: Flex(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             direction: Axis.horizontal,
@@ -226,7 +227,7 @@ Widget renderParticipateInChallenge() {
           width: double.infinity,
           color: Colors.black,
           child: Padding(
-            padding: EdgeInsets.only(top: 10.0.sp, bottom: Platform.isAndroid ? 10.0.sp : 24.sp),
+            padding: EdgeInsets.only(top: 8.0.sp, bottom: Platform.isAndroid ? 14.0.sp : 36.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -241,19 +242,18 @@ Widget renderParticipateInChallenge() {
                         ).createShader(
                           Rect.fromLTWH(0, 0, size.width, 16),
                         ),
-                        child: const StyledText(
+                        child: Text(
                           '기간 :',
-                          fontSize: 14,
-                          lineHeight: 20,
-                          fontWeight: 600,
+                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                            color: AppColorData.regular().colorTextBrand
+                          ),
                         ),
                       )
-                    : StyledText(
+                    : Text(
                         '기간 :',
-                        fontSize: 14,
-                        lineHeight: 20,
-                        fontWeight: 600,
-                        color: deepGrayColor,
+                  style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                      color: AppColorData.regular().colorTextTertiary
+                  ),
                       ),
                 Padding(
                   padding: EdgeInsets.only(left: 8.0.sp),
@@ -269,23 +269,15 @@ Widget renderParticipateInChallenge() {
                           ),
                           child: Text(
                             '${formatDateUntilTime(challengesDetailController.challengeDetails.value.fromDate)} ~ ${formatDateUntilTime(challengesDetailController.challengeDetails.value.toDate)}',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.sp,
-                              height: (20 / 14).sp,
+                            style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                color: AppColorData.regular().colorTextBrand
                             ),
                           ),
                         )
                       : Text(
                           '${formatDateUntilTime(challengesDetailController.challengeDetails.value.fromDate)} ~ ${formatDateUntilTime(challengesDetailController.challengeDetails.value.toDate)}',
-                          style: TextStyle(
-                            color: deepGrayColor,
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.sp,
-                            height: (20 / 14).sp,
+                          style:AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                              color: AppColorData.regular().colorTextTertiary
                           ),
                         ),
                 ),

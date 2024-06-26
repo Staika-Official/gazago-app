@@ -30,25 +30,25 @@ import 'package:url_launcher/url_launcher.dart';
 class LoginController extends GetxController {
   @override
   void onInit() async {
-    await checkInspectionNotice();
+    // await checkInspectionNotice();
 
     super.onInit();
   }
-
-  Future<void> checkInspectionNotice() async {
-    DatabaseReference inspectionNoticeRef = FirebaseDatabase.instance.ref('inspectionNotice');
-    await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
-      if (snapshot.value == true && !Get.isBottomSheetOpen!) {
-        String noticeUri = getConfig(dataType: ConfigType.string, configKey: 'notice_alert_address');
-        Uri url = Uri.parse(noticeUri);
-        if (await canLaunchUrl(url)) {
-          showModalNoticeWebview(Get.context, linkUrl: noticeUri);
-        }
-      }
-    }).onError((error, stackTrace) {
-      print(error);
-    });
-  }
+  //
+  // Future<void> checkInspectionNotice() async {
+  //   DatabaseReference inspectionNoticeRef = FirebaseDatabase.instance.ref('inspectionNotice');
+  //   await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
+  //     if (snapshot.value == true && !Get.isBottomSheetOpen!) {
+  //       String noticeUri = getConfig(dataType: ConfigType.string, configKey: 'notice_alert_address');
+  //       Uri url = Uri.parse(noticeUri);
+  //       if (await canLaunchUrl(url)) {
+  //         showModalNoticeWebview(linkUrl: noticeUri);
+  //       }
+  //     }
+  //   }).onError((error, stackTrace) {
+  //     print(error);
+  //   });
+  // }
 
   void login(LoginType loginType) async {
     Adjust.trackEvent(AdjustEvent('lllyw8'));

@@ -116,6 +116,7 @@ enum HiveKey {
   collectionIdList,
   isNewCollection,
   currentPosition,
+  serviceStatus,
 }
 
 enum ResponseStatus {

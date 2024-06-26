@@ -105,27 +105,7 @@ class ChallengesHome extends StatelessWidget {
                                   ),
                                 ),
                                 if (item.challengeUserState != 'COMPLETE' && item.challengeUserState != 'INCOMPLETE')
-                                  item.challengeUserState == 'JOINED' && item.challengeState == 'READY'
-                                      ? Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(3.sp),
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 7.0.sp, horizontal: 8.0.sp),
-                                      child: StyledText(
-                                        controller.getChallengeUserStatus(item.challengeUserState!, item.challengeState!),
-                                        fontWeight: 500,
-                                        fontSize: 12,
-                                        lineHeight: 14,
-                                        color: Colors.black,
-                                        letterSpacing: -.1,
-                                      ),
-                                    ),
-                                  )
-                                      : item.challengeUserState != null
+                                 item.challengeUserState != null
                                       ? Container(
 
                                     decoration: BoxDecoration(
