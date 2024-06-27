@@ -21,73 +21,75 @@ class SignupComplete extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Positioned.fill(
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 70.0.sp),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 20.0.sp),
-                            child:iconSkyBlueCheck,
-                          ),
-                           Text(
-                            '회원가입이 완료 되었습니다.',
-                             style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
-                               color: AppColorData.regular().colorTextPrimary,
-                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 12.0.sp),
-                            child: Text(
-                              '이제 gazaGO와 함께\n즐거운 운동을 시작해 보세요.!',
-                              style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                color: AppColorData.regular().colorTextSecondary,
-                              ),
-                              textAlign: TextAlign.center,
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 70.0.sp),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 20.0.sp),
+                              child:iconSkyBlueCheck,
                             ),
-                          ),
-                        ],
-                      )
-                    ],
+                            Text(
+                              '회원가입이 완료 되었습니다.',
+                              style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                                color: AppColorData.regular().colorTextPrimary,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 12.0.sp),
+                              child: Text(
+                                '이제 gazaGO와 함께\n즐거운 운동을 시작해 보세요.',
+                                style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                  color: AppColorData.regular().colorTextSecondary,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-            Positioned(
-              left: 21.sp,
-              bottom: 50.sp,
-              right: 21.sp,
-              child: Stack(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 12.0.sp),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: AppColorData.regular().colorBgTransparcy80,
-                        borderRadius: BorderRadius.circular(20.sp),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0.sp, horizontal: 20.0.sp),
-                        child: Text(
-                          '기존에 가입된 회원정보가 있어 계정 연동을\n완료했습니다. 연결된 계정은\n‘설정 > 계정정보 > SNS로그인`에서\n확인할 수 있어요.',
-                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                            color: AppColorData.regular().colorTextPrimary,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                Padding(
+                  padding: EdgeInsets.only(left: 12.sp, right: 12.sp, bottom: 62.0.sp),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColorData.regular().colorBgTransparcy80,
+                      borderRadius: BorderRadius.circular(20.sp),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0.sp, horizontal: 20.0.sp),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        children: [
+                          Text(
+                            '기존에 가입된 회원정보가 있어\n계정 연동을 완료했습니다. 연결된 계정은\n‘설정 > 계정정보 > SNS로그인’에서\n확인할 수 있어요.',
+                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextPrimary,
+                            ),
+                            softWrap: true  ,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.clip,
+                          )
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+
             Positioned(
               left: 0,
               bottom: 0,
