@@ -5,6 +5,7 @@ import 'package:gaza_go/platform/controllers/join_terms_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
@@ -16,34 +17,27 @@ class JoinTerms extends StatelessWidget {
     return controller.termsList
         .map(
           (term) => Padding(
-            padding: EdgeInsets.only(left: 4.0.sp),
+            padding: EdgeInsets.only(left: 0.0.sp),
             child: InkWell(
               onTap: () => controller.toggleTerm(term),
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0.sp),
+                padding: EdgeInsets.symmetric(vertical: 9.0.sp),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 6.0.sp),
-                      child: Icon(
-                        Icons.check_outlined,
-                        color: term.isChecked ? AppColorData.regular().colorIconSuccess : AppColorData.regular().colorIconTertiary,
-                        size: 15.sp,
-                      ),
-                    ),
+                    term.isChecked ? iconCheckAgree : iconCheckDisagree,
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(left: 18.0.sp),
+                        padding: EdgeInsets.only(left: 8.0.sp),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               term.isRequired ? '[필수]' : '[선택]',
                               style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                    color: AppColorData.regular().colorTextPrimary,
+                                    color: AppColorData.regular().colorTextSecondary,
                                   ),
                             ),
                             Expanded(
@@ -52,7 +46,7 @@ class JoinTerms extends StatelessWidget {
                                 child: Text(
                                   term.title!,
                                   style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                        color: AppColorData.regular().colorTextPrimary,
+                                        color: AppColorData.regular().colorTextSecondary,
                                       ),
                                 ),
                               ),
@@ -67,11 +61,7 @@ class JoinTerms extends StatelessWidget {
                         child: SizedBox(
                           child: GestureDetector(
                             onTap: () => Get.toNamed(Routes.term, arguments: {'platform': controller.platform.value, 'termType': term.boardType, 'termId': term.id}),
-                            child: Icon(
-                              Icons.chevron_right,
-                              color: AppColorData.regular().colorIconTertiary,
-                              size: 20.sp,
-                            ),
+                            child: iconTermsArrowRight,
                           ),
                         ),
                       )
@@ -104,9 +94,9 @@ class JoinTerms extends StatelessWidget {
             Get.back();
           }
         },
-        backgroundColor: subBg01Color,
+        backgroundColor: AppColorData.regular().colorBgPrimary,
         child: Padding(
-          padding: EdgeInsets.all(20.sp),
+          padding: EdgeInsets.only(left:16.sp, right: 16.sp, top: 16.sp, bottom: 30.sp),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -140,16 +130,16 @@ class JoinTerms extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(top: 30.0.sp),
+                padding: EdgeInsets.only(top: 8.0.sp),
                 child: Text(
                   '서비스 이용을 위해 필수 약관에 동의해주세요',
                   style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                        color: AppColorData.regular().colorTextPrimary,
+                        color: AppColorData.regular().colorTextSecondary,
                       ),
                 ),
               ),
               Divider(
-                height: 40.sp,
+                height: 64.sp,
                 color: popupBgColor,
                 thickness: 1,
               ),
@@ -162,20 +152,12 @@ class JoinTerms extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           controller.allAgreed.value
-                              ? Icon(
-                                  Icons.check_circle,
-                                  color: skyBlueColor,
-                                  size: 24.sp,
-                                )
-                              : Icon(
-                                  Icons.check_circle_rounded,
-                                  color: popupBgColor,
-                                  size: 24.sp,
-                                ),
+                              ? iconAllCheckAgree
+                              : iconAllCheckDisagree,
                           Padding(
-                            padding: EdgeInsets.only(left: 12.0.sp),
+                            padding: EdgeInsets.only(left: 8.0.sp),
                             child: Text(
-                              '모든 항목 동의하기',
+                              '전체 항목 동의하기',
                               style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                                     color: AppColorData.regular().colorTextPrimary,
                                   ),
@@ -185,7 +167,7 @@ class JoinTerms extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 8.0.sp),
+                      padding: EdgeInsets.only(top: 11.0.sp),
                       child: Column(
                         children: [
                           ...renderTermsList(controller),
@@ -200,27 +182,21 @@ class JoinTerms extends StatelessWidget {
                 return Container(
                   height: 55.sp,
                   decoration: BoxDecoration(
-                    color: controller.allRequiredAgreed.value ? skyBlueColor : popupBgColor,
+                    color: controller.allRequiredAgreed.value ? AppColorData.regular().colorBgInteractivePrimary : AppColorData.regular().colorBgInteractivePrimaryDisabled,
                     border: Border.all(width: 2.sp, color: Colors.black),
                     borderRadius: BorderRadius.circular(8.sp),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        offset: Offset(0, 3.sp),
-                      )
-                    ],
+
                   ),
                   child: InkWell(
                     onTap: () => controller.allRequiredAgreed.value ? controller.requestJoin() : null,
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 12.0.sp),
                       child: Center(
-                          child: StyledText(
+                          child: Text(
                         '다음',
-                        fontSize: 18,
-                        lineHeight: 18,
-                        fontWeight: 500,
-                        color: controller.allRequiredAgreed.value ? Colors.black : deepGrayColor,
+                        style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                              color: controller.allRequiredAgreed.value ? AppColorData.regular().colorBaseBalck : AppColorData.regular().colorTextInverse,
+                            ),
                       )),
                     ),
                   ),

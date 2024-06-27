@@ -5,6 +5,7 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class SignupComplete extends StatelessWidget {
@@ -14,73 +15,71 @@ class SignupComplete extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultContainer(
       isLeadingShow: false,
-      backgroundColor: subBg01Color,
+      backgroundColor: AppColorData.regular().colorBgPrimary,
       child: Padding(
-        padding: EdgeInsets.all(20.sp),
+        padding: EdgeInsets.only(left:16.sp, right: 16.sp, top: 16.sp, bottom: 30.sp),
         child: Stack(
           alignment: Alignment.center,
           children: [
             Positioned.fill(
               child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 25.0.sp),
-                          child: CircleAvatar(
-                            radius: 40,
-                            backgroundColor: popupBgColor,
-                            child: iconSkyBlueCheck,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 70.0.sp),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 20.0.sp),
+                            child:iconSkyBlueCheck,
                           ),
-                        ),
-                        const StyledText(
-                          '회원가입이 완료 되었습니다.',
-                          fontSize: 22,
-                          fontWeight: 500,
-                          lineHeight: 22,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 14.0.sp),
-                          child: StyledText(
-                            '이제 gazaGO와 함께\n즐거운 운동을 시작해 보세요.!',
-                            fontSize: 16,
-                            fontWeight: 500,
-                            lineHeight: 22,
-                            textAlign: TextAlign.center,
-                            color: deepGrayColor,
+                           Text(
+                            '회원가입이 완료 되었습니다.',
+                             style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                               color: AppColorData.regular().colorTextPrimary,
+                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                          Padding(
+                            padding: EdgeInsets.only(top: 12.0.sp),
+                            child: Text(
+                              '이제 gazaGO와 함께\n즐거운 운동을 시작해 보세요.!',
+                              style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                color: AppColorData.regular().colorTextSecondary,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
             Positioned(
-              left: 0,
+              left: 21.sp,
               bottom: 50.sp,
-              right: 0,
+              right: 21.sp,
               child: Stack(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(bottom: 32.0.sp),
+                    padding: EdgeInsets.only(bottom: 12.0.sp),
                     child: Container(
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                        color: popupBgColor,
-                        borderRadius: BorderRadius.circular(12.sp),
+                        color: AppColorData.regular().colorBgTransparcy80,
+                        borderRadius: BorderRadius.circular(20.sp),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(10.0.sp),
-                        child: StyledText(
-                          '기존에 가입된 회원정보가 있어 계정 연동이 완료되었습니다. 연결된 계정은 ‘설정 > 계정정보 > SNS로그인 에서 확인 가능합니다.',
-                          color: lightGrayColor,
-                          fontSize: 14,
-                          lineHeight: 20,
-                          fontWeight: 500,
+                        padding: EdgeInsets.symmetric(vertical: 16.0.sp, horizontal: 20.0.sp),
+                        child: Text(
+                          '기존에 가입된 회원정보가 있어 계정 연동을\n완료했습니다. 연결된 계정은\n‘설정 > 계정정보 > SNS로그인`에서\n확인할 수 있어요.',
+                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                            color: AppColorData.regular().colorTextPrimary,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -96,27 +95,21 @@ class SignupComplete extends StatelessWidget {
               child: Container(
                 height: 55.sp,
                 decoration: BoxDecoration(
-                  color: skyBlueColor,
+                  color: AppColorData.regular().colorBgInteractivePrimary,
                   border: Border.all(width: 2.sp, color: Colors.black),
                   borderRadius: BorderRadius.circular(8.sp),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      offset: Offset(0, 3.sp),
-                    )
-                  ],
+
                 ),
                 child: InkWell(
                   onTap: () => Get.offAllNamed(Routes.loading),
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 12.0.sp),
-                    child: const Center(
-                        child: StyledText(
+                    child:  Center(
+                        child: Text(
                       '시작하기',
-                      fontSize: 18,
-                      lineHeight: 18,
-                      fontWeight: 500,
-                      color: Colors.black,
+                          style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                            color: AppColorData.regular().colorBaseBalck,
+                          ),
                     )),
                   ),
                 ),

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart';
@@ -18,7 +19,11 @@ class Login extends StatelessWidget {
         child: SizedBox(
           height: 50.sp,
           child: InkWell(
-            onTap: () => controller.login(loginType),
+            onTap: () {
+              if(HiveStore.load(key: HiveKey.serviceStatus.name) == null ||HiveStore.load(key: HiveKey.serviceStatus.name) == 0){
+                controller.login(loginType);
+              }
+            },
             child: Container(
               decoration: BoxDecoration(
                 color: getLoginButtonColor(loginType.name),

@@ -7785,7 +7785,7 @@ void showModalWebview(controller, context, {String? title, String linkUrl = ''})
   );
 }
 
-void showModalNoticeWebview(context, {String? title, String linkUrl = ''}) {
+void showModalNoticeWebview({String? title, String linkUrl = ''}) {
   GlobalKey webViewKey = GlobalKey();
   Get.bottomSheet(
     isDismissible: false,
@@ -8012,13 +8012,19 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
                       )
                     ),
                     Padding(
-                        padding: EdgeInsets.only(top: 4.0.sp, bottom: 28.sp),
-                        child: Text(
-                          '추적 허용이 안 보인다면 ios버전을 확인 해 주세요.',
-                          style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                            color: AppColorData.regular().colorTextTertiary,
+                        padding: EdgeInsets.only(top: 8.0.sp, bottom: 24.sp),
+                        child: InkWell(
+                          onTap: () {
+                            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'});
+                          },
+                          child: Text(
+                            '추적 허용이 보이지 않는다면?',
+                            style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                              color: AppColorData.regular().colorTextTertiary,
+                              decoration: TextDecoration.underline,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         )
                     ),
                     GazagoButton(
@@ -8075,7 +8081,7 @@ void showIOSDeniedAdPermissionAlert(DailyBenefitController controller) {
                       fit: BoxFit.fitWidth,
                     ),
                     Padding(
-                        padding: EdgeInsets.only(top: 16.0.sp, bottom: 28.sp),
+                        padding: EdgeInsets.only(top: 16.0.sp),
                         child: Text(
                           '그림과 같이 설정 → 개인정보 보호 및 보안 →\n추적 페이지에서 가자고 앱 추적을 허용해 주세요.',
                           style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
@@ -8084,10 +8090,26 @@ void showIOSDeniedAdPermissionAlert(DailyBenefitController controller) {
                           textAlign: TextAlign.center,
                         )
                     ),
-
+                    Padding(
+                        padding: EdgeInsets.only(top: 8.0.sp, bottom: 24.sp),
+                        child: InkWell(
+                          onTap: () {
+                            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'});
+                          },
+                          child: Text(
+                            '추적 허용이 보이지 않는다면?',
+                            style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                              color: AppColorData.regular().colorTextTertiary,
+                              decoration: TextDecoration.underline,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                    ),
                     GazagoButton(
                       onTap: () {
                         controller.moveAppSettings();
+                        // Get.back();
                       },
                       buttonText: '확인',
                       buttonColor: skyBlueColor,
@@ -9046,5 +9068,59 @@ void showNotEnoughGatheringConditionErrorAlert() {
         ),
       ),
     ],
+  );
+}
+
+
+
+
+void showServiceInspectionNotice() {
+  Get.dialog(
+    barrierColor: Colors.transparent,
+    useSafeArea: false,
+    WillPopScope(
+      onWillPop: () async => false,
+      child: Dialog(
+        insetPadding: EdgeInsets.zero,
+        backgroundColor: subBg01Color.withOpacity(.8),
+        child: Center(
+            child: Container(
+              width: 316.sp,
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12.5.sp),
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, top: 36.0.sp, bottom: 36.sp),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 16.sp),
+                      child: Text(
+                        '서비스 점검중 입니다.',
+                        style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
+                          color: AppColorData.regular().colorTextPrimary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    StyledText(
+                      '이용에 불편을 드려 죄송합니다.',
+                      fontWeight: 500,
+                      fontSize: 16,
+                      lineHeight: 24,
+                      letterSpacing: -.1,
+                      textAlign: TextAlign.center,
+                    ),
+
+                  ],
+                ),
+              ),
+            )),
+      ),
+    ),
   );
 }

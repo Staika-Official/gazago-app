@@ -21,7 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 class InspectionNoticeController extends GetxController {
   @override
   void onInit() async {
-    await checkInspectionNotice();
+    // await checkInspectionNotice();
     super.onInit();
   }
 
@@ -39,7 +39,7 @@ class InspectionNoticeController extends GetxController {
         String noticeUri = getConfig(dataType: ConfigType.string, configKey: 'notice_alert_address');
         Uri url = Uri.parse(noticeUri);
         if (await canLaunchUrl(url)) {
-          showModalNoticeWebview(Get.context, linkUrl: noticeUri);
+          showModalNoticeWebview( linkUrl: noticeUri);
         }
       }
       return;
