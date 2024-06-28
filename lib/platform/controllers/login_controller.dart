@@ -28,6 +28,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoginController extends GetxController {
+  RxBool isAlreadySigninUser = RxBool(false);
   @override
   void onInit() async {
     // await checkInspectionNotice();
@@ -207,12 +208,14 @@ class LoginController extends GetxController {
     await UaaService.socialLogin(
       loginInfo,
       successCallback: (AccessTokenModel token, int statusCode) async {
+        print('statusCode : $statusCode');
         if (statusCode == 200) {
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
           print('token : ${token.toJson().toString()}');
           print('accessToken : ${token.accessToken}');
           print('refreshToken : ${token.refreshToken}');
+          isAlreadySigninUser.value = true;
           if (token.accountStatus == 'TERMINATION_COMPLETED') {
             showToastPopup('탈퇴처리된 계정입니다.');
             forceLogout();
@@ -240,6 +243,7 @@ class LoginController extends GetxController {
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
           HiveStore.save(key: HiveKey.isNewUser.name, value: true);
+          isAlreadySigninUser.value = false;
           await initUserInfo();
           Get.offNamed(Routes.joinTerms, arguments: {'platform': 'gazago'});
         }

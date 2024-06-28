@@ -56,7 +56,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxList<StatModel> get statList {
     return RxList([
       StatModel(name: '체력', currentStat: userState.value.state != null ? userState.value.state!.stamina! : 0, type: 'STAMINA'),
-      StatModel(name: '신발 내구도', currentStat: userState.value.shoes != null ? userState.value.shoes!.durability! : 0, type: 'DURABILITY'),
+      StatModel(name: '내구도', currentStat: userState.value.shoes != null ? userState.value.shoes!.durability! : 0, type: 'DURABILITY'),
     ]);
   }
   GlobalKey webViewKey = GlobalKey();

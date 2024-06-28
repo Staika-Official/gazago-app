@@ -2961,7 +2961,7 @@ void showLeaderboardInfo() {
                                       fontWeight: 400,
                                     ),
                                     StyledText(
-                                      '· 신발 내구도 수리',
+                                      '· 내구도 수리',
                                       fontSize: 12,
                                       lineHeight: 18,
                                       fontWeight: 400,
@@ -4704,7 +4704,7 @@ void showItemTipAlert() {
                                       Padding(
                                         padding: EdgeInsets.only(top:4.0.sp),
                                         child: Text(
-                                          '수치가 높을수록 같은 운동량에\n신발 내구도가 덜 감소해요.',
+                                          '수치가 높을수록 같은 운동량에\n내구도가 덜 감소해요.',
                                           style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
                                               color: AppColorData.regular().colorTextPrimary
                                           ),
