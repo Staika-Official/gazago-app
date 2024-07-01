@@ -212,10 +212,11 @@ class LoginController extends GetxController {
         if (statusCode == 200) {
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
+
           print('token : ${token.toJson().toString()}');
           print('accessToken : ${token.accessToken}');
           print('refreshToken : ${token.refreshToken}');
-          isAlreadySigninUser.value = true;
+          // HiveStore.save(key: HiveKey.isAlreadySigninUser.name, value: true);
           if (token.accountStatus == 'TERMINATION_COMPLETED') {
             showToastPopup('탈퇴처리된 계정입니다.');
             forceLogout();
@@ -243,7 +244,6 @@ class LoginController extends GetxController {
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
           HiveStore.save(key: HiveKey.isNewUser.name, value: true);
-          isAlreadySigninUser.value = false;
           await initUserInfo();
           Get.offNamed(Routes.joinTerms, arguments: {'platform': 'gazago'});
         }

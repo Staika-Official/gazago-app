@@ -62,34 +62,34 @@ class SignupComplete extends StatelessWidget {
                     ),
                   ),
                 ),
-                if(loginController.isAlreadySigninUser.value)
-                  Padding(
-                    padding: EdgeInsets.only(left: 12.sp, right: 12.sp, bottom: 62.0.sp),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: AppColorData.regular().colorBgTransparcy80,
-                        borderRadius: BorderRadius.circular(20.sp),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 16.0.sp, horizontal: 20.0.sp),
-                        child: Wrap(
-                          alignment: WrapAlignment.center,
-                          children: [
-                            Text(
-                              '기존에 가입된 회원정보가 있어\n계정 연동을 완료했습니다. 연결된 계정은\n‘설정 > 계정정보 > SNS로그인’에서\n확인할 수 있어요.',
-                              style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                color: AppColorData.regular().colorTextPrimary,
-                              ),
-                              softWrap: true  ,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.clip,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                // if(loginController.isAlreadySigninUser.value)
+                //   Padding(
+                //     padding: EdgeInsets.only(left: 12.sp, right: 12.sp, bottom: 62.0.sp),
+                //     child: Container(
+                //       width: double.infinity,
+                //       decoration: BoxDecoration(
+                //         color: AppColorData.regular().colorBgTransparcy80,
+                //         borderRadius: BorderRadius.circular(20.sp),
+                //       ),
+                //       child: Padding(
+                //         padding: EdgeInsets.symmetric(vertical: 16.0.sp, horizontal: 20.0.sp),
+                //         child: Wrap(
+                //           alignment: WrapAlignment.center,
+                //           children: [
+                //             Text(
+                //               '기존에 가입된 회원정보가 있어\n계정 연동을 완료했습니다. 연결된 계정은\n‘설정 > 계정정보 > SNS로그인’에서\n확인할 수 있어요.',
+                //               style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                //                 color: AppColorData.regular().colorTextPrimary,
+                //               ),
+                //               softWrap: true  ,
+                //               textAlign: TextAlign.center,
+                //               overflow: TextOverflow.clip,
+                //             )
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //   ),
               ],
             ),
 
