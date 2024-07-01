@@ -55,8 +55,8 @@ SvgPicture iconMenuShopActive = SvgPicture.asset('assets/images/common/ico_menu_
 SvgPicture iconMenuChallenges = SvgPicture.asset('assets/images/common/ico_menu_challenges.svg', width: 18.76.sp, height: 24.15.sp);
 SvgPicture iconMenuChallengesActive = SvgPicture.asset(
   'assets/images/common/ico_menu_challenges_active.svg',
-  width: 10.69.sp,
-  height: 18.56.sp,
+  width: 18.76.sp,
+  height: 24.15.sp,
 );
 
 // Login
