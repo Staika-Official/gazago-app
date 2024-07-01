@@ -28,6 +28,7 @@ class CreateWalletWebview extends StatelessWidget {
             supportMultipleWindows: true,
             resourceCustomSchemes: ['intent'],
             underPageBackgroundColor: Colors.white,
+            isInspectable: true,
           ),
           gestureRecognizers: Set()..add(Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer())),
           onLoadResourceWithCustomScheme: (controller, url) async {
