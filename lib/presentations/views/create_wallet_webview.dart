@@ -18,59 +18,57 @@ class CreateWalletWebview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: InAppWebView(
-          initialUrlRequest: URLRequest(url: WebUri('${F.webWalletUrl}/terms?hl=ko-KR&ci=GAZAGO')),
-          initialSettings: InAppWebViewSettings(
-            clearCache: true,
-            transparentBackground: false,
-            javaScriptEnabled: true,
-            supportMultipleWindows: true,
-            resourceCustomSchemes: ['intent'],
-            underPageBackgroundColor: Colors.white,
-            isInspectable: true,
-          ),
-          gestureRecognizers: Set()..add(Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer())),
-          onLoadResourceWithCustomScheme: (controller, url) async {
-            await controller.stopLoading();
-            return null;
-          },
-          onWebViewCreated: (controller) async {
-            if (Platform.isAndroid) await InAppWebViewController.setWebContentsDebuggingEnabled(true);
-            controller.addJavaScriptHandler(
-              handlerName: 'app',
-              callback: (args) async {
-                // print arguments coming from the JavaScript side!
-                Map result = {};
-
-                switch (args[0]) {
-                  case 'CLOSE_WEBVIEW':
-                    // Get.find<WalletMasterController>().tabController.animateTo(0);
-                    Get.back();
-                    break;
-
-                  case 'REQUEST_TOKEN':
-                    String accessToken = HiveStore.loadString(key: HiveKey.accessToken.name)!;
-                    controller.evaluateJavascript(source: "window.setToken('$accessToken')");
-                    break;
-
-                  case 'COPY_ADDRESS':
-                    await Clipboard.setData(ClipboardData(text: args[1]));
-                    break;
-
-                  case 'CREATION_SUCCESSFUL':
-                    if (Get.isRegistered<StaikaWalletController>()) {
-                      await Get.find<StaikaWalletController>().getStaikaWalletInfo();
-                    }
-                    Get.until((route) => Get.currentRoute == Routes.wallet || Get.currentRoute == Routes.itemDetail);
-                    break;
-                }
-
-                return result;
-              },
-            );
-          },
+      body: InAppWebView(
+        initialUrlRequest: URLRequest(url: WebUri('${F.webWalletUrl}/terms?hl=ko-KR&ci=GAZAGO')),
+        initialSettings: InAppWebViewSettings(
+          clearCache: true,
+          transparentBackground: false,
+          javaScriptEnabled: true,
+          supportMultipleWindows: true,
+          resourceCustomSchemes: ['intent'],
+          underPageBackgroundColor: Colors.white,
+          isInspectable: true,
         ),
+        gestureRecognizers: Set()..add(Factory<VerticalDragGestureRecognizer>(() => VerticalDragGestureRecognizer())),
+        onLoadResourceWithCustomScheme: (controller, url) async {
+          await controller.stopLoading();
+          return null;
+        },
+        onWebViewCreated: (controller) async {
+          if (Platform.isAndroid) await InAppWebViewController.setWebContentsDebuggingEnabled(true);
+          controller.addJavaScriptHandler(
+            handlerName: 'app',
+            callback: (args) async {
+              // print arguments coming from the JavaScript side!
+              Map result = {};
+
+              switch (args[0]) {
+                case 'CLOSE_WEBVIEW':
+                  // Get.find<WalletMasterController>().tabController.animateTo(0);
+                  Get.back();
+                  break;
+
+                case 'REQUEST_TOKEN':
+                  String accessToken = HiveStore.loadString(key: HiveKey.accessToken.name)!;
+                  controller.evaluateJavascript(source: "window.setToken('$accessToken')");
+                  break;
+
+                case 'COPY_ADDRESS':
+                  await Clipboard.setData(ClipboardData(text: args[1]));
+                  break;
+
+                case 'CREATION_SUCCESSFUL':
+                  if (Get.isRegistered<StaikaWalletController>()) {
+                    await Get.find<StaikaWalletController>().getStaikaWalletInfo();
+                  }
+                  Get.until((route) => Get.currentRoute == Routes.wallet || Get.currentRoute == Routes.itemDetail);
+                  break;
+              }
+
+              return result;
+            },
+          );
+        },
       ),
     );
   }
