@@ -61,9 +61,9 @@ List<NCircleOverlay> renderCircleOverlays(ChallengeCourseModel? course) {
 List<NMarker> renderMarkers(ChallengeCourseModel? course) {
   ActivityController controller = Get.find<ActivityController>();
   if (course != null) {
-    NMarker startMaker = getCustomMarker(markerType: "START", course: course, markerIcon: controller.startMarker);
+    NMarker startMaker = getCustomMarker(id: course.id.toString(), markerType: "START", course: course, markerIcon: controller.startMarker);
 
-    NMarker endMaker = getCustomMarker(markerType: "END", course: course, markerIcon: controller.startMarker);
+    NMarker endMaker = getCustomMarker(id: course.id.toString(),markerType: "END", course: course, markerIcon: controller.startMarker);
 
     List<NMarker> checkpointMarker() {
       if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
@@ -83,9 +83,9 @@ List<NMarker> renderMarkers(ChallengeCourseModel? course) {
   }
 }
 
-NMarker getCustomMarker({required String markerType, required ChallengeCourseModel course, NOverlayImage? markerIcon, Function(NMarker?, Map<String, int?>)? onMarkerTab}) {
+NMarker getCustomMarker({required String id, required String markerType, required ChallengeCourseModel course, NOverlayImage? markerIcon, Function(NMarker?, Map<String, int?>)? onMarkerTab}) {
   NMarker startMarker = NMarker(
-    id: course.id!.toString(),
+    id: id,
     position: NLatLng(course.startLat!, course.startLon!),
     caption: NOverlayCaption(
       text: '시작: ${course.startPointName}',
@@ -108,7 +108,7 @@ NMarker getCustomMarker({required String markerType, required ChallengeCourseMod
   );
 
   NMarker endMarker = NMarker(
-    id: 'end_${course.id!.toString()}',
+    id: 'end_${id}',
     position: NLatLng(course.endLat!, course.endLon!),
     caption: NOverlayCaption(
       text: '도착: ${course.endPointName}',

@@ -28,7 +28,7 @@ mixin ChallengeMixin {
   final Rxn<ChallengeCourseModel> selectedCourse = Rxn();
   final Rxn<ChallengeModel> selectedChallenge = Rxn();
   late NaverMapController challengeMapController;
-  final RxList<NMarker> challengeMarkers = RxList.empty();
+  final RxList challengeMarkers = RxList.empty();
   final RxList<NMarker> selectedChallengeMarkers = RxList.empty();
   final Throttling challengeThr = Throttling(duration: const Duration(milliseconds: 500));
 

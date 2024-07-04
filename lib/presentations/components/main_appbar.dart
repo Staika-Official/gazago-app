@@ -132,8 +132,8 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                     Obx(() {
                       return controller.hasNewNotice.value
                           ? Positioned(
-                        top: 0.sp,
-                        right: 6.sp,
+                        top: 12.sp,
+                        right: 12.sp,
                         child: Container(
                           width: 8,
                           height: 8,

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
@@ -122,6 +123,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       await loadChallenges();
 
 
+
       gpsAccuracyTimer = Timer.periodic(const Duration(minutes: 10), (timer) async {
         if(gpsAccuracySensitive.value > 30 && exerciseState.value == ExerciseState.ongoing){
           showLocalNotificationLowGps();
@@ -183,6 +185,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   NMarker generateDefaultMarker(ChallengeCourseModel course) {
     return getCustomMarker(
+      id: course.id.toString(),
       markerType: "START",
       course: course,
       markerIcon: startMarker,
@@ -223,11 +226,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     challengeSelectedIndex.value = course.id!;
     selectedChallengeMarkers.clear();
-    // challengeMarkers.removeWhere((NMarker element) {
-    //   return element.id == challengeSelectedIndex.value.toString();
-    // });
+    challengeMarkers.removeWhere(( element) {
+      return element.id == challengeSelectedIndex.value.toString();
+    });
 
-    selectedChallengeMarkers.add(getCustomMarker(markerType: "START", course: course, markerIcon: startMarker));
+    selectedChallengeMarkers.add(getCustomMarker(id: course.id.toString(), markerType: "START", course: course, markerIcon: startMarker));
 
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
       course.checkpoints!.asMap().forEach((index, checkpoint) {
@@ -235,7 +238,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       });
     }
 
-    selectedChallengeMarkers.add(getCustomMarker(markerType: "END", course: course, markerIcon: endMarker));
+    selectedChallengeMarkers.add(getCustomMarker(id: course.id.toString(), markerType: "END", course: course, markerIcon: endMarker));
 
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
       List<NLatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
