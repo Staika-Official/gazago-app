@@ -13,20 +13,27 @@ import 'package:get/get.dart';
 class InventoryBadge extends StatelessWidget {
   const InventoryBadge({super.key});
 
-  List<Widget> renderUserBadgesList(InventoryController controller) {
+  List<Widget> renderUserBadgesList(InventoryController controller, BuildContext context) {
     return controller.userBadgesList
         .map(
           (item) => InkWell(
             onTap: () => controller.toBadgeDetail(item.badgeId),
             child: Container(
+              width: MediaQuery.of(context).size.width > 450 ? (MediaQuery
+                  .of(context)
+                  .size
+                  .width - 32 - 40) / 6 : (MediaQuery
+                  .of(context)
+                  .size
+                  .width - 32 - 16) / 3 ,
               decoration: BoxDecoration(
                 color: subBg01Color,
                 borderRadius: BorderRadius.all(
-                  Radius.circular(20.sp),
+                  Radius.circular(12.sp),
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.0.sp),
+                padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 18.0.sp),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,7 +41,7 @@ class InventoryBadge extends StatelessWidget {
                     Opacity(
                       opacity: item.state == 'EQUIPPED' ? 0.5 : 1,
                       child: SizedBox(
-                        height: 90.sp,
+                        height: 68.sp,
                         // padding: EdgeInsets.all(10.0.sp),
                         child: item.imageUrl!.contains('.svg')
                             ? SvgPicture.network(
@@ -57,8 +64,16 @@ class InventoryBadge extends StatelessWidget {
                     //     padding: const EdgeInsets.only(top: 5, bottom: 5),
                     //     child: StyledText(item.name!),
                     //   ),
+                    if (item.name != null)
+                      Text(
+                        item.name!,
+                        style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                            color: AppColorData.regular().colorTextPrimary
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     Padding(
-                      padding: EdgeInsets.only(top: 10.0.sp),
+                      padding: EdgeInsets.only(top: 6.0.sp),
                       child: item.state == 'EQUIPPED'
                           ? Container(
                               width: double.infinity,
@@ -124,7 +139,6 @@ class InventoryBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryController controller = Get.put(InventoryController());
-    double width = MediaQuery.of(context).size.width;
 
     return Obx(() {
       return Container(
@@ -132,7 +146,7 @@ class InventoryBadge extends StatelessWidget {
         child: controller.userBadgesList.isEmpty
             ? Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 50.sp),
+                padding: EdgeInsets.symmetric(vertical: 60.sp),
                 decoration: BoxDecoration(
                   color: popupBgColor,
                   borderRadius: BorderRadius.circular(12.sp),
@@ -142,41 +156,34 @@ class InventoryBadge extends StatelessWidget {
                   children: [
                     iconEmpty,
                     Padding(
-                      padding: EdgeInsets.only(top: 16.sp),
-                      child: const StyledText(
+                      padding: EdgeInsets.only(top: 20.sp),
+                      child: Text(
                         '뱃지가 없습니다.',
-                        color: Color(0xff7b7b7b),
-                        fontSize: 16,
-                        lineHeight: 10,
-                        fontWeight: 500,
+                        style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                              color: AppColorData.regular().colorTextPrimary,
+                        )
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 12.sp),
-                      child: const StyledText(
+                      child: Text(
                         '등산해서 뱃지를 받아보세요!',
-                        color: Color(0xff7b7b7b),
-                        fontSize: 16,
-                        lineHeight: 10,
-                        fontWeight: 500,
+                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                            color: AppColorData.regular().colorTextSecondary,
+                          )
                       ),
                     ),
                   ],
                 ),
               )
             : Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 16.0),
                 child: Obx(() {
-                  return GridView.count(
-                    primary: false,
-                    padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 30.sp),
-                    childAspectRatio: (1 / 1.4),
-                    crossAxisSpacing: 10.sp,
-                    mainAxisSpacing: 10.sp,
-                    crossAxisCount: (width < 350.sp) ? 2 : 3,
-                    controller: controller.badgeScrollController,
+                  return Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
                     children: <Widget>[
-                      ...renderUserBadgesList(controller),
+                      ...renderUserBadgesList(controller, context),
                     ],
                   );
                 }),

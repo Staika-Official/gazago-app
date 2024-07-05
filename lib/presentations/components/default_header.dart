@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class DefaultHeader extends StatelessWidget {
@@ -48,12 +49,8 @@ class DefaultHeader extends StatelessWidget {
           titleWidget ??
               Text(
                 titleText ?? '',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: -0.5,
-                  height: 1,
+                style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                  color: AppColorData.regular().colorTextPrimary,
                 ),
               ),
           Positioned(

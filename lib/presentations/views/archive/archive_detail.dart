@@ -12,6 +12,7 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class ArchiveDetail extends StatelessWidget {
@@ -27,19 +28,19 @@ class ArchiveDetail extends StatelessWidget {
         child: IconButton(
           onPressed: () => controller.showConfirmDelete(controller.selectedItem.value.id!),
           icon: iconWasteBasket,
-          splashRadius: 20.sp,
+          splashRadius: 32.sp,
           constraints: BoxConstraints(
-            minWidth: 20.sp,
+            minWidth: 32.sp,
           ),
         ),
       ),
-      backgroundColor: subBg01Color,
+      backgroundColor: AppColorData.regular().colorBgPrimary,
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 15.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,20 +49,16 @@ class ArchiveDetail extends StatelessWidget {
                   Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(right: 15.0.sp),
+                        padding: EdgeInsets.only(right: 8.0.sp),
                         child: Stack(
                           clipBehavior: Clip.none,
                           children: [
-                            CircleAvatar(
-                              radius: 21.sp,
-                              backgroundColor: Colors.transparent,
-                              foregroundImage: controller.getArchiveTypeImage(controller.selectedItem.value),
-                            ),
+                            controller.getArchiveTypeImage(controller.selectedItem.value),
                             if (controller.selectedItem.value.badgeIssueId != null)
                               controller.selectedItem.value.badgeImageUrl!.contains('.svg')
                                   ? Positioned(
-                                      right: -5,
-                                      bottom: -5,
+                                      right: 0,
+                                      bottom: 2,
                                       child: SvgPicture.network(
                                         width: 20.sp,
                                         height: 20.sp,
@@ -71,8 +68,8 @@ class ArchiveDetail extends StatelessWidget {
                                       ),
                                     )
                                   : Positioned(
-                                      right: -5,
-                                      bottom: -5,
+                                      right: 0,
+                                      bottom: 2,
                                       child: CachedNetworkImage(
                                         width: 20.sp,
                                         height: 20.sp,
@@ -89,34 +86,36 @@ class ArchiveDetail extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                          formatDateUntilDay(controller.selectedItem.value.startedDate),
+                          style: AppTextStyleData.regular().koBodySemiboldLg.copyWith(
+                            color: AppColorData.regular().colorTextSecondary,
+                          )
+                      ),
                       controller.selectedItem.value.secondName != null
-                          ? StyledText(
+                          ? Text(
                               controller.selectedItem.value.secondName!,
-                              fontSize: 18,
-                              lineHeight: 20,
-                              fontWeight: 500,
-                              color: const Color(0xFF949494),
+                              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                color: AppColorData.regular().colorTextSecondary,
+                              )
                             )
                           : Container(),
-                      StyledText(
-                        formatDateUntilDay(controller.selectedItem.value.startedDate),
-                        fontSize: controller.selectedItem.value.secondName != null ? 14 : 18,
-                        lineHeight: 20,
-                        fontWeight: 500,
-                        color: controller.selectedItem.value.secondName != null ? Colors.white : const Color(0xFF949494),
-                      ),
+
                     ],
                   )
                 ],
               ),
             ),
-            const Divider(
-              height: 2,
-              thickness: 2.0,
-              color: Color(0xFF2C2C35),
+            Padding(
+              padding: EdgeInsets.only(top: 4.sp, left: 16.0.sp, right: 16.0.sp),
+              child: Divider(
+                height: 2,
+                thickness: 2.0,
+                color: AppColorData.regular().colorBorderSecondary,
+              ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 22.0.sp, horizontal: 16.0.sp),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -126,14 +125,14 @@ class ArchiveDetail extends StatelessWidget {
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(right: 5.2.sp, bottom: 3.sp),
+                          padding: EdgeInsets.only( bottom: 4.sp),
                           child: iconArchiveClockDetail,
                         ),
-                        StyledText(
+                        Text(
                           formatSeconds(controller.selectedItem.value.time!),
-                          fontSize: 16,
-                          lineHeight: 20,
-                          fontWeight: 600,
+                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextInteractivePrimary,
+                            )
                         )
                       ],
                     ),
@@ -142,14 +141,14 @@ class ArchiveDetail extends StatelessWidget {
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(right: 5.2.sp, bottom: 5.sp),
+                          padding: EdgeInsets.only( bottom: 4.sp),
                           child: iconArchiveDistanceDetail,
                         ),
-                        StyledText(
-                          '${formatDecimalPlaces(convertMetersToKm(controller.selectedItem.value.rewardDistance!), 2)} km',
-                          fontSize: 16,
-                          lineHeight: 20,
-                          fontWeight: 600,
+                        Text(
+                          '${formatDecimalPlaces(convertMetersToKm(controller.selectedItem.value.rewardDistance!), 3, isAutoDecimal: true)} km',
+                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextInteractivePrimary,
+                            )
                         ),
                       ],
                     ),
@@ -158,14 +157,14 @@ class ArchiveDetail extends StatelessWidget {
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(right: 5.2.sp, bottom: 3.sp),
+                          padding: EdgeInsets.only( bottom: 4.sp),
                           child: iconArchiveStepsDetail,
                         ),
-                        StyledText(
+                        Text(
                           '${controller.selectedItem.value.steps}',
-                          fontSize: 16,
-                          lineHeight: 20,
-                          fontWeight: 600,
+                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextInteractivePrimary,
+                            )
                         ),
                       ],
                     ),
@@ -175,7 +174,7 @@ class ArchiveDetail extends StatelessWidget {
             ),
 
             Padding(
-              padding: EdgeInsets.only(left: 20.0.sp, right: 20.0.sp, top: 0.0.sp, bottom: 15.0.sp),
+              padding: EdgeInsets.only(left: 16.0.sp, right: 16.0.sp, top: 0.0.sp, bottom: 15.0.sp),
               child: Container(
                   width: double.infinity,
                   height: 220.sp,
@@ -189,7 +188,8 @@ class ArchiveDetail extends StatelessWidget {
                         );
                         mapController.addOverlay( NPathOverlay(
                           id: 'detail path',
-                          width: 3,
+                          width: 4,
+                          outlineWidth: 0,
                           color: Colors.red,
                           coords: controller.locations.length > 1 ? controller.locations : [const NLatLng(37.5551, 126.9933), const NLatLng(37.5551, 126.9933)],
                           // outlineColor: Colors.white,
@@ -219,15 +219,13 @@ class ArchiveDetail extends StatelessWidget {
                             children: [
                               iconNoneMap,
                               Padding(
-                                padding: EdgeInsets.only(top: 14.0.sp),
-                                child: StyledText(
-                                  '2개월이 지난 운동 기록은\n지도 데이터를 제공하지 않습니다.',
+                                padding: EdgeInsets.only(top: 20.0.sp),
+                                child: Text(
+                                  '2개월이 지난 운동경로는 볼 수 없어요.',
                                   textAlign: TextAlign.center,
-                                  fontSize: 14,
-                                  fontWeight: 500,
-                                  lineHeight: 20,
-                                  letterSpacing: -.1,
-                                  color: Colors.white.withOpacity(.6),
+                                    style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                      color: AppColorData.regular().colorTextSecondary,
+                                    )
                                 ),
                               ),
                             ],
@@ -235,27 +233,29 @@ class ArchiveDetail extends StatelessWidget {
                         )),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
               child: Row(
                 children: [
-                  const StyledText(
-                    '획득 GO',
-                    fontWeight: 600,
-                    fontSize: 16,
+                  Text(
+                    '받은 GO',
+                      style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                      )
                   ),
                   const Spacer(),
                   Row(
                     children: [
-                      StyledText(
+                      Text(
                         formatDecimalPlaces(controller.selectedItem.value.rewardGo!, 2),
-                        fontWeight: 500,
-                        fontSize: 16,
+                          style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
+                            color: AppColorData.regular().colorTextPrimary,
+                          )
                       ),
-                      const StyledText(
+                       Text(
                         ' GO',
-                        fontWeight: 500,
-                        fontSize: 16,
-                        color: Color(0xFF7D7D84),
+                          style: AppTextStyleData.regular().enBodyMediumLg.copyWith(
+                            color: AppColorData.regular().colorTextTertiary,
+                          )
                       ),
                     ],
                   ),
@@ -263,27 +263,29 @@ class ArchiveDetail extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
               child: Row(
                 children: [
-                  const StyledText(
+                   Text(
                     '활동 보상',
-                    fontWeight: 600,
-                    fontSize: 16,
+                      style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                      )
                   ),
                   const Spacer(),
                   Row(
                     children: [
-                      StyledText(
+                      Text(
                         formatDecimalPlaces(controller.selectedItem.value.rewardGoExerciseSum!, 2),
-                        fontWeight: 500,
-                        fontSize: 16,
+                          style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
+                            color: AppColorData.regular().colorTextPrimary,
+                          )
                       ),
-                      const StyledText(
+                       Text(
                         ' GO',
-                        fontWeight: 500,
-                        fontSize: 16,
-                        color: Color(0xFF7D7D84),
+                          style: AppTextStyleData.regular().enBodyMediumLg.copyWith(
+                            color: AppColorData.regular().colorTextTertiary,
+                          )
                       ),
                     ],
                   ),
@@ -319,27 +321,29 @@ class ArchiveDetail extends StatelessWidget {
             //   ),
             // ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
               child: Row(
                 children: [
-                  const StyledText(
+                   Text(
                     '행운 효과',
-                    fontWeight: 600,
-                    fontSize: 16,
+                      style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                      )
                   ),
                   const Spacer(),
                   Row(
                     children: [
-                      StyledText(
+                      Text(
                         '${controller.selectedItem.value.luckOccurredCount ?? 0}',
-                        fontWeight: 500,
-                        fontSize: 16,
+                          style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
+                            color: AppColorData.regular().colorTextPrimary,
+                          )
                       ),
-                      const StyledText(
+                      Text(
                         ' 회',
-                        fontWeight: 500,
-                        fontSize: 16,
-                        color: Color(0xFF7D7D84),
+                          style: AppTextStyleData.regular().enBodyMediumLg.copyWith(
+                            color: AppColorData.regular().colorTextTertiary,
+                          )
                       ),
                     ],
                   ),
@@ -347,66 +351,69 @@ class ArchiveDetail extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
               child: Row(
                 children: [
-                  const StyledText(
-                    '소비 체력',
-                    fontWeight: 600,
-                    fontSize: 16,
+                  Text(
+                    '사용한 체력',
+                      style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                      )
                   ),
                   const Spacer(),
-                  StyledText(
+                  Text(
                     controller.selectedItem.value.spendStamina.toString(),
-                    fontWeight: 500,
-                    fontSize: 16,
-                    color: const Color(0xFF7D7D84),
+                      style: AppTextStyleData.regular().enBodyMediumLg.copyWith(
+                        color: AppColorData.regular().colorTextTertiary,
+                      )
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
               child: Row(
                 children: [
-                  const StyledText(
-                    '소비 신발 내구도',
-                    fontWeight: 600,
-                    fontSize: 16,
+                  Text(
+                    '사용한 내구도',
+                      style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                      )
                   ),
                   const Spacer(),
-                  StyledText(
+                  Text(
                     controller.selectedItem.value.spendDurability.toString(),
-                    fontWeight: 500,
-                    fontSize: 16,
-                    color: const Color(0xFF7D7D84),
+                      style: AppTextStyleData.regular().enBodyMediumLg.copyWith(
+                        color: AppColorData.regular().colorTextTertiary,
+                      )
                   ),
                 ],
               ),
             ),
             controller.selectedItem.value.challengeActivationType == "COURSE"
                 ? Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
                     child: Row(
                       children: [
-                        const StyledText(
+                        Text(
                           '획득 뱃지',
-                          fontWeight: 600,
-                          fontSize: 16,
+                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextPrimary,
+                            )
                         ),
                         const Spacer(),
-                        StyledText(
+                        Text(
                           controller.selectedItem.value.badgeIssueId != null ? controller.selectedItem.value.badgeName! : '챌린지 실패',
-                          fontWeight: 500,
-                          fontSize: 16,
-                          color: const Color(0xFF7D7D84),
+                            style: AppTextStyleData.regular().enBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextTertiary,
+                            )
                         ),
                       ],
                     ),
                   )
                 : Container(),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 16.0.sp),
               child: const Divider(
                 height: 2,
                 thickness: 2.0,
@@ -415,40 +422,42 @@ class ArchiveDetail extends StatelessWidget {
             ),
             controller.selectedItem.value.challengeActivationType == "COURSE"
                 ? Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
                     child: Row(
                       children: [
-                        const StyledText(
+                        Text(
                           '시작점',
-                          fontWeight: 600,
-                          fontSize: 16,
+                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextPrimary,
+                            )
                         ),
                         const Spacer(),
-                        StyledText(
+                        Text(
                           controller.selectedItem.value.startPointName!,
-                          fontWeight: 500,
-                          fontSize: 16,
-                          color: const Color(0xFF7D7D84),
+                            style: AppTextStyleData.regular().enBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextTertiary,
+                            )
                         ),
                       ],
                     ),
                   )
                 : Container(),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
               child: Row(
                 children: [
-                  const StyledText(
+                  Text(
                     '시작 시간',
-                    fontWeight: 600,
-                    fontSize: 16,
+                      style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                      )
                   ),
                   const Spacer(),
-                  StyledText(
-                    formatDate(controller.selectedItem.value.startedDate!),
-                    fontWeight: 500,
-                    fontSize: 16,
-                    color: const Color(0xFF7D7D84),
+                  Text(
+                      formatHipenDate(controller.selectedItem.value.startedDate!),
+                      style: AppTextStyleData.regular().enBodyMediumLg.copyWith(
+                        color: AppColorData.regular().colorTextTertiary,
+                      )
                   ),
                 ],
               ),
@@ -456,20 +465,21 @@ class ArchiveDetail extends StatelessWidget {
             // startPointName
             controller.selectedItem.value.challengeActivationType == "COURSE"
                 ? Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
                     child: Row(
                       children: [
-                        const StyledText(
+                        Text(
                           '종료점',
-                          fontWeight: 600,
-                          fontSize: 16,
+                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextPrimary,
+                            )
                         ),
                         const Spacer(),
-                        StyledText(
+                        Text(
                           controller.selectedItem.value.endPointName!,
-                          fontWeight: 500,
-                          fontSize: 16,
-                          color: const Color(0xFF7D7D84),
+                            style: AppTextStyleData.regular().enBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextTertiary,
+                            )
                         ),
                       ],
                     ),
@@ -477,27 +487,28 @@ class ArchiveDetail extends StatelessWidget {
                 : Container(),
             controller.selectedItem.value.endedDate != null
                 ? Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
                     child: Row(
                       children: [
-                        const StyledText(
+                        Text(
                           '종료 시간',
-                          fontWeight: 600,
-                          fontSize: 16,
+                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextPrimary,
+                            )
                         ),
                         const Spacer(),
-                        StyledText(
-                          formatDate(controller.selectedItem.value.endedDate!),
-                          fontWeight: 500,
-                          fontSize: 16,
-                          color: const Color(0xFF7D7D84),
+                        Text(
+                            formatHipenDate(controller.selectedItem.value.endedDate!),
+                            style: AppTextStyleData.regular().enBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextTertiary,
+                            )
                         ),
                       ],
                     ),
                   )
                 : Container(),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+              padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 16.0.sp),
               child: const Divider(
                 height: 2,
                 thickness: 2.0,
@@ -506,20 +517,21 @@ class ArchiveDetail extends StatelessWidget {
             ),
             controller.selectedItem.value.speed != null
                 ? Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+                    padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
                     child: Row(
                       children: [
-                        const StyledText(
+                        Text(
                           '평균 속도',
-                          fontWeight: 600,
-                          fontSize: 16,
+                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextPrimary,
+                            )
                         ),
                         const Spacer(),
-                        StyledText(
+                        Text(
                           '${controller.selectedItem.value.speed!.toString()} km/h',
-                          fontWeight: 500,
-                          fontSize: 16,
-                          color: const Color(0xFF7D7D84),
+                            style: AppTextStyleData.regular().enBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextTertiary,
+                            )
                         ),
                       ],
                     ),
@@ -527,25 +539,27 @@ class ArchiveDetail extends StatelessWidget {
                 : Container(),
             controller.selectedItem.value.altitude != null
                 ? Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 20.0.sp),
+                    padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 16.0.sp),
                     child: Row(
                       children: [
-                        const StyledText(
+                        Text(
                           '최고 고도',
-                          fontWeight: 600,
-                          fontSize: 16,
+                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextPrimary,
+                            )
                         ),
                         const Spacer(),
-                        StyledText(
+                        Text(
                           '${controller.selectedItem.value.altitude!.toString()} m',
-                          fontWeight: 500,
-                          fontSize: 16,
-                          color: const Color(0xFF7D7D84),
+                            style: AppTextStyleData.regular().enBodyMediumLg.copyWith(
+                              color: AppColorData.regular().colorTextTertiary,
+                            )
                         ),
                       ],
                     ),
                   )
                 : Container(),
+            SizedBox(height: 50.sp,)
           ],
         ),
       ),

@@ -50,8 +50,8 @@ SvgPicture iconMenuShopActive = SvgPicture.asset('assets/images/common/ico_menu_
 SvgPicture iconMenuChallenges = SvgPicture.asset('assets/images/common/ico_menu_challenges.svg', width: 18.76.sp, height: 24.15.sp);
 SvgPicture iconMenuChallengesActive = SvgPicture.asset(
   'assets/images/common/ico_menu_challenges_active.svg',
-  width: 10.69.sp,
-  height: 18.56.sp,
+  width: 18.76.sp,
+  height: 24.15.sp,
 );
 
 // Login
@@ -70,13 +70,13 @@ SvgPicture iconHeaderShareIOS = SvgPicture.asset('assets/images/common/ico_heade
 SvgPicture iconHeaderLock = SvgPicture.asset('assets/images/common/ico_header_lock.svg', width: 20.sp, height: 26.sp);
 SvgPicture iconHeaderUnlock = SvgPicture.asset('assets/images/common/ico_header_unlock.svg', width: 20.sp, height: 26.sp);
 
-SvgPicture iconArchiveClock = SvgPicture.asset('assets/images/archive/ico_archive_clock.svg', width: 14.sp, height: 14.sp);
-SvgPicture iconArchiveDistance = SvgPicture.asset('assets/images/archive/ico_archive_distance.svg', width: 14.sp, height: 14.sp);
-SvgPicture iconArchiveSteps = SvgPicture.asset('assets/images/archive/ico_archive_steps.svg', width: 14.sp, height: 14.sp);
+SvgPicture iconArchiveClock = SvgPicture.asset('assets/images/archive/ico_archive_clock.svg', width: 20.sp, height: 20.sp);
+SvgPicture iconArchiveDistance = SvgPicture.asset('assets/images/archive/ico_archive_distance.svg', width: 20.sp, height: 20.sp);
+SvgPicture iconArchiveSteps = SvgPicture.asset('assets/images/archive/ico_archive_steps.svg', width: 20.sp, height: 20.sp);
 
-SvgPicture iconArchiveClockDetail = SvgPicture.asset('assets/images/archive/ico_archive_clock.svg', width: 20.sp, height: 20.sp);
-SvgPicture iconArchiveDistanceDetail = SvgPicture.asset('assets/images/archive/ico_archive_distance.svg', width: 20.sp, height: 20.sp);
-SvgPicture iconArchiveStepsDetail = SvgPicture.asset('assets/images/archive/ico_archive_steps.svg', width: 20.sp, height: 20.sp);
+SvgPicture iconArchiveClockDetail = SvgPicture.asset('assets/images/archive/ico_archive_clock.svg', width: 24.sp, height: 24.sp);
+SvgPicture iconArchiveDistanceDetail = SvgPicture.asset('assets/images/archive/ico_archive_distance.svg', width: 24.sp, height: 24.sp);
+SvgPicture iconArchiveStepsDetail = SvgPicture.asset('assets/images/archive/ico_archive_steps.svg', width: 24.sp, height: 24.sp);
 
 //activity
 SvgPicture iconDailyMission = SvgPicture.asset('assets/images/activity/ico_daily_mission.svg', width: 40.sp, height: 40.sp);
@@ -109,8 +109,11 @@ SvgPicture iconPause = SvgPicture.asset('assets/images/activity/ico_pause.svg', 
 SvgPicture iconActivityLuck = SvgPicture.asset('assets/images/activity/ico_activity_luck.svg', width: 14.sp, height: 14.sp);
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15.sp, height: 20.sp);
-SvgPicture iconWasteBasket = SvgPicture.asset('assets/images/common/ico_wastebasket.svg', width: 15.sp, height: 20.sp);
+SvgPicture iconWasteBasket = SvgPicture.asset('assets/images/common/ico_wastebasket.svg', width: 32.sp, height: 32.sp);
 SvgPicture iconNoneMap = SvgPicture.asset('assets/images/archive/ico_none_map.svg', width: 37.sp, height: 37.sp);
+SvgPicture iconArchiveWalking = SvgPicture.asset('assets/images/archive/ico_walking.svg', width: 54.sp, height: 54.sp);
+SvgPicture iconArchiveHiking = SvgPicture.asset('assets/images/archive/ico_hiking.svg', width: 54.sp, height: 54.sp);
+SvgPicture iconArchiveMountain = SvgPicture.asset('assets/images/archive/ico_mountain_100.svg', width: 54.sp, height: 54.sp);
 
 //leaderboard
 SvgPicture iconStatisticsTokenGo = SvgPicture.asset('assets/images/activity/ico_activity_token_go.svg', width: 25.27.sp, height: 27.62.sp);
@@ -148,7 +151,7 @@ SvgPicture iconChevronDown = SvgPicture.asset('assets/images/preference/ico_chev
 SvgPicture iconChevronUp = SvgPicture.asset('assets/images/preference/ico_chevron_up_color.svg', width: 24.sp, height: 24.sp);
 
 //wallet
-SvgPicture iconEmpty = SvgPicture.asset('assets/images/wallet/ico_empty.svg', width: 90.sp, height: 90.sp);
+SvgPicture iconEmpty = SvgPicture.asset('assets/images/wallet/ico_empty.svg', width: 84.sp, height: 84.sp);
 SvgPicture iconEmptyRoundedBg = SvgPicture.asset('assets/images/wallet/ico_empty_rounded_bg.svg', width: 84.sp, height: 84.sp);
 SvgPicture iconIn = SvgPicture.asset('assets/images/wallet/ico_in.svg', width: 18.67.sp, height: 18.67.sp);
 SvgPicture iconOut = SvgPicture.asset('assets/images/wallet/ico_out.svg', width: 18.67.sp, height: 18.67.sp);

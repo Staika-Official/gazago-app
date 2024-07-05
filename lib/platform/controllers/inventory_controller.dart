@@ -571,7 +571,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       double itemHeight = itemWidth * 1.5;
       listHeight.value = itemHeight * rowCount + rowCount * 10 + 70;
     } else {
-      listHeight.value = 165;
+      listHeight.value = 230;
     }
   }
 

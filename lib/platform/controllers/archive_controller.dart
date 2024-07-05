@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
@@ -14,6 +16,7 @@ import 'package:gaza_go/platform/models/archive_detail_item_model.dart';
 import 'package:gaza_go/platform/models/archive_list_item_model.dart';
 import 'package:gaza_go/platform/services/archive_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:get/get.dart';
 import 'package:jiffy/jiffy.dart';
 
@@ -138,12 +141,12 @@ class ArchiveController extends GetxController with ScrollMixin {
   getArchiveTypeImage(archive) {
     if (archive.type == 'HIKING') {
       if (archive.challengeId != null) {
-        return const Svg('assets/images/archive/ico_mountain_100.svg');
+        return iconArchiveMountain;
       } else {
-        return const Svg('assets/images/archive/ico_hiking.svg');
+        return iconArchiveHiking;
       }
     } else {
-      return const Svg('assets/images/archive/ico_walking.svg');
+      return iconArchiveWalking;
     }
   }
 

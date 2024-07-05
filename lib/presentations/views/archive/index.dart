@@ -9,6 +9,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class ArchiveHome extends StatelessWidget {
@@ -22,9 +23,9 @@ class ArchiveHome extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.only(bottom: 15.sp),
               decoration: BoxDecoration(
-                color: popupBgColor,
+                color: AppColorData.regular().colorBgTertiary,
                 border: Border.all(
-                  width: 1,
+                  width: 2,
                   color: Colors.black,
                 ),
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
@@ -39,9 +40,9 @@ class ArchiveHome extends StatelessWidget {
               ),
               child: Card(
                 elevation: 0,
-                color: popupBgColor,
+                color: AppColorData.regular().colorBgTertiary,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 15.0.sp, left: 18.0.sp, right: 18.0.sp, bottom: 10.0.sp),
+                  padding: EdgeInsets.only(top: 16.0.sp, left: 20.0.sp, right: 20.0.sp, bottom: 12.0.sp),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -52,19 +53,12 @@ class ArchiveHome extends StatelessWidget {
                           Stack(
                             clipBehavior: Clip.none,
                             children: [
-                              CircleAvatar(
-                                radius: 21.sp,
-                                backgroundColor: Colors.transparent,
-                                foregroundImage: controller.getArchiveTypeImage(archive),
-                                // foregroundImage: archive.type == ExerciseType.hiking.name.toUpperCase()
-                                // const sp.Svg('assets/images/archive/ico_archive_hiking.svg')
-                                //     : const sp.Svg('assets/images/archive/ico_archive_walking.svg'),
-                              ),
+                              controller.getArchiveTypeImage(archive),
                               if (archive.badgeIssueId != null)
                                 archive.badgeImageUrl!.contains('.svg')
                                     ? Positioned(
-                                        right: -5,
-                                        bottom: -5,
+                                        right: 0,
+                                        bottom: 2,
                                         child: SvgPicture.network(
                                           width: 20.sp,
                                           height: 20.sp,
@@ -74,8 +68,8 @@ class ArchiveHome extends StatelessWidget {
                                         ),
                                       )
                                     : Positioned(
-                                        right: -5,
-                                        bottom: -5,
+                                        right: 0,
+                                        bottom: 2,
                                         child: CachedNetworkImage(
                                           width: 20.sp,
                                           height: 20.sp,
@@ -88,37 +82,50 @@ class ArchiveHome extends StatelessWidget {
                           ),
                           Padding(
                             padding: EdgeInsets.only(
-                              left: 16.sp,
+                              left: 8.sp,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                StyledText(formatDateUntilDay(archive.startedDate!), fontSize: 16, fontWeight: 500),
-                                if (archive.challengeTitle != null) StyledText(archive.challengeTitle!, fontSize: 12, lineHeight: 20, color: deepGrayColor, fontWeight: 600),
+                                Text(
+                                    formatDateUntilDay(archive.startedDate!),
+                                    style: AppTextStyleData.regular().koBodySemiboldLg.copyWith(
+                                      color: AppColorData.regular().colorTextPrimary
+                                    ),
+                                ),
+                                if (archive.challengeTitle != null)
+                                  Text(
+                                      archive.challengeTitle!,
+                                    style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                        color: AppColorData.regular().colorTextSecondary
+                                    ),
+                                  ),
                               ],
                             ),
                           )
                         ],
                       ),
                       Divider(
-                        color: subBg02Color,
-                        height: 25.sp,
+                        color: AppColorData.regular().colorBorderPrimary,
+                        height: 22.sp,
                         thickness: 1,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(left: 6.0.sp),
+                            padding: EdgeInsets.only(left: 8.0.sp),
                             child: Row(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(right: 5.2.sp),
+                                  padding: EdgeInsets.only(right: 4.sp),
                                   child: iconArchiveClock,
                                 ),
-                                StyledText(
+                                Text(
                                   formatSeconds(archive.time!),
-                                  fontWeight: 600,
+                                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                      color: AppColorData.regular().colorTextInteractivePrimary,
+                                  ),
                                 )
                               ],
                             ),
@@ -126,26 +133,30 @@ class ArchiveHome extends StatelessWidget {
                           Row(
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(right: 5.2.sp),
+                                padding: EdgeInsets.only(right: 4.sp),
                                 child: iconArchiveDistance,
                               ),
-                              StyledText(
-                                '${formatDecimalPlaces(convertMetersToKm(archive.rewardDistance!), 2)} km',
-                                fontWeight: 600,
+                              Text(
+                                '${formatDecimalPlaces(convertMetersToKm(archive.rewardDistance!), 3, isAutoDecimal: true)} km',
+                                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                  color: AppColorData.regular().colorTextInteractivePrimary,
+                                ),
                               ),
                             ],
                           ),
                           Padding(
-                            padding: EdgeInsets.only(right: 6.0.sp),
+                            padding: EdgeInsets.only(right: 8.0.sp),
                             child: Row(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(right: 5.2.sp),
+                                  padding: EdgeInsets.only(right: 4.sp),
                                   child: iconArchiveSteps,
                                 ),
-                                StyledText(
+                                Text(
                                   '${archive.steps}',
-                                  fontWeight: 600,
+                                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                                    color: AppColorData.regular().colorTextInteractivePrimary,
+                                  ),
                                 ),
                               ],
                             ),

@@ -885,13 +885,13 @@ Future<void> showChallengeBadgeAcquisitionAlert(PushMessageChallengeSuccessModel
 
 void showDeleteRecordAlert(ArchiveController controller, int id) {
   showAlert(
-    title: '삭제',
-    contentText: '기록이 정말 사라지길 원하십니까?',
+    title: '운동기록 삭제',
+    contentText: '운동기록을 삭제하면 복구할 수 없어요.',
     actions: [
       Expanded(
         child: GazagoButton(
           onTap: () => Get.back(),
-          buttonText: '아니요',
+          buttonText: '취소',
           textColor: Colors.white,
           buttonColor: popupBgColor,
         ),
