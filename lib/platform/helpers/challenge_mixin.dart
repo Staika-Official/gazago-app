@@ -101,16 +101,16 @@ mixin ChallengeMixin {
     if (challengeState == 'READY') {
       switch (userStatus) {
         case 'REGISTER_AVAILABLE':
-          text = '참가 가능';
+          text = '접수 중';
           break;
         case 'REGISTER_READY':
           text = '접수 전';
           break;
         case 'JOINED':
-          text = '시작 전';
+          text = '참가 중';
           break;
         case 'JOIN_AVAILABLE':
-          text = '참가 가능';
+          text = '접수 중';
           break;
         case 'JOIN_CLOSED':
           text = '참가 마감';

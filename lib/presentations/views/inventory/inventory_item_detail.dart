@@ -220,7 +220,7 @@ class InventoryItemDetail extends StatelessWidget {
                                                                   padding: EdgeInsets.only(left: 12.0.sp, right: 7.sp),
                                                                   child: iconShoes,
                                                                 ),
-                                                                Text('내구도 저항',
+                                                                Text('내구도',
                                                                     style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
                                                                           color: controller.selectedItem.value.durability!.toInt() <= 30 ? Colors.white : Colors.black,
                                                                         )),

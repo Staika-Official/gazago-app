@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_config.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,7 +21,10 @@ import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
+import 'package:gaza_go/platform/firebase/remote_config.dart';
+import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -28,6 +32,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 import 'constants/routes.dart';
@@ -69,10 +74,58 @@ Future<void> initializeAdMob() async {
   });
 }
 
+void getStreamData(snapshot) async {
+  print(snapshot.value);
+  HiveStore.save(key: HiveKey.serviceStatus.name, value: snapshot.value);
+  if(Get.currentRoute == Routes.login && (Get.isDialogOpen! || Get.isBottomSheetOpen!)){
+    Get.back();
+  }
+  if(snapshot.value == 2){
+    forceLogout();
+    Future.delayed(const Duration(seconds: 1), ()async {
+      if(!Get.isDialogOpen!){
+        showServiceInspectionNotice();
+      }
+
+    });
+
+    return;
+  } else if(snapshot.value == 1){
+    Future.delayed(const Duration(seconds: 1), ()async {
+      if (Get.currentRoute == Routes.login && !Get.isDialogOpen!) {
+        showServiceInspectionNotice();
+      }
+    });
+    return;
+
+  } else {
+
+  }
+}
+
+Future<void> checkInspectionNotice() async {
+
+  DatabaseReference inspectionNoticeRef = FirebaseDatabase.instance.ref('inspection');
+  Stream<DatabaseEvent> stream = inspectionNoticeRef.onValue;
+  await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
+    getStreamData(snapshot);
+  }).onError((error, stackTrace) {
+    print(error);
+  });
+  stream.listen((DatabaseEvent event) {
+    print('Event Type: ${event.type}');
+    print('Snapshot: ${event.snapshot.value}');
+    getStreamData(event.snapshot);
+  });
+}
+
+
 void main() async {
   await runZonedGuarded(() async {
+    int isServiceInspection = 0;
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
-    AdjustConfig adjustConfig = AdjustConfig('egsa3l7qwj5s', F.isDev ? AdjustEnvironment.sandbox : AdjustEnvironment.production);
+
+    AdjustConfig adjustConfig = new AdjustConfig('egsa3l7qwj5s', F.isDev ? AdjustEnvironment.sandbox : AdjustEnvironment.production);
     adjustConfig.logLevel = AdjustLogLevel.verbose;
     Adjust.start(adjustConfig);
     await Hive.initFlutter();
@@ -99,7 +152,7 @@ void main() async {
     await initializeDateFormatting();
     await requestNotificationPermission();
     await requestTrackingPermission();
-
+    await checkInspectionNotice();
     runApp(const MyApp());
   }, (error, stack) {
     recordCrashlyticsError(error, stack);
@@ -132,7 +185,7 @@ class MyApp extends StatelessWidget {
 
     Get.put(GlobalController(), permanent: true);
     Get.put(WalletMasterController(), permanent: true);
-    Get.put(InspectionNoticeController(), permanent: true);
+    // Get.put(InspectionNoticeController(), permanent: true);
     Get.put(LoaderController(), permanent: true);
 
 

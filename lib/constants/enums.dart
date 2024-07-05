@@ -115,6 +115,9 @@ enum HiveKey {
   isFailureGetSpendingWallet,
   collectionIdList,
   isNewCollection,
+  currentPosition,
+  serviceStatus,
+  isAlreadySigninUser,
 }
 
 enum ResponseStatus {

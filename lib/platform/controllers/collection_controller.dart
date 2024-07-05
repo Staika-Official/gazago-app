@@ -229,8 +229,10 @@ class CollectionController extends SuperController with GetTickerProviderStateMi
         // 내가 가진 아이템과 조건이 일치하는 아이템을 찾아서 개수를 세어준다.
         if (condition.item != null) {
           int itemId = condition.item!.id;
-          int ownedBadgesCount = myAllItems.where((item) => (item.itemId == itemId) && item.equipped == false).length;
-          condition.completeAmount = ownedBadgesCount;
+          Iterable<UserItemsSummariesModel> ownedItemList = myAllItems.where((item) => (item.itemId == itemId) && item.equipped == false);
+          int allAmount = ownedItemList.fold(0, (sum, item) => sum + item.amount);
+
+          condition.completeAmount = allAmount;
         } else {
           condition.completeAmount = 0;
         }

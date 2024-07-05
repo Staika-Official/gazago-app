@@ -41,7 +41,7 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
 
   RxString get leaderboardDate {
     if (DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()) == DateFormat('yyyy-MM-dd').format(today.value!.toLocal())) {
-      return RxString('TODAY');
+      return RxString('Today');
     }
     return RxString(DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()).toString());
   }

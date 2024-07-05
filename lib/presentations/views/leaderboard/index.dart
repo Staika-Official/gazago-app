@@ -4,6 +4,7 @@ import 'package:gaza_go/platform/controllers/leaderboard_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/views/archive/index.dart';
 import 'package:gaza_go/presentations/views/leaderboard/leaderboard.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class RankingHome extends StatelessWidget {
@@ -14,7 +15,7 @@ class RankingHome extends StatelessWidget {
     LeaderboardController controller = Get.put(LeaderboardController());
 
     return Scaffold(
-      backgroundColor: subBg01Color,
+      backgroundColor: AppColorData.regular().colorBgPrimary,
       body: Container(
         color: subBg01Color,
         child: Column(

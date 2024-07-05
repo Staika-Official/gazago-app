@@ -29,25 +29,28 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoginController extends GetxController {
+  RxBool isAlreadySigninUser = RxBool(false);
   @override
   void onInit() async {
-    await checkInspectionNotice();
+    // await checkInspectionNotice();
 
     super.onInit();
   }
-
-  Future<void> checkInspectionNotice() async {
-    DatabaseReference inspectionNoticeRef = FirebaseDatabase.instance.ref('inspectionNotice');
-    await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
-      if (snapshot.value == true && !Get.isBottomSheetOpen!) {
-        String noticeUri = getConfig(dataType: ConfigType.string, configKey: 'notice_alert_address');
-        Uri url = Uri.parse(noticeUri);
-        if (await canLaunchUrl(url)) {
-          showModalNoticeWebview(Get.context, linkUrl: noticeUri);
-        }
-      }
-    }).onError((error, stackTrace) {});
-  }
+  //
+  // Future<void> checkInspectionNotice() async {
+  //   DatabaseReference inspectionNoticeRef = FirebaseDatabase.instance.ref('inspectionNotice');
+  //   await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
+  //     if (snapshot.value == true && !Get.isBottomSheetOpen!) {
+  //       String noticeUri = getConfig(dataType: ConfigType.string, configKey: 'notice_alert_address');
+  //       Uri url = Uri.parse(noticeUri);
+  //       if (await canLaunchUrl(url)) {
+  //         showModalNoticeWebview(linkUrl: noticeUri);
+  //       }
+  //     }
+  //   }).onError((error, stackTrace) {
+  //     print(error);
+  //   });
+  // }
 
   void login(LoginType loginType) async {
     Adjust.trackEvent(AdjustEvent('lllyw8'));
@@ -206,9 +209,11 @@ class LoginController extends GetxController {
     await UaaService.socialLogin(
       loginInfo,
       successCallback: (AccessTokenModel token, int statusCode) async {
+        print('statusCode : $statusCode');
         if (statusCode == 200) {
           HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
           HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
+
           if (token.accountStatus == 'TERMINATION_COMPLETED') {
             showToastPopup('탈퇴처리된 계정입니다.');
             forceLogout();

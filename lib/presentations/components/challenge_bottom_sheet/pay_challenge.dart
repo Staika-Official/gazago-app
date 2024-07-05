@@ -4,6 +4,7 @@ import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:intl/intl.dart';
 
 // 챌린지 전 - 접수 전
@@ -12,46 +13,34 @@ Map renderPayReadyRegisterReady(ChallengesDetailController challengesDetailContr
     onTap: () => null,
     child: Container(
         decoration: BoxDecoration(
-          color: subBg01Color,
+          color: AppColorData.regular().colorBgTertiary,
           border: Border.all(
             width: 2,
             style: BorderStyle.solid,
-            color: deepGrayColor,
+            color: AppColorData.regular().colorBgInteractivePrimaryDisabled,
           ),
           borderRadius: BorderRadius.all(
             Radius.circular(25.sp),
           ),
-          boxShadow: [
-            BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
-          ],
+
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: const StyledText(
+          child:  StyledText(
             '접수 전',
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
-            color: deepGrayColor,
+            color: AppColorData.regular().colorBgInteractivePrimaryDisabled,
             letterSpacing: -.1,
           ),
         )),
   );
 
-  Widget content = RichText(
-    text: TextSpan(
-      style: TextStyle(
-        color: lightGrayColor,
-        fontWeight: FontWeight.w500,
-        fontSize: 16.sp,
-        height: 20.sp / 16,
-      ),
-      children: [
-        TextSpan(
-          text: '접수 예정일  ${DateFormat('MM.dd HH:mm', 'ko').format(DateTime.parse(challengesDetailController.challengeDetails.value.reservedDate!).toLocal())}',
-          style: const TextStyle(color: skyBlueColor),
-        ),
-      ],
+  Widget content = Text(
+    '접수 예정일 \n${DateFormat('MM.dd HH:mm', 'ko').format(DateTime.parse(challengesDetailController.challengeDetails.value.reservedDate!).toLocal())}',
+    style: AppTextStyleData.regular().koBodySemiboldLg.copyWith(
+      color: AppColorData.regular().colorTextBrand,
     ),
   );
 
@@ -64,27 +53,24 @@ Map renderPayReadyJoined(ChallengesDetailController challengesDetailController) 
     onTap: () => null,
     child: Container(
         decoration: BoxDecoration(
-          color: subBg01Color,
-          border: Border.all(
-            width: 2,
-            style: BorderStyle.solid,
-            color: deepGrayColor,
-          ),
+          color: popupBgColor,
           borderRadius: BorderRadius.all(
             Radius.circular(25.sp),
           ),
-          boxShadow: [
-            BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
-          ],
+          border: Border.all(
+            width: 2,
+            style: BorderStyle.solid,
+            color: AppColorData.regular().colorBgInteractivePrimaryPressed,
+          ),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: const StyledText(
-            '챌린지 전',
+          child: StyledText(
+            '참가 중',
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
-            color: deepGrayColor,
+            color: AppColorData.regular().colorBgInteractivePrimaryPressed,
             letterSpacing: -.1,
           ),
         )),
@@ -229,22 +215,24 @@ Map renderPayInProgressJoined(ChallengesDetailController challengesDetailControl
     onTap: () => null,
     child: Container(
         decoration: BoxDecoration(
-          color: skyBlueColor,
+          color: popupBgColor,
           borderRadius: BorderRadius.all(
             Radius.circular(25.sp),
           ),
-          boxShadow: [
-            BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
-          ],
+          border: Border.all(
+            width: 2,
+            style: BorderStyle.solid,
+            color: AppColorData.regular().colorBgInteractivePrimaryPressed,
+          ),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: const StyledText(
+          child: StyledText(
             '참가 중',
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
-            color: Colors.black,
+            color: AppColorData.regular().colorBgInteractivePrimaryPressed,
             letterSpacing: -.1,
           ),
         )),
@@ -281,19 +269,17 @@ Map renderPayInProgressJoinedClosed(ChallengesDetailController challengesDetailC
   Widget suffix = InkWell(
     onTap: () => null,
     child: Container(
-        decoration: BoxDecoration(
-          color: subBg01Color,
+        decoration:  BoxDecoration(
+          color: AppColorData.regular().colorBgTertiary,
           border: Border.all(
             width: 2,
             style: BorderStyle.solid,
-            color: deepGrayColor,
+            color: AppColorData.regular().colorBgInteractivePrimaryDisabled,
           ),
           borderRadius: BorderRadius.all(
             Radius.circular(25.sp),
           ),
-          boxShadow: [
-            BoxShadow(offset: Offset(0.sp, 3.sp), color: Colors.black),
-          ],
+
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),

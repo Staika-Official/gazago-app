@@ -269,6 +269,7 @@ class Api {
 
   static Future<void> _retryFailedRequest(DioException e, ErrorInterceptorHandler handler) async {
     String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
+    print('accessTokenaccessToken : $accessToken');
     if (accessToken == null) {
       resetToLogin(e, handler);
       return;
@@ -390,7 +391,8 @@ class Api {
       HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
       HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
       needToRefreshToken = false;
-
+      print('_retryFailedRequest');
+      print('_retryFailedRequest : res.requestOptions.path ${res.requestOptions.path}');
       await _retryFailedRequest(e, handler);
     }).onError((DioException error, stacktrace) {
       _logger.e(

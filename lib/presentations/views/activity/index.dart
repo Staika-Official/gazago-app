@@ -61,7 +61,7 @@ class ActivityHome extends StatelessWidget {
                           child: stat.type == 'STAMINA'
                               ? SizedBox(
                             child: Stack(
-                              fit: StackFit.passthrough,
+
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
@@ -82,7 +82,7 @@ class ActivityHome extends StatelessWidget {
                                       padding: EdgeInsets.symmetric(vertical: 0.0.sp),
                                       child: LayoutBuilder(builder: (context, constraints) {
                                   return Container(
-                                      width: stat.currentStat > 20
+                                      width: stat.currentStat > 10
                                           ? constraints.maxWidth / (100 / stat.currentStat)
                                           : stat.currentStat < 2
                                           ? 0
@@ -97,7 +97,11 @@ class ActivityHome extends StatelessWidget {
                                         borderRadius: const BorderRadius.all(
                                           Radius.circular(100),
                                         ),
-
+                                        border: Border.all(
+                                          width: 2.sp,
+                                          color: Colors.black,
+                                          strokeAlign: BorderSide.strokeAlignOutside,
+                                        ),
 
                                       ),
                                   );
@@ -109,7 +113,7 @@ class ActivityHome extends StatelessWidget {
                           )
                               : SizedBox(
                             child: Stack(
-                              fit: StackFit.passthrough,
+
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
@@ -147,6 +151,11 @@ class ActivityHome extends StatelessWidget {
                                           .colorBgWarning : AppColorData
                                           .regular()
                                           .colorPointPurple,
+                                      border: Border.all(
+                                        width: 2.sp,
+                                        color: Colors.black,
+                                        strokeAlign: BorderSide.strokeAlignOutside,
+                                      ),
                                       borderRadius: const BorderRadius.all(
                                         Radius.circular(100),
                                       ),

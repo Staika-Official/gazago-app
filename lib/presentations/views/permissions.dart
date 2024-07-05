@@ -6,6 +6,7 @@ import 'package:gaza_go/platform/models/permission_item_model.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class Permissions extends StatelessWidget {
@@ -21,11 +22,14 @@ class Permissions extends StatelessWidget {
   List<Widget> renderPermissionList() {
     return permissionsList
         .map((permission) => Padding(
-              padding: EdgeInsets.symmetric(vertical: 15.sp, horizontal: 10.sp),
+              padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 0.sp),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SvgPicture.asset(permission.iconPath),
+                  Padding(
+                    padding: EdgeInsets.only(top:2.0.sp),
+                    child: SvgPicture.asset(permission.iconPath),
+                  ),
                   Padding(
                     padding: EdgeInsets.only(left: 16.sp),
                     child: Column(
@@ -33,33 +37,30 @@ class Permissions extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            StyledText(
+                            Text(
                               permission.permissionName,
-                              fontSize: 18,
-                              fontWeight: 500,
-                              lineHeight: 18,
-                              color: Colors.white,
+                              style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                    color: AppColorData.regular().colorTextPrimary,
+                                  ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 5.sp),
-                              child: StyledText(
+                              child: Text(
                                 permission.isRequired ? '(필수)' : '(선택)',
-                                fontSize: 18,
-                                fontWeight: 500,
-                                lineHeight: 18,
-                                color: deepGrayColor,
+                                style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                  color: AppColorData.regular().colorTextPrimary,
+                                ),
                               ),
                             )
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 8.0.sp),
-                          child: StyledText(
+                          padding: EdgeInsets.only(top: 0.sp),
+                          child: Text(
                             permission.description,
-                            fontSize: 14,
-                            fontWeight: 500,
-                            lineHeight: 14,
-                            color: lightGrayColor,
+                            style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                              color: AppColorData.regular().colorTextSecondary,
+                            ),
                           ),
                         ),
                       ],
@@ -79,42 +80,49 @@ class Permissions extends StatelessWidget {
       isLeadingShow: false,
       backgroundColor: subBg01Color,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.only(top: 20.sp, left: 16.sp, right: 16.sp, bottom: 30.sp),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const StyledText('접근 권한 안내', fontSize: 22, fontWeight: 500, lineHeight: 22),
+                Text(
+                    '접근 권한 안내',
+                  style: AppTextStyleData.regular().koHeadingSemiboldMd.copyWith(
+                    color: AppColorData.regular().colorTextPrimary,
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.only(top: 9.sp, bottom: 10.sp),
-                  child: const StyledText(
-                    '원활한 서비스 이용을 위하여 아래 권한들을\n허용해 주시기 바랍니다.',
-                    fontSize: 16,
-                    fontWeight: 500,
-                    lineHeight: 22,
-                    color: deepGrayColor,
-                    textAlign: TextAlign.center,
+                  child: Text(
+                    '서비스 이용을 위해 아래 권한을 허용해 주시기 바랍니다.',
+                    style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                      color: AppColorData.regular().colorTextSecondary,
+                    ),
+
                   ),
                 ),
               ],
             ),
-            Divider(
-              thickness: 1,
-              height: 20.sp,
-              color: popupBgColor,
+            Padding(
+              padding: EdgeInsets.only(top:5.0.sp),
+              child: Divider(
+                thickness: 1,
+                height: 40.sp,
+                color: popupBgColor,
+              ),
             ),
             ...renderPermissionList(),
             Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 0,
-                vertical: 20.sp,
+              padding: EdgeInsets.only(
+                top: 20.sp,
               ),
-              child: const StyledText(
+              child: Text(
                 "ㆍgazaGO는 운동 기록과 뱃지 획득 등의 기능 사용을 위해 앱이 닫혀 있을 때도 위치 데이터를 필요로 합니다. 원활한 서비스 이용을 위해 단말의 설정에서 위치 엑세스  권한을 ‘항상 허용'으로 설정해 주시길 바랍니다.",
-                fontSize: 13,
-                fontWeight: 500,
-                lineHeight: 18,
-                color: deepGrayColor,
+                style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                  color: AppColorData.regular().colorTextTertiary,
+                ),
               ),
             ),
             Expanded(
@@ -123,26 +131,21 @@ class Permissions extends StatelessWidget {
                 child: Container(
                   height: 55.sp,
                   decoration: BoxDecoration(
-                    color: skyBlueColor,
+                    color: AppColorData.regular().colorBgInteractivePrimary,
                     border: Border.all(width: 2.sp, color: Colors.black),
                     borderRadius: BorderRadius.circular(8.sp),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        offset: Offset(0, 3.sp),
-                      )
-                    ],
+
                   ),
                   child: InkWell(
                     onTap: () => controller.requestPermissions(),
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 12.0.sp),
-                      child: const Center(
-                          child: StyledText(
+                      child: Center(
+                          child: Text(
                         '확인',
-                        fontSize: 18,
-                        lineHeight: 18,
-                        color: Colors.black,
+                            style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                              color: AppColorData.regular().colorBaseBalck,
+                            ),
                       )),
                     ),
                   ),

@@ -255,7 +255,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
 
   void showMainPopup() async {
     bool isShowPopup = await checkPopupExpired();
-    if (isShowPopup && !Get.isDialogOpen!) {
+    if (isShowPopup && !Get.isDialogOpen! && !Get.isBottomSheetOpen!) {
       setCurrent(0);
       showMainPopupAlert(this);
     }

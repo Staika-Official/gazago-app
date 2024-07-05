@@ -17,7 +17,7 @@ SvgPicture iconSortChecked = SvgPicture.asset('assets/images/common/ico_sort_che
 SvgPicture iconShopFilter = SvgPicture.asset('assets/images/common/ico_item_filter.svg', width: 18.sp, height: 16.sp);
 SvgPicture iconShopFilterActive = SvgPicture.asset('assets/images/common/ico_item_filter_active.svg', width: 18.sp, height: 16.sp);
 SvgPicture iconShopEmpty = SvgPicture.asset('assets/images/common/ico_shop_list_none.svg', width: 90.sp, height: 90.sp);
-SvgPicture iconSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_check_sky_blue.svg', width: 48.sp, height: 26.sp);
+SvgPicture iconSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_check_sky_blue.svg', width: 84.sp, height: 84.sp);
 SvgPicture iconCloseWhite = SvgPicture.asset('assets/images/common/ico_close_white.svg', width: 14.sp, height: 14.sp);
 SvgPicture iconHand = SvgPicture.asset('assets/images/common/ico_hand.svg', width: 65.sp, height: 65.sp);
 SvgPicture iconCircleSkyBlueCheck = SvgPicture.asset('assets/images/common/ico_circle_check_skyblue.svg', width: 40.sp, height: 40.sp);
@@ -36,6 +36,11 @@ SvgPicture iconRightLinkArrow = SvgPicture.asset('assets/images/common/ico_right
 SvgPicture iconCheckGetAble = SvgPicture.asset('assets/images/common/ico_check_getable.svg', width: 18.82.sp, height: 13.92.sp);
 SvgPicture iconCollectionComplete = SvgPicture.asset('assets/images/common/ico_collection_complete.svg', width: 15.sp, height: 15.sp);
 SvgPicture iconHeaderBack = SvgPicture.asset('assets/images/common/ico_header_back.svg', width: 24.sp, height: 24.sp);
+SvgPicture iconAllCheckAgree = SvgPicture.asset('assets/images/common/ico_all_agree_check_circle.svg', width: 24.sp, height: 24.sp);
+SvgPicture iconAllCheckDisagree = SvgPicture.asset('assets/images/common/ico_all_disagree_check_circle.svg', width: 24.sp, height: 24.sp);
+SvgPicture iconCheckAgree = SvgPicture.asset('assets/images/common/ico_check_agree.svg', width: 24.sp, height: 24.sp);
+SvgPicture iconCheckDisagree = SvgPicture.asset('assets/images/common/ico_check_disagree.svg', width: 24.sp, height: 24.sp);
+SvgPicture iconTermsArrowRight = SvgPicture.asset('assets/images/common/ico_terms_arrow_right.svg', width: 18.sp, height: 18.sp);
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.5.sp);
 SvgPicture iconMenuHomeActive = SvgPicture.asset('assets/images/common/ico_menu_home_active.svg', width: 20.5.sp, height: 20.5.sp);
@@ -120,10 +125,10 @@ SvgPicture iconStatisticsTokenGo = SvgPicture.asset('assets/images/activity/ico_
 SvgPicture iconCalendarStatisticsTokenTik = SvgPicture.asset('assets/images/leaderboard/ico_token_tik.svg', width: 17.54.sp, height: 19.18.sp);
 SvgPicture iconLeaderboardRightArrow = SvgPicture.asset('assets/images/leaderboard/ico_right_arrow.svg');
 SvgPicture iconMyRankArrow = SvgPicture.asset('assets/images/leaderboard/ico_my_rank_arrow.svg', width: 10.sp, height: 10.sp);
-SvgPicture iconCalendar = SvgPicture.asset('assets/images/leaderboard/ico_calendar.svg', width: 18.95.sp, height: 18.85.sp);
+SvgPicture iconCalendar = SvgPicture.asset('assets/images/leaderboard/ico_calendar.svg', width: 24.sp, height: 24.sp);
 SvgPicture iconStikCalendar = SvgPicture.asset('assets/images/leaderboard/ico_stik_calendar.svg', width: 15.sp, height: 15.sp);
 SvgPicture iconTikCalendar = SvgPicture.asset('assets/images/leaderboard/ico_tik_calendar.svg', width: 15.sp, height: 15.sp);
-SvgPicture iconTodayTik = SvgPicture.asset('assets/images/leaderboard/ico_today_tik.svg', width: 30.sp, height: 30.sp);
+SvgPicture iconTodayTik = SvgPicture.asset('assets/images/leaderboard/ico_today_tik.svg', width: 24.sp, height: 24.sp);
 SvgPicture iconInfo = SvgPicture.asset('assets/images/leaderboard/ico_info.svg', width: 18.sp, height: 18.sp);
 
 // inventory
@@ -157,6 +162,7 @@ SvgPicture iconIn = SvgPicture.asset('assets/images/wallet/ico_in.svg', width: 1
 SvgPicture iconOut = SvgPicture.asset('assets/images/wallet/ico_out.svg', width: 18.67.sp, height: 18.67.sp);
 SvgPicture iconArrowRight = SvgPicture.asset('assets/images/wallet/ico_arrow_right.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconArrowRightTriangle = SvgPicture.asset('assets/images/wallet/ico_arrow_right_triangle.svg', width: 12.sp, height: 12.sp);
+
 SvgPicture iconCoupon = SvgPicture.asset('assets/images/wallet/ico_coupon.svg', width: 38.sp, height: 38.sp);
 SvgPicture iconTik = SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 20.sp, height: 20.sp);
 SvgPicture iconTikSmall = SvgPicture.asset('assets/images/wallet/ico_tik.svg', width: 14.sp, height: 14.sp);

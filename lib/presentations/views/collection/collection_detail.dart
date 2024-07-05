@@ -6,6 +6,7 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/collection_controller.dart';
 import 'package:gaza_go/platform/controllers/collection_detail_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/models/user_badges_summaries_model.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/gauge_painter.dart';
 
@@ -61,6 +62,7 @@ class CollectionDetail extends StatelessWidget {
   }
 
   Widget renderGatheringRewardImage(data) {
+    CollectionController collectionController = Get.find();
     switch (data.type) {
       case 'ITEM':
         if (data.item.imageUrl.contains('.svg')) {
@@ -83,6 +85,7 @@ class CollectionDetail extends StatelessWidget {
         }
 
       case 'BADGE':
+ 
         if (data.badgeComposeConfig.imageUrl.contains('.svg')) {
           return SvgPicture.network(
             data.badgeComposeConfig.imageUrl,

@@ -19,6 +19,7 @@ import 'package:gaza_go/presentations/views/challenges/crew_detail.dart';
 import 'package:gaza_go/presentations/views/collection/collection_detail.dart';
 import 'package:gaza_go/presentations/views/collection/collection_reward_detail.dart';
 import 'package:gaza_go/presentations/views/collection/index.dart';
+import 'package:gaza_go/presentations/views/create_wallet_webview.dart';
 import 'package:gaza_go/presentations/views/daily_benefits.dart';
 import 'package:gaza_go/presentations/views/debugging/position_raw_data_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/request_info.dart';
@@ -150,6 +151,7 @@ class Routes {
   static const collectionHome = '/collection';
   static const collectionDetail = '/collection_detail';
   static const collectionRewardDetail = '/collection_reward_detail';
+  static const createWalletWebview = '/create_wallet_webview';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -217,6 +219,7 @@ class Routes {
     stepPage(name: Routes.laboratoryKakaoShare, page: const LaboratoryKakaoShare()),
     stepPage(name: Routes.createWalletPassword, page: const CreateWalletPassword()),
     stepPage(name: Routes.createWallet, page: const CreateWallet()),
+    stepPage(name: Routes.createWalletWebview, page: const CreateWalletWebview()),
     stepPage(name: Routes.sendStikGoWallet, page: const SendStikGoWallet()),
     stepPage(name: Routes.sendStikStaikaWallet, page: const SendStikStaikaWallet()),
     stepPage(name: Routes.challengeDetail, page: const ChallengeDetail()),
