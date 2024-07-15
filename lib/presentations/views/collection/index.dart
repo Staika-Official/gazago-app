@@ -311,6 +311,7 @@ class CollectionHome extends StatelessWidget {
             child: SingleChildScrollView(
               child: Obx(() {
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     controller.fixedCollection.value.id != 0 ?
@@ -500,12 +501,16 @@ class CollectionHome extends StatelessWidget {
                         padding: EdgeInsets.only(left: 16.0.sp, right: 16.sp, bottom: 40.sp),
                         child: AnimatedSwitcher(
                           duration: Duration(seconds: 2),
-                          child: Wrap(
-                            spacing: 0,
-                            runSpacing: 0,
-                            children: [
-                              ...renderCollectionList(context, controller, controller.collectionList),
-                            ],
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Wrap(
+                              alignment: WrapAlignment.start,
+                              spacing: 0,
+                              runSpacing: 0,
+                              children: [
+                                ...renderCollectionList(context, controller, controller.collectionList),
+                              ],
+                            ),
                           ),
                         ),
                       ) : Center(child: Padding(

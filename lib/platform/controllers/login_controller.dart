@@ -27,6 +27,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/uuid.dart';
 
 class LoginController extends GetxController {
   RxBool isAlreadySigninUser = RxBool(false);
@@ -171,7 +172,13 @@ class LoginController extends GetxController {
   }
 
   Future<void> requestLogin(LoginType loginType, String accessToken, {bool forceLogin = false}) async {
-    String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
+    String? uuid = HiveStore.loadString(key: HiveKey.uuid.name) ;
+    if (uuid == null || uuid.isEmpty) {
+      uuid = const Uuid().v4();
+      HiveStore.save(key: HiveKey.uuid.name, value: uuid);
+    }
+    String deviceId = uuid;
+
     String fcmToken = HiveStore.loadString(key: HiveKey.fcmToken.name)!;
     String? inviteUserId = HiveStore.loadString(key: HiveKey.inviteUserId.name);
     String appVersion = await PackageInfo.fromPlatform().then((info) => info.version);

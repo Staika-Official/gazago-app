@@ -77,9 +77,9 @@ class WithdrawConfirmController extends GetxController {
   }
 
   void handleWithdrawComplete() {
-    HiveStore.deleteMultipleKeys(keys: [
-      HiveKey.uuid.name,
-    ]);
+    // HiveStore.deleteMultipleKeys(keys: [
+    //   HiveKey.uuid.name,
+    // ]);
     forceLogout();
   }
 }

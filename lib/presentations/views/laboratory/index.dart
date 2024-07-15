@@ -86,6 +86,11 @@ class Laboratory extends StatelessWidget {
                       buttonText: '카톡 공유하기',
                       buttonColor: skyBlueColor,
                     ),
+                    GazagoButton(
+                      onTap: () => Get.toNamed(Routes.laboratoryDetectChallengeCourse),
+                      buttonText: '챌린지 코스 확인하기',
+                      buttonColor: skyBlueColor,
+                    ),
                   ],
                 ),
               ),

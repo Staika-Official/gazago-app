@@ -64,6 +64,7 @@ mixin ActivityMixin {
   StreamSubscription<PedestrianStatus>? pedestrianStatusSubscription;
   final Health health = Health();
   final RxDouble realTimeSpeed = RxDouble(0);
+  final RxDouble gpsSpeed = RxDouble(0);
   final RxBool lowStaminaNotified = RxBool(false);
   final RxBool stoppedExercising = RxBool(false);
   final RxBool zeroStaminaNotified = RxBool(false);

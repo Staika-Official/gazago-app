@@ -27,6 +27,15 @@ class ActivityApi {
     );
   }
 
+  static Future<Response> getChallengesNearByHierarchy(Position currentLocation) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get(
+      '/challenge-courses/hierarchy/lat/${currentLocation.latitude}/lon/${currentLocation.longitude}',
+    );
+  }
+
   static Future<Response> getChallengeCourse(String userId, int id) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',

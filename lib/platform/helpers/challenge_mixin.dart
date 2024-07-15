@@ -165,15 +165,22 @@ mixin ChallengeMixin {
 
   Future<void> getNearByCourses(Position currentLocation, ExerciseState exerciseState) async {
     nearByCourses.clear();
+    nearByCourses.value = RxList.empty();
+    Future.delayed(Duration(milliseconds: 500));
     await ActivityService.getNearByCourses(currentLocation, successCallback: (List<ChallengeCourseModel> result) {
+
       if (result.isNotEmpty) {
         notificationOnCourse(result, exerciseState);
       }
       nearByCourses.addAll(result);
+      nearByCourses.refresh();
     }, errorCallback: () {
       nearByCourses.clear();
     });
+
   }
+
+
 
   Future<void> getChallengesHierarchy(Position currentLocation, int challengeId) async {
     hierarchyChallengesList.clear();

@@ -93,7 +93,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Timer? gpsAccuracyTimer;
   List gpsNoticeList = ['절전모드 중이라면 해제해주세요.','넓게 트인 야외로 이동해보세요.','지속적으로 GPS 수신이 원활하지 않을 경우, 휴대폰을 껐다 켠 다음 다시 시도해주세요.'];
   RxBool isNewCollection = RxBool(false);
-
+  Rxn<ChallengeCourseModel> nearChallengeLocation = Rxn(null);
+  NaverMapController? naverMapController;
+  RxDouble betweenDistance = RxDouble(0.0);
+  RxInt detectDelay = RxInt(1);
   void checkNewCollectionStatus() {
     if(HiveStore.load(key: HiveKey.isNewCollection.name) != null && HiveStore.load(key: HiveKey.isNewCollection.name) == true  ){
       isNewCollection.value = true;
@@ -160,8 +163,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> initActivityStatus() async {
+
     await initializeActivity();
     await loadMakerImages();
+
     // await getPromotionAdsList();
   }
 
@@ -854,14 +859,63 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         // 첼린지 존 찾기(30초마다 요청)
         DateTime now = DateTime.now();
 
-        List<String>? prevPosition = HiveStore.load(key: HiveKey.currentPosition.name) != null ? HiveStore.load(key: HiveKey.currentPosition.name).split(',') : null;
-        double prevPositionLat = prevPosition != null ? double.parse(prevPosition[0]) : position.latitude;
-        double prevPositionLng = prevPosition != null ? double.parse(prevPosition[1]) : position.longitude;
-        if (receiveLocationTime.value.add(const Duration(seconds: 30)).compareTo(now) < 0 ) {
-          if(calculateDistance( prevPositionLat, prevPositionLng, position.latitude, position.longitude) > 1){
-            await findCourses();
-          }
+        // List<String>? prevPosition = HiveStore.load(key: HiveKey.currentPosition.name) != null ? HiveStore.load(key: HiveKey.currentPosition.name).split(',') : null;
 
+        // final cameraUpdate = NCameraUpdate.scrollAndZoomTo(target: NLatLng(currentLocation.value.latitude, currentLocation.value.longitude));
+
+        print('Get.currentRoute : ${Get.currentRoute}');
+        if(Get.currentRoute == '/laboratory/detect_challenge_course'){
+          final cameraUpdate = NCameraUpdate.withParams(
+            target: NLatLng(currentLocation.value.latitude, currentLocation.value.longitude),
+            zoom: 16,
+          );
+          naverMapController?.updateCamera(cameraUpdate);
+        }
+
+        double prevPositionLat = nearChallengeLocation.value != null ? double.parse(nearChallengeLocation.value!.startLat.toString()) : position.latitude;
+        double prevPositionLng = nearChallengeLocation.value != null ? double.parse(nearChallengeLocation.value!.startLon.toString()) : position.longitude;
+        betweenDistance.value = calculateDistance( prevPositionLat, prevPositionLng, position.latitude, position.longitude);
+
+        gpsSpeed.value = convertMStoKMH(position.speed);
+
+        print('posLat : $prevPositionLat, posLng : $prevPositionLng');
+        print('speed : ${convertMStoKMH(position.speed)}');
+        print('realtime speed : ${realTimeSpeed.value}');
+        print('title : ${nearChallengeLocation.value?.firstName}');
+        print('title : ${nearChallengeLocation.value?.endPointName}');
+        print('dis : ${betweenDistance.value}');
+        print('nearChallengeLocation.value : ${nearChallengeLocation.value!.startLat}');
+
+        /*
+        1. 최초 앱 실행시 저장된 가장 가까운 챌린지 location 저장 (Hierarchy api 호출)
+        2. 현재 location 위치와 가장 가까운 챌린지 location 거리 비교
+        3. 거리가 100km, 50km, 10km, 5km, 1km 이하일 경우에 따른 시간 딜레이로 챌린지 찾기 요청
+        */
+
+        print(detectDelay.value);
+
+        if (receiveLocationTime.value.add( Duration(seconds: detectDelay.value)).isBefore(now)) {
+
+          if (gpsSpeed.value < 15) {
+
+            await findCourses();
+            await getChallengesNearByHierarchy();
+          } else {
+
+            if (betweenDistance.value > 1000) {
+
+              await getChallengesNearByHierarchy();
+            }
+          }
+          if (betweenDistance.value < 2000) {
+            detectDelay.value = 30;
+          } else if (betweenDistance.value < 5000) {
+            detectDelay.value = 60;
+          } else if (betweenDistance.value < 10000) {
+            detectDelay.value = 300;
+          } else {
+            detectDelay.value = 600;
+          }
           receiveLocationTime.value = now;
         }
       }
@@ -870,6 +924,33 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         detectChallengeZone(position);
       });
     }, onError: (e) {});
+  }
+
+  Future<void> getChallengesNearByHierarchy() async{
+    await ActivityService.getChallengesNearByHierarchy(currentLocation.value,
+      successCallback: (data) async {
+        if(data.course != null){
+          nearChallengeLocation.value = findNearestCourse(currentLocation.value.latitude, currentLocation.value.longitude, data.course!);
+          nearChallengeLocation.refresh();
+        }
+      },
+
+      errorCallback: (){},
+    );
+  }
+
+  ChallengeCourseModel findNearestCourse(myPosLat, myPosLon, courses) {
+    ChallengeCourseModel nearestCourse = ChallengeCourseModel();
+    double shortestDistance = double.infinity;
+
+    for (var course in courses) {
+      double distance = calculateDistance(myPosLat, myPosLon, course.startLat, course.startLon);
+      if (distance < shortestDistance) {
+        shortestDistance = distance;
+        nearestCourse = course;
+      }
+    }
+    return nearestCourse;
   }
 
   void detectFakeGps() async {
@@ -921,6 +1002,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<void> initializeActivity() async {
     await getCurrentLocation();
+    await getChallengesNearByHierarchy();
     initLocationStream();
     initGpsServiceStream();
 
@@ -934,8 +1016,27 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
       // lan or lon의 오차범위가 5m 이상일 경우 새로운 코스를 찾는다. (추후 작업 필요)
       await getNearByCourses(currentLocation.value, exerciseState.value);
+      print('findCourses.Get.currentRoute : ${Get.currentRoute}');
+      if(Get.currentRoute == '/laboratory/detect_challenge_course'){
+        refreshUpdateCamera();
+      }
+
     } else {
       await getCourseList();
+    }
+  }
+
+  void refreshUpdateCamera(){
+    if (nearByCourses.value != null && naverMapController != null) {
+      List overlays = [];
+      nearByCourses.value.forEach((item) {
+        overlays.addAll(renderCircleOverlays(item));
+        overlays.addAll(renderMarkers(item));
+      });
+      print(overlays);
+      // controller.naverMapController?.clearOverlays();
+      naverMapController?.clearOverlays();
+      naverMapController?.addOverlayAll({...overlays});
     }
   }
 

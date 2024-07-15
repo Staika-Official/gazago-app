@@ -71,6 +71,21 @@ class ActivityService {
     }
   }
 
+  static Future<void> getChallengesNearByHierarchy(Position currentLocation, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ActivityApi.getChallengesNearByHierarchy(currentLocation);
+    if (res.statusCode == 200) {
+      List<ChallengeHierarchyModel> challengeList = List.empty(growable: true);
+      if (res.data.length > 0) {
+        res.data.forEach((challenge) {
+          challengeList.add(ChallengeHierarchyModel.fromJson(challenge));
+        });
+      }
+      successCallback(challengeList[0]);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
   static Future<void> getChallengeCourse(int id, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ActivityApi.getChallengeCourse(userId!, id);
     if (res.statusCode == 200) {

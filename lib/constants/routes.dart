@@ -31,6 +31,7 @@ import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dar
 import 'package:gaza_go/presentations/views/inventory/inventory_item_detail.dart';
 import 'package:gaza_go/presentations/views/inventory/synthetic_badge.dart';
 import 'package:gaza_go/presentations/views/join/join_terms.dart';
+import 'package:gaza_go/presentations/views/laboratory/laboratory_detect_challenge_course.dart';
 import 'package:gaza_go/presentations/views/laboratory/laboratory_end_point.dart';
 import 'package:gaza_go/presentations/views/laboratory/laboratory_fake_gps.dart';
 import 'package:gaza_go/presentations/views/laboratory/laboratory_kakao_share.dart';
@@ -130,6 +131,7 @@ class Routes {
   static const laboratoryEndPoint = '/laboratory/end_point';
   static const laboratoryFakeGps = '/laboratory/fake_gps';
   static const laboratoryKakaoShare = '/laboratory/kakao_share';
+  static const laboratoryDetectChallengeCourse = '/laboratory/detect_challenge_course';
   static const shopItemDetail = '/shop/item/detail';
   static const adMobRewarded = '/admob/reward';
   static const adMobRewardedInterstitial = '/admob/interstitial';
@@ -212,6 +214,7 @@ class Routes {
     stepPage(name: Routes.laboratory, page: const Laboratory()),
     stepPage(name: Routes.laboratorySolanaCreateWallet, page: const LaboratorySolanaCreateWallet()),
     stepPage(name: Routes.laboratorySolanaTransfer, page: const LaboratorySolanaTransfer()),
+    stepPage(name: Routes.laboratoryDetectChallengeCourse, page: const LaboratoryDetectChallengeCourse()),
     stepPage(name: Routes.webView, page: const WebView()),
     stepPage(name: Routes.noticeWebView, page: const NoticeWebView()),
     stepPage(name: Routes.laboratoryEndPoint, page: const LaboratoryEndPoint()),
