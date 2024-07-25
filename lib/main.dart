@@ -119,6 +119,13 @@ Future<void> checkInspectionNotice() async {
   });
 }
 
+Future<void> checkRegion() async {
+  String? language = HiveStore.loadString(key: HiveKey.serviceLanguage.name);
+  if(language == null){
+    HiveStore.save(key: HiveKey.serviceLanguage.name, value: 'ko');
+  }
+}
+
 
 void main() async {
   await runZonedGuarded(() async {
@@ -134,6 +141,7 @@ void main() async {
     KakaoSdk.init(
       nativeAppKey: F.isDev ? '930bba5aed33cd931e3f56280a663785' : '2e02e4417b2bc7cdecb41b59d6196206',
     );
+    await checkRegion();
     initDebuggingMode();
     await initFirebase();
     await initFirebasePackages();

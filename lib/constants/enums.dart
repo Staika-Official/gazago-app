@@ -118,6 +118,7 @@ enum HiveKey {
   currentPosition,
   serviceStatus,
   isAlreadySigninUser,
+  serviceLanguage,
 }
 
 enum ResponseStatus {

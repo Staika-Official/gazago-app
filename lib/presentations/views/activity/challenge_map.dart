@@ -155,11 +155,13 @@ class ChallengeMap extends StatelessWidget {
                   activeLayerGroups: const [NLayerGroup.mountain],
                 ),
                 onMapReady:(mapController){
+                  controller.challengeMapController = mapController;
                   controller.onChallengeMapCreated(mapController);
                   mapController.addOverlayAll(
                     {...controller.challengeMarkers, ...controller.selectedChallengeMarkers},
                   );
                 } ,
+
               ),
               Padding(
                 padding: EdgeInsets.only(top: 68.sp),

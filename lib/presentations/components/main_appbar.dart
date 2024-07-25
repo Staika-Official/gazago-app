@@ -102,7 +102,17 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                     left: 8.sp,
                     right: 6.sp,
                   ),
-                  child: InkWell(
+                  child: walletMasterController.spendingTokens.value.isEmpty ?
+                      InkWell(
+                        onTap: () => walletMasterController.initializeController(),
+                        child: Container(
+                          child:
+                          StyledText(
+                            '지갑이 없어요'
+                          ),
+                        ),
+                      )
+                      : InkWell(
                     onTap: () => walletMasterController.moveToWallet(),
                     child: Row(
                       children: [

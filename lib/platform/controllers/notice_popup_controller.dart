@@ -70,51 +70,67 @@ class NoticePopupController extends GetxController with PromotionMixin {
   Future<void> initController() async {
     await getPromotionAdsList();
     await getNoticePopupList();
-    await getMainNoticePopupList();
+    // await getMainNoticePopupList();
     showMainPopup();
-  }
-
-  Future<void> getMainNoticePopupList() async {
-    await BoardService.getMainNoticePopupList(
-      successCallback: (List<NoticePopupModel> records) {
-        records.removeWhere((element) => element.type == 'INSPECTION');
-        if (promotionAdsList.isNotEmpty) {
-          for (PromotionAdModel promotion in promotionAdsList) {
-            NoticePopupModel promotionAd = NoticePopupModel(
-              imageUrlKo: promotion.imageUrl,
-              label: promotion.label,
-              openType: promotion.openType,
-              linkUrl: promotion.linkUrl,
-              listOrder: promotion.listOrder,
-              isAdsBanner: true,
-            );
-            noticeMainPopupList.add(promotionAd);
-          }
-        }
-        noticeMainPopupList.addAll(records);
-        noticeMainPopupList.sort((a, b) => a.listOrder!.compareTo(b.listOrder!));
-      },
-    );
   }
 
   Future<void> getNoticePopupList() async {
     await BoardService.getNoticePopupList(
-      successCallback: (List<NoticePopupModel> records) {
-        records.removeWhere((element) => element.type == 'INSPECTION');
-        noticePopupList.addAll(records);
-        List<int>? noticePopupListIds = HiveStore.load(key: HiveKey.noticePopupListIds.name);
-        if (noticePopupListIds != null && noticePopupListIds.isNotEmpty) {
-          for (NoticePopupModel notice in noticePopupList) {
-            if (!noticePopupListIds.contains(notice.id!)) {
-              hasNewNotice.value = true;
-              break;
-            }
-          }
-        } else if (noticePopupListIds == null && noticePopupList.isNotEmpty) {
-          hasNewNotice.value = true;
-        }
+      successCallback: (List<NoticePopupModel> records) async {
+
+        List<NoticePopupModel> mainPopupList = records.toList();
+        List<NoticePopupModel> alramList = records.toList();
+
+        setMainNoticePopupList(mainPopupList);
+        setNoticePopupList(alramList);
       },
     );
+  }
+
+  bool dateRangeFiltered(item){
+    DateTime now = DateTime.now();
+    DateTime displayFromDate = DateTime.parse(item.displayFromDate);
+    DateTime displayToDate = DateTime.parse(item.displayToDate);
+    return now.isAfter(displayFromDate) && now.isBefore(displayToDate);
+  }
+
+  void setMainNoticePopupList(List<NoticePopupModel>  list)  {
+
+    list.removeWhere((element) => (element.type == 'INSPECTION' || element.mainDisplayed == false) || !dateRangeFiltered(element));
+
+    if (promotionAdsList.isNotEmpty) {
+      for (PromotionAdModel promotion in promotionAdsList) {
+        NoticePopupModel promotionAd = NoticePopupModel(
+          imageUrlKo: promotion.imageUrl,
+          label: promotion.label,
+          openType: promotion.openType,
+          linkUrl: promotion.linkUrl,
+          listOrder: promotion.listOrder,
+          isAdsBanner: true,
+        );
+        noticeMainPopupList.add(promotionAd);
+      }
+    }
+    noticeMainPopupList.addAll(list);
+    noticeMainPopupList.sort((a, b) => a.listOrder!.compareTo(b.listOrder!));
+  }
+
+  setNoticePopupList(List<NoticePopupModel>  list) {
+    list.removeWhere((element) => element.type == 'INSPECTION');
+    print('getMainNoticePopupList : ${list.length}');
+    print('getMainNoticePopupList : ${list}');
+    noticePopupList.addAll(list);
+    List<int>? noticePopupListIds = HiveStore.load(key: HiveKey.noticePopupListIds.name);
+    if (noticePopupListIds != null && noticePopupListIds.isNotEmpty) {
+      for (NoticePopupModel notice in noticePopupList) {
+        if (!noticePopupListIds.contains(notice.id!)) {
+          hasNewNotice.value = true;
+          break;
+        }
+      }
+    } else if (noticePopupListIds == null && noticePopupList.isNotEmpty) {
+      hasNewNotice.value = true;
+    }
   }
 
   void moveToWebView(NoticePopupModel item) async {

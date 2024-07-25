@@ -123,7 +123,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         await initActivityStatus();
       }
 
-      await loadChallenges();
+
 
 
 
@@ -171,11 +171,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> loadMakerImages() async {
-    startMarker = await NOverlayImage.fromAssetImage(
+    startMarker = const NOverlayImage.fromAssetImage(
       'assets/images/activity/ico_challenge_start_marker.png',
     );
 
-    endMarker = await NOverlayImage.fromAssetImage(
+    endMarker = const NOverlayImage.fromAssetImage(
       'assets/images/activity/ico_challenge_end_marker.png',
     );
 
@@ -232,7 +232,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     challengeSelectedIndex.value = course.id!;
     selectedChallengeMarkers.clear();
     challengeMarkers.removeWhere(( element) {
-      return element.id == challengeSelectedIndex.value.toString();
+      return element.info.id == challengeSelectedIndex.value.toString();
     });
 
     selectedChallengeMarkers.add(getCustomMarker(id: course.id.toString(), markerType: "START", course: course, markerIcon: startMarker));
@@ -893,7 +893,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         */
 
         print(detectDelay.value);
-
+        if (betweenDistance.value < 2000) {
+          detectDelay.value = 30;
+        }
         if (receiveLocationTime.value.add( Duration(seconds: detectDelay.value)).isBefore(now)) {
 
           if (gpsSpeed.value < 15) {

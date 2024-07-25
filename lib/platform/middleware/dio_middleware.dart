@@ -62,8 +62,8 @@ class Api {
       'showLoading': showLoading,
     };
     _dio.options.headers['Content-Type'] = 'application/json; charset=utf-8';
+    String headerLang = HiveStore.loadString(key: HiveKey.serviceLanguage.name) == 'ko'? 'ko-KR' : 'ja-JP';
 
-    String headerLang = getx.Get.locale?.languageCode == 'ko' ? 'ko-KR' : 'en-US';
     _dio.options.headers['Accept-Language'] = headerLang;
 
     if (needsToken) {
@@ -160,6 +160,7 @@ class Api {
       '\nREQUEST'
       '\nMethods: ${options.method}'
       '\nHeader Content-Type: ${options.headers['Content-Type']}'
+      '\nHeader Accept-Language: ${options.headers['Accept-Language']}'
       '\nHeader Authorization: ${options.headers['Authorization']}'
       '\nPath: ${options.baseUrl + options.path}'
       '\nQueries: ${(options.queryParameters)}'

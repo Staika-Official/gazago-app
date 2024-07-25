@@ -176,7 +176,7 @@ class LoadingController extends GetxController {
       successCallback: (termsList) {
         this.termsList.value = termsList;
         if (allRequiredAgreed.value) {
-          if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().initializeController();
+          // if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().initializeController();
           if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().initializeController();
         } else {
           timerStop();

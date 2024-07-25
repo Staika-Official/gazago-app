@@ -92,8 +92,8 @@ class ActivityChallengeCourses extends StatelessWidget {
                 controller.onChallengeMapCreated(mapController);
                 mapController.addOverlayAll(
                   {
-                    if (controller.selectedCourse.value != null) ...renderCircleOverlays(controller.selectedCourse.value),
-                    if (controller.selectedCourse.value != null) ...renderMarkers(controller.selectedCourse.value),
+                    ...renderCircleOverlays(controller.selectedCourse.value),
+                    ...renderMarkers(controller.selectedCourse.value),
                   },
                 );
               },

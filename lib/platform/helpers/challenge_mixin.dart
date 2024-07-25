@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
@@ -15,6 +16,8 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:throttling/throttling.dart';
+
+import '../models/checkpoint_model.dart';
 
 mixin ChallengeMixin {
   GlobalController globalController = Get.find();
@@ -27,11 +30,11 @@ mixin ChallengeMixin {
   final RxList<ChallengeCourseModel> doableCourses = RxList.empty();
   final Rxn<ChallengeCourseModel> selectedCourse = Rxn();
   final Rxn<ChallengeModel> selectedChallenge = Rxn();
-  late NaverMapController challengeMapController;
+
   final RxList challengeMarkers = RxList.empty();
   final RxList<NMarker> selectedChallengeMarkers = RxList.empty();
   final Throttling challengeThr = Throttling(duration: const Duration(milliseconds: 500));
-
+  late NaverMapController challengeMapController;
   RxList<ChallengeCourseModel> get doableCoursesByChallenge {
     if (selectedChallenge.value != null) {
       return RxList(doableCourses.where((course) => course.challengeId == selectedChallenge.value!.id).toList());
@@ -164,11 +167,12 @@ mixin ChallengeMixin {
   }
 
   Future<void> getNearByCourses(Position currentLocation, ExerciseState exerciseState) async {
-    nearByCourses.clear();
-    nearByCourses.value = RxList.empty();
-    Future.delayed(Duration(milliseconds: 500));
-    await ActivityService.getNearByCourses(currentLocation, successCallback: (List<ChallengeCourseModel> result) {
 
+
+    // Future.delayed(Duration(milliseconds: 500));
+    await ActivityService.getNearByCourses(currentLocation, successCallback: (List<ChallengeCourseModel> result) {
+      // nearByCourses.clear();
+      nearByCourses.value = RxList.empty();
       if (result.isNotEmpty) {
         notificationOnCourse(result, exerciseState);
       }
@@ -253,12 +257,12 @@ mixin ChallengeMixin {
       listHeight.value = listKey.currentContext!.size!.height;
     }
     if (selectedCourse.value?.checkpoints != null && selectedCourse.value!.checkpoints!.isNotEmpty) {
-      List<NLatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!);
+      List<NLatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!,  selectedCourse.value!);
 
       challengeMapController.updateCamera(
         NCameraUpdate.fitBounds(
           NLatLngBounds.from(markers),
-          padding: EdgeInsets.all(120),
+          padding: EdgeInsets.all(150),
         ),
       );
     }
@@ -266,13 +270,21 @@ mixin ChallengeMixin {
 
   void selectCourse(ChallengeCourseModel course) {
     selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
-    if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
-      List<NLatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!);
+    challengeMapController.clearOverlays();
+    challengeMapController.addOverlayAll(
+      {
+        ...renderCircleOverlays(selectedCourse.value),
+        ...renderMarkers(selectedCourse.value),
 
+      },
+    );
+    if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
+
+      List<NLatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!,  selectedCourse.value!);
       challengeMapController.updateCamera(
         NCameraUpdate.fitBounds(
           NLatLngBounds.from(markers),
-          padding: EdgeInsets.all(120),
+          padding: EdgeInsets.all(150),
         ),
       );
     } else {
@@ -288,13 +300,31 @@ mixin ChallengeMixin {
         ),
       );
     }
+
+
   }
 
-  List<NLatLng> getCheckPointsCourse(markers) {
-    double minLat = markers.map((marker) => marker.lat).reduce((a, b) => a < b ? a : b);
-    double maxLat = markers.map((marker) => marker.lat).reduce((a, b) => a > b ? a : b);
-    double minLng = markers.map((marker) => marker.lon).reduce((a, b) => a < b ? a : b);
-    double maxLng = markers.map((marker) => marker.lon).reduce((a, b) => a > b ? a : b);
+  List<NLatLng> getCheckPointsCourse(markers, selectCourse) {
+    List<dynamic> allPoints = [
+      CheckpointModel(
+        lat: selectCourse.startLat,
+        lon: selectCourse.startLon,
+      ),
+      CheckpointModel(
+        lat: selectCourse.endLat,
+        lon: selectCourse.endLon,
+      ),
+      ...markers
+    ];
+    double minLat = allPoints.map((point) => point.lat).reduce((a, b) => a < b ? a : b);
+    double maxLat = allPoints.map((point) => point.lat).reduce((a, b) => a > b ? a : b);
+    double minLng = allPoints.map((point) => point.lon).reduce((a, b) => a < b ? a : b);
+    double maxLng = allPoints.map((point) => point.lon).reduce((a, b) => a > b ? a : b);
+    //
+    // double minLat = markers.map((marker) => marker.lat).reduce((a, b) => a < b ? a : b);
+    // double maxLat = markers.map((marker) => marker.lat).reduce((a, b) => a > b ? a : b);
+    // double minLng = markers.map((marker) => marker.lon).reduce((a, b) => a < b ? a : b);
+    // double maxLng = markers.map((marker) => marker.lon).reduce((a, b) => a > b ? a : b);
 
     // double aspectRatio = (maxLng - minLng) / (maxLat - minLat);
 

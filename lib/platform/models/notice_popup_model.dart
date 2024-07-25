@@ -9,6 +9,7 @@ class NoticePopupModel {
   String? clientId;
   bool? displayed;
   bool? activated;
+  bool? mainDisplayed;
   int? listOrder;
   int? referenceId;
   int? challengeId;
@@ -35,6 +36,7 @@ class NoticePopupModel {
     this.clientId,
     this.displayed,
     this.activated,
+    this.mainDisplayed,
     this.listOrder,
     this.referenceId,
     this.challengeId,

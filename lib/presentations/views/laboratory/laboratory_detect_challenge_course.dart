@@ -150,7 +150,7 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
                       children: [
                         StyledText('speed : '),
                         StyledText(
-                            '${formatDecimalPlaces(convertMStoKMH(controller.gpsSpeed.value), 2)} km/h'
+                            '${formatDecimalPlaces(controller.gpsSpeed.value, 0)} km/h'
                         ),
                       ],
                     ),

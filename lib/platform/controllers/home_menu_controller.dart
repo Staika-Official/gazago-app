@@ -75,13 +75,15 @@ class HomeMenuController extends SuperController {
   @override
   void onReady() async {
     Get.isRegistered<ActivityController>() ? Get.find<ActivityController>().initializeExercise() : Get.put(ActivityController()).initializeExercise();
+    Get.isRegistered<ActivityController>() ? Get.find<ActivityController>().loadChallenges()  : Get.put(ActivityController()).loadChallenges();
+    Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().initializeController()  : Get.put(WalletMasterController()).initializeController();
     await checkUpdates();
     bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;
     checkItemsDb();
     handlePendingDynamicLink();
     checkForNewChallenges();
     await checkUserCI();
-    await handleCheckGetSpendingWallet();
+    // await handleCheckGetSpendingWallet();
     handleAppNotification();
     super.onReady();
   }

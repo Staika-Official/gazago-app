@@ -27,6 +27,7 @@ class DebuggingController extends GetxController {
   final TextEditingController endPointPasswordController = TextEditingController();
   final Rx<EndPointType> endPointType = Rx(EndPointType.stage);
   final RxBool allowFakeGps = RxBool(false);
+  final RxString regionLanguage = RxString('');
   final RxList<NewChallengeModel> challengesList = RxList.empty();
   final Rxn<NewChallengeModel> selectedChallenge = Rxn();
   RxString get shareUrl {
@@ -43,6 +44,7 @@ class DebuggingController extends GetxController {
     isShowDebuggingMenu.value = HiveStore.load(key: HiveKey.isDebuggingMode.name);
     endPointType.value = F.baseUrl.contains('api.stage') ? EndPointType.stage : EndPointType.prod;
     allowFakeGps.value = HiveStore.load(key: HiveKey.allowFakeGpsTest.name) ?? false;
+    regionLanguage.value = HiveStore.load(key: HiveKey.serviceLanguage.name);
     getChallengeList();
     super.onInit();
   }
@@ -142,6 +144,13 @@ class DebuggingController extends GetxController {
   void setGpsPermission(bool val) {
     allowFakeGps.value = val;
     HiveStore.save(key: HiveKey.allowFakeGpsTest.name, value: val);
+  }
+
+  void setRegionLanguage(String val) {
+    regionLanguage.value = val;
+    HiveStore.save(key: HiveKey.serviceLanguage.name, value: val);
+
+
   }
 
   Future<void> getChallengeList() async {

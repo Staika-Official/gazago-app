@@ -247,21 +247,21 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
     onInit();
   }
 
+
   Future<void> getSpendingWalletBalances({bool showLoading = false}) async {
     await WalletService.getSpendingWalletBalances(
         showLoading: showLoading,
         successCallback: (balances) {
           HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: false);
           spendingTokens.value = balances;
+          // spendingTokens.value = [];
         },
         errorCallback: (ErrorResponseDataModel? error) {
           HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: true);
           if (Get.currentRoute != Routes.loading) {
-            showRefetchGetSpendingWalletAlert();
 
-            if (!isGetFailSpendingWallet.value) {
-              showRefetchGetSpendingWalletAlert();
-            }
+
+            showRefetchGetSpendingWalletAlert();
             isGetFailSpendingWallet.value = true;
           }
         });

@@ -63,7 +63,7 @@ List<NMarker> renderMarkers(ChallengeCourseModel? course) {
   if (course != null) {
     NMarker startMaker = getCustomMarker(id: course.id.toString(), markerType: "START", course: course, markerIcon: controller.startMarker);
 
-    NMarker endMaker = getCustomMarker(id: course.id.toString(),markerType: "END", course: course, markerIcon: controller.startMarker);
+    NMarker endMaker = getCustomMarker(id: course.id.toString(),markerType: "END", course: course, markerIcon: controller.endMarker);
 
     List<NMarker> checkpointMarker() {
       if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
@@ -84,55 +84,73 @@ List<NMarker> renderMarkers(ChallengeCourseModel? course) {
 }
 
 NMarker getCustomMarker({required String id, required String markerType, required ChallengeCourseModel course, NOverlayImage? markerIcon, Function(NMarker?, Map<String, int?>)? onMarkerTab}) {
-  NMarker startMarker = NMarker(
-    id: id,
-    position: NLatLng(course.startLat!, course.startLon!),
-    caption: NOverlayCaption(
-      text: '시작: ${course.startPointName}',
-      color: skyBlueColor,
-      haloColor: Colors.black,
-      textSize: 16.0.sp,
-    ),
-
-
-    // subCaptionTextSize: 14.sp,
-    // subCaptionText: course.secondName,
-    // subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-    // subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-    captionOffset: 5,
-    icon: markerIcon,
-    size: const Size(20,20),
-
-    // Todo: 여기서 마커 클릭 이벤트 처리
-    // onMarkerTab: onMarkerTab,
-  );
-
-  NMarker endMarker = NMarker(
-    id: 'end_${id}',
-    position: NLatLng(course.endLat!, course.endLon!),
-    caption: NOverlayCaption(
-      text: '도착: ${course.endPointName}',
-      color: const Color(0xFFFF6F75),
-      haloColor: Colors.black,
-      textSize: 16.0.sp,
-    ),
-
-    captionOffset: 5,
-    // subCaptionText: course.secondName,
-    // subCaptionTextSize: 14.sp,
-    // subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
-    // subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
-    icon: markerIcon,
-    size: const Size(20,20),
-  );
 
   switch (markerType) {
     case 'START':
-      return startMarker;
+      return  NMarker(
+        id: id,
+        position: NLatLng(course.startLat!, course.startLon!),
+        caption: NOverlayCaption(
+          text: '시작: ${course.startPointName}',
+          color: skyBlueColor,
+          haloColor: Colors.black,
+          textSize: 16.0.sp,
+        ),
+
+
+        // subCaptionTextSize: 14.sp,
+        // subCaptionText: course.secondName,
+        // subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+        // subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+        captionOffset: 5,
+        icon: markerIcon,
+        size: const Size(20,20),
+
+        // Todo: 여기서 마커 클릭 이벤트 처리
+        // onMarkerTab: onMarkerTab,
+      );
     case 'END':
-      return endMarker;
+      return NMarker(
+        id: 'end_${id}',
+        position: NLatLng(course.endLat!, course.endLon!),
+        caption: NOverlayCaption(
+          text: '도착: ${course.endPointName}',
+          color: const Color(0xFFFF6F75),
+          haloColor: Colors.black,
+          textSize: 16.0.sp,
+        ),
+
+        captionOffset: 5,
+        // subCaptionText: course.secondName,
+        // subCaptionTextSize: 14.sp,
+        // subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+        // subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+        icon: markerIcon,
+        size: const Size(20,20),
+      );
     default:
-      return startMarker;
+      return NMarker(
+        id: id,
+        position: NLatLng(course.startLat!, course.startLon!),
+        caption: NOverlayCaption(
+          text: '시작: ${course.startPointName}',
+          color: skyBlueColor,
+          haloColor: Colors.black,
+          textSize: 16.0.sp,
+        ),
+
+
+        // subCaptionTextSize: 14.sp,
+        // subCaptionText: course.secondName,
+        // subCaptionColor: (Platform.isAndroid) ? Colors.white : Colors.black,
+        // subCaptionHaloColor: (Platform.isAndroid) ? Colors.black : Colors.white,
+        captionOffset: 5,
+        icon: markerIcon,
+        size: const Size(20,20),
+
+        // Todo: 여기서 마커 클릭 이벤트 처리
+        // onMarkerTab: onMarkerTab,
+      );
   }
 }
 
