@@ -244,7 +244,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }
 
     selectedChallengeMarkers.add(getCustomMarker(id: course.id.toString(), markerType: "END", course: course, markerIcon: endMarker));
-
+    challengeMapController.clearOverlays();
+    challengeMapController.addOverlayAll(
+      {...challengeMarkers, ...selectedChallengeMarkers},
+    );
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
       List<NLatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
       challengeMapController.updateCamera(

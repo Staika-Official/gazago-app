@@ -156,11 +156,12 @@ class ChallengeMap extends StatelessWidget {
                 ),
                 onMapReady:(mapController){
                   controller.challengeMapController = mapController;
-                  controller.onChallengeMapCreated(mapController);
+                  controller.onChallengeMapCreated();
                   mapController.addOverlayAll(
                     {...controller.challengeMarkers, ...controller.selectedChallengeMarkers},
                   );
                 } ,
+
 
               ),
               Padding(
