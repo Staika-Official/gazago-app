@@ -89,6 +89,7 @@ class ActivityChallengeCourses extends StatelessWidget {
           children: [
             NaverMap(
               onMapReady: (mapController) {
+                controller.challengeMapController = mapController;
                 controller.onChallengeMapCreated();
                 mapController.addOverlayAll(
                   {
