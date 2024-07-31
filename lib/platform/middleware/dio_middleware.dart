@@ -276,9 +276,9 @@ class Api {
       return;
     }
 
-    Dio dio = Dio();
+    // Dio dio = Dio();
     e.requestOptions.headers['Authorization'] = 'Bearer $accessToken';
-    await dio
+    await _dio
         .request(
       e.requestOptions.baseUrl + e.requestOptions.path,
       options: Options(
@@ -391,6 +391,8 @@ class Api {
 
       HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
       HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
+      _dio.options.headers['Authorization'] = 'Bearer ${newToken.accessToken}';
+      e.requestOptions.headers['Authorization'] = 'Bearer ${newToken.accessToken}';
       needToRefreshToken = false;
       print('_retryFailedRequest');
       print('_retryFailedRequest : res.requestOptions.path ${res.requestOptions.path}');
