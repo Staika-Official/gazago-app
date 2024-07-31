@@ -565,7 +565,8 @@ class ActivityActive extends StatelessWidget {
                   Padding(
                       padding: EdgeInsets.only(left: 38.0.sp, right: 38.sp, top: 20.sp),
                       child: Container(
-                        width: double.infinity.sp,
+                        // width: double.infinity.sp,
+                        width: 300,
                         padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 24.sp),
                         decoration: BoxDecoration(
                           color: Colors.black,
