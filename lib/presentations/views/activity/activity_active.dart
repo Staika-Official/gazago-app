@@ -60,8 +60,8 @@ class ActivityActive extends StatelessWidget {
     double spaceLeft = constraints.maxWidth - (totalBars * barWidth);
     double spacesBetweenBars = spaceLeft / (totalBars - 1);
 
-    // 속도가 15 이상인 경우 35번째 바에 표시
-    if (speed >= 15) {
+    // 속도가 12 이상인 경우 35번째 바에 표시
+    if (speed >= 12) {
       return (totalBars - 1) * (barWidth + spacesBetweenBars) + (barWidth / 2);
     }
 
