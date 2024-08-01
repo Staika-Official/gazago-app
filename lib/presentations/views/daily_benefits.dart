@@ -20,7 +20,7 @@ class DailyBenefits extends StatelessWidget {
 
   Widget _renderTitleText(String title) {
     List<String> list = title.split(RegExp(r'([0-9]+(\s|\S)TIK)|([0-9]+(\s|\S)GO)|(아이템)'));
-    List<String?> keywords = RegExp(r'([0-9]+(\s|\S)TIK)|([0-9]+(\s|\S)GO)|(아이템)').allMatches(title).map((match) => match.group(0)).toList();
+    List<String?> keywords = RegExp(r'(TIK)|([0-9]+(\s|\S)GO)|(아이템)').allMatches(title).map((match) => match.group(0)).toList();
     List<TextSpan> textSpanList = List.empty(growable: true);
 
     for (int idx = 1; idx < list.length; idx++) {
