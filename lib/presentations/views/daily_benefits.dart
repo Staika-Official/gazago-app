@@ -301,7 +301,7 @@ class DailyBenefits extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  icon: iconInfo,
+                                  icon: iconExclamationMarkSmall,
                                   splashRadius: 15.sp,
                                 ),
                               ),

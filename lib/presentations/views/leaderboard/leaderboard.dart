@@ -682,7 +682,7 @@ class LeaderboardHome extends StatelessWidget {
                     child: IconButton(
                       padding: EdgeInsets.zero,
                       onPressed: () => showLeaderboardInfo(),
-                      icon: iconInfo,
+                      icon: iconExclamationMarkSmall,
                       splashRadius: 15.sp,
                     ),
                   ),

@@ -62,7 +62,7 @@ class UaaApi {
   static Future<Response> fetchUploadImageUrl(String fileName) async {
     return await Api.client(
       serviceUrl: ServiceUrl.uaaService,
-      isFile: true,
+      isFile: false,
       allowCustomErrorHandler: true,
     ).get('/images/presigned-url/profile?fileName=$fileName');
   }
