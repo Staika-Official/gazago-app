@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/wallet_on_chain_nft_detail_controll
 import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
@@ -63,7 +64,7 @@ class OnChainNftDetail extends StatelessWidget {
                                         ? SvgPicture.network(
                                             fit: BoxFit.cover,
                                             controller.nftDetail.value!.json!.image!,
-                                            placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                            placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                             headers: imageNetworkHeader,
                                           )
                                         : CachedNetworkImage(

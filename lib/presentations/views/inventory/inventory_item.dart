@@ -62,19 +62,19 @@ class InventoryItem extends StatelessWidget {
                               SizedBox(
                                 height: 60.sp,
                                 child: controller.isConsumerItemUsing.value != null && controller.isConsumerItemUsing.value.id == item.id
-                                    ? const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator()))
+                                    ? const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor)))
                                     : Container(
                                         child: item.itemImageUrl.contains('.svg')
                                             ? SvgPicture.network(
                                                 fit: BoxFit.fitHeight,
                                                 item.itemImageUrl,
-                                                placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                                 headers: imageNetworkHeader,
                                               )
                                             : CachedNetworkImage(
                                                 imageUrl: item.itemImageUrl,
                                                 fit: BoxFit.fitHeight,
-                                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                                 errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                                                 httpHeaders: imageNetworkHeader,
                                                 color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),

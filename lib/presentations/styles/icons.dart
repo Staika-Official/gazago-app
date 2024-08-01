@@ -41,6 +41,12 @@ SvgPicture iconAllCheckDisagree = SvgPicture.asset('assets/images/common/ico_all
 SvgPicture iconCheckAgree = SvgPicture.asset('assets/images/common/ico_check_agree.svg', width: 24.sp, height: 24.sp);
 SvgPicture iconCheckDisagree = SvgPicture.asset('assets/images/common/ico_check_disagree.svg', width: 24.sp, height: 24.sp);
 SvgPicture iconTermsArrowRight = SvgPicture.asset('assets/images/common/ico_terms_arrow_right.svg', width: 18.sp, height: 18.sp);
+
+// Header
+SvgPicture iconHeaderTik = SvgPicture.asset('assets/images/common/ico_header_tik.svg', width: 24.sp, height: 24.sp);
+SvgPicture iconHeaderStik = SvgPicture.asset('assets/images/common/ico_header_stik.svg', width: 24.sp, height: 24.sp);
+SvgPicture iconHeaderRefresh = SvgPicture.asset('assets/images/common/ico_header_refresh.svg', width: 24.sp, height: 24.sp);
+
 // Bottom Navigation Icon
 SvgPicture iconMenuHome = SvgPicture.asset('assets/images/common/ico_menu_home.svg', width: 20.5.sp, height: 20.5.sp);
 SvgPicture iconMenuHomeActive = SvgPicture.asset('assets/images/common/ico_menu_home_active.svg', width: 20.5.sp, height: 20.5.sp);

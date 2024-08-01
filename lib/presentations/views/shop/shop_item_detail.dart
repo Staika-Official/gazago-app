@@ -99,15 +99,15 @@ class ShopItemDetail extends StatelessWidget {
                                                                   controller.selectedItem.value.itemImageUrl!,
                                                                   placeholderBuilder: (BuildContext context) => Container(
                                                                     padding: const EdgeInsets.all(30.0),
-                                                                    child: const CircularProgressIndicator(),
+                                                                    child: const CircularProgressIndicator(color:skyBlueColor),
                                                                   ),
                                                                   headers: imageNetworkHeader,
                                                                 )
                                                               : CachedNetworkImage(
                                                                   imageUrl: controller.selectedItem.value.itemImageUrl!,
                                                                   fit: BoxFit.fitWidth,
-                                                                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                                                  errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                                                  errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                                                   httpHeaders: imageNetworkHeader,
                                                                 ),
                                                         ),
@@ -759,8 +759,8 @@ class ShopItemDetail extends StatelessWidget {
                                               image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                                             ),
                                           ),
-                                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                          errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                          errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                           httpHeaders: imageNetworkHeader,
                                         ),
                                       )

@@ -755,12 +755,12 @@ void showBadgeAcquisitionAlert(String badgeImgUrl, ChallengeCourseModel selected
                   fit: BoxFit.contain,
                   badgeImgUrl,
                   width: 150.sp,
-                  placeholderBuilder: (BuildContext context) => Container(width: 150, height: 150, padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                  placeholderBuilder: (BuildContext context) => Container(width: 150, height: 150, padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator(color:skyBlueColor)),
                   headers: imageNetworkHeader,
                 )
               : CachedNetworkImage(
                   imageUrl: badgeImgUrl,
-                  placeholder: (context, url) => Container(width: 150, height: 150, padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator()),
+                  placeholder: (context, url) => Container(width: 150, height: 150, padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator(color:skyBlueColor)),
                   fit: BoxFit.fitWidth,
                   width: 150.sp,
                   httpHeaders: imageNetworkHeader,
@@ -825,12 +825,12 @@ Future<void> showChallengeBadgeAcquisitionAlert(PushMessageChallengeSuccessModel
                   fit: BoxFit.contain,
                   pushMessageData.badgeImageUrl!,
                   width: 150.sp,
-                  placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                  placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                   headers: imageNetworkHeader,
                 )
               : CachedNetworkImage(
                   imageUrl: pushMessageData.badgeImageUrl!,
-                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                   fit: BoxFit.fitWidth,
                   width: 150.sp,
                   httpHeaders: imageNetworkHeader,
@@ -1722,14 +1722,14 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                       ? SvgPicture.network(
                           fit: BoxFit.contain,
                           controller.purchaseCompleteItem.value.itemImageUrl,
-                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                           headers: imageNetworkHeader,
                         )
                       : CachedNetworkImage(
                           imageUrl: controller.purchaseCompleteItem.value.itemImageUrl,
                           fit: BoxFit.fitWidth,
-                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                          errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                          errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                           httpHeaders: imageNetworkHeader,
                         ),
                 ),
@@ -5423,11 +5423,11 @@ void consumerItemUsagePopup(controller, context) {
                                                 child: item.itemImageUrl.contains('.svg')
                                                     ? SvgPicture.network(
                                                         item.itemImageUrl,
-                                                        placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                        placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                                       )
                                                     : CachedNetworkImage(
                                                         imageUrl: item.itemImageUrl,
-                                                        placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                        placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                                         errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                                                       ),
                                               ),
@@ -7637,8 +7637,8 @@ void showChallengeLandingPopup(ChallengesDetailController controller, ChallengeL
                   child: CachedNetworkImage(
                     imageUrl: landingInfo.imageUrl!,
                     fit: BoxFit.fitWidth,
-                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                    errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                    errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                     httpHeaders: imageNetworkHeader,
                   ),
                 ),
@@ -7954,6 +7954,51 @@ void showRefetchGetSpendingWalletAlert() {
           onTap: () {
             Get.back();
             walletMasterController.getSpendingWalletBalances();
+          },
+          buttonText: '확인',
+          buttonColor: skyBlueColor,
+        ),
+      ),
+    ],
+  );
+}
+
+void showFailureGetSpendingWalletAlert() {
+  WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
+  showAlert(
+    allowMultipleBottomSheet: true,
+    contentWidget: Padding(
+      padding: EdgeInsets.only(top: 0.0.sp, bottom: 32.sp),
+      child: Column(
+        children: [
+
+          iconPopupExclamationMark,
+          Padding(
+            padding: EdgeInsets.only(top: 16.0.sp),
+            child: Text(
+              '잠시 후 다시 시도해주세요',
+              style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                  color: AppColorData.regular().colorTextPrimary
+              )
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20.0.sp),
+            child: Text(
+              '일시적인 오류로 지갑 정보를 불러 올 수 없습니다.',
+                style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                    color: AppColorData.regular().colorTextPrimary
+                )
+            ),
+          ),
+        ],
+      ),
+    ),
+    actions: [
+      Expanded(
+        child: GazagoButton(
+          onTap: () {
+            Get.back();
           },
           buttonText: '확인',
           buttonColor: skyBlueColor,

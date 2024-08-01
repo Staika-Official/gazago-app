@@ -70,7 +70,7 @@ class CollectionDetail extends StatelessWidget {
             data.item.imageUrl,
             width: 60.sp,
             height: 60.sp,
-            placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(),
+            placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(color:skyBlueColor),
           );
         } else {
           return Image.network(
@@ -91,7 +91,7 @@ class CollectionDetail extends StatelessWidget {
             data.badgeComposeConfig.imageUrl,
             width: 60.sp,
             height: 60.sp,
-            placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(),
+            placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(color:skyBlueColor),
           );
         } else {
           return Image.network(

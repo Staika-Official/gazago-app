@@ -15,6 +15,7 @@ import 'package:gaza_go/platform/models/user_badges_summaries_model.dart';
 import 'package:gaza_go/platform/models/user_items_summaries_model.dart';
 import 'package:gaza_go/platform/services/collection_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class CollectionDetailController extends GetxController {
@@ -157,7 +158,7 @@ class CollectionDetailController extends GetxController {
           imageUrl,
           width: 148.sp,
           height: 148.sp,
-          placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(),
+          placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(color:skyBlueColor),
         );
       } else {
         return Image.network(

@@ -64,6 +64,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   final Throttling thr = Throttling(duration: const Duration(milliseconds: 1000));
   RxString clickedAssetButton = RxString('');
   final RxBool isGetFailSpendingWallet = RxBool(false);
+  final RxBool isWalletGetLoading = RxBool(false);
 
   RxList<AssetTokenBalanceModel> get allTikUiList {
     List<AssetTokenBalanceModel> balanceUiList = List.empty(growable: true);
@@ -248,24 +249,29 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
   }
 
 
+
   Future<void> getSpendingWalletBalances({bool showLoading = false}) async {
+    loaderController.isLoading.value = true;
+    isWalletGetLoading.value = true;
     await WalletService.getSpendingWalletBalances(
         showLoading: showLoading,
         successCallback: (balances) {
           HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: false);
           spendingTokens.value = balances;
           // spendingTokens.value = [];
+          // showFailureGetSpendingWalletAlert();
         },
         errorCallback: (ErrorResponseDataModel? error) {
           HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: true);
           if (Get.currentRoute != Routes.loading) {
 
 
-            showRefetchGetSpendingWalletAlert();
+            showFailureGetSpendingWalletAlert();
             isGetFailSpendingWallet.value = true;
           }
         });
-
+    loaderController.isLoading.value = false;
+    isWalletGetLoading.value = false;
     // if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("서비스를 위해 정보를 불러오는 중입니다.");
   }
 

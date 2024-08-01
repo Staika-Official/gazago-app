@@ -47,13 +47,13 @@ class InventoryBadge extends StatelessWidget {
                             ? SvgPicture.network(
                                 fit: BoxFit.contain,
                                 item.imageUrl!,
-                                placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(20.0), child: const CircularProgressIndicator()),
+                                placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(20.0), child: const CircularProgressIndicator(color:skyBlueColor)),
                                 headers: imageNetworkHeader,
                               )
                             : CachedNetworkImage(
                                 imageUrl: item.imageUrl!,
                                 fit: BoxFit.contain,
-                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                 errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                                 httpHeaders: imageNetworkHeader,
                               ),

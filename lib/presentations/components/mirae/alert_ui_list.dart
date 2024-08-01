@@ -129,7 +129,7 @@ void miraeAssetAlert(int challengeId, String? challengeUserState) {
               fit: BoxFit.fill,
               width: double.infinity,
               imageUrl: 'https://s3.ap-northeast-2.amazonaws.com/image.stage.staika.io/popups/image_miraeasset_challenge_popup.png',
-              placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+              placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
               httpHeaders: imageNetworkHeader,
             ),
             Positioned(

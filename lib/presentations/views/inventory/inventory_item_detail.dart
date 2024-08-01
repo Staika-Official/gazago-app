@@ -110,14 +110,14 @@ class InventoryItemDetail extends StatelessWidget {
                                                                 fit: BoxFit.fitHeight,
                                                                 height: 170.sp,
                                                                 controller.selectedItem.value.itemImageUrl,
-                                                                placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                                placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                                                 headers: imageNetworkHeader,
                                                               )
                                                             : CachedNetworkImage(
                                                                 imageUrl: controller.selectedItem.value.itemImageUrl,
                                                                 height: 170.sp,
                                                                 fit: BoxFit.fitHeight,
-                                                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                                                 httpHeaders: imageNetworkHeader,
                                                               ),
                                                       ),
@@ -704,8 +704,8 @@ class InventoryItemDetail extends StatelessWidget {
                                                                 image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
                                                               ),
                                                             ),
-                                                            placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                                            errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                            placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                                            errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                                             httpHeaders: imageNetworkHeader,
                                                           ),
                                                         )

@@ -122,7 +122,7 @@ class ActivityChallengeCourses extends StatelessWidget {
                           fit: BoxFit.fitHeight,
                           width: 72.sp,
                           height: 72.sp,
-                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
                           headers: imageNetworkHeader,
                         )
                       : CachedNetworkImage(
@@ -130,7 +130,7 @@ class ActivityChallengeCourses extends StatelessWidget {
                           width: 72.sp,
                           height: 72.sp,
                           imageUrl: controller.selectedChallenge.value!.thumbnailImageUrl,
-                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
                           httpHeaders: imageNetworkHeader,
                         ),
                 ),

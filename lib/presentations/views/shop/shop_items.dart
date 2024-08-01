@@ -68,13 +68,13 @@ class ShopItems extends StatelessWidget {
                                         ? SvgPicture.network(
                                             fit: BoxFit.contain,
                                             item.itemImageUrl!,
-                                            placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                            placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                             headers: imageNetworkHeader,
                                           )
                                         : CachedNetworkImage(
                                             imageUrl: item.itemImageUrl!,
                                             fit: BoxFit.fitHeight,
-                                            placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                            placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                             errorWidget: (context, url, error) => Image.asset("assets/images/@temp_bal.png"),
                                             httpHeaders: imageNetworkHeader,
                                           ),
@@ -391,7 +391,7 @@ class ShopItems extends StatelessWidget {
                         ? shopController.dataGetLoading.value
                             ? Padding(
                                 padding: EdgeInsets.symmetric(vertical: 120.0.sp),
-                                child: const Center(child: CircularProgressIndicator()),
+                                child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
                               )
                             : Container(
                                 width: double.infinity,

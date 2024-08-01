@@ -8,6 +8,7 @@ import 'package:gaza_go/platform/helpers/inventory_mixin.dart';
 import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/services/badge_service.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class SyntheticBadgeController extends GetxController with InventoryMixin {
@@ -139,7 +140,7 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
                     ? CachedNetworkImage(
                         imageUrl: selectBadge.value.imageUrl!,
                         fit: BoxFit.fill,
-                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        placeholder: (context, url) => const CircularProgressIndicator(color:skyBlueColor),
                         errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                         httpHeaders: imageNetworkHeader,
                       )

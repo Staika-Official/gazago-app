@@ -184,7 +184,7 @@ class CrewList extends StatelessWidget {
                       child: controller.dataGetLoading.value
                           ? Padding(
                               padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                              child: const Center(child: CircularProgressIndicator()),
+                              child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
                             )
                           : controller.crewList.isEmpty
                               ? SizedBox(

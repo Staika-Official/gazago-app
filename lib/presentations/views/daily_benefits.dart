@@ -318,7 +318,7 @@ class DailyBenefits extends StatelessWidget {
                             child: SizedBox(
                               width: 40,
                               height: 40,
-                              child: CircularProgressIndicator(),
+                              child: CircularProgressIndicator(color:skyBlueColor),
                             ),
                           ),
                         )
@@ -451,14 +451,14 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                                 fit: BoxFit.fitHeight,
                                 width: 50.sp,
                                 height: 50.sp,
-                                placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                                placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
                                 headers: imageNetworkHeader,
                               )
                             : CachedNetworkImage(
                                 imageUrl: widget.benefitItem.imageUrl!,
                                 height: 50.sp,
                                 width: 50.sp,
-                                placeholder: (context, string) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                                placeholder: (context, string) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
                                 httpHeaders: imageNetworkHeader,
                               )
                         : Container(),
@@ -578,7 +578,7 @@ class _DailyBenefitItemState extends State<DailyBenefitItem> {
                   child: SizedBox(
                     width: 44,
                     height: 44,
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(color:skyBlueColor),
                   ),
                 ),
               ),

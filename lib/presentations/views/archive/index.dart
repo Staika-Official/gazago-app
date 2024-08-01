@@ -198,7 +198,7 @@ class ArchiveHome extends StatelessWidget {
                   ? controller.dataGetLoading.value
                       ? Padding(
                           padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                          child: const Center(child: CircularProgressIndicator()),
+                          child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
                         )
                       : Padding(
                         padding: EdgeInsets.only(top:20.0.sp),
@@ -250,7 +250,7 @@ class ArchiveHome extends StatelessWidget {
                               if (controller.dataGetLoading.value)
                                 Padding(
                                   padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                                  child: const Center(child: CircularProgressIndicator()),
+                                  child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
                                 )
                             ],
                           ),

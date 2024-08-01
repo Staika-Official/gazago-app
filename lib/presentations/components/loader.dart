@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class Loader extends StatelessWidget {
@@ -14,7 +15,7 @@ class Loader extends StatelessWidget {
         children: [
           Center(
             key: loaderController.dialogKey,
-            child: const CircularProgressIndicator(), //무지성 돌돌이~
+            child: const CircularProgressIndicator(color:skyBlueColor), //무지성 돌돌이~
           ),
         ],
       ),

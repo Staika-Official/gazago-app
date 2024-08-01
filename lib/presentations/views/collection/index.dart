@@ -262,7 +262,7 @@ class CollectionHome extends StatelessWidget {
           imageUrl,
           width: 100.sp,
           height: 100.sp,
-          placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(),
+          placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(color:skyBlueColor),
         );
       } else {
         return Image.network(
@@ -494,7 +494,7 @@ class CollectionHome extends StatelessWidget {
                       ),
                     ) : const Center(child: Padding(
                       padding: EdgeInsets.all(20.0),
-                      child: SizedBox.square(dimension: 50, child: CircularProgressIndicator()),
+                      child: SizedBox.square(dimension: 50, child: CircularProgressIndicator(color:skyBlueColor)),
                     )),
                     controller.collectionList.isNotEmpty ?
                       Padding(
@@ -515,7 +515,7 @@ class CollectionHome extends StatelessWidget {
                         ),
                       ) : Center(child: Padding(
                       padding: EdgeInsets.only(top:150.0.sp),
-                      child: SizedBox.square(dimension: 50, child: CircularProgressIndicator()),
+                      child: SizedBox.square(dimension: 50, child: CircularProgressIndicator(color:skyBlueColor)),
                     )),
                   ],
                 );

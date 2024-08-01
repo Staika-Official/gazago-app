@@ -66,7 +66,7 @@ class NftList extends StatelessWidget {
                                     ? SvgPicture.network(
                                         fit: BoxFit.cover,
                                         nftItem.itemImageUrl,
-                                        placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                        placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                         headers: imageNetworkHeader,
                                       )
                                     : CachedNetworkImage(
@@ -301,7 +301,7 @@ class NftList extends StatelessWidget {
                                   ? SvgPicture.network(
                                       fit: BoxFit.cover,
                                       nftItem.metadata!.image!,
-                                      placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                      placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                       headers: imageNetworkHeader,
                                     )
                                   : CachedNetworkImage(

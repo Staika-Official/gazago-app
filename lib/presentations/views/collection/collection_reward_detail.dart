@@ -92,15 +92,15 @@ class CollectionRewardDetail extends StatelessWidget {
                                                       controller.rewardItem.imageUrl!,
                                                       placeholderBuilder: (BuildContext context) => Container(
                                                         padding: const EdgeInsets.all(30.0),
-                                                        child: const CircularProgressIndicator(),
+                                                        child: const CircularProgressIndicator(color:skyBlueColor),
                                                       ),
                                                       headers: imageNetworkHeader,
                                                     )
                                                         : CachedNetworkImage(
                                                       imageUrl: controller.rewardItem.imageUrl!,
                                                       fit: BoxFit.fitWidth,
-                                                      placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                                      errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                      placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                                      errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                                       httpHeaders: imageNetworkHeader,
                                                     ),
                                                   ),

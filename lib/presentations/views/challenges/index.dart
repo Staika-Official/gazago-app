@@ -65,14 +65,14 @@ class ChallengesHome extends StatelessWidget {
                                 ? SvgPicture.network(
                                     fit: BoxFit.cover,
                                     item.thumbnailImageUrl!,
-                                    placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                    placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                     headers: imageNetworkHeader,
                                   )
                                 : CachedNetworkImage(
                                     imageUrl: item.thumbnailImageUrl!,
                                     fit: BoxFit.cover,
-                                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                    errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                    errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                     httpHeaders: imageNetworkHeader,
                                   ),
                           // Image.asset("assets/images/challenges/@temp_img.png", fit: BoxFit.cover),
@@ -411,7 +411,7 @@ class ChallengesHome extends StatelessWidget {
                   ? challengesController.dataGetLoading.value
                       ? Padding(
                           padding: EdgeInsets.symmetric(vertical: 120.0.sp),
-                          child: const Center(child: CircularProgressIndicator()),
+                          child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
                         )
                       : Container(
                           width: double.infinity,

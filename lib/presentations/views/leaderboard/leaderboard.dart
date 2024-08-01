@@ -937,7 +937,7 @@ class LeaderboardHome extends StatelessWidget {
             child: controller.dataGetLoading.value
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                    child: const Center(child: CircularProgressIndicator()),
+                    child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
                   )
                 : controller.rankings.isEmpty
                     ? Center(
@@ -988,7 +988,7 @@ class LeaderboardHome extends StatelessWidget {
                                 child: SizedBox(
                                   width: 20.sp,
                                   height: 20.sp,
-                                  child: const CircularProgressIndicator(),
+                                  child: const CircularProgressIndicator(color:skyBlueColor),
                                 ),
                               ),
                             )
@@ -1002,7 +1002,7 @@ class LeaderboardHome extends StatelessWidget {
                 child: SizedBox(
                   width: 20.sp,
                   height: 20.sp,
-                  child: const CircularProgressIndicator(),
+                  child: const CircularProgressIndicator(color:skyBlueColor),
                 ),
               ),
             )

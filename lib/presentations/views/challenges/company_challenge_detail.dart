@@ -40,7 +40,7 @@ class CompanyChallengeDetail extends StatelessWidget {
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color:skyBlueColor),
           );
         }
         return Stack(
@@ -303,14 +303,14 @@ class CompanyChallengeDetail extends StatelessWidget {
                                                 ? SvgPicture.network(
                                                     fit: BoxFit.fill,
                                                     controller.challengeDetails.value.imageUrl!,
-                                                    placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                    placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                                     headers: imageNetworkHeader,
                                                   )
                                                 : CachedNetworkImage(
                                                     imageUrl: controller.challengeDetails.value.imageUrl!,
                                                     fit: BoxFit.fill,
-                                                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
-                                                    errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                                    errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                                     httpHeaders: imageNetworkHeader,
                                                   ),
                                         ],

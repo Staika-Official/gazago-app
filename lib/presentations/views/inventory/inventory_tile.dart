@@ -84,11 +84,11 @@ class InventoryTile extends StatelessWidget {
                               ? SvgPicture.network(
                                   fit: BoxFit.contain,
                                   imageUrl,
-                                  placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                  placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                 )
                               : CachedNetworkImage(
                                   imageUrl: imageUrl,
-                                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator())),
+                                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
                                   errorWidget: (context, url, error) => iconNoBadge,
                                   fit: BoxFit.contain,
                                   httpHeaders: imageNetworkHeader,

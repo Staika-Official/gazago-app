@@ -68,7 +68,7 @@ class ActivitySelect extends StatelessWidget {
                                     fit: BoxFit.fitHeight,
                                     width: 72.sp,
                                     height: 72.sp,
-                                    placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                                    placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
                                     headers: imageNetworkHeader,
                                   )
                                 : CachedNetworkImage(
@@ -76,7 +76,7 @@ class ActivitySelect extends StatelessWidget {
                                     width: 72.sp,
                                     height: 72.sp,
                                     imageUrl: challenge.thumbnailImageUrl,
-                                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
                                     httpHeaders: imageNetworkHeader,
                                   ),
                           ),
@@ -373,7 +373,7 @@ class ActivitySelect extends StatelessWidget {
                             child: controller.isFetchingCourseList.value
                                 ? Padding(
                                     padding: EdgeInsets.symmetric(vertical: 50.0.sp),
-                                    child: const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator())),
+                                    child: const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
                                   )
                                 : controller.challengeList.isNotEmpty
                                     ? Column(
@@ -463,7 +463,7 @@ class ActivitySelect extends StatelessWidget {
                       child: CachedNetworkImage(
                         imageUrl: controller.promotionAdsList[0].subImageUrl!,
                         fit: BoxFit.fill,
-                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        placeholder: (context, url) => const CircularProgressIndicator(color:skyBlueColor),
                         errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                         httpHeaders: imageNetworkHeader,
                       )),

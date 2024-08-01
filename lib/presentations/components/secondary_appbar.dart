@@ -10,6 +10,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
 
 class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
@@ -96,35 +97,76 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: popupBgColor,
-                    border: Border.all(
-                      width: 1,
-                      color: Colors.black,
-                    ),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20.sp),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        top: 4.0.sp,
-                        bottom: 4.0.sp,
-                        left: 0,
-                        right: 8,
+                walletMasterController.isWalletGetLoading.value == true
+                    ? Container(
+                  width: 20.sp,
+                  height: 20.sp,
+                  child: const CircularProgressIndicator(color: skyBlueColor),
+                ) :
+                InkWell(
+                  onTap: () => walletMasterController.getSpendingWalletBalances(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: popupBgColor,
+                      border: Border.all(
+                        width: 1,
+                        color: Colors.black,
                       ),
-                      child: InkWell(
-                        onTap: () => walletMasterController.moveToWallet(),
-                        child: Row(
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20.sp),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          top: 4.0.sp,
+                          bottom: 4.0.sp,
+                          left: 8.sp,
+                          right: 8.sp,
+                        ),
+                        child: walletMasterController.spendingTokens.value.isEmpty ?
+                        Row(
                           children: [
-                            ...renderWalletItems(walletMasterController),
+                            Stack(children: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 15.0.sp),
+                                child: iconHeaderStik,
+                              ),
+                              iconHeaderTik
+                            ]),
+
+                            Padding(
+                              padding: EdgeInsets.only(left:4.0.sp),
+                              child: Text(
+                                '지갑 다시 불러오기',
+                                style: AppTextStyleData
+                                    .regular()
+                                    .koBodyMediumMd
+                                    .copyWith(
+                                  color: AppColorData
+                                      .regular()
+                                      .colorTextPrimary,
+
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left:4.0.sp, right: 0.0.sp),
+                              child: iconHeaderRefresh,
+                            )
                           ],
+                        )
+                            : InkWell(
+                          onTap: () => walletMasterController.moveToWallet(),
+                          child: Row(
+                            children: [
+                              ...renderWalletItems(walletMasterController),
+                            ],
+                          ),
                         ),
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:get/get.dart';
 
 class LoaderController extends GetxController {
@@ -19,7 +20,7 @@ class LoaderController extends GetxController {
                 child: SizedBox(
                   width: 20,
                   height: 20,
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(color:skyBlueColor),
                 ),
               ),
             ),
