@@ -7976,7 +7976,7 @@ void showFailureGetSpendingWalletAlert() {
           Padding(
             padding: EdgeInsets.only(top: 16.0.sp),
             child: Text(
-              '잠시 후 다시 시도해주세요',
+              '지갑 정보를 불러오는데 실패했습니다.',
               style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
                   color: AppColorData.regular().colorTextPrimary
               )
@@ -7985,10 +7985,11 @@ void showFailureGetSpendingWalletAlert() {
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
             child: Text(
-              '일시적인 오류로 지갑 정보를 불러 올 수 없습니다.',
+              '일시적인 오류로 지갑 정보를 가져올 수 없습니다.\n문제가 계속될 경우, 잠시 후 다시 시도해 주세요.',
                 style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                     color: AppColorData.regular().colorTextPrimary
-                )
+                ),
+              textAlign: TextAlign.center,
             ),
           ),
         ],
@@ -7997,10 +7998,22 @@ void showFailureGetSpendingWalletAlert() {
     actions: [
       Expanded(
         child: GazagoButton(
+          onTap: () => Get.back(),
+          buttonText: '취소',
+          textColor: Colors.white,
+          buttonColor: popupBgColor,
+        ),
+      ),
+      SizedBox(
+        width: 9.sp,
+      ),
+      Expanded(
+        child: GazagoButton(
           onTap: () {
             Get.back();
+            walletMasterController.getSpendingWalletBalances();
           },
-          buttonText: '확인',
+          buttonText: '다시 불러오기',
           buttonColor: skyBlueColor,
         ),
       ),

@@ -38,7 +38,10 @@ class DefaultHeader extends StatelessWidget {
                 width: 24,
                 padding: EdgeInsets.zero,
                 child: IconButton(
-                  onPressed: () => Get.back(),
+                  onPressed: () {
+                    if(onBackButtonTap != null) onBackButtonTap!();
+                    Get.back();
+                  } ,
                   padding: EdgeInsets.zero,
                   iconSize: 24,
                   splashRadius: 24.sp,

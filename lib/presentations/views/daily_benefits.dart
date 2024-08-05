@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/daily_benefit_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/benefit_item_model.dart';
@@ -85,9 +86,14 @@ class DailyBenefits extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DailyBenefitController controller = Get.isRegistered<DailyBenefitController>() ? Get.find<DailyBenefitController>() : Get.put(DailyBenefitController());
-
+    WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
     return Obx(() {
       return DefaultContainer(
+        onBackButtonTap: () {
+
+          walletMasterController.getSpendingWalletBalances();
+          // Get.back();
+        },
         backgroundColor: subBg01Color,
         titleWidget: const Stack(
           clipBehavior: Clip.none,

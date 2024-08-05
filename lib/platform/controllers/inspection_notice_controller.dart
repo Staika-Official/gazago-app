@@ -28,6 +28,7 @@ class InspectionNoticeController extends GetxController {
       if (Get.currentRoute == Routes.login && Get.isBottomSheetOpen!) {
         Get.back();
       }
+
     }
   }
 

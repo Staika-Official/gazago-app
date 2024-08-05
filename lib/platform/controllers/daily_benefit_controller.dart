@@ -267,7 +267,7 @@ class DailyBenefitController extends GetxController {
         dailyBenefitList.value!.benefits[index] = updatedItem;
         dailyBenefitList.refresh();
         Get.find<ActivityController>().getUserState();
-        Get.find<WalletMasterController>().getSpendingWalletBalances();
+        // Get.find<WalletMasterController>().getSpendingWalletBalances();
         selectedBenefitItem.value = null;
       },
       errorCallback: (ErrorResponseDataModel? errorResponse) {

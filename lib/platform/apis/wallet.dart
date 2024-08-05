@@ -10,7 +10,7 @@ import 'package:gaza_go/platform/models/transfer_nft_request_model.dart';
 class WalletApi {
   // - 스펜딩 월렛 api
   static Future<Response> getSpendingWalletBalances({bool showLoading = false}) async {
-    return await Api.client(serviceUrl: ServiceUrl.goWalletService, showLoading: showLoading).get('/spending/balances', queryParameters: {
+    return await Api.client(serviceUrl: ServiceUrl.goWalletService,allowCustomErrorHandler: true,  showLoading: showLoading).get('/spending/balances', queryParameters: {
       'clientId': 'GAZAGO',
     });
   }
