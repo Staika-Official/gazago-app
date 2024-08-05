@@ -269,7 +269,7 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
           HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: true);
           if (Get.currentRoute != Routes.loading) {
             if (error != null) {
-              if(error.status == 404){
+              if(error.status == 500){
                 showFailureGetSpendingWalletAlert();
               }else{
                 showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));

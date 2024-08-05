@@ -80,14 +80,11 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            walletMasterController.isWalletGetLoading.value == true
-                ? Container(
-              width: 20.sp,
-              height: 20.sp,
-              child: const CircularProgressIndicator(color: skyBlueColor),
-            ) :
             InkWell(
-              onTap: () => walletMasterController.getSpendingWalletBalances(),
+              focusColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              onTap: () =>  walletMasterController.isWalletGetLoading.value == true ? null : walletMasterController.getSpendingWalletBalances(),
               child: Container(
                 decoration: BoxDecoration(
                   color: popupBgColor,
@@ -112,16 +109,32 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                       right: 8.sp,
                     ),
                     child: walletMasterController.spendingTokens.value.isEmpty ?
-                        Row(
-                          children: [
-                            Stack(children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 15.0.sp),
-                                child: iconHeaderStik,
-                              ),
-                              iconHeaderTik
-                            ]),
+                    Row(
+                      children: [
+                        Stack(children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 15.0.sp),
+                            child: iconHeaderStik,
+                          ),
+                          iconHeaderTik
+                        ]),
+                        walletMasterController.isWalletGetLoading.value == true ?
+                        Padding(
+                          padding: EdgeInsets.only(left:4.0.sp, right: 3.sp),
+                          child: Text(
+                            '지갑 불러오는중...',
+                            style: AppTextStyleData
+                                .regular()
+                                .koBodyMediumMd
+                                .copyWith(
+                              color: AppColorData
+                                  .regular()
+                                  .colorTextPrimary,
 
+                            ),
+                          ),
+                        ) : Row(
+                          children: [
                             Padding(
                               padding: EdgeInsets.only(left:4.0.sp),
                               child: Text(
@@ -142,7 +155,10 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                               child: iconHeaderRefresh,
                             )
                           ],
-                        )
+                        ),
+
+                      ],
+                    )
                         : InkWell(
                       onTap: () => walletMasterController.moveToWallet(),
                       child: Row(

@@ -28,9 +28,9 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
               radius: 11.sp,
               foregroundImage: token.logoUrl != '' && token.logoUrl != null
                   ? CachedNetworkImageProvider(
-                      token.logoUrl!,
-                      headers: imageNetworkHeader,
-                    )
+                token.logoUrl!,
+                headers: imageNetworkHeader,
+              )
                   : const sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
             ),
             Padding(
@@ -72,39 +72,36 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             isShowBackButton
                 ? Container(
-                    width: 24,
-                    padding: EdgeInsets.zero,
-                    child: IconButton(
-                      onPressed: () => Get.back(),
-                      padding: EdgeInsets.zero,
-                      iconSize: 24,
-                      splashRadius: 24.sp,
-                      icon: iconHeaderBack,
-                    ),
-                  )
+              width: 24,
+              padding: EdgeInsets.zero,
+              child: IconButton(
+                onPressed: () => Get.back(),
+                padding: EdgeInsets.zero,
+                iconSize: 24,
+                splashRadius: 24.sp,
+                icon: iconHeaderBack,
+              ),
+            )
                 : Container(
-                    padding: EdgeInsets.symmetric(vertical: 3.0.sp),
-                    constraints: BoxConstraints(
-                      minWidth: 100.sp,
-                    ),
-                    child: StyledText(
-                      homeMenuController.selectedMenuTitle(),
-                      fontWeight: 600,
-                      fontSize: 22,
-                      lineHeight: 30,
-                    ),
-                  ),
+              padding: EdgeInsets.symmetric(vertical: 3.0.sp),
+              constraints: BoxConstraints(
+                minWidth: 100.sp,
+              ),
+              child: StyledText(
+                homeMenuController.selectedMenuTitle(),
+                fontWeight: 600,
+                fontSize: 22,
+                lineHeight: 30,
+              ),
+            ),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                walletMasterController.isWalletGetLoading.value == true
-                    ? Container(
-                  width: 20.sp,
-                  height: 20.sp,
-                  child: const CircularProgressIndicator(color: skyBlueColor),
-                ) :
                 InkWell(
-                  onTap: () => walletMasterController.getSpendingWalletBalances(),
+                  focusColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  onTap: () =>  walletMasterController.isWalletGetLoading.value == true ? null : walletMasterController.getSpendingWalletBalances(),
                   child: Container(
                     decoration: BoxDecoration(
                       color: popupBgColor,
@@ -138,11 +135,11 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
                               ),
                               iconHeaderTik
                             ]),
-
+                            walletMasterController.isWalletGetLoading.value == true ?
                             Padding(
-                              padding: EdgeInsets.only(left:4.0.sp),
+                              padding: EdgeInsets.only(left:4.0.sp, right: 3.sp),
                               child: Text(
-                                '지갑 다시 불러오기',
+                                '지갑 불러오는중...',
                                 style: AppTextStyleData
                                     .regular()
                                     .koBodyMediumMd
@@ -153,11 +150,29 @@ class SecondaryAppbar extends StatelessWidget implements PreferredSizeWidget {
 
                                 ),
                               ),
+                            ) : Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left:4.0.sp),
+                                  child: Text(
+                                    '지갑 다시 불러오기',
+                                    style: AppTextStyleData
+                                        .regular()
+                                        .koBodyMediumMd
+                                        .copyWith(
+                                      color: AppColorData
+                                          .regular()
+                                          .colorTextPrimary,
+
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left:4.0.sp, right: 0.0.sp),
+                                  child: iconHeaderRefresh,
+                                )
+                              ],
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left:4.0.sp, right: 0.0.sp),
-                              child: iconHeaderRefresh,
-                            )
                           ],
                         )
                             : InkWell(
