@@ -35,7 +35,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:throttling/throttling.dart';
 
 class WalletMasterController extends GetxController with SolanaMixin, GetTickerProviderStateMixin {
-  LoaderController loaderController = Get.put(LoaderController());
+  LoaderController loaderController = Get.isRegistered<LoaderController>() ? Get.find<LoaderController>() : Get.put(LoaderController());
 
   late TabController tabController;
   final RxList<AssetTokenBalanceModel> spendingTokens = RxList.empty();
@@ -263,14 +263,14 @@ class WalletMasterController extends GetxController with SolanaMixin, GetTickerP
           // spendingTokens.value = [];
           // showFailureGetSpendingWalletAlert();
         },
-        errorCallback: (ErrorResponseDataModel? error) {
+        errorCallback: (ErrorResponseDataModel? error) async {
           loaderController.isLoading.value = false;
           isWalletGetLoading.value = false;
           HiveStore.save(key: HiveKey.isFailureGetSpendingWallet.name, value: true);
           if (Get.currentRoute != Routes.loading) {
             if (error != null) {
               if(error.status == 500){
-                showFailureGetSpendingWalletAlert();
+                await showFailureGetSpendingWalletAlert();
               }else{
                 showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
               }

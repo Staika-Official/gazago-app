@@ -7963,7 +7963,7 @@ void showRefetchGetSpendingWalletAlert() {
   );
 }
 
-void showFailureGetSpendingWalletAlert() {
+Future<void> showFailureGetSpendingWalletAlert() async {
   WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
   showAlert(
     allowMultipleBottomSheet: true,

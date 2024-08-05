@@ -87,280 +87,283 @@ class DailyBenefits extends StatelessWidget {
   Widget build(BuildContext context) {
     DailyBenefitController controller = Get.isRegistered<DailyBenefitController>() ? Get.find<DailyBenefitController>() : Get.put(DailyBenefitController());
     WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
-    return Obx(() {
-      return DefaultContainer(
-        onBackButtonTap: () {
+    return PopScope(
+      onPopInvoked: (bool didPop) async {
+        Future.delayed(Duration.zero, () async {
+          await walletMasterController.getSpendingWalletBalances();
+        });
+      },
+      child: Obx(() {
+        return DefaultContainer(
 
-          walletMasterController.getSpendingWalletBalances();
-          // Get.back();
-        },
-        backgroundColor: subBg01Color,
-        titleWidget: const Stack(
-          clipBehavior: Clip.none,
-          children: [
-            StyledText(
-              '일일혜택',
-              fontSize: 18,
-              fontWeight: 500,
-              lineHeight: 18,
-            ),
-            Positioned(
-              right: -45,
-              top: -3,
-              child: BetaTag(),
-            )
-          ],
-        ),
-        child: RefreshIndicator(
-          onRefresh: () => controller.refreshController(),
-          child: SingleChildScrollView(
-            child: SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 10,
-                    ),
-                    child: StyledText(
-                      controller.formattedDate.value,
-                      fontSize: 16,
-                      lineHeight: 16,
-                      fontWeight: 500,
-                      letterSpacing: -0.1,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 26, bottom: 11),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        controller.dailyBenefitList.value != null
-                            ? StyledText(
-                                controller.dailyBenefitList.value!.userExercise.distance! >= 1000
-                                    ? formatDecimalPlaces(double.parse(formatMeterToKilometer(controller.dailyBenefitList.value!.userExercise.distance!.toInt())), 1, roundType: RoundType.floor)
-                                    : formatDecimalPlaces(controller.dailyBenefitList.value!.userExercise.distance!, 0),
-                                fontFamily: 'Montserrat',
-                                fontSize: 50,
-                                lineHeight: 50,
-                                fontWeight: 500,
-                                letterSpacing: -0.3,
-                              )
-                            : const StyledText(
-                                '0',
-                                fontFamily: 'Montserrat',
-                                fontSize: 50,
-                                lineHeight: 50,
-                                fontWeight: 500,
-                                letterSpacing: -0.3,
-                              ),
-                        StyledText(
-                          controller.dailyBenefitList.value!.userExercise.distance! >= 1000 ? 'km' : 'm',
-                          fontFamily: 'Montserrat',
-                          fontSize: 50,
-                          lineHeight: 50,
-                          fontWeight: 400,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const StyledText(
-                        '현재 거리',
+          backgroundColor: subBg01Color,
+          titleWidget: const Stack(
+            clipBehavior: Clip.none,
+            children: [
+              StyledText(
+                '일일혜택',
+                fontSize: 18,
+                fontWeight: 500,
+                lineHeight: 18,
+              ),
+              Positioned(
+                right: -45,
+                top: -3,
+                child: BetaTag(),
+              )
+            ],
+          ),
+          child: RefreshIndicator(
+            onRefresh: () => controller.refreshController(),
+            child: SingleChildScrollView(
+              child: SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 10,
+                      ),
+                      child: StyledText(
+                        controller.formattedDate.value,
                         fontSize: 16,
                         lineHeight: 16,
                         fontWeight: 500,
-                        color: lightGrayColor,
+                        letterSpacing: -0.1,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 4),
-                        child: Ink(
-                          width: 24,
-                          height: 24,
-                          child: InkWell(
-                            onTap: () => controller.refreshController(),
-                            borderRadius: BorderRadius.circular(24),
-                            child: iconRefresh,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 18, bottom: 25),
-                    child: SizedBox(
-                      width: 310,
-                      child: Stack(
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 26, bottom: 11),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            width: double.infinity,
-                            height: 16,
-                            decoration: BoxDecoration(
-                              color: popupBgColor,
-                              borderRadius: BorderRadius.circular(7),
-                            ),
-                          ),
-                          Positioned(
-                            left: 0,
-                            top: 0,
-                            child: Container(
-                              width: 310 *
-                                  (controller.dailyBenefitList.value!.userExercise.distance! >= controller.maxRewardDistance.value
-                                      ? 1
-                                      : controller.dailyBenefitList.value!.userExercise.distance! / controller.maxRewardDistance.value),
-                              height: 16,
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                  transform: GradientRotation(2.3911),
-                                  colors: [
-                                    skyBlueColor,
-                                    Color(0xff0EF3D8),
-                                  ],
+                          controller.dailyBenefitList.value != null
+                              ? StyledText(
+                                  controller.dailyBenefitList.value!.userExercise.distance! >= 1000
+                                      ? formatDecimalPlaces(double.parse(formatMeterToKilometer(controller.dailyBenefitList.value!.userExercise.distance!.toInt())), 1, roundType: RoundType.floor)
+                                      : formatDecimalPlaces(controller.dailyBenefitList.value!.userExercise.distance!, 0),
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 50,
+                                  lineHeight: 50,
+                                  fontWeight: 500,
+                                  letterSpacing: -0.3,
+                                )
+                              : const StyledText(
+                                  '0',
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 50,
+                                  lineHeight: 50,
+                                  fontWeight: 500,
+                                  letterSpacing: -0.3,
                                 ),
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                            ),
+                          StyledText(
+                            controller.dailyBenefitList.value!.userExercise.distance! >= 1000 ? 'km' : 'm',
+                            fontFamily: 'Montserrat',
+                            fontSize: 50,
+                            lineHeight: 50,
+                            fontWeight: 400,
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 16, left: 20.sp, right: 20.sp, bottom: 24),
-                        child: Row(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const StyledText(
+                          '현재 거리',
+                          fontSize: 16,
+                          lineHeight: 16,
+                          fontWeight: 500,
+                          color: lightGrayColor,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: Ink(
+                            width: 24,
+                            height: 24,
+                            child: InkWell(
+                              onTap: () => controller.refreshController(),
+                              borderRadius: BorderRadius.circular(24),
+                              child: iconRefresh,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 18, bottom: 25),
+                      child: SizedBox(
+                        width: 310,
+                        child: Stack(
                           children: [
-                            _renderTitleText(controller.dailyBenefitList.value!.label),
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.0.sp, bottom: 2),
-                              child: SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  onPressed: () => Get.dialog(
-                                    barrierColor: Colors.black.withOpacity(.8),
-                                    Material(
-                                      color: Colors.transparent,
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
-                                        child: Center(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Stack(
-                                                children: [
-                                                  Container(
-                                                    width: double.infinity,
-                                                    padding: EdgeInsets.only(top: 44.sp, left: 29.sp, right: 29.sp, bottom: 42.sp),
-                                                    decoration: BoxDecoration(
-                                                      color: popupBgColor,
-                                                      borderRadius: BorderRadius.circular(10.sp),
-                                                    ),
-                                                    child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        const StyledText(
-                                                          '일일 혜택 안내',
-                                                          fontSize: 18,
-                                                          fontWeight: 700,
-                                                        ),
-                                                        Padding(
-                                                          padding: EdgeInsets.only(top: 29.sp),
-                                                          child: const Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              StyledText(
-                                                                '일일 혜택은 광고 수익으로 운영되며, 광고를 시청하신 후에 보상으로 아이템 또는 TIK등을 받을 수 있어요. \n최대한 혜택을 드리고자, 다소 길이가 길거나 불필요하게 느껴지는 광고가 나올 수 있다는 점 양해 부탁드려요. \n일일 혜택은 현재 베타로 운영되고 있으며, 상황에 따라 사전 고지 없이 변경될 수 있어요.',
-                                                                fontSize: 14,
-                                                                fontWeight: 600,
-                                                                lineHeight: 24,
-                                                                letterSpacing: -0.3,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    right: 12,
-                                                    top: 12,
-                                                    child: InkWell(
-                                                      onTap: () => Get.back(),
-                                                      child: iconCloseWhite,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                            Container(
+                              width: double.infinity,
+                              height: 16,
+                              decoration: BoxDecoration(
+                                color: popupBgColor,
+                                borderRadius: BorderRadius.circular(7),
+                              ),
+                            ),
+                            Positioned(
+                              left: 0,
+                              top: 0,
+                              child: Container(
+                                width: 310 *
+                                    (controller.dailyBenefitList.value!.userExercise.distance! >= controller.maxRewardDistance.value
+                                        ? 1
+                                        : controller.dailyBenefitList.value!.userExercise.distance! / controller.maxRewardDistance.value),
+                                height: 16,
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    transform: GradientRotation(2.3911),
+                                    colors: [
+                                      skyBlueColor,
+                                      Color(0xff0EF3D8),
+                                    ],
                                   ),
-                                  icon: iconExclamationMarkSmall,
-                                  splashRadius: 15.sp,
+                                  borderRadius: BorderRadius.circular(7),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
                     ),
-                  ),
-                  controller.dataGetLoading.value
-                      ? const SizedBox(
-                          height: 200,
-                          child: Center(
-                            child: SizedBox(
-                              width: 40,
-                              height: 40,
-                              child: CircularProgressIndicator(color:skyBlueColor),
-                            ),
-                          ),
-                        )
-                      : controller.dailyBenefitList.value != null && controller.dailyBenefitList.value!.benefits.isEmpty
-                          ? const SizedBox(
-                              height: 200,
-                              child: Center(
-                                child: StyledText(
-                                  '일일 혜택이 없습니다.',
-                                  fontSize: 16,
-                                  fontWeight: 600,
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 16, left: 20.sp, right: 20.sp, bottom: 24),
+                          child: Row(
+                            children: [
+                              _renderTitleText(controller.dailyBenefitList.value!.label),
+                              Padding(
+                                padding: EdgeInsets.only(left: 5.0.sp, bottom: 2),
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () => Get.dialog(
+                                      barrierColor: Colors.black.withOpacity(.8),
+                                      Material(
+                                        color: Colors.transparent,
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 25.0.sp),
+                                          child: Center(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Stack(
+                                                  children: [
+                                                    Container(
+                                                      width: double.infinity,
+                                                      padding: EdgeInsets.only(top: 44.sp, left: 29.sp, right: 29.sp, bottom: 42.sp),
+                                                      decoration: BoxDecoration(
+                                                        color: popupBgColor,
+                                                        borderRadius: BorderRadius.circular(10.sp),
+                                                      ),
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          const StyledText(
+                                                            '일일 혜택 안내',
+                                                            fontSize: 18,
+                                                            fontWeight: 700,
+                                                          ),
+                                                          Padding(
+                                                            padding: EdgeInsets.only(top: 29.sp),
+                                                            child: const Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                StyledText(
+                                                                  '일일 혜택은 광고 수익으로 운영되며, 광고를 시청하신 후에 보상으로 아이템 또는 TIK등을 받을 수 있어요. \n최대한 혜택을 드리고자, 다소 길이가 길거나 불필요하게 느껴지는 광고가 나올 수 있다는 점 양해 부탁드려요. \n일일 혜택은 현재 베타로 운영되고 있으며, 상황에 따라 사전 고지 없이 변경될 수 있어요.',
+                                                                  fontSize: 14,
+                                                                  fontWeight: 600,
+                                                                  lineHeight: 24,
+                                                                  letterSpacing: -0.3,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                      right: 12,
+                                                      top: 12,
+                                                      child: InkWell(
+                                                        onTap: () => Get.back(),
+                                                        child: iconCloseWhite,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    icon: iconExclamationMarkSmall,
+                                    splashRadius: 15.sp,
+                                  ),
                                 ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    controller.dataGetLoading.value
+                        ? const SizedBox(
+                            height: 200,
+                            child: Center(
+                              child: SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: CircularProgressIndicator(color:skyBlueColor),
                               ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.only(bottom: 20),
-                              child: GridView.count(
-                                crossAxisCount: 3,
-                                mainAxisSpacing: 18.sp,
-                                crossAxisSpacing: 10.sp,
-                                childAspectRatio: 110.sp / 147.sp,
-                                physics: const ClampingScrollPhysics(),
-                                padding: EdgeInsets.only(left: 20.sp, right: 20.sp),
-                                shrinkWrap: true,
-                                children: [
-                                  ..._renderDailyBenefitList(controller),
-                                ],
-                              ),
-                            )
-                ],
+                            ),
+                          )
+                        : controller.dailyBenefitList.value != null && controller.dailyBenefitList.value!.benefits.isEmpty
+                            ? const SizedBox(
+                                height: 200,
+                                child: Center(
+                                  child: StyledText(
+                                    '일일 혜택이 없습니다.',
+                                    fontSize: 16,
+                                    fontWeight: 600,
+                                  ),
+                                ),
+                              )
+                            : Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: GridView.count(
+                                  crossAxisCount: 3,
+                                  mainAxisSpacing: 18.sp,
+                                  crossAxisSpacing: 10.sp,
+                                  childAspectRatio: 110.sp / 147.sp,
+                                  physics: const ClampingScrollPhysics(),
+                                  padding: EdgeInsets.only(left: 20.sp, right: 20.sp),
+                                  shrinkWrap: true,
+                                  children: [
+                                    ..._renderDailyBenefitList(controller),
+                                  ],
+                                ),
+                              )
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      }),
+    );
   }
 }
 

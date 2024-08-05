@@ -8,7 +8,7 @@ class LoaderController extends GetxController {
   GlobalKey? loaderKey = GlobalKey();
 
   @override
-  void onInit() async {
+  Future<void> onInit() async {
     isLoading.listen((val) {
       if (val == true) {
         Get.dialog(
