@@ -633,6 +633,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
           showBlockchainNetworkErrorAlert();
         } else if (error.errorCode == 'NOT_FOUND_WALLET') {
           showStaikaStatusAlert(hasWallet: false);
+        } else {
+          errorBottomSheet(error?.errorMessage ?? '에러가 발생했습니다.');
         }
       },
     );
