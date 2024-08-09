@@ -135,7 +135,7 @@ class CollectionHome extends StatelessWidget {
             width: (MediaQuery
                 .of(context)
                 .size
-                .width / 3) - 12.sp,
+                .width / 3).floorToDouble() - 12.sp,
             child: Padding(
               padding: EdgeInsets.only(left: 12.0.sp, right: 12.sp),
               child: Column(

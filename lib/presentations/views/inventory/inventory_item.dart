@@ -37,13 +37,13 @@ class InventoryItem extends StatelessWidget {
                 (item) => InkWell(
                   onTap: () => controller.toItemDetail(item.id),
                   child: Container(
-                    width: MediaQuery.of(context).size.width > 450 ? (MediaQuery
+                    width: MediaQuery.of(context).size.width > 450 ? ((MediaQuery
                         .of(context)
                         .size
-                        .width - 32 - 40) / 6 : (MediaQuery
+                        .width - 32 - 40) / 6).floorToDouble() : ((MediaQuery
                         .of(context)
                         .size
-                        .width - 32 - 16) / 3 ,
+                        .width - 32 - 16) / 3).floorToDouble() ,
                     decoration: BoxDecoration(
                       color: subBg01Color,
                       borderRadius: BorderRadius.all(
