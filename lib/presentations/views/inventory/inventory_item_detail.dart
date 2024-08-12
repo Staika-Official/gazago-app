@@ -832,17 +832,20 @@ class InventoryItemDetail extends StatelessWidget {
                                         if (controller.selectedItem.value.expiredDate != null)
                                           Container(
                                             decoration: BoxDecoration(
-                                              color: Colors.black.withOpacity(.2),
+                                              color: AppColorData.regular().colorBgPrimary,
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(12.sp),
+                                                bottomRight: Radius.circular(12.sp),
+                                              ),
                                             ),
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(vertical: 10.0.sp),
                                               child: Center(
-                                                child: StyledText(
-                                                  '아이템 사용 기한: ${formatDateUntilTime(controller.selectedItem.value.expiredDate)} 소멸 예정',
-                                                  color: lightGrayColor,
-                                                  fontSize: 12,
-                                                  fontWeight: 500,
-                                                  letterSpacing: -0.1,
+                                                child: Text(
+                                                  '아이템 사용 기한: ${formatHipenDate(controller.selectedItem.value.expiredDate)} 소멸 예정',
+                                                  style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                                                        color: AppColorData.regular().colorTextTertiary,
+                                                      ),
                                                 ),
                                               ),
                                             ),

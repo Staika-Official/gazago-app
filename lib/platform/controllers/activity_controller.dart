@@ -69,7 +69,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Rx<LocationPermission> _locationPermission = Rx(LocationPermission.unableToDetermine);
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
-  final Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
+  Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
   NOverlayImage? startMarker;
   NOverlayImage? endMarker;
   List<NOverlayImage> checkpointMarkers = List.empty(growable: true);
@@ -96,7 +96,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Rxn<ChallengeCourseModel> nearChallengeLocation = Rxn(null);
   NaverMapController? naverMapController;
   RxDouble betweenDistance = RxDouble(0.0);
-  RxInt detectDelay = RxInt(1);
+  RxInt detectDelay = RxInt(30);
+  bool _isRequestingChallenges = false;
   void checkNewCollectionStatus() {
     if(HiveStore.load(key: HiveKey.isNewCollection.name) != null && HiveStore.load(key: HiveKey.isNewCollection.name) == true  ){
       isNewCollection.value = true;
@@ -163,7 +164,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> initActivityStatus() async {
-
+    print('11111111111111');
     await initializeActivity();
     await loadMakerImages();
 
@@ -338,6 +339,13 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       loaderController.isLoading.value = false;
       shortConsumerItems(stat.type);
     });
+  }
+
+  int getRemainingDays(String expiryDate) {
+    DateTime expiryUTCDateTime = DateTime.parse(expiryDate).toUtc();
+    DateTime now = DateTime.now().toUtc();
+
+    return expiryUTCDateTime.difference(now).inDays;
   }
 
   void confirmRecoveryOrRepairStat(stat) async {
@@ -860,58 +868,45 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       } else {
         // HiveStore.save(key: HiveKey.accessToken.name, value: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJramg0MzU3IiwiYXV0aCI6IlJPTEVfQURNSU4sUk9MRV9MT0NBVElPTixST0xFX0xPQ0FUSU9OX1NVUEVSVklTT1IiLCJleHAiOjE3MTg3ODYwNzksInVzZXJJZCI6IjI1NSJ9.rNf30NedosrnS4iPLLgEFR2RCNQSCLsytDqXsM4jLkJB_wKwhC-LQ0PVYnr3gzrDcT031n7cBBWyheYv_Ml9rA');
         // 첼린지 존 찾기(30초마다 요청)
-        DateTime now = DateTime.now();
+        if (_isRequestingChallenges) return; // Prevent concurrent requests
+        _isRequestingChallenges = true;
+        try {
+          DateTime now = DateTime.now();
 
-        // List<String>? prevPosition = HiveStore.load(key: HiveKey.currentPosition.name) != null ? HiveStore.load(key: HiveKey.currentPosition.name).split(',') : null;
+          // List<String>? prevPosition = HiveStore.load(key: HiveKey.currentPosition.name) != null ? HiveStore.load(key: HiveKey.currentPosition.name).split(',') : null;
 
-        // final cameraUpdate = NCameraUpdate.scrollAndZoomTo(target: NLatLng(currentLocation.value.latitude, currentLocation.value.longitude));
+          // final cameraUpdate = NCameraUpdate.scrollAndZoomTo(target: NLatLng(currentLocation.value.latitude, currentLocation.value.longitude));
 
-        print('Get.currentRoute : ${Get.currentRoute}');
-        if(Get.currentRoute == '/laboratory/detect_challenge_course'){
-          final cameraUpdate = NCameraUpdate.withParams(
-            target: NLatLng(currentLocation.value.latitude, currentLocation.value.longitude),
-            zoom: 16,
-          );
-          naverMapController?.updateCamera(cameraUpdate);
-        }
+          print('Get.currentRoute : ${Get.currentRoute}');
+          if(Get.currentRoute == '/laboratory/detect_challenge_course'){
+            final cameraUpdate = NCameraUpdate.withParams(
+              target: NLatLng(currentLocation.value.latitude, currentLocation.value.longitude),
+              zoom: 16,
+            );
+            naverMapController?.updateCamera(cameraUpdate);
+          }
 
-        double prevPositionLat = nearChallengeLocation.value != null ? double.parse(nearChallengeLocation.value!.startLat.toString()) : position.latitude;
-        double prevPositionLng = nearChallengeLocation.value != null ? double.parse(nearChallengeLocation.value!.startLon.toString()) : position.longitude;
-        betweenDistance.value = calculateDistance( prevPositionLat, prevPositionLng, position.latitude, position.longitude);
+          double prevPositionLat = nearChallengeLocation.value != null ? double.parse(nearChallengeLocation.value!.startLat.toString()) : position.latitude;
+          double prevPositionLng = nearChallengeLocation.value != null ? double.parse(nearChallengeLocation.value!.startLon.toString()) : position.longitude;
+          betweenDistance.value = calculateDistance( prevPositionLat, prevPositionLng, position.latitude, position.longitude);
 
-        gpsSpeed.value = convertMStoKMH(position.speed);
+          gpsSpeed.value = convertMStoKMH(position.speed);
 
-        print('posLat : $prevPositionLat, posLng : $prevPositionLng');
-        print('speed : ${convertMStoKMH(position.speed)}');
-        print('realtime speed : ${realTimeSpeed.value}');
-        print('title : ${nearChallengeLocation.value?.firstName}');
-        print('title : ${nearChallengeLocation.value?.endPointName}');
-        print('dis : ${betweenDistance.value}');
-        print('nearChallengeLocation.value : ${nearChallengeLocation.value!.startLat}');
+          print('posLat : $prevPositionLat, posLng : $prevPositionLng');
+          print('speed : ${convertMStoKMH(position.speed)}');
+          print('realtime speed : ${realTimeSpeed.value}');
+          print('title : ${nearChallengeLocation.value?.firstName}');
+          print('title : ${nearChallengeLocation.value?.endPointName}');
+          print('dis : ${betweenDistance.value}');
+          print('nearChallengeLocation.value : ${nearChallengeLocation.value!.startLat}');
 
-        /*
+          /*
         1. 최초 앱 실행시 저장된 가장 가까운 챌린지 location 저장 (Hierarchy api 호출)
         2. 현재 location 위치와 가장 가까운 챌린지 location 거리 비교
         3. 거리가 100km, 50km, 10km, 5km, 1km 이하일 경우에 따른 시간 딜레이로 챌린지 찾기 요청
         */
 
-        print(detectDelay.value);
-        if (betweenDistance.value < 2000) {
-          detectDelay.value = 30;
-        }
-        if (receiveLocationTime.value.add( Duration(seconds: detectDelay.value)).isBefore(now)) {
 
-          if (gpsSpeed.value < 15) {
-
-            await findCourses();
-            await getChallengesNearByHierarchy();
-          } else {
-
-            if (betweenDistance.value > 1000) {
-
-              await getChallengesNearByHierarchy();
-            }
-          }
           if (betweenDistance.value < 2000) {
             detectDelay.value = 30;
           } else if (betweenDistance.value < 5000) {
@@ -921,9 +916,24 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           } else {
             detectDelay.value = 600;
           }
-          receiveLocationTime.value = now;
+
+          if (receiveLocationTime.value.add( Duration(seconds: detectDelay.value)).isBefore(now)) {
+
+            if (gpsSpeed.value < 15) {
+              await findCourses();
+              await getChallengesNearByHierarchy();
+            } else if(betweenDistance.value > 1000){
+              await getChallengesNearByHierarchy();
+
+            }
+
+            receiveLocationTime.value = now;
+          }
+        } finally {
+          _isRequestingChallenges = false;
         }
       }
+
       HiveStore.save(key: HiveKey.currentPosition.name, value: '${position.latitude},${position.longitude}');
       locationThr.throttle(() {
         detectChallengeZone(position);
@@ -932,6 +942,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> getChallengesNearByHierarchy() async{
+    print('3333333333');
     await ActivityService.getChallengesNearByHierarchy(currentLocation.value,
       successCallback: (data) async {
         if(data.course != null){
@@ -1006,6 +1017,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> initializeActivity() async {
+    print('2222222222222');
     await getCurrentLocation();
     await getChallengesNearByHierarchy();
     initLocationStream();

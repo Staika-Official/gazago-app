@@ -120,6 +120,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
     print('getMainNoticePopupList : ${list.length}');
     print('getMainNoticePopupList : ${list}');
     noticePopupList.addAll(list);
+    // noticePopupList.sort((a, b) => a.listOrder!.compareTo(b.listOrder!));
     List<int>? noticePopupListIds = HiveStore.load(key: HiveKey.noticePopupListIds.name);
     if (noticePopupListIds != null && noticePopupListIds.isNotEmpty) {
       for (NoticePopupModel notice in noticePopupList) {

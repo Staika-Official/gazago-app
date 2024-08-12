@@ -5360,7 +5360,7 @@ void consumerItemUsagePopup(controller, context) {
       canPop: false,
       child: Container(
         decoration: BoxDecoration(
-          color: popupBgColor,
+          color:  AppColorData.regular().colorBgTertiary,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(12.sp),
             topRight: Radius.circular(12.sp),
@@ -5374,11 +5374,11 @@ void consumerItemUsagePopup(controller, context) {
               children: [
                 Padding(
                   padding: EdgeInsets.only(bottom: 30.sp),
-                  child: StyledText(
+                  child: Text(
                     controller.selectedType == 'STAMINA' ? '체력 회복하기' : '내구도 수리하기',
-                    fontSize: 22,
-                    fontWeight: 500,
-                    lineHeight: 22,
+                    style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                      color: AppColorData.regular().colorTextPrimary
+                    )
                   ),
                 ),
                 Expanded(
@@ -5394,7 +5394,7 @@ void consumerItemUsagePopup(controller, context) {
                                   child: Container(
                                     width: double.infinity,
                                     decoration: BoxDecoration(
-                                      color: subBg02Color,
+                                      color: AppColorData.regular().colorBgSecondary,
                                       border: Border.all(
                                         width: 2.sp,
                                         color: Colors.black,
@@ -5418,42 +5418,42 @@ void consumerItemUsagePopup(controller, context) {
                                               ),
                                             ),
                                             child: Stack(children: [
-                                              Padding(
-                                                padding: EdgeInsets.all(10.0.sp),
-                                                child: item.itemImageUrl.contains('.svg')
-                                                    ? SvgPicture.network(
-                                                        item.itemImageUrl,
-                                                        placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
-                                                      )
-                                                    : CachedNetworkImage(
-                                                        imageUrl: item.itemImageUrl,
-                                                        placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
-                                                        errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
-                                                      ),
+                                              Center(
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(10.0.sp),
+                                                  child: item.itemImageUrl.contains('.svg')
+                                                      ? SvgPicture.network(
+                                                          item.itemImageUrl,
+                                                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                                        )
+                                                      : CachedNetworkImage(
+                                                          imageUrl: item.itemImageUrl,
+                                                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                                          errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                                                        ),
+                                                ),
                                               ),
                                               if (item.amount! > 1)
                                                 Positioned(
                                                   left: 8.sp,
                                                   top: 8.sp,
                                                   child: Container(
-                                                      decoration: BoxDecoration(
-                                                        color: const Color(0xFF0E0E13),
-                                                        borderRadius: BorderRadius.circular(6),
-                                                      ),
-                                                      child: Padding(
-                                                        padding: EdgeInsets.symmetric(vertical: 4.sp, horizontal: 6.0.sp),
-                                                        child: StyledText(
-                                                          item.amount != null
-                                                              ? item.amount > 99
-                                                                  ? '99+'
-                                                                  : item.amount.toString()
-                                                              : '0',
-                                                          fontSize: 12,
-                                                          lineHeight: 12,
-                                                          letterSpacing: -.1,
-                                                          fontWeight: 600,
+                                                    decoration: BoxDecoration(
+                                                      color: AppColorData.regular().colorBaseBalck,
+                                                      borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius4.sp),
+                                                    ),
+                                                    child: Padding(
+                                                      padding: EdgeInsets.symmetric(vertical: 2.sp, horizontal: 6.0.sp),
+                                                      child: Text(
+                                                        item.amount! > 99 ? '99+' : item.amount.toString(),
+                                                        style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
+                                                          color: AppColorData.regular().colorBaseWhite,
+                                                          height: 1.1,
+                                                          letterSpacing: -.1
                                                         ),
-                                                      )),
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
                                               Positioned(
                                                 right: 8.sp,
@@ -5462,6 +5462,27 @@ void consumerItemUsagePopup(controller, context) {
                                                 height: 18,
                                                 child: getItemGradeCircleIcon(item.itemGrade),
                                               ),
+                                              if (item.expiredDate != null)
+                                                Positioned(
+                                                  left: 8.sp,
+                                                  bottom: 8.sp,
+                                                  child: Container(
+                                                    padding: EdgeInsets.symmetric(
+                                                      horizontal: 6.sp,
+                                                      vertical: 1.sp,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: controller.getRemainingDays(item.expiredDate!) == 0 ? AppColorData.regular().colorBgWarningSubtle  : AppColorData.regular().colorPointBrandgray,
+                                                      borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius4.sp),
+                                                    ),
+                                                    child: Text(
+                                                      'D-${controller.getRemainingDays(item.expiredDate!)}',
+                                                      style: AppTextStyleData.regular().koCaptionSemiboldMd.copyWith(
+                                                        color: AppColorData.regular().colorTextInverse,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
                                             ]),
                                           ),
                                           Expanded(
