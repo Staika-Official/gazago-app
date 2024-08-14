@@ -850,6 +850,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         positionRawData.add(logForm);
         HiveStore.savePositionRawData(value: positionRawData);
       }
+
       if (exerciseState.value == ExerciseState.ongoing && position.accuracy < gpsAccuracy) {
         exerciseData.add(UserExerciseModel(
           altitude: position.altitude,
@@ -868,6 +869,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       } else {
         // HiveStore.save(key: HiveKey.accessToken.name, value: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJramg0MzU3IiwiYXV0aCI6IlJPTEVfQURNSU4sUk9MRV9MT0NBVElPTixST0xFX0xPQ0FUSU9OX1NVUEVSVklTT1IiLCJleHAiOjE3MTg3ODYwNzksInVzZXJJZCI6IjI1NSJ9.rNf30NedosrnS4iPLLgEFR2RCNQSCLsytDqXsM4jLkJB_wKwhC-LQ0PVYnr3gzrDcT031n7cBBWyheYv_Ml9rA');
         // 첼린지 존 찾기(30초마다 요청)
+
         if (_isRequestingChallenges) return; // Prevent concurrent requests
         _isRequestingChallenges = true;
         try {
@@ -888,13 +890,19 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
           double prevPositionLat = nearChallengeLocation.value != null ? double.parse(nearChallengeLocation.value!.startLat.toString()) : position.latitude;
           double prevPositionLng = nearChallengeLocation.value != null ? double.parse(nearChallengeLocation.value!.startLon.toString()) : position.longitude;
+
           betweenDistance.value = calculateDistance( prevPositionLat, prevPositionLng, position.latitude, position.longitude);
 
           gpsSpeed.value = convertMStoKMH(position.speed);
+          // gpsSpeed.value = betweenDistance.value * 3.6 / 1000;
+          // gpsSpeed.value = calculateDistance( prevL ?? position.latitude, prevG ?? position.longitude, position.latitude, position.longitude);
+          // gpsSpeed.value = position.speed;
 
           print('posLat : $prevPositionLat, posLng : $prevPositionLng');
-          print('speed : ${convertMStoKMH(position.speed)}');
-          print('realtime speed : ${realTimeSpeed.value}');
+          print('gpsSpeed : ${gpsSpeed.value}');
+          print('betweenDistance : ${betweenDistance.value}');
+          // print('positionspeed : ${position.speed}');
+          // print('realtime speed : ${betweenDistance.value * 3.6 / 1000}');
           print('title : ${nearChallengeLocation.value?.firstName}');
           print('title : ${nearChallengeLocation.value?.endPointName}');
           print('dis : ${betweenDistance.value}');
@@ -916,10 +924,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           } else {
             detectDelay.value = 600;
           }
+          if (gpsSpeed.value < 12) {
+            detectDelay.value = 30;
+          }
 
+          // print('detectDelay.value : ${detectDelay.value}');
           if (receiveLocationTime.value.add( Duration(seconds: detectDelay.value)).isBefore(now)) {
-
-            if (gpsSpeed.value < 15) {
+            // print('여기야:');
+            if (gpsSpeed.value < 12) {
               await findCourses();
               await getChallengesNearByHierarchy();
             } else if(betweenDistance.value > 1000){
@@ -929,6 +941,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
             receiveLocationTime.value = now;
           }
+
         } finally {
           _isRequestingChallenges = false;
         }
