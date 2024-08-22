@@ -70,6 +70,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
   Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
+  Rx<DateTime> calcNearCourseTime = Rx(DateTime.now());
   NOverlayImage? startMarker;
   NOverlayImage? endMarker;
   List<NOverlayImage> checkpointMarkers = List.empty(growable: true);
@@ -93,10 +94,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Timer? gpsAccuracyTimer;
   List gpsNoticeList = ['절전모드 중이라면 해제해주세요.','넓게 트인 야외로 이동해보세요.','지속적으로 GPS 수신이 원활하지 않을 경우, 휴대폰을 껐다 켠 다음 다시 시도해주세요.'];
   RxBool isNewCollection = RxBool(false);
+  RxList nearChallengeAllLocation =  RxList.empty();
   Rxn<ChallengeCourseModel> nearChallengeLocation = Rxn(null);
   NaverMapController? naverMapController;
   RxDouble betweenDistance = RxDouble(0.0);
   RxInt detectDelay = RxInt(30);
+  RxInt calcDelay = RxInt(300);
   bool _isRequestingChallenges = false;
   void checkNewCollectionStatus() {
     if(HiveStore.load(key: HiveKey.isNewCollection.name) != null && HiveStore.load(key: HiveKey.isNewCollection.name) == true  ){
@@ -795,7 +798,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   void initLocationStream() async {
     late LocationSettings locationSettings;
-
+    print('44444');
     if (Platform.isAndroid) {
       locationSettings = AndroidSettings(
           accuracy: locationAccuracyQuality,
@@ -827,7 +830,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       currentLocation.value = position;
       gpsAccuracySensitive.value = position.accuracy;
       // gpsAccuracySensitive.value = 40;
-
+      print('등록');
       isFakeGps.value = position.isMocked;
       print('position : $position');
       print('position.accuracy : ${position.accuracy}');
@@ -908,40 +911,33 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           print('dis : ${betweenDistance.value}');
           print('nearChallengeLocation.value : ${nearChallengeLocation.value!.startLat}');
 
-          /*
-        1. 최초 앱 실행시 저장된 가장 가까운 챌린지 location 저장 (Hierarchy api 호출)
-        2. 현재 location 위치와 가장 가까운 챌린지 location 거리 비교
-        3. 거리가 100km, 50km, 10km, 5km, 1km 이하일 경우에 따른 시간 딜레이로 챌린지 찾기 요청
-        */
 
 
-          if (betweenDistance.value < 2000) {
+          // 주기적으로 가장 가까운 챌린지 코스 지점 5분마다 재조회
+          if (calcNearCourseTime.value.add( Duration(seconds: 300)).isBefore(now)) {
+            calculateNearByHierarchyCourse(position.latitude, position.longitude);
+          }
+
+
+          if (betweenDistance.value < 1000) {
             detectDelay.value = 30;
-          } else if (betweenDistance.value < 5000) {
+          } else if (betweenDistance.value < 3000) {
             detectDelay.value = 60;
-          } else if (betweenDistance.value < 10000) {
+          } else if (betweenDistance.value < 5000) {
             detectDelay.value = 300;
           } else {
             detectDelay.value = 600;
           }
-          if (gpsSpeed.value < 12) {
-            detectDelay.value = 30;
-          }
+          print('detectDelay : ${detectDelay}');
 
           // print('detectDelay.value : ${detectDelay.value}');
           if (receiveLocationTime.value.add( Duration(seconds: detectDelay.value)).isBefore(now)) {
-            // print('여기야:');
-            if (gpsSpeed.value < 12) {
+            if (gpsSpeed.value < 12 && betweenDistance.value < 1000) {
               await findCourses();
-              await getChallengesNearByHierarchy();
-            } else if(betweenDistance.value > 1000){
-              await getChallengesNearByHierarchy();
-
             }
-
             receiveLocationTime.value = now;
           }
-
+          print('detectDelay : ${detectDelay}');
         } finally {
           _isRequestingChallenges = false;
         }
@@ -954,19 +950,45 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }, onError: (e) {});
   }
 
+  void calculateNearByHierarchyCourse(currentLat, currentLon){
+    print('555555');
+
+    nearChallengeLocation.value = findNearestCourse(currentLat, currentLon, nearChallengeAllLocation.expand((c) => c.course).toList());
+    print('nearChallengeLocation.value');
+    print(nearChallengeLocation.value);
+    nearChallengeLocation.refresh();
+  }
+
   Future<void> getChallengesNearByHierarchy() async{
     print('3333333333');
     await ActivityService.getChallengesNearByHierarchy(currentLocation.value,
       successCallback: (data) async {
-        if(data.course != null){
-          nearChallengeLocation.value = findNearestCourse(currentLocation.value.latitude, currentLocation.value.longitude, data.course!);
-          nearChallengeLocation.refresh();
+        if(data != null){
+          nearChallengeAllLocation.value = data;
+          nearChallengeAllLocation.refresh();
+          calculateNearByHierarchyCourse(currentLocation.value.latitude, currentLocation.value.longitude);
         }
       },
 
       errorCallback: (){},
     );
   }
+
+  // 두 지점 간의 유클리드 거리를 계산하는 함수
+  // double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+  //   // 위도와 경도를 라디안으로 변환
+  //   double lat1Rad = lat1 * pi / 180;
+  //   double lon1Rad = lon1 * pi / 180;
+  //   double lat2Rad = lat2 * pi / 180;
+  //   double lon2Rad = lon2 * pi / 180;
+  //
+  //   // 유클리드 거리 계산
+  //   double deltaLat = lat2Rad - lat1Rad;
+  //   double deltaLon = lon2Rad - lon1Rad;
+  //   double distance = sqrt(deltaLat * deltaLat + deltaLon * deltaLon) * 6371;  // 6371은 지구의 반지름 (단위: km)
+  //
+  //   return distance;
+  // }
 
   ChallengeCourseModel findNearestCourse(myPosLat, myPosLon, courses) {
     ChallengeCourseModel nearestCourse = ChallengeCourseModel();
@@ -982,6 +1004,25 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     return nearestCourse;
   }
 
+// // 가장 가까운 코스를 찾는 함수
+//   Map<String, dynamic> findClosestCourse(double currentLat, double currentLon, List<Map<String, dynamic>> courses) {
+//     double closestDistance = double.infinity;
+//     Map<String, dynamic> closestCourse;
+//
+//     for (var course in courses) {
+//       double startLat = course['startLat'];
+//       double startLon = course['startLon'];
+//
+//       double distance = calculateDistance(currentLat, currentLon, startLat, startLon);
+//
+//       if (distance < closestDistance) {
+//         closestDistance = distance;
+//         closestCourse = course;
+//       }
+//     }
+//
+//     return closestCourse;
+//   }
   void detectFakeGps() async {
     //안드로이드만 탐지 가능
     if (isFakeGps.value && Get.isBottomSheetOpen != true && !isTestingFakeGps()) {

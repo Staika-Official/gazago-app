@@ -80,7 +80,7 @@ class ActivityService {
           challengeList.add(ChallengeHierarchyModel.fromJson(challenge));
         });
       }
-      successCallback(challengeList[0]);
+      successCallback(challengeList);
     } else {
       if (errorCallback != null) errorCallback();
     }

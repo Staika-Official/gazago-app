@@ -161,7 +161,7 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
                       children: [
                         StyledText('Detect Delay : '),
                         StyledText(
-                            '${controller.detectDelay.value} 초'
+                            '${controller.detectDelay} 초'
                         ),
                       ],
                     ),
