@@ -846,8 +846,9 @@ mixin ActivityMixin {
     Get.until((route) => route.isFirst);
   }
 
-  void showExerciseMap(Widget mapWidget) {
-    Get.dialog(mapWidget, barrierDismissible: false);
+  void showExerciseMap() {
+    // Get.dialog(mapWidget, barrierDismissible: false);
+    Get.toNamed(Routes.activityMap);
   }
 
   bool isTestingFakeGps() {

@@ -669,7 +669,7 @@ class ActivityHome extends StatelessWidget {
                                               onPressed: controller.disableActivityButton.value
                                                   ? null
                                                   : [ExerciseState.ongoing, ExerciseState.paused, ExerciseState.ready].any((state) => controller.exerciseState.value == state)
-                                                  ? () => controller.requestExerciseInitialization()
+                                                  ? () => controller.isClickedBtn.value == false ? controller.requestExerciseInitialization() : null
                                                   : () => showToastPopup('지속적으로 문제가 발생한다면 앱을 재시작해주세요'),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(150.sp),

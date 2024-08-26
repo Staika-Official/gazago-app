@@ -895,7 +895,7 @@ class ActivityActive extends StatelessWidget {
                                 child: CircularButton(
                                   radius: 54.8.sp,
                                   color: Colors.white,
-                                  onTap: () => controller.showExerciseMap(const ActivityMap()),
+                                  onTap: () => controller.showExerciseMap(),
                                   child: SvgPicture.asset(
                                     'assets/images/activity/ico_exercise_location.svg',
                                     width: 28.sp,

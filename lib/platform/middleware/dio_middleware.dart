@@ -193,6 +193,7 @@ class Api {
   }
 
   static _onErrorInterceptor(DioException e, ErrorInterceptorHandler handler) async {
+
     _logger.e(
       '------------->'
       '\nERROR'
@@ -230,8 +231,9 @@ class Api {
     }
 
     if (e.response?.statusCode == ResponseStatus.unauthorized.code) {
-      final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
 
+      final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
+      
       if (refreshToken == '') {
         showToastPopup('토큰이 만료되었습니다.\n다시 로그인해주세요.');
         resetToLogin(e, handler);
@@ -270,7 +272,7 @@ class Api {
 
   static Future<void> _retryFailedRequest(DioException e, ErrorInterceptorHandler handler) async {
     String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
-    print('accessTokenaccessToken : $accessToken');
+
     if (accessToken == null) {
       resetToLogin(e, handler);
       return;
@@ -392,7 +394,7 @@ class Api {
       HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
       HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
       _dio.options.headers['Authorization'] = 'Bearer ${newToken.accessToken}';
-      e.requestOptions.headers['Authorization'] = 'Bearer ${newToken.accessToken}';
+      // e.requestOptions.headers['Authorization'] = 'Bearer ${newToken.accessToken}';
       needToRefreshToken = false;
       print('_retryFailedRequest');
       print('_retryFailedRequest : res.requestOptions.path ${res.requestOptions.path}');
@@ -441,6 +443,8 @@ class Api {
         activityController.exerciseTimer = null;
         activityController.updateTimer = null;
       }
+      activityController.locationSubscription?.cancel();
+      activityController.locationSubscription = null;
     }
 
     if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);

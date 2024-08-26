@@ -5,6 +5,7 @@ import 'package:gaza_go/platform/middleware/router_middleware.dart';
 import 'package:gaza_go/presentations/components/in_app_modal_webview.dart';
 import 'package:gaza_go/presentations/views/activity/activity_active.dart';
 import 'package:gaza_go/presentations/views/activity/activity_courses.dart';
+import 'package:gaza_go/presentations/views/activity/activity_map.dart';
 import 'package:gaza_go/presentations/views/activity/challenge_course_detail.dart';
 import 'package:gaza_go/presentations/views/activity/challenge_map.dart';
 import 'package:gaza_go/presentations/views/activity/equipped_item.dart';
@@ -92,6 +93,7 @@ class Routes {
   static const activityActive = '/activity/active';
   static const equippedItems = '/activity/equipped_items';
   static const challengeMap = '/activity/challenge_map';
+  static const activityMap = '/activity/activity_map';
   static const preferences = '/preferences';
   static const preferenceBoard = '/preferences/board';
   static const noticeList = '/notice/list';
@@ -178,6 +180,7 @@ class Routes {
     stepPage(name: Routes.activityChallenges, page: const ActivityChallengeCourses()),
     stepPage(name: Routes.activityActive, page: const ActivityActive()),
     stepPage(name: Routes.challengeMap, page: const ChallengeMap()),
+    stepPage(name: Routes.activityMap, page: const ActivityMap()),
     stepPage(name: Routes.preferences, page: const Preferences()),
     stepPage(name: Routes.preferenceBoard, page: const PreferenceBoard()),
     stepPage(name: Routes.noticeList, page: const NoticeList()),

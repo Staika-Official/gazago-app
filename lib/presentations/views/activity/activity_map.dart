@@ -18,6 +18,7 @@ class ActivityMap extends StatelessWidget {
         Obx(() {
           return NaverMap(
             onMapReady: (mapController) {
+              controller.challengeMapController = mapController;
               mapController.setLocationTrackingMode(NLocationTrackingMode.follow);
               mapController.addOverlayAll(
                 {
@@ -25,7 +26,10 @@ class ActivityMap extends StatelessWidget {
                   if (controller.selectedCourse.value != null) ...renderMarkers(controller.selectedCourse.value),
                 },
               );
+              print('지도가 준비되었을때');
+
               if(controller.coordinates.length >= 10) {
+                print('여기에 들어왔다');
                 mapController.addOverlay( NPathOverlay(
                   id: 'path',
                   width: 3,
@@ -34,13 +38,26 @@ class ActivityMap extends StatelessWidget {
                   // outlineColor: Colors.white,
                 ));
               }
-
             },
+            // onCameraChange: (position, isGesture) {
+            //   // controller.challengeMapController.clearOverlays();
+            //   print('카메라 움직이는중');
+            //   if(controller.coordinates.length >= 10) {
+            //     controller.challengeMapController.addOverlay( NPathOverlay(
+            //       id: 'path',
+            //       width: 3,
+            //       color: Colors.red,
+            //       coords: controller.coordinates,
+            //       // outlineColor: Colors.white,
+            //     ));
+            //   }
+            // },
           options:  NaverMapViewOptions(
             locationButtonEnable: true,
             maxZoom: 20,
             minZoom: 8,
-            tiltGesturesEnable: false,
+            indoorEnable: true,
+            tiltGesturesEnable: true,
             nightModeEnable: true,
             mapType: NMapType.basic,
             activeLayerGroups: const [NLayerGroup.mountain],

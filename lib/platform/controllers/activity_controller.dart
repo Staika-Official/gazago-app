@@ -101,6 +101,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxInt detectDelay = RxInt(30);
   RxInt calcDelay = RxInt(300);
   bool _isRequestingChallenges = false;
+  RxBool isClickedBtn = RxBool(false);
   void checkNewCollectionStatus() {
     if(HiveStore.load(key: HiveKey.isNewCollection.name) != null && HiveStore.load(key: HiveKey.isNewCollection.name) == true  ){
       isNewCollection.value = true;
@@ -526,6 +527,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   requestExerciseInitialization() async {
+    isClickedBtn.value = true;
     bool systemReady = await checkAvailabilities();
     if (systemReady) {
       if (!isListeningToLocation.value) {
@@ -552,6 +554,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     } else {
       await requestPermissionStepByStep();
     }
+    isClickedBtn.value = false;
   }
 
   Future<bool> checkAvailabilities() async {
@@ -673,7 +676,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       Get.toNamed(Routes.activityActive);
     } else {
-      if (Get.isDialogOpen == null || Get.isDialogOpen == false) Get.dialog(const ActivitySelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+
+      if (Get.isDialogOpen == null || Get.isDialogOpen == false){
+        print('운동선택');
+        Get.dialog(const ActivitySelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+      }
     }
   }
 
@@ -837,6 +844,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       // HiveStore.save(key: HiveKey.currentPosition.name, value: null);
       detectFakeGps();
 
+
+
       if (HiveStore.load(key: HiveKey.isDebuggingMode.name) && exerciseState.value == ExerciseState.ongoing) {
         List positionRawData = HiveStore.load(key: HiveKey.positionRawDataLogs.name) ?? [];
 
@@ -855,6 +864,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       }
 
       if (exerciseState.value == ExerciseState.ongoing && position.accuracy < gpsAccuracy) {
+
         exerciseData.add(UserExerciseModel(
           altitude: position.altitude,
           speed: convertMStoKMH(position.speed),
@@ -868,6 +878,17 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           filterCoordinates(coordinates.last, NLatLng(position.latitude, position.longitude), userState.value.exercise!.id!);
           exerciseDistance.value = exerciseDistance.value +
               Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
+        }
+
+        if(Get.currentRoute == Routes.activityMap && coordinates.length >= 10) {
+          print('여기에 들어왔다');
+          challengeMapController.addOverlay( NPathOverlay(
+            id: 'path',
+            width: 3,
+            color: Colors.red,
+            coords: coordinates,
+            // outlineColor: Colors.white,
+          ));
         }
       } else {
         // HiveStore.save(key: HiveKey.accessToken.name, value: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJramg0MzU3IiwiYXV0aCI6IlJPTEVfQURNSU4sUk9MRV9MT0NBVElPTixST0xFX0xPQ0FUSU9OX1NVUEVSVklTT1IiLCJleHAiOjE3MTg3ODYwNzksInVzZXJJZCI6IjI1NSJ9.rNf30NedosrnS4iPLLgEFR2RCNQSCLsytDqXsM4jLkJB_wKwhC-LQ0PVYnr3gzrDcT031n7cBBWyheYv_Ml9rA');
