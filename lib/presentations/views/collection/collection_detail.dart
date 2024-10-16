@@ -603,7 +603,7 @@ class CollectionDetail extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(top: 4.0.sp),
                         child: Text(
-                          '컬렉션 재료는 리워드를 받으면 사라져요.',
+                          '아래의 컬렉션 재료를 모두 모아 리워드를 받아보세요!',
                           style: AppTextStyleData
                               .regular()
                               .koBodyMediumMd
@@ -612,6 +612,88 @@ class CollectionDetail extends StatelessWidget {
                                 .regular()
                                 .colorTextSecondary,
 
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8.0.sp),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColorData
+                                .regular()
+                                .colorBgPrimary,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.sp),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(10.0.sp),
+                            child: Column(
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '· ',
+                                      style: AppTextStyleData
+                                          .regular()
+                                          .koBodyMediumMd
+                                          .copyWith(
+                                        color: AppColorData
+                                            .regular()
+                                            .colorTextPrimary,
+                                        fontSize: 20.sp,
+                                        height: 1
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        '리워드를 받으면 컬렉션 재료는 사라져요.',
+                                        style: AppTextStyleData
+                                            .regular()
+                                            .koBodyMediumMd
+                                            .copyWith(
+                                          color: AppColorData
+                                              .regular()
+                                              .colorTextPrimary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '· ',
+                                      style: AppTextStyleData
+                                          .regular()
+                                          .koBodyMediumMd
+                                          .copyWith(
+                                          color: AppColorData
+                                              .regular()
+                                              .colorTextPrimary,
+                                          fontSize: 20.sp,
+                                          height: 1
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        '장착하지 않은 뱃지나 아이템만 재료로 쓸 수 있어요.',
+                                        style: AppTextStyleData
+                                            .regular()
+                                            .koBodyMediumMd
+                                            .copyWith(
+                                          color: AppColorData
+                                              .regular()
+                                              .colorTextPrimary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

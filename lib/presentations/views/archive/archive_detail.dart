@@ -23,7 +23,7 @@ class ArchiveDetail extends StatelessWidget {
     ArchiveController controller = Get.find();
 
     return DefaultContainer(
-      titleText: '${formatDateUntilDay(controller.selectedItem.value.startedDate)} 기록',
+      titleText: '운동기록 상세',
       trailingChild: InkWell(
         child: IconButton(
           onPressed: () => controller.showConfirmDelete(controller.selectedItem.value.id!),
