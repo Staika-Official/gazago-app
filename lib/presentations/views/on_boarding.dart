@@ -1,4 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -68,7 +68,7 @@ class OnBoarding extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CarouselController carouselController = CarouselController();
+    final CarouselSliderController carouselController = CarouselSliderController();
     final OnBoardingController controller = Get.put(OnBoardingController());
     return Scaffold(
       backgroundColor: const Color(0xffe5e5e5),
@@ -93,7 +93,7 @@ class OnBoarding extends StatelessWidget {
               child: CarouselSlider(
                 key: const Key('Slider'),
                 items: _getImageSliders(controller),
-                carouselController: carouselController,
+                controller: carouselController,
                 options: CarouselOptions(
                   viewportFraction: 3,
                   autoPlay: false,

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -755,12 +755,12 @@ void showBadgeAcquisitionAlert(String badgeImgUrl, ChallengeCourseModel selected
                   fit: BoxFit.contain,
                   badgeImgUrl,
                   width: 150.sp,
-                  placeholderBuilder: (BuildContext context) => Container(width: 150, height: 150, padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator(color:skyBlueColor)),
+                  placeholderBuilder: (BuildContext context) => Container(width: 150, height: 150, padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator(color: skyBlueColor)),
                   headers: imageNetworkHeader,
                 )
               : CachedNetworkImage(
                   imageUrl: badgeImgUrl,
-                  placeholder: (context, url) => Container(width: 150, height: 150, padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator(color:skyBlueColor)),
+                  placeholder: (context, url) => Container(width: 150, height: 150, padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator(color: skyBlueColor)),
                   fit: BoxFit.fitWidth,
                   width: 150.sp,
                   httpHeaders: imageNetworkHeader,
@@ -825,12 +825,12 @@ Future<void> showChallengeBadgeAcquisitionAlert(PushMessageChallengeSuccessModel
                   fit: BoxFit.contain,
                   pushMessageData.badgeImageUrl!,
                   width: 150.sp,
-                  placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                  placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color: skyBlueColor))),
                   headers: imageNetworkHeader,
                 )
               : CachedNetworkImage(
                   imageUrl: pushMessageData.badgeImageUrl!,
-                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color: skyBlueColor))),
                   fit: BoxFit.fitWidth,
                   width: 150.sp,
                   httpHeaders: imageNetworkHeader,
@@ -1722,14 +1722,14 @@ void itemPurchaseCompleteAlert(ShopDetailController controller) {
                       ? SvgPicture.network(
                           fit: BoxFit.contain,
                           controller.purchaseCompleteItem.value.itemImageUrl,
-                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color: skyBlueColor))),
                           headers: imageNetworkHeader,
                         )
                       : CachedNetworkImage(
                           imageUrl: controller.purchaseCompleteItem.value.itemImageUrl,
                           fit: BoxFit.fitWidth,
-                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
-                          errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color: skyBlueColor))),
+                          errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color: skyBlueColor))),
                           httpHeaders: imageNetworkHeader,
                         ),
                 ),
@@ -3113,7 +3113,7 @@ void showLeaderboardInfo() {
 }
 
 Future<void> showMainPopupAlert(NoticePopupController noticePopupController) async {
-  final CarouselController carouselController = CarouselController();
+  final CarouselSliderController carouselController = CarouselSliderController();
   if (Get.isBottomSheetOpen == null || !Get.isBottomSheetOpen! || !Get.isDialogOpen!) {
     await Get.bottomSheet(
       isDismissible: false,
@@ -3146,7 +3146,7 @@ Future<void> showMainPopupAlert(NoticePopupController noticePopupController) asy
                             ),
                           ))
                       .toList(),
-                  carouselController: carouselController,
+                  controller: carouselController,
                   options: CarouselOptions(
                     aspectRatio: 1,
                     viewportFraction: 1,
@@ -4633,20 +4633,13 @@ void showItemTipAlert() {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            '능력치 안내',
-                            style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
-                              color: AppColorData.regular().colorTextPrimary
-                            )
-                          ),
+                          Text('능력치 안내', style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(color: AppColorData.regular().colorTextPrimary)),
                           Padding(
                             padding: EdgeInsets.only(top: 8.0.sp),
                             child: Text(
-                                '아이템 구매시 아이템 등급에 따라 능력치가\n확률적으로 결정돼요.',
-                                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                    color: AppColorData.regular().colorTextPrimary
-                                ),
-                                textAlign: TextAlign.center,
+                              '아이템 구매시 아이템 등급에 따라 능력치가\n확률적으로 결정돼요.',
+                              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(color: AppColorData.regular().colorTextPrimary),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                           Padding(
@@ -4663,25 +4656,23 @@ void showItemTipAlert() {
                                       child: Text(
                                         'GO 적립량',
                                         style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                          color: AppColorData.regular().colorTextPrimary,
-                                          height: 1.1,
-                                        ),
+                                              color: AppColorData.regular().colorTextPrimary,
+                                              height: 1.1,
+                                            ),
                                       ),
                                     ),
                                   ],
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top:4.0.sp),
+                                  padding: EdgeInsets.only(top: 4.0.sp),
                                   child: Text(
                                     '수치가 높을수록 같은 운동량에\n더 많은 GO를 얻을 수 있어요.',
-                                    style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                                        color: AppColorData.regular().colorTextPrimary
-                                    ),
+                                    style: AppTextStyleData.regular().koBodyMediumSm.copyWith(color: AppColorData.regular().colorTextPrimary),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top:16.0.sp),
+                                  padding: EdgeInsets.only(top: 16.0.sp),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
@@ -4694,20 +4685,18 @@ void showItemTipAlert() {
                                             child: Text(
                                               '내구도 저항',
                                               style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                                  color: AppColorData.regular().colorTextPrimary,
-                                                height: 1.1,
-                                              ),
+                                                    color: AppColorData.regular().colorTextPrimary,
+                                                    height: 1.1,
+                                                  ),
                                             ),
                                           ),
                                         ],
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(top:4.0.sp),
+                                        padding: EdgeInsets.only(top: 4.0.sp),
                                         child: Text(
                                           '수치가 높을수록 같은 운동량에\n내구도가 덜 감소해요.',
-                                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                                              color: AppColorData.regular().colorTextPrimary
-                                          ),
+                                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(color: AppColorData.regular().colorTextPrimary),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -4715,7 +4704,7 @@ void showItemTipAlert() {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top:16.0.sp),
+                                  padding: EdgeInsets.only(top: 16.0.sp),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
@@ -4728,20 +4717,18 @@ void showItemTipAlert() {
                                             child: Text(
                                               '체력 저항',
                                               style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                                  color: AppColorData.regular().colorTextPrimary,
-                                                height: 1.1,
-                                              ),
+                                                    color: AppColorData.regular().colorTextPrimary,
+                                                    height: 1.1,
+                                                  ),
                                             ),
                                           ),
                                         ],
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(top:4.0.sp),
+                                        padding: EdgeInsets.only(top: 4.0.sp),
                                         child: Text(
                                           '수치가 높을수록 같은 운동량에\n체력이 덜 감소해요.',
-                                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                                              color: AppColorData.regular().colorTextPrimary
-                                          ),
+                                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(color: AppColorData.regular().colorTextPrimary),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -4749,7 +4736,7 @@ void showItemTipAlert() {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top:16.0.sp),
+                                  padding: EdgeInsets.only(top: 16.0.sp),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
@@ -4762,20 +4749,18 @@ void showItemTipAlert() {
                                             child: Text(
                                               '행운',
                                               style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                                  color: AppColorData.regular().colorTextPrimary,
-                                                height: 1.1,
-                                              ),
+                                                    color: AppColorData.regular().colorTextPrimary,
+                                                    height: 1.1,
+                                                  ),
                                             ),
                                           ),
                                         ],
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.only(top:4.0.sp),
+                                        padding: EdgeInsets.only(top: 4.0.sp),
                                         child: Text(
                                           '수치가 높을수록 운동 중에 행운 GO를\n더 크게, 더 자주 얻을 수 있어요.',
-                                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                                              color: AppColorData.regular().colorTextPrimary
-                                          ),
+                                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(color: AppColorData.regular().colorTextPrimary),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -4785,7 +4770,6 @@ void showItemTipAlert() {
                               ],
                             ),
                           ),
-
                         ],
                       ),
                     ),
@@ -5360,7 +5344,7 @@ void consumerItemUsagePopup(controller, context) {
       canPop: false,
       child: Container(
         decoration: BoxDecoration(
-          color:  AppColorData.regular().colorBgTertiary,
+          color: AppColorData.regular().colorBgTertiary,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(12.sp),
             topRight: Radius.circular(12.sp),
@@ -5374,12 +5358,8 @@ void consumerItemUsagePopup(controller, context) {
               children: [
                 Padding(
                   padding: EdgeInsets.only(bottom: 30.sp),
-                  child: Text(
-                    controller.selectedType == 'STAMINA' ? '체력 회복하기' : '내구도 수리하기',
-                    style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
-                      color: AppColorData.regular().colorTextPrimary
-                    )
-                  ),
+                  child:
+                      Text(controller.selectedType == 'STAMINA' ? '체력 회복하기' : '내구도 수리하기', style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(color: AppColorData.regular().colorTextPrimary)),
                 ),
                 Expanded(
                   child: SingleChildScrollView(
@@ -5424,11 +5404,12 @@ void consumerItemUsagePopup(controller, context) {
                                                   child: item.itemImageUrl.contains('.svg')
                                                       ? SvgPicture.network(
                                                           item.itemImageUrl,
-                                                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                                          placeholderBuilder: (BuildContext context) =>
+                                                              const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color: skyBlueColor))),
                                                         )
                                                       : CachedNetworkImage(
                                                           imageUrl: item.itemImageUrl,
-                                                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color: skyBlueColor))),
                                                           errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
                                                         ),
                                                 ),
@@ -5446,11 +5427,7 @@ void consumerItemUsagePopup(controller, context) {
                                                       padding: EdgeInsets.symmetric(vertical: 2.sp, horizontal: 6.0.sp),
                                                       child: Text(
                                                         item.amount! > 99 ? '99+' : item.amount.toString(),
-                                                        style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
-                                                          color: AppColorData.regular().colorBaseWhite,
-                                                          height: 1.1,
-                                                          letterSpacing: -.1
-                                                        ),
+                                                        style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(color: AppColorData.regular().colorBaseWhite, height: 1.1, letterSpacing: -.1),
                                                       ),
                                                     ),
                                                   ),
@@ -5472,14 +5449,16 @@ void consumerItemUsagePopup(controller, context) {
                                                       vertical: 1.sp,
                                                     ),
                                                     decoration: BoxDecoration(
-                                                      color: controller.getRemainingDays(item.expiredDate!) == 0 ? AppColorData.regular().colorBgWarningSubtle  : AppColorData.regular().colorPointBrandgray,
+                                                      color: controller.getRemainingDays(item.expiredDate!) == 0
+                                                          ? AppColorData.regular().colorBgWarningSubtle
+                                                          : AppColorData.regular().colorPointBrandgray,
                                                       borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius4.sp),
                                                     ),
                                                     child: Text(
                                                       'D-${controller.getRemainingDays(item.expiredDate!)}',
                                                       style: AppTextStyleData.regular().koCaptionSemiboldMd.copyWith(
-                                                        color: AppColorData.regular().colorTextInverse,
-                                                      ),
+                                                            color: AppColorData.regular().colorTextInverse,
+                                                          ),
                                                     ),
                                                   ),
                                                 ),
@@ -7658,8 +7637,8 @@ void showChallengeLandingPopup(ChallengesDetailController controller, ChallengeL
                   child: CachedNetworkImage(
                     imageUrl: landingInfo.imageUrl!,
                     fit: BoxFit.fitWidth,
-                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
-                    errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color: skyBlueColor))),
+                    errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color: skyBlueColor))),
                     httpHeaders: imageNetworkHeader,
                   ),
                 ),
@@ -7992,24 +7971,16 @@ Future<void> showFailureGetSpendingWalletAlert() async {
       padding: EdgeInsets.only(top: 0.0.sp, bottom: 32.sp),
       child: Column(
         children: [
-
           iconPopupExclamationMark,
           Padding(
             padding: EdgeInsets.only(top: 16.0.sp),
-            child: Text(
-              '지갑 정보를 불러오는데 실패했습니다.',
-              style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
-                  color: AppColorData.regular().colorTextPrimary
-              )
-            ),
+            child: Text('지갑 정보를 불러오는데 실패했습니다.', style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(color: AppColorData.regular().colorTextPrimary)),
           ),
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
             child: Text(
               '일시적인 오류로 지갑 정보를 가져올 수 없습니다.\n문제가 계속될 경우, 잠시 후 다시 시도해 주세요.',
-                style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                    color: AppColorData.regular().colorTextPrimary
-                ),
+              style: AppTextStyleData.regular().koBodyMediumLg.copyWith(color: AppColorData.regular().colorTextPrimary),
               textAlign: TextAlign.center,
             ),
           ),
@@ -8053,69 +8024,67 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
         backgroundColor: subBg01Color.withOpacity(.8),
         child: Center(
             child: Container(
-              width: 316.sp,
-              decoration: BoxDecoration(
-                color: popupBgColor,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(12.5.sp),
-                ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, top: 36.0.sp, bottom: 24.sp),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 16.sp),
-                      child: Text(
-                        '광고 시청을 위해\n앱 추적 요청을 허용해주세요.',
-                        style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
+          width: 316.sp,
+          decoration: BoxDecoration(
+            color: popupBgColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(12.5.sp),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, top: 36.0.sp, bottom: 24.sp),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 16.sp),
+                  child: Text(
+                    '광고 시청을 위해\n앱 추적 요청을 허용해주세요.',
+                    style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
                           color: AppColorData.regular().colorTextPrimary,
                         ),
-                          textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Image.asset(
-                      'assets/images/activity/img_ios_ad_permission.png',
-                      fit: BoxFit.fitWidth,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 16.0.sp),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Image.asset(
+                  'assets/images/activity/img_ios_ad_permission.png',
+                  fit: BoxFit.fitWidth,
+                ),
+                Padding(
+                    padding: EdgeInsets.only(top: 16.0.sp),
+                    child: Text(
+                      '그림과 같이 설정 → 가자고 앱에서\n추적을 허용해 주세요.',
+                      style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                            color: AppColorData.regular().colorTextSecondary,
+                          ),
+                      textAlign: TextAlign.center,
+                    )),
+                Padding(
+                    padding: EdgeInsets.only(top: 8.0.sp, bottom: 24.sp),
+                    child: InkWell(
+                      onTap: () {
+                        Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'});
+                      },
                       child: Text(
-                          '그림과 같이 설정 → 가자고 앱에서\n추적을 허용해 주세요.',
-                              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                color: AppColorData.regular().colorTextSecondary,
-                              ),
-                        textAlign: TextAlign.center,
-                      )
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(top: 8.0.sp, bottom: 24.sp),
-                        child: InkWell(
-                          onTap: () {
-                            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'});
-                          },
-                          child: Text(
-                            '추적 허용이 보이지 않는다면?',
-                            style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                        '추적 허용이 보이지 않는다면?',
+                        style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
                               color: AppColorData.regular().colorTextTertiary,
                               decoration: TextDecoration.underline,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                        )
-                    ),
-                    GazagoButton(
-                      onTap: () {
-                        controller.moveAppSettings();
-                      },
-                      buttonText: '확인',
-                      buttonColor: skyBlueColor,
-                    ),
-                  ],
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
+                GazagoButton(
+                  onTap: () {
+                    controller.moveAppSettings();
+                  },
+                  buttonText: '확인',
+                  buttonColor: skyBlueColor,
                 ),
-              ),
-            )),
+              ],
+            ),
+          ),
+        )),
       ),
     ),
   );
@@ -8132,70 +8101,68 @@ void showIOSDeniedAdPermissionAlert(DailyBenefitController controller) {
         backgroundColor: subBg01Color.withOpacity(.8),
         child: Center(
             child: Container(
-              width: 316.sp,
-              decoration: BoxDecoration(
-                color: popupBgColor,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(12.5.sp),
-                ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, top: 36.0.sp, bottom: 24.sp),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 16.sp),
-                      child: Text(
-                        '광고 시청을 위해\n앱 추적 요청을 허용해주세요.',
-                        style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
+          width: 316.sp,
+          decoration: BoxDecoration(
+            color: popupBgColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(12.5.sp),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, top: 36.0.sp, bottom: 24.sp),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 16.sp),
+                  child: Text(
+                    '광고 시청을 위해\n앱 추적 요청을 허용해주세요.',
+                    style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
                           color: AppColorData.regular().colorTextPrimary,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Image.asset(
-                      'assets/images/activity/img_ios_ad_denied_permission.png',
-                      fit: BoxFit.fitWidth,
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(top: 16.0.sp),
-                        child: Text(
-                          '그림과 같이 설정 → 개인정보 보호 및 보안 →\n추적 페이지에서 가자고 앱 추적을 허용해 주세요.',
-                          style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Image.asset(
+                  'assets/images/activity/img_ios_ad_denied_permission.png',
+                  fit: BoxFit.fitWidth,
+                ),
+                Padding(
+                    padding: EdgeInsets.only(top: 16.0.sp),
+                    child: Text(
+                      '그림과 같이 설정 → 개인정보 보호 및 보안 →\n추적 페이지에서 가자고 앱 추적을 허용해 주세요.',
+                      style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
                             color: AppColorData.regular().colorTextSecondary,
                           ),
-                          textAlign: TextAlign.center,
-                        )
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(top: 8.0.sp, bottom: 24.sp),
-                        child: InkWell(
-                          onTap: () {
-                            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'});
-                          },
-                          child: Text(
-                            '추적 허용이 보이지 않는다면?',
-                            style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                      textAlign: TextAlign.center,
+                    )),
+                Padding(
+                    padding: EdgeInsets.only(top: 8.0.sp, bottom: 24.sp),
+                    child: InkWell(
+                      onTap: () {
+                        Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'});
+                      },
+                      child: Text(
+                        '추적 허용이 보이지 않는다면?',
+                        style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
                               color: AppColorData.regular().colorTextTertiary,
                               decoration: TextDecoration.underline,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                        )
-                    ),
-                    GazagoButton(
-                      onTap: () {
-                        controller.moveAppSettings();
-                        // Get.back();
-                      },
-                      buttonText: '확인',
-                      buttonColor: skyBlueColor,
-                    ),
-                  ],
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
+                GazagoButton(
+                  onTap: () {
+                    controller.moveAppSettings();
+                    // Get.back();
+                  },
+                  buttonText: '확인',
+                  buttonColor: skyBlueColor,
                 ),
-              ),
-            )),
+              ],
+            ),
+          ),
+        )),
       ),
     ),
   );
@@ -8319,7 +8286,7 @@ void showNotGpsSensorAlert(ActivityController controller) {
               fontWeight: 500,
               fontSize: 16,
               lineHeight: 22,
-              textAlign: TextAlign.center, 
+              textAlign: TextAlign.center,
             ),
           ),
           Padding(
@@ -8331,7 +8298,6 @@ void showNotGpsSensorAlert(ActivityController controller) {
               lineHeight: 22,
               textAlign: TextAlign.center,
             ),
-
           ),
         ],
       ),
@@ -9150,9 +9116,6 @@ void showNotEnoughGatheringConditionErrorAlert() {
   );
 }
 
-
-
-
 void showServiceInspectionNotice() {
   Get.dialog(
     barrierColor: Colors.transparent,
@@ -9164,41 +9127,40 @@ void showServiceInspectionNotice() {
         backgroundColor: subBg01Color.withOpacity(.8),
         child: Center(
             child: Container(
-              width: 316.sp,
-              decoration: BoxDecoration(
-                color: popupBgColor,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(12.5.sp),
-                ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, top: 36.0.sp, bottom: 36.sp),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 16.sp),
-                      child: Text(
-                        '서비스 점검중 입니다.',
-                        style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
+          width: 316.sp,
+          decoration: BoxDecoration(
+            color: popupBgColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(12.5.sp),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 20.0.sp, right: 20.sp, top: 36.0.sp, bottom: 36.sp),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 16.sp),
+                  child: Text(
+                    '서비스 점검중 입니다.',
+                    style: AppTextStyleData.regular().koHeadingSemiboldSm.copyWith(
                           color: AppColorData.regular().colorTextPrimary,
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    StyledText(
-                      '이용에 불편을 드려 죄송합니다.',
-                      fontWeight: 500,
-                      fontSize: 16,
-                      lineHeight: 24,
-                      letterSpacing: -.1,
-                      textAlign: TextAlign.center,
-                    ),
-
-                  ],
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-            )),
+                StyledText(
+                  '이용에 불편을 드려 죄송합니다.',
+                  fontWeight: 500,
+                  fontSize: 16,
+                  lineHeight: 24,
+                  letterSpacing: -.1,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        )),
       ),
     ),
   );
