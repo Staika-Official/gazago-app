@@ -92,9 +92,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxBool isShowGpsAccuracyAlert = RxBool(false);
   RxnInt isShowGpsAccuracyCount = RxnInt(0);
   Timer? gpsAccuracyTimer;
-  List gpsNoticeList = ['절전모드 중이라면 해제해주세요.','넓게 트인 야외로 이동해보세요.','지속적으로 GPS 수신이 원활하지 않을 경우, 휴대폰을 껐다 켠 다음 다시 시도해주세요.'];
+  List gpsNoticeList = ['절전모드 중이라면 해제해주세요.', '넓게 트인 야외로 이동해보세요.', '지속적으로 GPS 수신이 원활하지 않을 경우, 휴대폰을 껐다 켠 다음 다시 시도해주세요.'];
   RxBool isNewCollection = RxBool(false);
-  RxList nearChallengeAllLocation =  RxList.empty();
+  RxList nearChallengeAllLocation = RxList.empty();
   Rxn<ChallengeCourseModel> nearChallengeLocation = Rxn(null);
   NaverMapController? naverMapController;
   RxDouble betweenDistance = RxDouble(0.0);
@@ -103,13 +103,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   bool _isRequestingChallenges = false;
   RxBool isClickedBtn = RxBool(false);
   void checkNewCollectionStatus() {
-    if(HiveStore.load(key: HiveKey.isNewCollection.name) != null && HiveStore.load(key: HiveKey.isNewCollection.name) == true  ){
+    if (HiveStore.load(key: HiveKey.isNewCollection.name) != null && HiveStore.load(key: HiveKey.isNewCollection.name) == true) {
       isNewCollection.value = true;
     } else {
       isNewCollection.value = false;
     }
   }
-
 
   Future<void> initializeExercise() async {
     challengeGuideController = AnimationController(vsync: this);
@@ -128,37 +127,31 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         await initActivityStatus();
       }
 
-
-
-
-
       gpsAccuracyTimer = Timer.periodic(const Duration(minutes: 10), (timer) async {
-        if(gpsAccuracySensitive.value > 30 && exerciseState.value == ExerciseState.ongoing){
+        if (gpsAccuracySensitive.value > 30 && exerciseState.value == ExerciseState.ongoing) {
           showLocalNotificationLowGps();
         }
       });
 
       gpsAccuracySensitive.stream.listen((event) {
-        if(exerciseState.value == ExerciseState.ongoing){
+        if (exerciseState.value == ExerciseState.ongoing) {
           if (event > 30 && isShowGpsAccuracyCount.value! < 1) {
             showNotGpsSensorAlert(this);
             showLocalNotificationLowGps();
             isShowGpsAccuracyCount.value = 1;
             isShowGpsAccuracyAlert.value = true;
-          } else if(event < 30 && isShowGpsAccuracyAlert.value){
+          } else if (event < 30 && isShowGpsAccuracyAlert.value) {
             isShowGpsAccuracyAlert.value = false;
             Get.back();
           }
         }
-
-
       });
     });
 
     // await initPlatformState();
   }
 
-  void showLocalNotificationLowGps(){
+  void showLocalNotificationLowGps() {
     showLocalNotification(notificationType: NotificationType.gpsLow, title: 'GPS 수신이 원활하지 않습니다.', message: '운동 기록이 되지 않고 있습니다.');
   }
 
@@ -236,7 +229,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
     challengeSelectedIndex.value = course.id!;
     selectedChallengeMarkers.clear();
-    challengeMarkers.removeWhere(( element) {
+    challengeMarkers.removeWhere((element) {
       return element.info.id == challengeSelectedIndex.value.toString();
     });
 
@@ -251,7 +244,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     selectedChallengeMarkers.add(getCustomMarker(id: course.id.toString(), markerType: "END", course: course, markerIcon: endMarker));
     challengeMapController.clearOverlays();
     challengeMapController.addOverlayAll(
-      { ...selectedChallengeMarkers},
+      {...selectedChallengeMarkers},
     );
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
       List<NLatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
@@ -443,6 +436,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   // }
 
   Future<void> getUserState({bool showLoading = false}) async {
+    print('getUserStategetUserStategetUserStategetUserStategetUserState');
     await ActivityService.getCurrentUserState(
       showLoading: showLoading,
       successCallback: (CurrentUserStateModel currentUserState) async {
@@ -676,8 +670,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
       Get.toNamed(Routes.activityActive);
     } else {
-
-      if (Get.isDialogOpen == null || Get.isDialogOpen == false){
+      if (Get.isDialogOpen == null || Get.isDialogOpen == false) {
         print('운동선택');
         Get.dialog(const ActivitySelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
       }
@@ -844,8 +837,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       // HiveStore.save(key: HiveKey.currentPosition.name, value: null);
       detectFakeGps();
 
-
-
       if (HiveStore.load(key: HiveKey.isDebuggingMode.name) && exerciseState.value == ExerciseState.ongoing) {
         List positionRawData = HiveStore.load(key: HiveKey.positionRawDataLogs.name) ?? [];
 
@@ -864,7 +855,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       }
 
       if (exerciseState.value == ExerciseState.ongoing && position.accuracy < gpsAccuracy) {
-
         exerciseData.add(UserExerciseModel(
           altitude: position.altitude,
           speed: convertMStoKMH(position.speed),
@@ -880,9 +870,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
               Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
         }
 
-        if(Get.currentRoute == Routes.activityMap && coordinates.length >= 10) {
+        if (Get.currentRoute == Routes.activityMap && coordinates.length >= 10) {
           print('여기에 들어왔다');
-          challengeMapController.addOverlay( NPathOverlay(
+          challengeMapController.addOverlay(NPathOverlay(
             id: 'path',
             width: 3,
             color: Colors.red,
@@ -904,7 +894,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           // final cameraUpdate = NCameraUpdate.scrollAndZoomTo(target: NLatLng(currentLocation.value.latitude, currentLocation.value.longitude));
 
           print('Get.currentRoute : ${Get.currentRoute}');
-          if(Get.currentRoute == '/laboratory/detect_challenge_course'){
+          if (Get.currentRoute == '/laboratory/detect_challenge_course') {
             final cameraUpdate = NCameraUpdate.withParams(
               target: NLatLng(currentLocation.value.latitude, currentLocation.value.longitude),
               zoom: 16,
@@ -915,7 +905,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           double prevPositionLat = nearChallengeLocation.value != null ? double.parse(nearChallengeLocation.value!.startLat.toString()) : position.latitude;
           double prevPositionLng = nearChallengeLocation.value != null ? double.parse(nearChallengeLocation.value!.startLon.toString()) : position.longitude;
 
-          betweenDistance.value = calculateDistance( prevPositionLat, prevPositionLng, position.latitude, position.longitude);
+          betweenDistance.value = calculateDistance(prevPositionLat, prevPositionLng, position.latitude, position.longitude);
 
           gpsSpeed.value = convertMStoKMH(position.speed);
           // gpsSpeed.value = betweenDistance.value * 3.6 / 1000;
@@ -932,13 +922,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           print('dis : ${betweenDistance.value}');
           print('nearChallengeLocation.value : ${nearChallengeLocation.value!.startLat}');
 
-
-
           // 주기적으로 가장 가까운 챌린지 코스 지점 5분마다 재조회
-          if (calcNearCourseTime.value.add( Duration(seconds: 300)).isBefore(now)) {
+          if (calcNearCourseTime.value.add(Duration(seconds: 300)).isBefore(now)) {
             calculateNearByHierarchyCourse(position.latitude, position.longitude);
           }
-
 
           if (betweenDistance.value < 1000) {
             detectDelay.value = 30;
@@ -952,7 +939,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           print('detectDelay : ${detectDelay}');
 
           // print('detectDelay.value : ${detectDelay.value}');
-          if (receiveLocationTime.value.add( Duration(seconds: detectDelay.value)).isBefore(now)) {
+          if (receiveLocationTime.value.add(Duration(seconds: detectDelay.value)).isBefore(now)) {
             if (gpsSpeed.value < 12 && betweenDistance.value < 1000) {
               await findCourses();
             }
@@ -971,7 +958,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     }, onError: (e) {});
   }
 
-  void calculateNearByHierarchyCourse(currentLat, currentLon){
+  void calculateNearByHierarchyCourse(currentLat, currentLon) {
     print('555555');
 
     nearChallengeLocation.value = findNearestCourse(currentLat, currentLon, nearChallengeAllLocation.expand((c) => c.course).toList());
@@ -980,18 +967,18 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     nearChallengeLocation.refresh();
   }
 
-  Future<void> getChallengesNearByHierarchy() async{
+  Future<void> getChallengesNearByHierarchy() async {
     print('3333333333');
-    await ActivityService.getChallengesNearByHierarchy(currentLocation.value,
+    await ActivityService.getChallengesNearByHierarchy(
+      currentLocation.value,
       successCallback: (data) async {
-        if(data != null){
+        if (data != null) {
           nearChallengeAllLocation.value = data;
           nearChallengeAllLocation.refresh();
           calculateNearByHierarchyCourse(currentLocation.value.latitude, currentLocation.value.longitude);
         }
       },
-
-      errorCallback: (){},
+      errorCallback: () {},
     );
   }
 
@@ -1074,9 +1061,7 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     double dLat = lat2 - lat1;
     double dLon = lon2 - lon1;
 
-    double a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(lat1) * cos(lat2) *
-            sin(dLon / 2) * sin(dLon / 2);
+    double a = sin(dLat / 2) * sin(dLat / 2) + cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
     double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
     return earthRadius * c;
@@ -1109,16 +1094,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       // lan or lon의 오차범위가 5m 이상일 경우 새로운 코스를 찾는다. (추후 작업 필요)
       await getNearByCourses(currentLocation.value, exerciseState.value);
       print('findCourses.Get.currentRoute : ${Get.currentRoute}');
-      if(Get.currentRoute == '/laboratory/detect_challenge_course'){
+      if (Get.currentRoute == '/laboratory/detect_challenge_course') {
         refreshUpdateCamera();
       }
-
     } else {
       await getCourseList();
     }
   }
 
-  void refreshUpdateCamera(){
+  void refreshUpdateCamera() {
     if (nearByCourses.value != null && naverMapController != null) {
       List overlays = [];
       nearByCourses.value.forEach((item) {
@@ -1288,7 +1272,6 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   @override
   void onResumed() {
-
     print('onResumed activity');
     checkNewCollectionStatus();
 

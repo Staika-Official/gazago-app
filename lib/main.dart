@@ -12,16 +12,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
-import 'package:gaza_go/platform/controllers/challenges_controller.dart';
-import 'package:gaza_go/platform/controllers/collection_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
-import 'package:gaza_go/platform/controllers/inspection_notice_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
-import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
-import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -32,7 +27,6 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 import 'constants/routes.dart';
@@ -77,34 +71,29 @@ Future<void> initializeAdMob() async {
 void getStreamData(snapshot) async {
   print(snapshot.value);
   HiveStore.save(key: HiveKey.serviceStatus.name, value: snapshot.value);
-  if(Get.currentRoute == Routes.login && (Get.isDialogOpen! || Get.isBottomSheetOpen!)){
+  if (Get.currentRoute == Routes.login && (Get.isDialogOpen! || Get.isBottomSheetOpen!)) {
     Get.back();
   }
-  if(snapshot.value == 2){
+  if (snapshot.value == 2) {
     forceLogout();
-    Future.delayed(const Duration(seconds: 1), ()async {
-      if(!Get.isDialogOpen!){
+    Future.delayed(const Duration(seconds: 1), () async {
+      if (!Get.isDialogOpen!) {
         showServiceInspectionNotice();
       }
-
     });
 
     return;
-  } else if(snapshot.value == 1){
-    Future.delayed(const Duration(seconds: 1), ()async {
+  } else if (snapshot.value == 1) {
+    Future.delayed(const Duration(seconds: 1), () async {
       if (Get.currentRoute == Routes.login && !Get.isDialogOpen!) {
         showServiceInspectionNotice();
       }
     });
     return;
-
-  } else {
-
-  }
+  } else {}
 }
 
 Future<void> checkInspectionNotice() async {
-
   DatabaseReference inspectionNoticeRef = FirebaseDatabase.instance.ref('inspection');
   Stream<DatabaseEvent> stream = inspectionNoticeRef.onValue;
   await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
@@ -121,11 +110,10 @@ Future<void> checkInspectionNotice() async {
 
 Future<void> checkRegion() async {
   String? language = HiveStore.loadString(key: HiveKey.serviceLanguage.name);
-  if(language == null){
+  if (language == null) {
     HiveStore.save(key: HiveKey.serviceLanguage.name, value: 'ko');
   }
 }
-
 
 void main() async {
   await runZonedGuarded(() async {
@@ -196,10 +184,7 @@ class MyApp extends StatelessWidget {
     // Get.put(InspectionNoticeController(), permanent: true);
     Get.put(LoaderController(), permanent: true);
 
-
-
     Get.put(ActivityController(), permanent: true);
-
 
     return ScreenUtilInit(
       designSize: const Size(390, 844),

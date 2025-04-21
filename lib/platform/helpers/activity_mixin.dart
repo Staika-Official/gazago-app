@@ -5,7 +5,6 @@ import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -13,7 +12,6 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
-import 'package:gaza_go/platform/controllers/inspection_notice_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -27,7 +25,6 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -861,15 +858,15 @@ mixin ActivityMixin {
     luckLoadControl.value = Control.playReverseFromEnd;
     isShowLuckAnimation.value = true;
 
-    if (isAbleSound) {
-      HapticFeedback.vibrate();
-
-      if (!assetsAudioPlayer.isPlaying.value) {
-        assetsAudioPlayer.open(Audio("assets/audio/bonus_go.mp3")).then((value) {
-          assetsAudioPlayer.play();
-        }).onError((error, stackTrace) {});
-      }
-    }
+    // if (isAbleSound) {
+    //   HapticFeedback.vibrate();
+    //
+    //   if (!assetsAudioPlayer.isPlaying.value) {
+    //     assetsAudioPlayer.open(Audio("assets/audio/bonus_go.mp3")).then((value) {
+    //       assetsAudioPlayer.play();
+    //     }).onError((error, stackTrace) {});
+    //   }
+    // }
   }
 
   void initLuckAnimation() async {

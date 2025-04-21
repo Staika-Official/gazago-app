@@ -5,7 +5,9 @@ import 'package:gaza_go/platform/models/terms_history_model.dart';
 
 class MemberApi {
   static Future<Response> initializeUserData(String userId, String? email) async {
-    return await Api.client(serviceUrl: ServiceUrl.stateService).post('/users/$userId/init', data: {'email': email, });
+    return await Api.client(serviceUrl: ServiceUrl.stateService).post('/users/$userId/init', data: {
+      'email': email,
+    });
   }
 
   static Future<Response> getMemberUserInfo(String userId, String clientId) async {

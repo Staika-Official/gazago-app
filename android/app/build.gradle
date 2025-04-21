@@ -113,6 +113,9 @@ dependencies {
     implementation 'com.facebook.android:audience-network-sdk:6.16.0'
     implementation 'com.google.ads.mediation:facebook:6.16.0.0'
     implementation 'com.google.ads.mediation:inmobi:10.6.0.0'
+    implementation ('androidx.appcompat:appcompat:1.6.1') {
+        force = true
+    }
 }
 
 configurations.all {

@@ -7901,7 +7901,7 @@ void showMinimumSendStikAmountAlert() {
           Padding(
             padding: EdgeInsets.only(top: 20.0.sp),
             child: const StyledText(
-              '최소 5STIK 이상 보낼 수 있습니다.',
+              '최소 10STIK 이상 보낼 수 있습니다.',
               fontSize: 20,
               lineHeight: 28,
               fontWeight: 500,
