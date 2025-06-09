@@ -9,7 +9,8 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class CrewInfo extends StatelessWidget {
   const CrewInfo({super.key});
@@ -39,8 +40,8 @@ class CrewInfo extends StatelessWidget {
                       iconShopReward,
                       Padding(
                         padding: EdgeInsets.only(left: 4.0.sp),
-                        child: const StyledText(
-                          'GO 적립량',
+                        child: StyledText(
+                          'go_accumulation'.tr(),
                           color: skyBlueColor,
                           fontSize: 12,
                           lineHeight: 14,
@@ -80,7 +81,7 @@ class CrewInfo extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(left: 4.0.sp),
                         child: StyledText(
-                          '내구도 저항',
+                          'durability_resistance'.tr(),
                           color: AppColorData.regular().colorPointPurple,
                           fontSize: 12,
                           lineHeight: 12,
@@ -117,8 +118,8 @@ class CrewInfo extends StatelessWidget {
                       iconShopStamina,
                       Padding(
                         padding: EdgeInsets.only(left: 4.0.sp),
-                        child: const StyledText(
-                          '체력 저항',
+                        child: StyledText(
+                          'stamina_resistance'.tr(),
                           color: lightGreenColor,
                           fontSize: 12,
                           lineHeight: 12,
@@ -157,7 +158,7 @@ class CrewInfo extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(left: 4.0.sp),
                       child: StyledText(
-                        '행운',
+                        'luck'.tr(),
                         color: pinkColor,
                         fontSize: 12,
                         lineHeight: 12,
@@ -233,7 +234,8 @@ class CrewInfo extends StatelessWidget {
                             child: CircleAvatar(
                               radius: 22.sp,
                               backgroundColor: deepGrayColor,
-                              foregroundImage: (member.imageUrl == null || member.imageUrl == '')
+                              foregroundImage: (member.imageUrl == null ||
+                                      member.imageUrl == '')
                                   ? Image.asset(
                                       'assets/images/ic_launcher.png',
                                       width: 30.sp,
@@ -264,7 +266,10 @@ class CrewInfo extends StatelessWidget {
               ),
             ),
             StyledText(
-              '${member.blockQuantity} 블럭 | ${member.inviteCount} 초대',
+              'blocks_and_invites'.tr(args: [
+                member.blockQuantity.toString(),
+                member.inviteCount.toString(),
+              ]),
               fontSize: 12,
               fontWeight: 500,
               color: deepGrayColor,
@@ -295,20 +300,32 @@ class CrewInfo extends StatelessWidget {
                           child: CircleAvatar(
                             radius: 33.sp,
                             backgroundColor: deepGrayColor,
-                            foregroundImage: (controller.selectedCrew.value.iconImageUrl == null || controller.selectedCrew.value.iconImageUrl == '')
+                            foregroundImage: (controller
+                                            .selectedCrew.value.iconImageUrl ==
+                                        null ||
+                                    controller
+                                            .selectedCrew.value.iconImageUrl ==
+                                        '')
                                 ? Image.asset(
                                     'assets/images/ic_launcher.png',
                                     width: 30.sp,
                                   ).image
-                                : controller.selectedCrew.value.iconImageUrl!.contains('.svg')
-                                    ? sp.Svg(controller.selectedCrew.value.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                                : controller.selectedCrew.value.iconImageUrl!
+                                        .contains('.svg')
+                                    ? sp.Svg(
+                                        controller
+                                            .selectedCrew.value.iconImageUrl!,
+                                        source: sp
+                                            .SvgSource.network) as ImageProvider
                                     : CachedNetworkImageProvider(
-                                        controller.selectedCrew.value.iconImageUrl!,
+                                        controller
+                                            .selectedCrew.value.iconImageUrl!,
                                         headers: imageNetworkHeader,
                                       ),
                           ),
                         ),
-                        if (controller.selectedCrew.value.crewBuffLevel != 'NONE')
+                        if (controller.selectedCrew.value.crewBuffLevel !=
+                            'NONE')
                           Center(
                             child: SizedBox(
                               width: 66.sp,
@@ -327,13 +344,16 @@ class CrewInfo extends StatelessWidget {
                     lineHeight: 26,
                     fontWeight: 500,
                   ),
-                  if (controller.selectedCrew.value.crewBuffLevel != 'NONE') ...[
+                  if (controller.selectedCrew.value.crewBuffLevel !=
+                      'NONE') ...[
                     Padding(
-                      padding: EdgeInsets.only(top: 28.sp, left: 20.sp, right: 20.sp),
+                      padding: EdgeInsets.only(
+                          top: 28.sp, left: 20.sp, right: 20.sp),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ...renderBuffStats(controller.selectedCrew.value.crewBuffLevel!),
+                          ...renderBuffStats(
+                              controller.selectedCrew.value.crewBuffLevel!),
                         ],
                       ),
                     ),
@@ -350,7 +370,10 @@ class CrewInfo extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: StyledText(
-                        '${controller.selectedCrew.value.crewBuffLevel!.replaceAll('LEVEL_', 'Lv')} 크루 버프 적용중',
+                        'crew_buff_level'.tr(args: [
+                          controller.selectedCrew.value.crewBuffLevel!
+                              .replaceAll('LEVEL_', 'Lv')
+                        ]),
                         fontSize: 14,
                         fontWeight: 500,
                         lineHeight: 14,
@@ -372,8 +395,8 @@ class CrewInfo extends StatelessWidget {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const StyledText(
-                                  '크루랭킹',
+                                StyledText(
+                                  'crew_ranking_1'.tr(),
                                   fontSize: 14,
                                   fontWeight: 500,
                                   lineHeight: 14,
@@ -381,7 +404,9 @@ class CrewInfo extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 8),
                                   child: StyledText(
-                                    '${controller.crewRanking.value}등',
+                                    'crew_rank_1'.tr(args: [
+                                      controller.crewRanking.value.toString()
+                                    ]),
                                     fontSize: 16,
                                     fontWeight: 500,
                                     lineHeight: 16,
@@ -405,8 +430,8 @@ class CrewInfo extends StatelessWidget {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const StyledText(
-                                  '누적 크루블럭',
+                                StyledText(
+                                  'total_crew_blocks'.tr(),
                                   fontSize: 14,
                                   fontWeight: 500,
                                   lineHeight: 14,
@@ -414,7 +439,10 @@ class CrewInfo extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 8),
                                   child: StyledText(
-                                    '${controller.accumulatedCrewBlock.value}개',
+                                    'accumulated_crew_blocks'.tr(args: [
+                                      controller.accumulatedCrewBlock.value
+                                          .toString()
+                                    ]),
                                     fontSize: 16,
                                     fontWeight: 500,
                                     lineHeight: 16,
@@ -438,8 +466,8 @@ class CrewInfo extends StatelessWidget {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const StyledText(
-                                  '크루초대',
+                                StyledText(
+                                  'invite_crew_members'.tr(),
                                   fontSize: 14,
                                   fontWeight: 500,
                                   lineHeight: 14,
@@ -460,7 +488,8 @@ class CrewInfo extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (controller.selectedCrew.value.crewRelayStatus! == 'ONGOING')
+                  if (controller.selectedCrew.value.crewRelayStatus! ==
+                      'ONGOING')
                     Container(
                       margin: EdgeInsets.only(
                         top: 12,
@@ -478,9 +507,9 @@ class CrewInfo extends StatelessWidget {
                         ),
                         onPressed: () => showCrewInviteInfoAlert(controller),
                         child: RichText(
-                          text: const TextSpan(
-                            text: '크루원 초대하고, ',
-                            style: TextStyle(
+                          text: TextSpan(
+                            text: 'invite_crew_members_get_blocks'.tr(),
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                               height: 1.5,
@@ -488,8 +517,10 @@ class CrewInfo extends StatelessWidget {
                             ),
                             children: [
                               TextSpan(
-                                text: '2블럭 받기',
-                                style: TextStyle(fontWeight: FontWeight.w800),
+                                text: 'get_2_blocks'.tr(),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
                             ],
                           ),
@@ -505,7 +536,8 @@ class CrewInfo extends StatelessWidget {
                 color: const Color(0xff2E3038),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 23, left: 20.sp, right: 20.sp, bottom: 18.sp),
+                padding: EdgeInsets.only(
+                    top: 23, left: 20.sp, right: 20.sp, bottom: 18.sp),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -513,7 +545,7 @@ class CrewInfo extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         StyledText(
-                          '오늘 크루가 쌓은 블럭',
+                          'todays_crew_blocks'.tr(),
                           fontSize: 14,
                           fontWeight: 500,
                           lineHeight: 22,
@@ -536,7 +568,9 @@ class CrewInfo extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: StyledText(
-                        '${controller.dailyBlockCount.value}개',
+                        'daily_block_count'.tr(args: [
+                          controller.dailyBlockCount.value.toString()
+                        ]),
                         fontSize: 26,
                         fontWeight: 500,
                         lineHeight: 26,
@@ -557,14 +591,17 @@ class CrewInfo extends StatelessWidget {
                       child: LayoutBuilder(
                         builder: (context, constraints) {
                           return Row(
-                            children: [...renderBlocksCollected(controller.dailyBlockCount.value)],
+                            children: [
+                              ...renderBlocksCollected(
+                                  controller.dailyBlockCount.value)
+                            ],
                           );
                         },
                       ),
                     ),
                     if (controller.dailyBlockCount.value == 0)
-                      const StyledText(
-                        '블록을 1개 이상 쌓아야 릴레이가 유지돼요!',
+                      StyledText(
+                        'minimum_block_for_relay'.tr(),
                         fontSize: 14,
                         fontWeight: 600,
                         fontFamily: 'Monserrat',
@@ -592,11 +629,11 @@ class CrewInfo extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: StyledText(
-                            '하루에 2km씩 걷고 1블럭씩 채워보세요',
+                            'walk_2km_daily'.tr(),
                             fontSize: 16,
                             fontWeight: 500,
                           ),
@@ -613,19 +650,23 @@ class CrewInfo extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 5, left: 18.sp, right: 18.sp, bottom: 10),
+                  padding: EdgeInsets.only(
+                      top: 5, left: 18.sp, right: 18.sp, bottom: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       StyledText(
-                        '크루원',
+                        'crew_members'.tr(),
                         fontSize: 18,
                         fontWeight: 500,
                         lineHeight: 18,
                         color: Colors.white.withOpacity(0.8),
                       ),
                       StyledText(
-                        '${controller.selectedCrew.value.crewMemberList!.length}명',
+                        'crew_member_count_1'.tr(args: [
+                          controller.selectedCrew.value.crewMemberList!.length
+                              .toString()
+                        ]),
                         fontSize: 18,
                         fontWeight: 500,
                         lineHeight: 18,

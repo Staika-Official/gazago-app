@@ -9,7 +9,8 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 List<Widget> renderProductList(WalletMasterController controller) {
   return controller.inAppProducts
@@ -17,7 +18,8 @@ List<Widget> renderProductList(WalletMasterController controller) {
       .entries
       .map(
         (product) => Padding(
-          padding: EdgeInsets.only(left: 25.sp, top: 17.sp, right: 17.sp, bottom: 17.sp),
+          padding: EdgeInsets.only(
+              left: 25.sp, top: 17.sp, right: 17.sp, bottom: 17.sp),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -31,10 +33,10 @@ List<Widget> renderProductList(WalletMasterController controller) {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if ([2, 4, 5].any((element) => element == product.key))
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 7),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 7),
                           child: StyledText(
-                            '인기',
+                            'popularity'.tr(),
                             fontSize: 10,
                             lineHeight: 10,
                             fontWeight: 800,
@@ -44,7 +46,10 @@ List<Widget> renderProductList(WalletMasterController controller) {
                       Row(
                         children: [
                           StyledText(
-                            formatDecimalPlaces(controller.getProductPrice(product.value.id) * 0.7, 0),
+                            formatDecimalPlaces(
+                                controller.getProductPrice(product.value.id) *
+                                    0.7,
+                                0),
                             fontSize: 18.sp,
                             fontWeight: 700,
                             lineHeight: 18.sp,
@@ -107,7 +112,8 @@ List<Widget> renderProductList(WalletMasterController controller) {
                       onTap: () => controller.purchaseInAppItem(product.value),
                       borderRadius: BorderRadius.circular(50),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 15.sp),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 25.sp, vertical: 15.sp),
                         child: FittedBox(
                           child: StyledText(
                             '${product.value.currencySymbol}${formatDecimalPlaces(product.value.rawPrice, 2, isAutoDecimal: true)}',
@@ -142,14 +148,17 @@ void showProductList() {
                     Container(
                       width: 2,
                       height: 2,
-                      margin: EdgeInsets.only(top: 5.sp, left: 6.sp, right: 6.sp),
+                      margin:
+                          EdgeInsets.only(top: 5.sp, left: 6.sp, right: 6.sp),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
                     StyledText(
-                      product.value.name! == 'Taika' ? '활동으로 받은 TIK' : '충전한 TIK',
+                      product.value.name! == 'Taika'
+                          ? 'earned_tik'.tr()
+                          : 'charged_tik'.tr(),
                       fontSize: 12,
                       fontWeight: 400,
                       lineHeight: 18,
@@ -160,7 +169,8 @@ void showProductList() {
                 Row(
                   children: [
                     StyledText(
-                      formatDecimalPlaces(double.parse(product.value.uiAmountString!), 0),
+                      formatDecimalPlaces(
+                          double.parse(product.value.uiAmountString!), 0),
                       fontSize: 12,
                       fontWeight: 700,
                       lineHeight: 20,
@@ -194,7 +204,7 @@ void showProductList() {
       child: Obx(() {
         return DefaultContainer(
           backgroundColor: subBg01Color,
-          titleText: 'TIK 충전하기',
+          titleText: 'charge_tik'.tr(),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -202,9 +212,10 @@ void showProductList() {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 24.sp, top: 16.sp, right: 24.sp, bottom: 16.sp),
-                    child: const StyledText(
-                      '현재 보유 자산',
+                    padding: EdgeInsets.only(
+                        left: 24.sp, top: 16.sp, right: 24.sp, bottom: 16.sp),
+                    child: StyledText(
+                      'current_assets'.tr(),
                       fontSize: 16,
                       fontWeight: 600,
                       lineHeight: 20,
@@ -212,7 +223,8 @@ void showProductList() {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 24.sp, right: 24.sp, bottom: 16.sp),
+                    padding: EdgeInsets.only(
+                        left: 24.sp, right: 24.sp, bottom: 16.sp),
                     child: Column(
                       children: [
                         Padding(
@@ -229,7 +241,10 @@ void showProductList() {
                               Row(
                                 children: [
                                   StyledText(
-                                    formatDecimalPlaces(double.parse(controller.tik.value.uiAmountString!), 0),
+                                    formatDecimalPlaces(
+                                        double.parse(controller
+                                            .tik.value.uiAmountString!),
+                                        0),
                                     fontSize: 14.sp,
                                     fontWeight: 700,
                                     lineHeight: 20.sp,
@@ -265,14 +280,15 @@ void showProductList() {
                     children: [
                       ...renderProductList(controller),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25, vertical: 30),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: 9),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 9),
                               child: StyledText(
-                                '이용안내',
+                                'usage_guide'.tr(),
                                 fontSize: 14,
                                 lineHeight: 18,
                                 fontWeight: 500,
@@ -299,15 +315,17 @@ void showProductList() {
                                       color: deepGrayColor,
                                       letterSpacing: -.1,
                                     ),
-                                    const TextSpan(
-                                      text: '충전한 TIK은',
+                                    TextSpan(
+                                      text: 'charged_tik_non_exchangeable'.tr(),
                                       children: [
                                         TextSpan(
-                                          text: ' 상품권, STIK 교환은 불가',
-                                          style: TextStyle(fontWeight: FontWeight.w700, color: lightGrayColor),
+                                          text: 'no_voucher_stik_exchange'.tr(),
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              color: lightGrayColor),
                                         ),
                                         TextSpan(
-                                          text: '합니다.',
+                                          text: 'non_refundable_tik'.tr(),
                                         ),
                                       ],
                                     ),
@@ -329,9 +347,9 @@ void showProductList() {
                                       borderRadius: BorderRadius.circular(2),
                                     ),
                                   ),
-                                  const Expanded(
+                                  Expanded(
                                     child: StyledText(
-                                      '이미 사용한 TIK은 환불할 수 없으며, 이미 사용한 TIK을 환불받은 경우 사전통지 없이 회원이 보유한 TIK에서 환불받은 금액을 회수할 수 있습니다.',
+                                      'used_tik_non_refundable'.tr(),
                                       fontSize: 10,
                                       lineHeight: 14,
                                       fontWeight: 500,
@@ -356,36 +374,9 @@ void showProductList() {
                                       borderRadius: BorderRadius.circular(2),
                                     ),
                                   ),
-                                  const Expanded(
+                                  Expanded(
                                     child: StyledText(
-                                      '결제된 가격은 부가가치세가 포함된 가격입니다.',
-                                      fontSize: 10,
-                                      lineHeight: 14,
-                                      fontWeight: 500,
-                                      color: deepGrayColor,
-                                      letterSpacing: -.1,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 2,
-                                    height: 2,
-                                    margin: const EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      color: lightGrayColor,
-                                      borderRadius: BorderRadius.circular(2),
-                                    ),
-                                  ),
-                                  const Expanded(
-                                    child: StyledText(
-                                      '법정대리인의 동의 없는 미성년자의 결제는 취소될 수 있습니다.',
+                                      'price_includes_vat'.tr(),
                                       fontSize: 10,
                                       lineHeight: 14,
                                       fontWeight: 500,
@@ -412,7 +403,7 @@ void showProductList() {
                                   ),
                                   Expanded(
                                     child: StyledText(
-                                      Platform.isIOS ? 'iOS앱에서 충전한 TIK은 Apple 고객센터에서 환불 가능합니다.' : '안드로이드 앱에서 충전한 TIK은 Play 스토어고객센터에서 환불 가능합니다.',
+                                      'minor_payment_cancellation'.tr(),
                                       fontSize: 10,
                                       lineHeight: 14,
                                       fontWeight: 500,
@@ -440,8 +431,37 @@ void showProductList() {
                                   Expanded(
                                     child: StyledText(
                                       Platform.isIOS
-                                          ? 'iOS앱에서 충전한 TIK은 모바일 기기에서는 ‘OS설정 > 계정’에서, 데스크탑에서는 ‘iTunes > 계정 > 나의 계정보기 > 구입내역\' 메뉴에서 확인 가능합니다.'
-                                          : '안드로이드 앱에서 충전한 TIK은 모바일 기기에서는 ‘Play 스토어 > 프로필 > 결제 및 정기 결제 > 예산 및 내역’에서, 데스크탑에서는 ‘play.google.com > 프로필 > 결제 및 정기 결제 > 예산 및 주문 내역’ 메뉴에서 확인 가능합니다.',
+                                          ? 'ios_tik_refund_apple'.tr()
+                                          : 'android_tik_refund_playstore'.tr(),
+                                      fontSize: 10,
+                                      lineHeight: 14,
+                                      fontWeight: 500,
+                                      color: deepGrayColor,
+                                      letterSpacing: -.1,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 2,
+                                    height: 2,
+                                    margin: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: lightGrayColor,
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: StyledText(
+                                      Platform.isIOS
+                                          ? 'ios_tik_check_location'.tr()
+                                          : 'android_tik_check_location'.tr(),
                                       fontSize: 10,
                                       lineHeight: 14,
                                       fontWeight: 500,

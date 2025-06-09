@@ -9,24 +9,26 @@ import 'package:gaza_go/platform/helpers/inventory_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class InventoryItem extends StatelessWidget {
   const InventoryItem({super.key});
 
-
   List<Widget> renderItemSubTabList(InventoryHomeController controller) {
     return controller.itemSubTabList
         .map(
-          (item) => Padding( 
-            padding: EdgeInsets.only(left: 12.0.sp, right: 12.0.sp, top: 6.0.sp, bottom: 3.0.sp),
+          (item) => Padding(
+            padding: EdgeInsets.only(
+                left: 12.0.sp, right: 12.0.sp, top: 6.0.sp, bottom: 3.0.sp),
             child: Text(item['title']!),
           ),
         )
         .toList();
   }
 
-  List<Widget> renderItemList(InventoryHomeController homeController, InventoryController controller, BuildContext context) {
+  List<Widget> renderItemList(InventoryHomeController homeController,
+      InventoryController controller, BuildContext context) {
     return homeController.itemSubTabList
         .map(
           (tab) => Wrap(
@@ -37,13 +39,11 @@ class InventoryItem extends StatelessWidget {
                 (item) => InkWell(
                   onTap: () => controller.toItemDetail(item.id),
                   child: Container(
-                    width: MediaQuery.of(context).size.width > 450 ? ((MediaQuery
-                        .of(context)
-                        .size
-                        .width - 32 - 40) / 6).floorToDouble() : ((MediaQuery
-                        .of(context)
-                        .size
-                        .width - 32 - 16) / 3).floorToDouble() ,
+                    width: MediaQuery.of(context).size.width > 450
+                        ? ((MediaQuery.of(context).size.width - 32 - 40) / 6)
+                            .floorToDouble()
+                        : ((MediaQuery.of(context).size.width - 32 - 16) / 3)
+                            .floorToDouble(),
                     decoration: BoxDecoration(
                       color: subBg01Color,
                       borderRadius: BorderRadius.all(
@@ -52,61 +52,109 @@ class InventoryItem extends StatelessWidget {
                     ),
                     child: Stack(
                       children: [
-                        if (item.publishType == 'NFT') Positioned(right: 8.sp, top: 8.sp, child: SvgPicture.asset('assets/images/inventory/ico_nft.svg')),
+                        if (item.publishType == 'NFT')
+                          Positioned(
+                              right: 8.sp,
+                              top: 8.sp,
+                              child: SvgPicture.asset(
+                                  'assets/images/inventory/ico_nft.svg')),
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10.0.sp, horizontal: 18.0.sp),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.0.sp, horizontal: 18.0.sp),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
                                 height: 60.sp,
-                                child: controller.isConsumerItemUsing.value != null && controller.isConsumerItemUsing.value.id == item.id
-                                    ? const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor)))
+                                child: controller.isConsumerItemUsing.value !=
+                                            null &&
+                                        controller
+                                                .isConsumerItemUsing.value.id ==
+                                            item.id
+                                    ? const Center(
+                                        child: SizedBox.square(
+                                            dimension: 40,
+                                            child: CircularProgressIndicator(
+                                                color: skyBlueColor)))
                                     : Container(
-                                        child: item.itemImageUrl.contains('.svg')
+                                        child: item.itemImageUrl
+                                                .contains('.svg')
                                             ? SvgPicture.network(
                                                 fit: BoxFit.fitHeight,
                                                 item.itemImageUrl,
-                                                placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                                placeholderBuilder: (BuildContext
+                                                        context) =>
+                                                    const Center(
+                                                        child: SizedBox.square(
+                                                            dimension: 40,
+                                                            child: CircularProgressIndicator(
+                                                                color:
+                                                                    skyBlueColor))),
                                                 headers: imageNetworkHeader,
                                               )
                                             : CachedNetworkImage(
                                                 imageUrl: item.itemImageUrl,
                                                 fit: BoxFit.fitHeight,
-                                                placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
-                                                errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                                                placeholder: (context, url) =>
+                                                    const Center(
+                                                        child: SizedBox.square(
+                                                            dimension: 40,
+                                                            child: CircularProgressIndicator(
+                                                                color:
+                                                                    skyBlueColor))),
+                                                errorWidget: (context, url,
+                                                        error) =>
+                                                    Image.asset(
+                                                        "assets/images/@temp_badge.png"),
                                                 httpHeaders: imageNetworkHeader,
-                                                color: item.equipped == true ? Colors.white.withOpacity(0.5) : Colors.white.withOpacity(1),
-                                                colorBlendMode: BlendMode.modulate,
+                                                color: item.equipped == true
+                                                    ? Colors.white
+                                                        .withOpacity(0.5)
+                                                    : Colors.white
+                                                        .withOpacity(1),
+                                                colorBlendMode:
+                                                    BlendMode.modulate,
                                               ),
                                       ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 10.sp, bottom: 6.sp),
+                                padding:
+                                    EdgeInsets.only(top: 10.sp, bottom: 6.sp),
                                 child: item.equipped == true
                                     ? Text(
                                         item.itemName,
-                                        style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                                          color: AppColorData.regular().colorTextInteractiveSecondaryDisabled
-                                        ),
+                                        style: AppTextStyleData.regular()
+                                            .koBodyMediumSm
+                                            .copyWith(
+                                                color: AppColorData.regular()
+                                                    .colorTextInteractiveSecondaryDisabled),
                                         overflow: TextOverflow.ellipsis,
                                       )
                                     : Text(
                                         item.itemName,
-                                        style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                                          color: AppColorData.regular().colorTextPrimary,
-                                        ),
+                                        style: AppTextStyleData.regular()
+                                            .koBodyMediumSm
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorTextPrimary,
+                                            ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                               ),
                               item.equipped == false
                                   ? InkWell(
-                                      onTap: () => item.itemCategory == 'DISPOSABLE'
-                                          ? controller.isConsumerItemUsing.value == null
-                                              ? controller.checkConsumerItemType(item)
+                                      onTap: () => item.itemCategory ==
+                                              'DISPOSABLE'
+                                          ? controller.isConsumerItemUsing
+                                                      .value ==
+                                                  null
+                                              ? controller
+                                                  .checkConsumerItemType(item)
                                               : null
-                                          : controller.checkEquippedInventoryChallengeItem(item.id, item.itemCategory),
+                                          : controller
+                                              .checkEquippedInventoryChallengeItem(
+                                                  item.id, item.itemCategory),
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
@@ -114,7 +162,8 @@ class InventoryItem extends StatelessWidget {
                                           border: Border.all(
                                             width: 1,
                                             style: BorderStyle.solid,
-                                            color: AppColorData.regular().colorBorderInteractivePrimary,
+                                            color: AppColorData.regular()
+                                                .colorBorderInteractivePrimary,
                                           ),
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(25.sp),
@@ -122,11 +171,17 @@ class InventoryItem extends StatelessWidget {
                                         ),
                                         alignment: Alignment.center,
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 4, horizontal: 10),
                                           child: Text(
-                                            item.itemCategory == 'DISPOSABLE' ? '사용하기' : '장착하기',
-                                            style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                                                  color: AppColorData.regular().colorTextPrimary,
+                                            item.itemCategory == 'DISPOSABLE'
+                                                ? 'use_item'.tr()
+                                                : 'equip_item'.tr(),
+                                            style: AppTextStyleData.regular()
+                                                .koBodyMediumSm
+                                                .copyWith(
+                                                  color: AppColorData.regular()
+                                                      .colorTextPrimary,
                                                 ),
                                           ),
                                         ),
@@ -139,7 +194,8 @@ class InventoryItem extends StatelessWidget {
                                         border: Border.all(
                                           width: 1,
                                           style: BorderStyle.solid,
-                                          color: AppColorData.regular().colorBorderInteractivePrimaryPressed,
+                                          color: AppColorData.regular()
+                                              .colorBorderInteractivePrimaryPressed,
                                         ),
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(20.sp),
@@ -147,11 +203,15 @@ class InventoryItem extends StatelessWidget {
                                       ),
                                       alignment: Alignment.center,
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 4, horizontal: 10),
                                         child: Text(
-                                          '장착 중',
-                                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                                                color: AppColorData.regular().colorTextInteractivePrimaryPressed,
+                                          'equipped'.tr(),
+                                          style: AppTextStyleData.regular()
+                                              .koBodyMediumSm
+                                              .copyWith(
+                                                color: AppColorData.regular()
+                                                    .colorTextInteractivePrimaryPressed,
                                               ),
                                         ),
                                       ),
@@ -159,22 +219,30 @@ class InventoryItem extends StatelessWidget {
                             ],
                           ),
                         ),
-                        if (item.itemCategory == 'DISPOSABLE' && item.amount != null)
+                        if (item.itemCategory == 'DISPOSABLE' &&
+                            item.amount != null)
                           Positioned(
                             left: 8.sp,
                             top: 8.sp,
                             child: Container(
                               decoration: BoxDecoration(
                                 color: AppColorData.regular().colorBaseBalck,
-                                borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius4.sp),
+                                borderRadius: BorderRadius.circular(
+                                    AppDoubleData.regular().numberRadius4.sp),
                               ),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 2.sp, horizontal: 6.0.sp),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 2.sp, horizontal: 6.0.sp),
                                 child: Text(
-                                  item.amount! > 99 ? '99+' : item.amount.toString(),
-                                  style: AppTextStyleData.regular().numBodySemiboldSm.copyWith(
-                                    color: AppColorData.regular().colorBaseWhite,
-                                  ),
+                                  item.amount! > 99
+                                      ? '99+'
+                                      : item.amount.toString(),
+                                  style: AppTextStyleData.regular()
+                                      .numBodySemiboldSm
+                                      .copyWith(
+                                        color: AppColorData.regular()
+                                            .colorBaseWhite,
+                                      ),
                                 ),
                               ),
                             ),
@@ -187,26 +255,36 @@ class InventoryItem extends StatelessWidget {
                           child: getItemGradeCircleIcon(item.itemGrade),
                         ),
                         if (item.expiredDate != null)
-                            Positioned(
-                              left: 8.sp,
-                              top: 56.sp,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 6.sp,
-                                  vertical: 1.sp,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: controller.getRemainingDays(item.expiredDate!) == 0 ? AppColorData.regular().colorBgWarningSubtle  : AppColorData.regular().colorPointBrandgray,
-                                  borderRadius: BorderRadius.circular(AppDoubleData.regular().numberRadius4.sp),
-                                ),
-                                child: Text(
-                                    'D-${controller.getRemainingDays(item.expiredDate!)}',
-                                        style: AppTextStyleData.regular().koCaptionSemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorTextInverse,
-                                        ),
-                                ),
+                          Positioned(
+                            left: 8.sp,
+                            top: 56.sp,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 6.sp,
+                                vertical: 1.sp,
+                              ),
+                              decoration: BoxDecoration(
+                                color: controller.getRemainingDays(
+                                            item.expiredDate!) ==
+                                        0
+                                    ? AppColorData.regular()
+                                        .colorBgWarningSubtle
+                                    : AppColorData.regular()
+                                        .colorPointBrandgray,
+                                borderRadius: BorderRadius.circular(
+                                    AppDoubleData.regular().numberRadius4.sp),
+                              ),
+                              child: Text(
+                                'D-${controller.getRemainingDays(item.expiredDate!)}',
+                                style: AppTextStyleData.regular()
+                                    .koCaptionSemiboldMd
+                                    .copyWith(
+                                      color: AppColorData.regular()
+                                          .colorTextInverse,
+                                    ),
                               ),
                             ),
+                          ),
                         // Positioned(
                         //   right: 7.sp,
                         //   top: 7.sp,
@@ -242,7 +320,8 @@ class InventoryItem extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 20.0.sp),
               controller: controller.subTabController,
               isScrollable: true,
-              labelStyle: TextStyle(fontWeight: FontWeight.w500, fontSize: 14.sp, height: 1),
+              labelStyle: TextStyle(
+                  fontWeight: FontWeight.w500, fontSize: 14.sp, height: 1),
               labelPadding: EdgeInsets.zero,
               labelColor: Colors.black,
               unselectedLabelColor: const Color(0xFF898B92),
@@ -254,7 +333,8 @@ class InventoryItem extends StatelessWidget {
               indicatorSize: TabBarIndicatorSize.label,
               dividerColor: Colors.transparent,
               tabs: [...renderItemSubTabList(controller)],
-              onTap: (index) => inventoryController.getUserItemsByCategory(controller.itemSubTabList, index),
+              onTap: (index) => inventoryController.getUserItemsByCategory(
+                  controller.itemSubTabList, index),
             ),
           ),
           Obx(() {
@@ -265,7 +345,6 @@ class InventoryItem extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   controller: controller.subTabController,
                   children: [
-
                     ...renderItemList(controller, inventoryController, context),
                   ],
                 ),

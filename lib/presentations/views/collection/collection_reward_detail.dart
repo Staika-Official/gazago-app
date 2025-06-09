@@ -15,22 +15,24 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class CollectionRewardDetail extends StatelessWidget {
   const CollectionRewardDetail({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    CollectionRewardDetailController controller = Get.put(CollectionRewardDetailController());
+    CollectionRewardDetailController controller =
+        Get.put(CollectionRewardDetailController());
 
     return Scaffold(
-      appBar: const SecondaryAppbar(
-        isShowBackButton: true,
-        isShowPreferencesButton: false,
-      ),
-      backgroundColor: AppColorData.regular().colorBgPrimary,
-      body: SizedBox(
+        appBar: const SecondaryAppbar(
+          isShowBackButton: true,
+          isShowPreferencesButton: false,
+        ),
+        backgroundColor: AppColorData.regular().colorBgPrimary,
+        body: SizedBox(
           child: Stack(
             fit: StackFit.expand,
             children: [
@@ -49,7 +51,8 @@ class CollectionRewardDetail extends StatelessWidget {
                             color: Colors.black,
                           ),
                           borderRadius: BorderRadius.all(
-                            Radius.circular(AppDoubleData.regular().numberRadius12.sp),
+                            Radius.circular(
+                                AppDoubleData.regular().numberRadius12.sp),
                           ),
                           boxShadow: [
                             BoxShadow(
@@ -63,14 +66,17 @@ class CollectionRewardDetail extends StatelessWidget {
                         child: SizedBox(
                           child: Stack(
                             children: [
-                              if (controller.rewardItem.itemGrade != null && controller.rewardItem.itemGrade != 'NONE')
+                              if (controller.rewardItem.itemGrade != null &&
+                                  controller.rewardItem.itemGrade != 'NONE')
                                 Positioned(
                                   right: 32.sp,
                                   top: 0,
-                                  child: getItemGradeIcon(controller.rewardItem.itemGrade!),
+                                  child: getItemGradeIcon(
+                                      controller.rewardItem.itemGrade!),
                                 ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12.sp, vertical: 28.0.sp),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 12.sp, vertical: 28.0.sp),
                                 child: Column(
                                   children: [
                                     Column(
@@ -79,30 +85,76 @@ class CollectionRewardDetail extends StatelessWidget {
                                           width: double.infinity,
                                           child: Stack(
                                             children: [
-                                              if(controller.rewardItem.publishType == 'NFT')
-                                                Positioned.fill(left: 24.sp, right: 24.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
+                                              if (controller
+                                                      .rewardItem.publishType ==
+                                                  'NFT')
+                                                Positioned.fill(
+                                                    left: 24.sp,
+                                                    right: 24.sp,
+                                                    child: SvgPicture.asset(
+                                                        'assets/images/shop/ico_nft_detail.svg')),
                                               Padding(
-                                                padding: EdgeInsets.symmetric(vertical: 0.0.sp),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 0.0.sp),
                                                 child: Center(
                                                   child: SizedBox(
                                                     width: 174.sp,
-                                                    child: controller.rewardItem.imageUrl != null && controller.rewardItem.imageUrl!.contains('.svg')
+                                                    child: controller.rewardItem
+                                                                    .imageUrl !=
+                                                                null &&
+                                                            controller
+                                                                .rewardItem
+                                                                .imageUrl!
+                                                                .contains(
+                                                                    '.svg')
                                                         ? SvgPicture.network(
-                                                      fit: BoxFit.contain,
-                                                      controller.rewardItem.imageUrl!,
-                                                      placeholderBuilder: (BuildContext context) => Container(
-                                                        padding: const EdgeInsets.all(30.0),
-                                                        child: const CircularProgressIndicator(color:skyBlueColor),
-                                                      ),
-                                                      headers: imageNetworkHeader,
-                                                    )
+                                                            fit: BoxFit.contain,
+                                                            controller
+                                                                .rewardItem
+                                                                .imageUrl!,
+                                                            placeholderBuilder:
+                                                                (BuildContext
+                                                                        context) =>
+                                                                    Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(
+                                                                      30.0),
+                                                              child: const CircularProgressIndicator(
+                                                                  color:
+                                                                      skyBlueColor),
+                                                            ),
+                                                            headers:
+                                                                imageNetworkHeader,
+                                                          )
                                                         : CachedNetworkImage(
-                                                      imageUrl: controller.rewardItem.imageUrl!,
-                                                      fit: BoxFit.fitWidth,
-                                                      placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
-                                                      errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
-                                                      httpHeaders: imageNetworkHeader,
-                                                    ),
+                                                            imageUrl: controller
+                                                                .rewardItem
+                                                                .imageUrl!,
+                                                            fit:
+                                                                BoxFit.fitWidth,
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                const Center(
+                                                                    child: SizedBox.square(
+                                                                        dimension:
+                                                                            40,
+                                                                        child: CircularProgressIndicator(
+                                                                            color:
+                                                                                skyBlueColor))),
+                                                            errorWidget: (context,
+                                                                    url,
+                                                                    error) =>
+                                                                const Center(
+                                                                    child: SizedBox.square(
+                                                                        dimension:
+                                                                            40,
+                                                                        child: CircularProgressIndicator(
+                                                                            color:
+                                                                                skyBlueColor))),
+                                                            httpHeaders:
+                                                                imageNetworkHeader,
+                                                          ),
                                                   ),
                                                 ),
                                               ),
@@ -112,27 +164,35 @@ class CollectionRewardDetail extends StatelessWidget {
                                       ],
                                     ),
                                     Padding(
-                                      padding:  EdgeInsets.only(top:16.sp),
+                                      padding: EdgeInsets.only(top: 16.sp),
                                       child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          if(controller.rewardItem.publishType == 'NFT')
+                                          if (controller
+                                                  .rewardItem.publishType ==
+                                              'NFT')
                                             Padding(
-                                              padding: EdgeInsets.only(right: 5.0.sp, top:2.8.sp),
-                                              child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
+                                              padding: EdgeInsets.only(
+                                                  right: 5.0.sp, top: 2.8.sp),
+                                              child: SvgPicture.asset(
+                                                  'assets/images/shop/ico_nft_label.svg'),
                                             ),
                                           Text(
                                             controller.rewardItem.name,
-                                            style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
-                                              color: AppColorData.regular().colorTextPrimary,
-                                            ),
+                                            style: AppTextStyleData.regular()
+                                                .koBodySemiboldXl
+                                                .copyWith(
+                                                  color: AppColorData.regular()
+                                                      .colorTextPrimary,
+                                                ),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ],
-
                                 ),
                               ),
                             ],
@@ -140,48 +200,55 @@ class CollectionRewardDetail extends StatelessWidget {
                         ),
                       ),
 
-                        Padding(
-                          padding: EdgeInsets.only(top: 25.0.sp),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                '능력치',
-                                style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
-                                  color: AppColorData.regular().colorTextPrimary,
-                                ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 25.0.sp),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'stats'.tr(),
+                              style: AppTextStyleData.regular()
+                                  .koBodySemiboldXl
+                                  .copyWith(
+                                    color:
+                                        AppColorData.regular().colorTextPrimary,
+                                  ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 6.0.sp),
+                              child: InkWell(
+                                onTap: () => showItemTipAlert(),
+                                child: iconExclamationMarkSmall,
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 6.0.sp),
-                                child: InkWell(
-                                  onTap: () =>   showItemTipAlert(),
-                                  child: iconExclamationMarkSmall,
-                                ),
-                              )
-                            ],
-                          ),
+                            )
+                          ],
                         ),
+                      ),
                       // Go 보상
-                      if (controller.rewardItem.maxGoProfit != null && controller.rewardItem.maxGoProfit! > 0)
+                      if (controller.rewardItem.maxGoProfit != null &&
+                          controller.rewardItem.maxGoProfit! > 0)
                         Padding(
                           padding: EdgeInsets.only(top: 16.0.sp),
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       iconStatGo,
-                                       Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: Text(
-                                          'GO 적립량',
-                                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                            color: AppColorData.regular().colorTextPrimary,
-                                            height: 1.1
-                                          ),
+                                          'go_accumulation'.tr(),
+                                          style: AppTextStyleData.regular()
+                                              .koBodyMediumLg
+                                              .copyWith(
+                                                  color: AppColorData.regular()
+                                                      .colorTextPrimary,
+                                                  height: 1.1),
                                         ),
                                       ),
                                     ],
@@ -189,22 +256,35 @@ class CollectionRewardDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        formatDecimalPlaces(controller.rewardItem.minGoProfit!, 0),
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointCyan,
-                                        ),
+                                        formatDecimalPlaces(
+                                            controller.rewardItem.minGoProfit!,
+                                            0),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointCyan,
+                                            ),
                                       ),
                                       Text(
                                         '-',
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointCyan,
-                                        ),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointCyan,
+                                            ),
                                       ),
                                       Text(
-                                        formatDecimalPlaces(controller.rewardItem.maxGoProfit!, 0),
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointCyan,
-                                        ),
+                                        formatDecimalPlaces(
+                                            controller.rewardItem.maxGoProfit!,
+                                            0),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointCyan,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -217,13 +297,17 @@ class CollectionRewardDetail extends StatelessWidget {
                                     height: 12,
                                     child: Stack(
                                       children: [
-
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.rewardItem.maxGoProfit! / controller.rewardItem.minGoProfit!),
+                                              width: constraints.maxWidth /
+                                                  (controller.rewardItem
+                                                          .maxGoProfit! /
+                                                      controller.rewardItem
+                                                          .minGoProfit!),
                                               decoration: BoxDecoration(
-                                                color: AppColorData.regular().colorPointCyan,
+                                                color: AppColorData.regular()
+                                                    .colorPointCyan,
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(50.sp),
                                                 ),
@@ -236,7 +320,9 @@ class CollectionRewardDetail extends StatelessWidget {
                                             return Container(
                                               width: constraints.maxWidth,
                                               decoration: BoxDecoration(
-                                                color: AppColorData.regular().colorPointCyan.withOpacity(.4),
+                                                color: AppColorData.regular()
+                                                    .colorPointCyan
+                                                    .withOpacity(.4),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -253,25 +339,29 @@ class CollectionRewardDetail extends StatelessWidget {
                           ),
                         ),
                       // 신발 내구도
-                      if (controller.rewardItem.maxDurability != null && controller.rewardItem.maxDurability! > 0)
+                      if (controller.rewardItem.maxDurability != null &&
+                          controller.rewardItem.maxDurability! > 0)
                         Padding(
                           padding: EdgeInsets.only(top: 16.0.sp),
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       iconStatDurability,
-                                       Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: Text(
-                                          '내구도 저항',
-                                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                            color: AppColorData.regular().colorTextPrimary,
-                                              height: 1.1
-                                          ),
+                                          'durability_resistance'.tr(),
+                                          style: AppTextStyleData.regular()
+                                              .koBodyMediumLg
+                                              .copyWith(
+                                                  color: AppColorData.regular()
+                                                      .colorTextPrimary,
+                                                  height: 1.1),
                                         ),
                                       ),
                                     ],
@@ -279,22 +369,37 @@ class CollectionRewardDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        formatDecimalPlaces(controller.rewardItem.minDurability!, 0),
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointPurple,
-                                        ),
+                                        formatDecimalPlaces(
+                                            controller
+                                                .rewardItem.minDurability!,
+                                            0),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointPurple,
+                                            ),
                                       ),
                                       Text(
                                         '-',
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointPurple,
-                                        ),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointPurple,
+                                            ),
                                       ),
                                       Text(
-                                        formatDecimalPlaces(controller.rewardItem.maxDurability!, 0),
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointPurple,
-                                        ),
+                                        formatDecimalPlaces(
+                                            controller
+                                                .rewardItem.maxDurability!,
+                                            0),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointPurple,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -310,9 +415,14 @@ class CollectionRewardDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.rewardItem.maxDurability! / controller.rewardItem.minDurability!),
+                                              width: constraints.maxWidth /
+                                                  (controller.rewardItem
+                                                          .maxDurability! /
+                                                      controller.rewardItem
+                                                          .minDurability!),
                                               decoration: BoxDecoration(
-                                                color:  AppColorData.regular().colorPointPurple,
+                                                color: AppColorData.regular()
+                                                    .colorPointPurple,
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -323,9 +433,11 @@ class CollectionRewardDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth ,
+                                              width: constraints.maxWidth,
                                               decoration: BoxDecoration(
-                                                color:  AppColorData.regular().colorPointPurple.withOpacity(.4),
+                                                color: AppColorData.regular()
+                                                    .colorPointPurple
+                                                    .withOpacity(.4),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -342,25 +454,29 @@ class CollectionRewardDetail extends StatelessWidget {
                           ),
                         ),
                       // 체력
-                      if (controller.rewardItem.maxStamina != null && controller.rewardItem.maxStamina! > 0)
+                      if (controller.rewardItem.maxStamina != null &&
+                          controller.rewardItem.maxStamina! > 0)
                         Padding(
                           padding: EdgeInsets.only(top: 16.0.sp),
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       iconStatStamina,
-                                       Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: Text(
-                                          '체력 저항',
-                                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                            color: AppColorData.regular().colorTextPrimary,
-                                            height: 1.1
-                                          ),
+                                          'stamina_resistance'.tr(),
+                                          style: AppTextStyleData.regular()
+                                              .koBodyMediumLg
+                                              .copyWith(
+                                                  color: AppColorData.regular()
+                                                      .colorTextPrimary,
+                                                  height: 1.1),
                                         ),
                                       ),
                                     ],
@@ -368,22 +484,35 @@ class CollectionRewardDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        formatDecimalPlaces(controller.rewardItem.minStamina!, 0),
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointYellowgreen,
-                                        ),
+                                        formatDecimalPlaces(
+                                            controller.rewardItem.minStamina!,
+                                            0),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointYellowgreen,
+                                            ),
                                       ),
                                       Text(
                                         '-',
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointYellowgreen,
-                                        ),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointYellowgreen,
+                                            ),
                                       ),
                                       Text(
-                                        formatDecimalPlaces(controller.rewardItem.maxStamina!, 0),
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointYellowgreen,
-                                        ),
+                                        formatDecimalPlaces(
+                                            controller.rewardItem.maxStamina!,
+                                            0),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointYellowgreen,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -399,9 +528,14 @@ class CollectionRewardDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.rewardItem.maxStamina! / controller.rewardItem.minStamina!),
+                                              width: constraints.maxWidth /
+                                                  (controller.rewardItem
+                                                          .maxStamina! /
+                                                      controller.rewardItem
+                                                          .minStamina!),
                                               decoration: BoxDecoration(
-                                                color: AppColorData.regular().colorPointYellowgreen,
+                                                color: AppColorData.regular()
+                                                    .colorPointYellowgreen,
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -414,7 +548,9 @@ class CollectionRewardDetail extends StatelessWidget {
                                             return Container(
                                               width: constraints.maxWidth,
                                               decoration: BoxDecoration(
-                                                color: AppColorData.regular().colorPointYellowgreen.withOpacity(.5),
+                                                color: AppColorData.regular()
+                                                    .colorPointYellowgreen
+                                                    .withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -431,25 +567,29 @@ class CollectionRewardDetail extends StatelessWidget {
                           ),
                         ),
                       // 행운
-                      if (controller.rewardItem.maxLuck != null && controller.rewardItem.maxLuck! > 0)
+                      if (controller.rewardItem.maxLuck != null &&
+                          controller.rewardItem.maxLuck! > 0)
                         Padding(
                           padding: EdgeInsets.only(top: 16.0.sp),
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       iconStatLuck,
-                                       Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: Text(
-                                          '행운',
-                                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                            color: AppColorData.regular().colorTextPrimary,
-                                            height: 1.1
-                                          ),
+                                          'luck'.tr(),
+                                          style: AppTextStyleData.regular()
+                                              .koBodyMediumLg
+                                              .copyWith(
+                                                  color: AppColorData.regular()
+                                                      .colorTextPrimary,
+                                                  height: 1.1),
                                         ),
                                       ),
                                     ],
@@ -457,22 +597,33 @@ class CollectionRewardDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        formatDecimalPlaces(controller.rewardItem.minLuck!, 0),
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointPink,
-                                        ),
+                                        formatDecimalPlaces(
+                                            controller.rewardItem.minLuck!, 0),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointPink,
+                                            ),
                                       ),
                                       Text(
                                         '-',
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointPink,
-                                        ),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointPink,
+                                            ),
                                       ),
                                       Text(
-                                        formatDecimalPlaces(controller.rewardItem.maxLuck!, 0),
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointPink,
-                                        ),
+                                        formatDecimalPlaces(
+                                            controller.rewardItem.maxLuck!, 0),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointPink,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -488,9 +639,14 @@ class CollectionRewardDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.rewardItem.maxLuck! / controller.rewardItem.minLuck!),
+                                              width: constraints.maxWidth /
+                                                  (controller
+                                                          .rewardItem.maxLuck! /
+                                                      controller
+                                                          .rewardItem.minLuck!),
                                               decoration: BoxDecoration(
-                                                color: AppColorData.regular().colorPointPink,
+                                                color: AppColorData.regular()
+                                                    .colorPointPink,
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -501,9 +657,11 @@ class CollectionRewardDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth ,
+                                              width: constraints.maxWidth,
                                               decoration: BoxDecoration(
-                                                color: AppColorData.regular().colorPointPink.withOpacity(.5),
+                                                color: AppColorData.regular()
+                                                    .colorPointPink
+                                                    .withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -519,25 +677,29 @@ class CollectionRewardDetail extends StatelessWidget {
                             ],
                           ),
                         ),
-                      if (controller.rewardItem.rewardRateTo != null && controller.rewardItem.rewardRateTo! > 0)
+                      if (controller.rewardItem.rewardRateTo != null &&
+                          controller.rewardItem.rewardRateTo! > 0)
                         Padding(
                           padding: EdgeInsets.only(top: 16.0.sp),
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       iconStatGo,
-                                       Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: Text(
-                                          'GO 적립량',
-                                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                              color: AppColorData.regular().colorTextPrimary,
-                                              height: 1.1
-                                          ),
+                                          'go_accumulation'.tr(),
+                                          style: AppTextStyleData.regular()
+                                              .koBodyMediumLg
+                                              .copyWith(
+                                                  color: AppColorData.regular()
+                                                      .colorTextPrimary,
+                                                  height: 1.1),
                                         ),
                                       ),
                                     ],
@@ -545,22 +707,36 @@ class CollectionRewardDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        formatDecimalPlaces(controller.rewardItem.rewardRateFrom!, 0),
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointCyan,
-                                        ),
+                                        formatDecimalPlaces(
+                                            controller
+                                                .rewardItem.rewardRateFrom!,
+                                            0),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointCyan,
+                                            ),
                                       ),
                                       Text(
                                         '-',
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointCyan,
-                                        ),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointCyan,
+                                            ),
                                       ),
                                       Text(
-                                        formatDecimalPlaces(controller.rewardItem.rewardRateTo!, 0),
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointCyan,
-                                        ),
+                                        formatDecimalPlaces(
+                                            controller.rewardItem.rewardRateTo!,
+                                            0),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointCyan,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -573,13 +749,17 @@ class CollectionRewardDetail extends StatelessWidget {
                                     height: 12,
                                     child: Stack(
                                       children: [
-
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.rewardItem.rewardRateTo! / controller.rewardItem.rewardRateFrom!),
+                                              width: constraints.maxWidth /
+                                                  (controller.rewardItem
+                                                          .rewardRateTo! /
+                                                      controller.rewardItem
+                                                          .rewardRateFrom!),
                                               decoration: BoxDecoration(
-                                                color: AppColorData.regular().colorPointCyan,
+                                                color: AppColorData.regular()
+                                                    .colorPointCyan,
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -590,9 +770,11 @@ class CollectionRewardDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth ,
+                                              width: constraints.maxWidth,
                                               decoration: BoxDecoration(
-                                                color: AppColorData.regular().colorPointCyan.withOpacity(.5),
+                                                color: AppColorData.regular()
+                                                    .colorPointCyan
+                                                    .withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -608,25 +790,29 @@ class CollectionRewardDetail extends StatelessWidget {
                             ],
                           ),
                         ),
-                      if (controller.rewardItem.luckRateTo != null && controller.rewardItem.luckRateTo! > 0)
+                      if (controller.rewardItem.luckRateTo != null &&
+                          controller.rewardItem.luckRateTo! > 0)
                         Padding(
                           padding: EdgeInsets.only(top: 16.0.sp),
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       iconStatLuck,
-                                       Padding(
+                                      Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
                                         child: Text(
-                                          '행운',
-                                          style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                              color: AppColorData.regular().colorTextPrimary,
-                                              height: 1.1
-                                          ),
+                                          'luck'.tr(),
+                                          style: AppTextStyleData.regular()
+                                              .koBodyMediumLg
+                                              .copyWith(
+                                                  color: AppColorData.regular()
+                                                      .colorTextPrimary,
+                                                  height: 1.1),
                                         ),
                                       ),
                                     ],
@@ -634,22 +820,35 @@ class CollectionRewardDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        formatDecimalPlaces(controller.rewardItem.luckRateFrom!, 0),
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointPink,
-                                        ),
+                                        formatDecimalPlaces(
+                                            controller.rewardItem.luckRateFrom!,
+                                            0),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointPink,
+                                            ),
                                       ),
                                       Text(
                                         '-',
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointPink,
-                                        ),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointPink,
+                                            ),
                                       ),
                                       Text(
-                                        formatDecimalPlaces(controller.rewardItem.luckRateTo!, 0),
-                                        style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                                          color: AppColorData.regular().colorPointPink,
-                                        ),
+                                        formatDecimalPlaces(
+                                            controller.rewardItem.luckRateTo!,
+                                            0),
+                                        style: AppTextStyleData.regular()
+                                            .koBodySemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointPink,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -665,9 +864,14 @@ class CollectionRewardDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.rewardItem.luckRateTo! / controller.rewardItem.luckRateFrom!),
+                                              width: constraints.maxWidth /
+                                                  (controller.rewardItem
+                                                          .luckRateTo! /
+                                                      controller.rewardItem
+                                                          .luckRateFrom!),
                                               decoration: BoxDecoration(
-                                                color: AppColorData.regular().colorPointPink,
+                                                color: AppColorData.regular()
+                                                    .colorPointPink,
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -678,9 +882,11 @@ class CollectionRewardDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth ,
+                                              width: constraints.maxWidth,
                                               decoration: BoxDecoration(
-                                                color: AppColorData.regular().colorPointPink.withOpacity(.5),
+                                                color: AppColorData.regular()
+                                                    .colorPointPink
+                                                    .withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -696,7 +902,6 @@ class CollectionRewardDetail extends StatelessWidget {
                             ],
                           ),
                         ),
-
 
                       Padding(
                         padding: EdgeInsets.only(top: 24.sp, bottom: 82.sp),
@@ -705,18 +910,28 @@ class CollectionRewardDetail extends StatelessWidget {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(bottom: 8.sp),
-                              child:  Text(
-                                '${controller.rewardItem.type == 'ITEM' ? '아이템' : '뱃지'} 설명',
-                                style: AppTextStyleData.regular().koBodySemiboldLg.copyWith(
-                                  color: AppColorData.regular().colorTextPrimary,
-                                ),
+                              child: Text(
+                                'item_or_badge_description'.tr(args: [
+                                  controller.rewardItem.type == 'ITEM'
+                                      ? 'item'.tr()
+                                      : 'badge'.tr()
+                                ]),
+                                style: AppTextStyleData.regular()
+                                    .koBodySemiboldLg
+                                    .copyWith(
+                                      color: AppColorData.regular()
+                                          .colorTextPrimary,
+                                    ),
                               ),
                             ),
                             Text(
                               controller.rewardItem.description.toString(),
-                              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                color: AppColorData.regular().colorTextSecondary,
-                              ),
+                              style: AppTextStyleData.regular()
+                                  .koBodyMediumMd
+                                  .copyWith(
+                                    color: AppColorData.regular()
+                                        .colorTextSecondary,
+                                  ),
                             ),
                           ],
                         ),
@@ -725,11 +940,8 @@ class CollectionRewardDetail extends StatelessWidget {
                   ),
                 ),
               ),
-
             ],
           ),
-        )
-
-    );
+        ));
   }
 }

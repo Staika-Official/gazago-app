@@ -4,9 +4,11 @@ import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 // 챌린지 전 - 참가중
-Map renderCompanyCrewReadyJoined(ChallengesDetailController challengesDetailController) {
+Map renderCompanyCrewReadyJoined(
+    ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
     onTap: () => null,
     child: Container(
@@ -23,8 +25,8 @@ Map renderCompanyCrewReadyJoined(ChallengesDetailController challengesDetailCont
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: const StyledText(
-            '시작 전',
+          child: StyledText(
+            'before_challenge_start'.tr(),
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
@@ -42,9 +44,9 @@ Map renderCompanyCrewReadyJoined(ChallengesDetailController challengesDetailCont
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: const [
+      children: [
         TextSpan(
-          text: '곧 챌린지가 시작돼요.',
+          text: 'upcoming_challenge'.tr(),
         ),
       ],
     ),
@@ -54,7 +56,8 @@ Map renderCompanyCrewReadyJoined(ChallengesDetailController challengesDetailCont
 }
 
 // 챌린지 진행 중 - 참가 중
-Map renderCompanyCrewInProgressJoined(ChallengesDetailController challengesDetailController) {
+Map renderCompanyCrewInProgressJoined(
+    ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
     onTap: () => null,
     child: Container(
@@ -72,7 +75,7 @@ Map renderCompanyCrewInProgressJoined(ChallengesDetailController challengesDetai
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
           child: StyledText(
-            '참가 중',
+            'participating_challenge'.tr(),
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
@@ -90,9 +93,9 @@ Map renderCompanyCrewInProgressJoined(ChallengesDetailController challengesDetai
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: const [
+      children: [
         TextSpan(
-          text: '챌린지 기간까지 화이팅!',
+          text: 'challenge_encouragement'.tr(),
         ),
       ],
     ),
@@ -102,7 +105,8 @@ Map renderCompanyCrewInProgressJoined(ChallengesDetailController challengesDetai
 }
 
 // 챌린지 종료
-Map renderCompanyCrewEnded(ChallengesDetailController challengesDetailController) {
+Map renderCompanyCrewEnded(
+    ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
     onTap: () => null,
     child: Container(
@@ -119,8 +123,8 @@ Map renderCompanyCrewEnded(ChallengesDetailController challengesDetailController
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 40.sp),
-          child: const StyledText(
-            '종료',
+          child: StyledText(
+            'finished'.tr(),
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
@@ -138,12 +142,12 @@ Map renderCompanyCrewEnded(ChallengesDetailController challengesDetailController
         fontSize: 16.sp,
         height: 22.sp / 16,
       ),
-      children: const [
+      children: [
         TextSpan(
-          text: '챌린지가 끝났어요.\n',
+          text: 'challenge_ended_short'.tr(),
         ),
         TextSpan(
-          text: '다음 챌린지에 도전해 보세요!',
+          text: 'try_next_challenge'.tr(),
         ),
       ],
     ),

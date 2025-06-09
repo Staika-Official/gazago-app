@@ -3,7 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/wallet_actions_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class WalletActions extends StatelessWidget {
   const WalletActions({super.key});
@@ -33,7 +34,7 @@ class WalletActions extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('보유: ${100.00.toString()}'),
+                      Text('balance_stik'.tr(args: ['${100.00.toString()}'])),
                       TextButton(
                         onPressed: () => null,
                         child: const Text('All'),
@@ -61,7 +62,8 @@ class WalletActions extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text('보유: ${100.00.toString()}'),
+                  child:
+                      Text('balance_stik'.tr(args: ['${100.00.toString()}'])),
                 ),
               ],
             ),
@@ -74,11 +76,11 @@ class WalletActions extends StatelessWidget {
                   if (controller.actionType.value == WalletActionType.recharge)
                     Padding(
                       padding: EdgeInsets.all(8.0.sp),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('교환 비용'),
-                          Text(
+                          Text('exchange_fee'.tr()),
+                          const Text(
                             '1 STIK \u2248 100 TIK',
                           )
                         ],
@@ -89,7 +91,7 @@ class WalletActions extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('예상 수수료'),
+                        Text('estimated_fee'.tr()),
                         Text(
                           '${0.005.toString()} STIK',
                         )
@@ -104,7 +106,10 @@ class WalletActions extends StatelessWidget {
               padding: EdgeInsets.all(8.sp),
               child: ElevatedButton(
                 onPressed: () => null,
-                child: Text(controller.actionType.value == WalletActionType.recharge ? '충전하기' : '보내기'),
+                child: Text(
+                    controller.actionType.value == WalletActionType.recharge
+                        ? 'recharge_1'.tr()
+                        : 'send_item'.tr()),
               ),
             ),
           ],

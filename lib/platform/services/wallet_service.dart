@@ -29,6 +29,7 @@ import 'package:solana/dto.dart';
 import 'package:solana/encoder.dart';
 import 'package:solana/solana.dart' as solana;
 import 'package:solana/solana.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:solana_web3/solana_web3.dart';
 
 class WalletService {
@@ -40,34 +41,48 @@ class WalletService {
     return HiveStore.loadString(key: HiveKey.solanaSecretKey.name);
   }
 
-  static Future<void> getSpendingWalletBalances({bool showLoading = false, required Function successCallback, Function? errorCallback}) async {
-    Response res = await WalletApi.getSpendingWalletBalances(showLoading: showLoading);
+  static Future<void> getSpendingWalletBalances(
+      {bool showLoading = false,
+      required Function successCallback,
+      Function? errorCallback}) async {
+    Response res =
+        await WalletApi.getSpendingWalletBalances(showLoading: showLoading);
     if (res.statusCode == 200) {
       List<AssetTokenBalanceModel> balanceList = [];
       if (res.data.length > 0) {
-        res.data.forEach((item) => balanceList.add(AssetTokenBalanceModel.fromJson(item)));
+        res.data.forEach(
+            (item) => balanceList.add(AssetTokenBalanceModel.fromJson(item)));
       }
       successCallback(balanceList);
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null)
+        errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
-  static Future<void> getSpendingWalletBalance(String symbol, {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getSpendingWalletBalance(String symbol,
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getSpendingWalletBalance(symbol);
     if (res.statusCode == 200) {
       successCallback(AssetTokenBalanceModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null)
+        errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
-  static Future<void> getSpendingWalletTransactions(String symbol, {int page = 1, int size = 10, required Function successCallback, Function? errorCallback}) async {
-    Response res = await WalletApi.getSpendingWalletTransactions(symbol, page, size);
+  static Future<void> getSpendingWalletTransactions(String symbol,
+      {int page = 1,
+      int size = 10,
+      required Function successCallback,
+      Function? errorCallback}) async {
+    Response res =
+        await WalletApi.getSpendingWalletTransactions(symbol, page, size);
     if (res.statusCode == 200) {
       successCallback(AssetDetailModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null)
+        errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
@@ -82,7 +97,8 @@ class WalletService {
     return PayResponseModel.fromJson(res.data);
   }
 
-  static Future<void> getFeeTik({required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getFeeTik(
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getFeeTik();
     if (res.statusCode == 200) {
       successCallback(res.data);
@@ -91,12 +107,14 @@ class WalletService {
     }
   }
 
-  static Future<void> getWalletAddress(String type, {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getWalletAddress(String type,
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getWalletAddress(type);
     if (res.statusCode == 200) {
       List<SettingEnvironmentModel> addressList = [];
       if (res.data.length > 0) {
-        res.data.forEach((item) => addressList.add(SettingEnvironmentModel.fromJson(item)));
+        res.data.forEach(
+            (item) => addressList.add(SettingEnvironmentModel.fromJson(item)));
       }
       return successCallback(addressList);
     } else {
@@ -104,12 +122,14 @@ class WalletService {
     }
   }
 
-  static Future<void> getProviderUrl({required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getProviderUrl(
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getProviderUrl();
     if (res.statusCode == 200) {
       return successCallback(res.data);
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null)
+        errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
@@ -122,7 +142,8 @@ class WalletService {
     return WalletSolanaModel.fromJson(res.data);
   }
 
-  static Future<WalletSolanaModel> createSolanaWallet(String walletPassword) async {
+  static Future<WalletSolanaModel> createSolanaWallet(
+      String walletPassword) async {
     // Solana Dart가 SecretKey 를 프라이빗으로 해둬서 값을 가져올수 없음. solana_web3 라이브러리 필요함
     final wallet = Keypair.generateSync();
     final address = wallet.pubkey;
@@ -130,13 +151,22 @@ class WalletService {
     String? email = HiveStore.loadString(key: HiveKey.email.name);
 
     // 암호화된 시크릿키
-    String encryptSecretKey = encrypt(base58.encode(wallet.seckey), email!, walletPassword);
-    Response res = await WalletApi.createOnChainWallet(userId!, publicKey: address.toBase58(), secretKey: encryptSecretKey);
+    String encryptSecretKey =
+        encrypt(base58.encode(wallet.seckey), email!, walletPassword);
+    Response res = await WalletApi.createOnChainWallet(userId!,
+        publicKey: address.toBase58(), secretKey: encryptSecretKey);
 
     return WalletSolanaModel.fromJson(res.data);
   }
 
-  static Future<WalletSolanaTransferModel> transferSolana(String accountSecretkey, String walletPassword, String toAddress, String symbol, String tokenAddress, int decimals, int amount) async {
+  static Future<WalletSolanaTransferModel> transferSolana(
+      String accountSecretkey,
+      String walletPassword,
+      String toAddress,
+      String symbol,
+      String tokenAddress,
+      int decimals,
+      int amount) async {
     late final SolanaClient solanaClient;
     int priorityFee = 0;
     String platform = 'solana';
@@ -152,7 +182,8 @@ class WalletService {
       return;
     });
 
-    await WalletService.getTokenPriorityFee(platform, symbol, successCallback: (fees) {
+    await WalletService.getTokenPriorityFee(platform, symbol,
+        successCallback: (fees) {
       priorityFee = fees.priorityFee;
     }, errorCallback: () {
       showToastPopup('Failed to get fee');
@@ -160,7 +191,8 @@ class WalletService {
     });
     String? email = HiveStore.loadString(key: HiveKey.email.name);
 
-    String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
+    String? decryptPrivateKey =
+        decrypt(accountSecretkey, email!, walletPassword);
 
     if (decryptPrivateKey == null) {}
 
@@ -171,10 +203,12 @@ class WalletService {
 
     solana.Message message;
     if (symbol == 'SOL') {
-      message = getSolTransferMessage(sender.publicKey, receiver, amount, priorityFee);
+      message = getSolTransferMessage(
+          sender.publicKey, receiver, amount, priorityFee);
     } else {
       final mint = Ed25519HDPublicKey.fromBase58(tokenAddress);
-      message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount, priorityFee);
+      message = await getSplTransferMessage(
+          solanaClient, sender, receiver, mint, amount, priorityFee);
     }
 
     // FeePayer
@@ -186,7 +220,8 @@ class WalletService {
       },
     );
 
-    final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: solana.Commitment.confirmed);
+    final recentBlockhash = await solanaClient.rpcClient
+        .getLatestBlockhash(commitment: solana.Commitment.confirmed);
     final CompiledMessage compiledMessage = message.compile(
       recentBlockhash: recentBlockhash.value.blockhash,
       feePayer: feePayer,
@@ -203,30 +238,40 @@ class WalletService {
     );
 
     // API Call
-    Map<String, String> body = {'clientId': 'GAZAGO', 'encodeTransaction': tx.encode()};
+    Map<String, String> body = {
+      'clientId': 'GAZAGO',
+      'encodeTransaction': tx.encode()
+    };
     Response res = await WalletApi.transferSolana(body);
     return WalletSolanaTransferModel.fromJson(res.data);
   }
 
   //onchain apis
-  static Future<void> getOnChainWallet({required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getOnChainWallet(
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getOnChainWallet(userId!);
     if (res.statusCode == 200) {
       successCallback(OnChainWalletModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null)
+        errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
-  static Future<void> createOnChainWallet({required String walletPassword, required Function successCallback, Function? errorCallback}) async {
+  static Future<void> createOnChainWallet(
+      {required String walletPassword,
+      required Function successCallback,
+      Function? errorCallback}) async {
     final wallet = Keypair.generateSync();
     String? email = HiveStore.loadString(key: HiveKey.email.name);
 
     String publicKey = wallet.pubkey.toBase58();
     // 암호화된 시크릿키
-    String encryptSecretKey = encrypt(base58.encode(wallet.seckey), email!, walletPassword);
+    String encryptSecretKey =
+        encrypt(base58.encode(wallet.seckey), email!, walletPassword);
 
-    Response res = await WalletApi.createOnChainWallet(userId!, publicKey: publicKey, secretKey: encryptSecretKey);
+    Response res = await WalletApi.createOnChainWallet(userId!,
+        publicKey: publicKey, secretKey: encryptSecretKey);
     if (res.statusCode == 201) {
       successCallback(OnChainWalletModel.fromJson(res.data));
     } else {
@@ -234,7 +279,8 @@ class WalletService {
     }
   }
 
-  static Future<bool> encryptionIsValid({required String walletPassword}) async {
+  static Future<bool> encryptionIsValid(
+      {required String walletPassword}) async {
     Response res = await WalletApi.getOnChainWallet(userId!);
     if (res.statusCode == 200) {
       OnChainWalletModel walletPair = OnChainWalletModel.fromJson(res.data);
@@ -257,7 +303,8 @@ class WalletService {
     }
   }
 
-  static Future<void> disableOnChainWallet({required Function successCallback, Function? errorCallback}) async {
+  static Future<void> disableOnChainWallet(
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.disableOnChainWallet(userId!);
     if (res.statusCode == 200) {
       successCallback();
@@ -266,25 +313,30 @@ class WalletService {
     }
   }
 
-  static Future<void> getOnChainTokenBalance({required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getOnChainTokenBalance(
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getOnChainTokenBalance(userId!);
     if (res.statusCode == 200) {
       List<WalletTokenBalanceModel> balanceList = [];
       if (res.data.length > 0) {
-        res.data.forEach((item) => balanceList.add(WalletTokenBalanceModel.fromJson(item)));
+        res.data.forEach(
+            (item) => balanceList.add(WalletTokenBalanceModel.fromJson(item)));
       }
       successCallback(balanceList);
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null)
+        errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
-  static Future<void> getOnChainBalanceByToken(String symbol, {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getOnChainBalanceByToken(String symbol,
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getOnChainBalanceByToken(userId!, symbol);
     if (res.statusCode == 200) {
       successCallback(WalletTokenBalanceModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null)
+        errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
@@ -314,7 +366,8 @@ class WalletService {
       if (errorCallback != null) errorCallback(true);
     });
 
-    await WalletService.getTokenPriorityFee(platform, symbol, successCallback: (fees) {
+    await WalletService.getTokenPriorityFee(platform, symbol,
+        successCallback: (fees) {
       priorityFee = fees.priorityFee;
     }, errorCallback: () {
       showToastPopup('Failed to get fee');
@@ -325,7 +378,8 @@ class WalletService {
     // print('##############');
     // print('accountSecretkey: $accountSecretkey');
     // print(walletPassword);
-    String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
+    String? decryptPrivateKey =
+        decrypt(accountSecretkey, email!, walletPassword);
     // print(decryptPrivateKey);
 
     // if (decryptPrivateKey == null) {
@@ -343,16 +397,17 @@ class WalletService {
     solana.Message? message;
     try {
       if (symbol == 'SOL') {
-        message = getSolTransferMessage(sender.publicKey, receiver, amount, priorityFee);
+        message = getSolTransferMessage(
+            sender.publicKey, receiver, amount, priorityFee);
       } else {
         final mint = tokenAddress;
-        message = await getSplTransferMessage(solanaClient, sender, receiver, mint, amount, priorityFee);
+        message = await getSplTransferMessage(
+            solanaClient, sender, receiver, mint, amount, priorityFee);
       }
     } catch (e) {
-      showToastPopup('서명 오류');
+      showToastPopup('signature_error'.tr());
       message = null;
       if (errorCallback != null) errorCallback(true);
-
     }
 
     // FeePayer
@@ -364,8 +419,9 @@ class WalletService {
       },
     );
 
-    final recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: solana.Commitment.confirmed);
-    if(message != null){
+    final recentBlockhash = await solanaClient.rpcClient
+        .getLatestBlockhash(commitment: solana.Commitment.confirmed);
+    if (message != null) {
       final CompiledMessage compiledMessage = message.compile(
         recentBlockhash: recentBlockhash.value.blockhash,
         feePayer: feePayer,
@@ -389,16 +445,19 @@ class WalletService {
         fee: 0,
         encodedTransaction: tx.encode(),
       );
-      Response res = await WalletApi.exchangeStikToGoWallet(userId!, symbol, params);
+      Response res =
+          await WalletApi.exchangeStikToGoWallet(userId!, symbol, params);
       if (res.statusCode == 201) {
         successCallback(true);
       } else {
-        if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
+        if (errorCallback != null)
+          errorCallback(res.data != null
+              ? ErrorResponseDataModel.fromJson(res.data)
+              : null);
       }
     } else {
       if (errorCallback != null) errorCallback(true);
     }
-
   }
 
   static Future<void> fetchStikMoveToStaikaWallet({
@@ -413,25 +472,32 @@ class WalletService {
       fee: 0,
       encodedTransaction: '',
     );
-    Response res = await WalletApi.exchangeStikToGoWallet(userId!, symbol, params);
+    Response res =
+        await WalletApi.exchangeStikToGoWallet(userId!, symbol, params);
     if (res.statusCode == 201) {
       successCallback(true);
     } else {
       // if (errorCallback != null) errorCallback();
-      if (errorCallback != null) errorCallback(res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
+      if (errorCallback != null)
+        errorCallback(res.data != null
+            ? ErrorResponseDataModel.fromJson(res.data)
+            : null);
     }
   }
 
-  static Future<void> getTokenPriorityFee(String platform, String symbol, {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getTokenPriorityFee(String platform, String symbol,
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getTokenPriorityFee(platform, symbol);
     if (res.statusCode == 200) {
       successCallback(TokenPriorityFeeModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null)
+        errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
-  static Future<void> getNftList({required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getNftList(
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getNftList(userId!);
     if (res.statusCode == 200) {
       List<NftModel> nftListList = [];
@@ -440,16 +506,19 @@ class WalletService {
       }
       successCallback(nftListList);
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null)
+        errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
-  static Future<void> getNftDetail(String mintAddress, {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getNftDetail(String mintAddress,
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await WalletApi.getNftDetail(mintAddress);
     if (res.statusCode == 200) {
       successCallback(NftDetailModel.fromJson(res.data));
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null)
+        errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
@@ -479,7 +548,8 @@ class WalletService {
       return;
     });
 
-    await WalletService.getTokenPriorityFee(platform, symbol, successCallback: (fees) {
+    await WalletService.getTokenPriorityFee(platform, symbol,
+        successCallback: (fees) {
       priorityFee = fees.priorityFee;
     }, errorCallback: () {
       showToastPopup('Failed to get fee');
@@ -487,7 +557,8 @@ class WalletService {
     });
 
     String? email = HiveStore.loadString(key: HiveKey.email.name);
-    String? decryptPrivateKey = decrypt(accountSecretkey, email!, walletPassword);
+    String? decryptPrivateKey =
+        decrypt(accountSecretkey, email!, walletPassword);
     final sender = await Ed25519HDKeyPair.fromPrivateKeyBytes(
       privateKey: base58.decode(decryptPrivateKey!).sublist(0, 32),
     );
@@ -495,13 +566,15 @@ class WalletService {
     final mint = solana.Ed25519HDPublicKey.fromBase58(mintAddress);
 
     try {
-      message = await getNftTransferMessage(solanaClient, sender, toAddress, mint, priorityFee);
+      message = await getNftTransferMessage(
+          solanaClient, sender, toAddress, mint, priorityFee);
     } catch (e) {
       showBlockchainNetworkErrorAlert();
       return;
     }
 
-    recentBlockhash = await solanaClient.rpcClient.getLatestBlockhash(commitment: solana.Commitment.confirmed);
+    recentBlockhash = await solanaClient.rpcClient
+        .getLatestBlockhash(commitment: solana.Commitment.confirmed);
     final CompiledMessage compiledMessage = message.compile(
       recentBlockhash: recentBlockhash.value.blockhash,
       feePayer: toAddress,
@@ -517,13 +590,15 @@ class WalletService {
       signatures: signatures,
     );
 
-    TransferNftRequestModel data = TransferNftRequestModel(tokenAddress: mintAddress, encodedTransaction: tx.encode());
+    TransferNftRequestModel data = TransferNftRequestModel(
+        tokenAddress: mintAddress, encodedTransaction: tx.encode());
 
     Response res = await WalletApi.transferNftToGoWallet(userId!, data);
     if (res.statusCode == 201) {
       successCallback();
     } else {
-      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null)
+        errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/my_page_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class EditBiometrics extends StatelessWidget {
   const EditBiometrics({super.key});
@@ -13,28 +14,28 @@ class EditBiometrics extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('성별'),
+          Text('gender'.tr()),
           Row(
             children: [
               Expanded(
                 child: ElevatedButton(
                   onPressed: () => null,
-                  child: const Text('남자'),
+                  child: Text('male'.tr()),
                 ),
               ),
               Expanded(
                 child: ElevatedButton(
                   onPressed: () => null,
-                  child: const Text('여자'),
+                  child: Text('female'.tr()),
                 ),
               ),
             ],
           ),
-          const Text('나이'),
+          Text('age'.tr()),
           const TextField(),
-          const Text('몸무게'),
+          Text('weight'.tr()),
           const TextField(),
-          const Text('키'),
+          Text('height'.tr()),
           const TextField(),
           Expanded(
             child: Align(
@@ -43,7 +44,7 @@ class EditBiometrics extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () => controller.updateBiometrics(),
-                  child: const Text('확인'),
+                  child: Text('confirm'.tr()),
                 ),
               ),
             ),

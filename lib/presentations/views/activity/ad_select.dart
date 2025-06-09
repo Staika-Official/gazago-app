@@ -23,7 +23,7 @@ class AdSelect extends StatelessWidget {
           //         crossAxisAlignment: CrossAxisAlignment.center,
           //         children: [
           //           const StyledText(
-          //             '선택해주세요',
+          //             'please_select'.tr(),
           //             fontSize: 24,
           //             fontWeight: 700,
           //             lineHeight: 32,
@@ -123,7 +123,7 @@ class AdSelect extends StatelessWidget {
           //                           alignment: Alignment.topCenter,
           //                           child: controller.adLoadingTime.value == 0 && controller.startAd.value == null
           //                               ? const StyledText(
-          //                                   '아직 광고가 부족해요...',
+          //                                   'insufficient_ads'.tr(),
           //                                   color: Color(0xFFC0C2C8),
           //                                   fontSize: 20,
           //                                   fontWeight: 600,
@@ -131,7 +131,7 @@ class AdSelect extends StatelessWidget {
           //                                   fontFamily: 'Montserrat',
           //                                 )
           //                               : StyledText(
-          //                                   '광고 보고, ${controller.selectedCourse.value == null || controller.selectedExerciseType.value == ExerciseType.walking ? '1' : '3'}GO 받고 시작하기',
+          //                                   'watch_ad_get_go'.tr('${controller.selectedCourse.value == null || controller.selectedExerciseType.value == ExerciseType.walking ? '1' : '3'}'),
           //                                   color: controller.startAd.value == null ? const Color(0xFF767883) : Colors.black,
           //                                   fontSize: 20,
           //                                   fontWeight: 600,
@@ -144,7 +144,7 @@ class AdSelect extends StatelessWidget {
           //                       // Padding(
           //                       //   padding: EdgeInsets.only(top: 7.sp),
           //                       //   child: const StyledText(
-          //                       //     '광고 수익의 75%를 보상으로 제공해요.',
+          //                       //     '75_percent_ad_revenue'.tr(),
           //                       //     color: Colors.black,
           //                       //     fontSize: 12,
           //                       //     fontWeight: 500,
@@ -192,7 +192,7 @@ class AdSelect extends StatelessWidget {
           //                 mainAxisAlignment: MainAxisAlignment.center,
           //                 children: const [
           //                   StyledText(
-          //                     '시작하기',
+          //                     'start_action'.tr(),
           //                     fontSize: 24,
           //                     fontWeight: 600,
           //                     lineHeight: 22,
@@ -220,7 +220,7 @@ class AdSelect extends StatelessWidget {
           //           ),
           //           child: const Center(
           //               child: StyledText(
-          //             '취소',
+          //             'cancel'.tr(),
           //             fontSize: 18,
           //             fontWeight: 600,
           //           )),

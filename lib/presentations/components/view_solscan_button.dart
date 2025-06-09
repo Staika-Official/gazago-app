@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 
 class ViewSolscanButton extends StatelessWidget {
@@ -18,7 +19,7 @@ class ViewSolscanButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Solscan 보기',
+            'view_solscan'.tr(),
             style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
                   color: AppColorData.regular().colorTextTertiary,
                 ),

@@ -4,7 +4,8 @@ import 'package:gaza_go/platform/controllers/verification_name_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../../constants/enums.dart';
 
@@ -13,7 +14,8 @@ class VerificationName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    VerificationNameController controller = Get.put(VerificationNameController());
+    VerificationNameController controller =
+        Get.put(VerificationNameController());
 
     return GestureDetector(
       onTap: () => FocusScope.of(Get.context!).requestFocus(FocusNode()),
@@ -26,8 +28,8 @@ class VerificationName extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.only(top: 5.0.sp),
-                child: const StyledText(
-                  '본인인증에 필요한\n정보를 입력해주세요.',
+                child: StyledText(
+                  'enter_verification_info'.tr(),
                   fontSize: 24,
                   lineHeight: 32,
                   fontWeight: 700,
@@ -39,8 +41,8 @@ class VerificationName extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const StyledText(
-                        '이름',
+                      StyledText(
+                        'name'.tr(),
                         fontSize: 16,
                         fontWeight: 500,
                         color: lightGrayColor,
@@ -71,7 +73,7 @@ class VerificationName extends StatelessWidget {
                               ),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            hintText: "이름을 입력해주세요",
+                            hintText: 'enter_name_1'.tr(),
                             hintStyle: TextStyle(
                               color: deepGrayColor,
                               fontSize: 20.sp,
@@ -84,8 +86,8 @@ class VerificationName extends StatelessWidget {
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 22.0.sp),
-                        child: const StyledText(
-                          '국적',
+                        child: StyledText(
+                          'nationality'.tr(),
                           fontSize: 16,
                           fontWeight: 500,
                           lineHeight: 20,
@@ -103,13 +105,17 @@ class VerificationName extends StatelessWidget {
                                 elevation: 0,
                                 focusElevation: 0,
                                 highlightElevation: 0,
-                                color: controller.nationality.value == Nationality.local ? skyBlueColor : Colors.transparent,
+                                color: controller.nationality.value ==
+                                        Nationality.local
+                                    ? skyBlueColor
+                                    : Colors.transparent,
                                 disabledColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: const BorderRadius.all(
                                     Radius.circular(10),
                                   ),
-                                  side: controller.nationality.value == Nationality.local
+                                  side: controller.nationality.value ==
+                                          Nationality.local
                                       ? BorderSide.none
                                       : const BorderSide(
                                           color: popupBgColor,
@@ -117,11 +123,15 @@ class VerificationName extends StatelessWidget {
                                           style: BorderStyle.solid,
                                         ),
                                 ),
-                                onPressed: () => controller.updateNationality(Nationality.local),
+                                onPressed: () => controller
+                                    .updateNationality(Nationality.local),
                                 child: Text(
-                                  '내국인',
+                                  'korean_national'.tr(),
                                   style: TextStyle(
-                                    color: controller.nationality.value == Nationality.local ? Colors.black : deepGrayColor,
+                                    color: controller.nationality.value ==
+                                            Nationality.local
+                                        ? Colors.black
+                                        : deepGrayColor,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 20,
                                   ),
@@ -137,13 +147,17 @@ class VerificationName extends StatelessWidget {
                                 elevation: 0,
                                 focusElevation: 0,
                                 highlightElevation: 0,
-                                color: controller.nationality.value == Nationality.foreigner ? skyBlueColor : Colors.transparent,
+                                color: controller.nationality.value ==
+                                        Nationality.foreigner
+                                    ? skyBlueColor
+                                    : Colors.transparent,
                                 disabledColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: const BorderRadius.all(
                                     Radius.circular(10),
                                   ),
-                                  side: controller.nationality.value == Nationality.foreigner
+                                  side: controller.nationality.value ==
+                                          Nationality.foreigner
                                       ? BorderSide.none
                                       : const BorderSide(
                                           color: popupBgColor,
@@ -151,11 +165,15 @@ class VerificationName extends StatelessWidget {
                                           style: BorderStyle.solid,
                                         ),
                                 ),
-                                onPressed: () => controller.updateNationality(Nationality.foreigner),
+                                onPressed: () => controller
+                                    .updateNationality(Nationality.foreigner),
                                 child: Text(
-                                  '외국인',
+                                  'foreigner'.tr(),
                                   style: TextStyle(
-                                    color: controller.nationality.value == Nationality.foreigner ? Colors.black : deepGrayColor,
+                                    color: controller.nationality.value ==
+                                            Nationality.foreigner
+                                        ? Colors.black
+                                        : deepGrayColor,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 20.sp,
                                   ),
@@ -174,7 +192,9 @@ class VerificationName extends StatelessWidget {
                 return Container(
                   height: 55.sp,
                   decoration: BoxDecoration(
-                    color: controller.isValidNext.isTrue ? skyBlueColor : popupBgColor,
+                    color: controller.isValidNext.isTrue
+                        ? skyBlueColor
+                        : popupBgColor,
                     border: Border.all(width: 2.sp, color: Colors.black),
                     borderRadius: BorderRadius.circular(8.sp),
                     boxShadow: [
@@ -185,16 +205,20 @@ class VerificationName extends StatelessWidget {
                     ],
                   ),
                   child: InkWell(
-                    onTap: () => controller.isValidNext.isTrue ? controller.nextStep() : null,
+                    onTap: () => controller.isValidNext.isTrue
+                        ? controller.nextStep()
+                        : null,
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 12.0.sp),
                       child: Center(
                           child: StyledText(
-                        '다음',
+                        'next_action'.tr(),
                         fontSize: 18,
                         lineHeight: 18,
                         fontWeight: 500,
-                        color: controller.isValidNext.isTrue ? Colors.black : deepGrayColor,
+                        color: controller.isValidNext.isTrue
+                            ? Colors.black
+                            : deepGrayColor,
                       )),
                     ),
                   ),

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
@@ -9,6 +9,7 @@ import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_shoes_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:hive/hive.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class HiveStore {
   static void registerAdapters() {
@@ -25,22 +26,26 @@ class HiveStore {
 
   static void save({required String key, required dynamic value}) {
     final Box box = Hive.box('gazaGo');
-    box.put(key, value).onError((FileSystemException error, stackTrace) => handleHiveError(error));
+    box.put(key, value).onError(
+        (FileSystemException error, stackTrace) => handleHiveError(error));
   }
 
   static void saveUserExerciseData({required dynamic value}) {
     final Box box = Hive.box('gazaGo');
-    box.put(HiveKey.userExerciseDataLogs.name, value).onError((FileSystemException error, stackTrace) => handleHiveError(error));
+    box.put(HiveKey.userExerciseDataLogs.name, value).onError(
+        (FileSystemException error, stackTrace) => handleHiveError(error));
   }
 
   static void savePositionRawData({required dynamic value}) {
     final Box box = Hive.box('gazaGo');
-    box.put(HiveKey.positionRawDataLogs.name, value).onError((FileSystemException error, stackTrace) => handleHiveError(error));
+    box.put(HiveKey.positionRawDataLogs.name, value).onError(
+        (FileSystemException error, stackTrace) => handleHiveError(error));
   }
 
   static void saveCurrentUserState({required CurrentUserStateModel userState}) {
     final Box box = Hive.box('gazaGo');
-    box.put(HiveKey.userState.name, userState).onError((FileSystemException error, stackTrace) => handleHiveError(error));
+    box.put(HiveKey.userState.name, userState).onError(
+        (FileSystemException error, stackTrace) => handleHiveError(error));
   }
 
   static dynamic load({required String key}) {
@@ -73,26 +78,32 @@ class HiveStore {
     await box.clear();
   }
 
-  static void saveExerciseCoordinate(List<NLatLng> coordinates) {
+  static void saveExerciseCoordinate(List<LatLng> coordinates) {
     final Box box = Hive.box('gazaGo');
     List<List> untypedCoordinateList = List.empty(growable: true);
-    for (NLatLng coordinate in coordinates) {
+    for (LatLng coordinate in coordinates) {
       untypedCoordinateList.add([coordinate.latitude, coordinate.longitude]);
     }
 
-    box.put(HiveKey.lastUpdatedCoordinateIndex.name, coordinates.length).onError((FileSystemException error, stackTrace) => handleHiveError(error));
-    box.put(HiveKey.exerciseCoordinates.name, untypedCoordinateList).onError((FileSystemException error, stackTrace) => handleHiveError(error));
+    box
+        .put(HiveKey.lastUpdatedCoordinateIndex.name, coordinates.length)
+        .onError(
+            (FileSystemException error, stackTrace) => handleHiveError(error));
+    box.put(HiveKey.exerciseCoordinates.name, untypedCoordinateList).onError(
+        (FileSystemException error, stackTrace) => handleHiveError(error));
   }
 
   static void initializeExerciseCoordinates() {
     final Box box = Hive.box('gazaGo');
-    box.put(HiveKey.lastUpdatedCoordinateIndex.name, 0).onError((FileSystemException error, stackTrace) => handleHiveError(error));
-    box.put(HiveKey.exerciseCoordinates.name, []).onError((FileSystemException error, stackTrace) => handleHiveError(error));
+    box.put(HiveKey.lastUpdatedCoordinateIndex.name, 0).onError(
+        (FileSystemException error, stackTrace) => handleHiveError(error));
+    box.put(HiveKey.exerciseCoordinates.name, []).onError(
+        (FileSystemException error, stackTrace) => handleHiveError(error));
   }
 
   static void handleHiveError(FileSystemException e) {
     if (e.osError != null && e.osError!.errorCode == 28) {
-      showToastPopup('저장공간이 부족합니다.');
+      showToastPopup('low_storage'.tr());
     }
   }
 }

@@ -4,8 +4,9 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../styles/styled_text.dart';
 
@@ -13,7 +14,8 @@ class ActivityLoading extends StatelessWidget {
   final ExerciseType exerciseType;
   final String? adId;
   final ChallengeCourseModel? challenge;
-  const ActivityLoading({super.key, required this.exerciseType, this.adId, this.challenge});
+  const ActivityLoading(
+      {super.key, required this.exerciseType, this.adId, this.challenge});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,10 @@ class ActivityLoading extends StatelessWidget {
                   },
                   child: Padding(
                     padding: EdgeInsets.all(20.sp),
-                    child: controller.loadingTime.value < 4 ? Image.asset('assets/images/activity/ico_loading_${controller.loadingTime.value}.png') : Container(),
+                    child: controller.loadingTime.value < 4
+                        ? Image.asset(
+                            'assets/images/activity/ico_loading_${controller.loadingTime.value}.png')
+                        : Container(),
                   ),
                 ),
               ),
@@ -49,7 +54,8 @@ class ActivityLoading extends StatelessWidget {
                 right: 0,
                 child: Center(
                   child: InkWell(
-                    onTap: () => controller.passThrowActivityLoading(exerciseType, challenge),
+                    onTap: () => controller.passThrowActivityLoading(
+                        exerciseType, challenge),
                     child: Padding(
                       padding: EdgeInsets.all(8.0.sp),
                       child: Container(
@@ -64,8 +70,8 @@ class ActivityLoading extends StatelessWidget {
                         ),
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 4.0.sp),
-                          child: const StyledText(
-                            '건너뛰기',
+                          child: StyledText(
+                            'skip_action'.tr(),
                             color: lightGrayColor,
                             fontSize: 18,
                             lineHeight: 20,

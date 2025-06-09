@@ -7,7 +7,8 @@ import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class CrewList extends StatelessWidget {
   const CrewList({super.key});
@@ -45,15 +46,27 @@ class CrewList extends StatelessWidget {
                                         child: CircleAvatar(
                                           radius: 22.sp,
                                           backgroundColor: deepGrayColor,
-                                          foregroundImage: (item.value.iconImageUrl == null || item.value.iconImageUrl == '')
+                                          foregroundImage: (item
+                                                          .value.iconImageUrl ==
+                                                      null ||
+                                                  item.value.iconImageUrl == '')
                                               ? Image.asset(
                                                   'assets/images/ic_launcher.png',
                                                 ).image
-                                              : item.value.iconImageUrl!.contains('.svg')
-                                                  ? sp.Svg(item.value.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                                              : item.value.iconImageUrl!
+                                                      .contains('.svg')
+                                                  ? sp
+                                                          .Svg(
+                                                              item.value
+                                                                  .iconImageUrl!,
+                                                              source: sp
+                                                                  .SvgSource
+                                                                  .network)
+                                                      as ImageProvider
                                                   : CachedNetworkImageProvider(
                                                       item.value.iconImageUrl!,
-                                                      headers: imageNetworkHeader,
+                                                      headers:
+                                                          imageNetworkHeader,
                                                     ),
                                         ),
                                       ),
@@ -83,7 +96,8 @@ class CrewList extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                      if (item.value.crewRecruitStatus == 'CLOSE')
+                                      if (item.value.crewRecruitStatus ==
+                                          'CLOSE')
                                         Padding(
                                           padding: EdgeInsets.only(right: 5.sp),
                                           child: iconCircleLock,
@@ -99,7 +113,10 @@ class CrewList extends StatelessWidget {
                                     ],
                                   ),
                                   StyledText(
-                                    '크루장 : ${item.value.crewFounderNickName!.split('@')[0]}',
+                                    'crew_leader_nickname_alt'.tr(args: [
+                                      item.value.crewFounderNickName!
+                                          .split('@')[0]
+                                    ]),
                                     color: deepGrayColor,
                                     fontWeight: 500,
                                     fontSize: 12,
@@ -120,7 +137,9 @@ class CrewList extends StatelessWidget {
                       borderRadius: BorderRadius.circular(50),
                       color: subBg01Color,
                       border: Border.all(
-                        color: item.value.crewRecruitStatus == 'CLOSE' ? deepGrayColor : skyBlueColor,
+                        color: item.value.crewRecruitStatus == 'CLOSE'
+                            ? deepGrayColor
+                            : skyBlueColor,
                         width: 2,
                       ),
                       boxShadow: const [
@@ -131,7 +150,8 @@ class CrewList extends StatelessWidget {
                       ],
                     ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12.0.sp, horizontal: 14.0.sp),
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12.0.sp, horizontal: 14.0.sp),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -140,9 +160,13 @@ class CrewList extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(left: 4.0.sp),
                             child: StyledText(
-                              item.value.crewMemberList != null ? item.value.crewMemberList!.length.toString() : '0',
+                              item.value.crewMemberList != null
+                                  ? item.value.crewMemberList!.length.toString()
+                                  : '0',
                               textAlign: TextAlign.right,
-                              color: item.value.crewRecruitStatus == 'CLOSE' ? deepGrayColor : Colors.white,
+                              color: item.value.crewRecruitStatus == 'CLOSE'
+                                  ? deepGrayColor
+                                  : Colors.white,
                               fontSize: 14,
                               lineHeight: 16,
                               fontWeight: 500,
@@ -165,7 +189,10 @@ class CrewList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ChallengesDetailController controller = Get.isRegistered<ChallengesDetailController>() ? Get.find<ChallengesDetailController>() : Get.put(ChallengesDetailController());
+    ChallengesDetailController controller =
+        Get.isRegistered<ChallengesDetailController>()
+            ? Get.find<ChallengesDetailController>()
+            : Get.put(ChallengesDetailController());
 
     return SingleChildScrollView(
       child: Obx(() {
@@ -173,7 +200,8 @@ class CrewList extends StatelessWidget {
             color: subBg01Color,
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height - kBottomNavigationBarHeight,
+                minHeight: MediaQuery.of(context).size.height -
+                    kBottomNavigationBarHeight,
               ),
               child: Padding(
                 padding: EdgeInsets.only(bottom: 20.0.sp),
@@ -184,7 +212,9 @@ class CrewList extends StatelessWidget {
                       child: controller.dataGetLoading.value
                           ? Padding(
                               padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                              child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
+                              child: const Center(
+                                  child: CircularProgressIndicator(
+                                      color: skyBlueColor)),
                             )
                           : controller.crewList.isEmpty
                               ? SizedBox(
@@ -196,9 +226,9 @@ class CrewList extends StatelessWidget {
                                         iconEmpty,
                                         Padding(
                                           padding: EdgeInsets.only(top: 20.sp),
-                                          child: const StyledText(
-                                            '크루가 없어요.',
-                                            color: Color(0xff7b7b7b),
+                                          child: StyledText(
+                                            'no_crew'.tr(),
+                                            color: const Color(0xff7b7b7b),
                                             fontSize: 16,
                                             lineHeight: 10,
                                             fontWeight: 500,

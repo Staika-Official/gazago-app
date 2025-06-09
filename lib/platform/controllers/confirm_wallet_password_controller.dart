@@ -6,9 +6,11 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/password_mixin.dart';
 import 'package:gaza_go/platform/helpers/security_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
-class ConfirmWalletPasswordController extends GetxController with PasswordMixin {
+class ConfirmWalletPasswordController extends GetxController
+    with PasswordMixin {
   final RxString _password = ''.obs;
   final Rx<ErrorStatus> _errorStatus = Rx(ErrorStatus.basic);
   final FocusNode passwordFocusNode = FocusNode();
@@ -76,7 +78,7 @@ class ConfirmWalletPasswordController extends GetxController with PasswordMixin 
     if (decryptPrivateKey != null) {
       return _password.value;
     } else {
-      showToastPopup('비밀번호를 다시 확인해주세요');
+      showToastPopup('reconfirm_password'.tr());
       return null;
     }
   }

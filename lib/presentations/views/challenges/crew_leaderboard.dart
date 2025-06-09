@@ -7,12 +7,14 @@ import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
 import 'package:gaza_go/platform/models/crew_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class CrewLeaderboard extends StatelessWidget {
   const CrewLeaderboard({super.key});
 
-  List<Widget> renderCrewLeaderboardList(ChallengesDetailController controller) {
+  List<Widget> renderCrewLeaderboardList(
+      ChallengesDetailController controller) {
     return controller.crewList.asMap().entries.map((item) {
       return CrewRankingItem(item.key, item.value);
     }).toList();
@@ -20,7 +22,10 @@ class CrewLeaderboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ChallengesDetailController controller = Get.isRegistered<ChallengesDetailController>() ? Get.find<ChallengesDetailController>() : Get.put(ChallengesDetailController());
+    ChallengesDetailController controller =
+        Get.isRegistered<ChallengesDetailController>()
+            ? Get.find<ChallengesDetailController>()
+            : Get.put(ChallengesDetailController());
 
     return Obx(() {
       return Container(
@@ -29,7 +34,10 @@ class CrewLeaderboard extends StatelessWidget {
           physics: const ClampingScrollPhysics(),
           child: Column(
             children: [
-              if (controller.myCrew.value != null) CrewRankingItem(controller.myCrew.value!['ranking'] - 1, controller.myCrew.value!['crew'], isMyCrew: true),
+              if (controller.myCrew.value != null)
+                CrewRankingItem(controller.myCrew.value!['ranking'] - 1,
+                    controller.myCrew.value!['crew'],
+                    isMyCrew: true),
               ...renderCrewLeaderboardList(controller),
             ],
           ),
@@ -59,7 +67,9 @@ class CrewRankingItem extends StatelessWidget {
         color: isMyCrew ? Colors.black : subBg01Color,
         height: 64.sp,
         child: InkWell(
-          onTap: isMyCrew ? () => Get.find<ChallengesDetailController>().moveToMyCrew() : null,
+          onTap: isMyCrew
+              ? () => Get.find<ChallengesDetailController>().moveToMyCrew()
+              : null,
           child: Padding(
             padding: EdgeInsets.only(left: 18.sp, right: 20.sp),
             child: Row(
@@ -74,7 +84,8 @@ class CrewRankingItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 50, minWidth: 40),
+                          constraints:
+                              const BoxConstraints(maxWidth: 50, minWidth: 40),
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: StyledText(
@@ -94,17 +105,26 @@ class CrewRankingItem extends StatelessWidget {
                                 children: [
                                   Center(
                                     child: Padding(
-                                      padding: item.crewBuffLevel == 'NONE' || index + 1 > 3 ? EdgeInsets.only(top: 7.0.sp) : EdgeInsets.only(top: 7.0.sp),
+                                      padding: item.crewBuffLevel == 'NONE' ||
+                                              index + 1 > 3
+                                          ? EdgeInsets.only(top: 7.0.sp)
+                                          : EdgeInsets.only(top: 7.0.sp),
                                       child: CircleAvatar(
                                         radius: 16.sp,
                                         backgroundColor: Colors.black,
-                                        foregroundImage: (item.iconImageUrl == null || item.iconImageUrl == '')
+                                        foregroundImage: (item.iconImageUrl ==
+                                                    null ||
+                                                item.iconImageUrl == '')
                                             ? Image.asset(
                                                 'assets/images/ic_launcher.png',
                                                 width: 32.sp,
                                               ).image
-                                            : item.iconImageUrl!.contains('.svg')
-                                                ? sp.Svg(item.iconImageUrl!, source: sp.SvgSource.network) as ImageProvider
+                                            : item.iconImageUrl!
+                                                    .contains('.svg')
+                                                ? sp.Svg(item.iconImageUrl!,
+                                                        source: sp
+                                                            .SvgSource.network)
+                                                    as ImageProvider
                                                 : CachedNetworkImageProvider(
                                                     item.iconImageUrl!,
                                                     headers: imageNetworkHeader,
@@ -172,7 +192,9 @@ class CrewRankingItem extends StatelessWidget {
                                   ),
                                 ),
                                 StyledText(
-                                  '크루장 : ${item.crewFounderNickName!.split('@')[0]}',
+                                  'crew_leader_nickname'.tr(args: [
+                                    item.crewFounderNickName!.split('@')[0]
+                                  ]),
                                   color: deepGrayColor,
                                   fontWeight: 500,
                                   fontSize: 12,
@@ -191,7 +213,7 @@ class CrewRankingItem extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 8),
                   child: StyledText(
-                    '${item.blockQuantity} 블럭',
+                    'block_quantity'.tr(args: [item.blockQuantity.toString()]),
                     textAlign: TextAlign.right,
                     color: Colors.white,
                     fontSize: 14,

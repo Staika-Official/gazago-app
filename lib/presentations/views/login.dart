@@ -6,7 +6,8 @@ import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -20,7 +21,8 @@ class Login extends StatelessWidget {
           height: 50.sp,
           child: InkWell(
             onTap: () {
-              if(HiveStore.load(key: HiveKey.serviceStatus.name) == null ||HiveStore.load(key: HiveKey.serviceStatus.name) == 0){
+              if (HiveStore.load(key: HiveKey.serviceStatus.name) == null ||
+                  HiveStore.load(key: HiveKey.serviceStatus.name) == 0) {
                 controller.login(loginType);
               }
             },
@@ -34,12 +36,17 @@ class Login extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  loginType.name != 'email' ? getLoginButtonIcon(loginType.name) : Container(),
+                  loginType.name != 'email'
+                      ? getLoginButtonIcon(loginType.name)
+                      : Container(),
                   Padding(
                     padding: EdgeInsets.only(left: 6.0.sp),
                     child: StyledText(
-                      '${getLoginButtonText(loginType.name)}로 로그인',
-                      color: loginType.name == 'apple' ? Colors.white : Colors.black,
+                      'login_button_text'
+                          .tr(args: [getLoginButtonText(loginType.name)]),
+                      color: loginType.name == 'apple'
+                          ? Colors.white
+                          : Colors.black,
                       fontWeight: 500,
                       fontSize: 16,
                       lineHeight: 16,
@@ -61,7 +68,10 @@ class Login extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          image: DecorationImage(image: AssetImage('assets/images/common/bg_login.png'), alignment: Alignment(0, 0), fit: BoxFit.cover),
+          image: DecorationImage(
+              image: AssetImage('assets/images/common/bg_login.png'),
+              alignment: Alignment(0, 0),
+              fit: BoxFit.cover),
         ),
         child: Column(
           children: [

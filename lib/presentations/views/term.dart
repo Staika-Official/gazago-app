@@ -5,7 +5,8 @@ import 'package:gaza_go/platform/controllers/term_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class Term extends StatelessWidget {
   const Term({super.key});
@@ -22,10 +23,12 @@ class Term extends StatelessWidget {
           physics: const ClampingScrollPhysics(),
           child: Column(
             children: [
-              if (controller.termType.value == 'MARKETING' && Get.previousRoute != Routes.joinTerms)
+              if (controller.termType.value == 'MARKETING' &&
+                  Get.previousRoute != Routes.joinTerms)
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 0),
-                  padding: EdgeInsets.symmetric(horizontal: 0.sp, vertical: 15.sp),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 0.sp, vertical: 15.sp),
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
@@ -37,8 +40,8 @@ class Term extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const StyledText(
-                        '마케팅 정보 수신 동의',
+                      StyledText(
+                        'marketing_info_consent_1'.tr(),
                         fontSize: 18,
                         lineHeight: 18,
                         fontWeight: 500,
@@ -47,9 +50,11 @@ class Term extends StatelessWidget {
                       Switch.adaptive(
                         activeColor: skyBlueColor,
                         activeTrackColor: skyBlueColor,
-                        inactiveTrackColor: const Color.fromRGBO(120, 120, 128, 0.16),
+                        inactiveTrackColor:
+                            const Color.fromRGBO(120, 120, 128, 0.16),
                         thumbColor: WidgetStateProperty.all(Colors.white),
-                        overlayColor: WidgetStateProperty.all(Colors.transparent),
+                        overlayColor:
+                            WidgetStateProperty.all(Colors.transparent),
                         value: controller.agreeMarketing.value,
                         onChanged: (val) => controller.toggleSwitch(val),
                       )

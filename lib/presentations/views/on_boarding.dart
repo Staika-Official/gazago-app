@@ -2,7 +2,8 @@ import 'package:carousel_slider_plus/carousel_slider_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../platform/controllers/onboarding_controller.dart';
 
@@ -39,7 +40,10 @@ class OnBoarding extends StatelessWidget {
             width: double.infinity,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: index != _getImageSliders(controller).length - 1 ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+              crossAxisAlignment:
+                  index != _getImageSliders(controller).length - 1
+                      ? CrossAxisAlignment.start
+                      : CrossAxisAlignment.center,
               children: [
                 StyledText(
                   controller.getText(index)['title'],
@@ -48,7 +52,9 @@ class OnBoarding extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 10),
                   child: Text(
                     controller.getText(index)['content'],
-                    textAlign: index != _getImageSliders(controller).length - 1 ? TextAlign.left : TextAlign.center,
+                    textAlign: index != _getImageSliders(controller).length - 1
+                        ? TextAlign.left
+                        : TextAlign.center,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w400,
@@ -68,7 +74,8 @@ class OnBoarding extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CarouselSliderController carouselController = CarouselSliderController();
+    final CarouselSliderController carouselController =
+        CarouselSliderController();
     final OnBoardingController controller = Get.put(OnBoardingController());
     return Scaffold(
       backgroundColor: const Color(0xffe5e5e5),
@@ -83,10 +90,12 @@ class OnBoarding extends StatelessWidget {
                 },
                 style: ButtonStyle(
                   alignment: Alignment.centerRight,
-                  foregroundColor: WidgetStateProperty.all(const Color.fromARGB(255, 165, 165, 165)),
-                  padding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 20.sp)),
+                  foregroundColor: WidgetStateProperty.all(
+                      const Color.fromARGB(255, 165, 165, 165)),
+                  padding: WidgetStateProperty.all(
+                      EdgeInsets.symmetric(horizontal: 20.sp)),
                 ),
-                child: const Text('건너뛰기'),
+                child: Text('skip_action'.tr()),
               ),
             ),
             Expanded(
@@ -129,8 +138,16 @@ class OnBoarding extends StatelessWidget {
                     return Container(
                       width: 25.0.sp,
                       height: 3.0.sp,
-                      margin: EdgeInsets.only(top: 32.sp, left: 7.0.sp, right: 7.0.sp, bottom: 43.sp),
-                      decoration: BoxDecoration(shape: BoxShape.rectangle, color: controller.current.value == entry.key ? const Color.fromRGBO(0, 0, 0, 1) : const Color.fromRGBO(0, 0, 0, 0.31)),
+                      margin: EdgeInsets.only(
+                          top: 32.sp,
+                          left: 7.0.sp,
+                          right: 7.0.sp,
+                          bottom: 43.sp),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: controller.current.value == entry.key
+                              ? const Color.fromRGBO(0, 0, 0, 1)
+                              : const Color.fromRGBO(0, 0, 0, 0.31)),
                     );
                   }),
                 );
@@ -152,7 +169,7 @@ class OnBoarding extends StatelessWidget {
                         ),
                         elevation: 0,
                       ),
-                      child: const Text('스타이카 시작하기'),
+                      child: Text('start_staika'.tr()),
                       onPressed: () {
                         controller.nextStep();
                       }),

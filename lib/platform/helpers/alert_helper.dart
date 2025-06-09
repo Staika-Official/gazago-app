@@ -3,7 +3,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gaza_go/presentations/components/bottom_sheet_alert.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:in_app_update/in_app_update.dart';
 
 Future<void> showAlert({
@@ -17,7 +18,9 @@ Future<void> showAlert({
   bool isFullHeight = false,
   bool allowMultipleBottomSheet = false,
 }) async {
-  if (Get.isBottomSheetOpen == null || !Get.isBottomSheetOpen! || allowMultipleBottomSheet) {
+  if (Get.isBottomSheetOpen == null ||
+      !Get.isBottomSheetOpen! ||
+      allowMultipleBottomSheet) {
     await Get.bottomSheet(
       PopScope(
         canPop: false,
@@ -55,18 +58,18 @@ void showUpdateSnackbar() {
       isDismissible: false,
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.black.withOpacity(0.9),
-      titleText: const StyledText(
-        '다운로드 완료',
+      titleText: StyledText(
+        'download_complete'.tr(),
         fontSize: 14,
       ),
-      messageText: const StyledText(
-        '업데이트 해주세요',
+      messageText: StyledText(
+        'update_available'.tr(),
         fontSize: 12,
       ),
       mainButton: TextButton(
         onPressed: () => InAppUpdate.completeFlexibleUpdate(),
-        child: const StyledText(
-          '업데이트',
+        child: StyledText(
+          'update'.tr(),
           fontSize: 12,
           color: skyBlueColor,
         ),

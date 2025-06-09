@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/models/inventory_item_model.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
-class InventoryHomeController extends GetxController with GetTickerProviderStateMixin {
+class InventoryHomeController extends GetxController
+    with GetTickerProviderStateMixin {
   final RxList<InventoryItemModel> statList = RxList.empty();
 
   late TabController tabController;
@@ -12,31 +14,31 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
 
   List<Map<String, String>> itemSubTabList = [
     {
-      'title': '전체',
+      'title': 'all'.tr(),
       'itemType': ItemType.all.name,
     },
     {
-      'title': '모자',
+      'title': 'hat'.tr(),
       'itemType': ItemType.hat.name,
     },
     {
-      'title': '상의',
+      'title': 'top'.tr(),
       'itemType': ItemType.top.name,
     },
     {
-      'title': '하의',
+      'title': 'bottom'.tr(),
       'itemType': ItemType.bottom.name,
     },
     {
-      'title': '신발',
+      'title': 'shoes'.tr(),
       'itemType': ItemType.shoes.name,
     },
     {
-      'title': '액세서리',
+      'title': 'accessories'.tr(),
       'itemType': ItemType.accessory.name,
     },
     {
-      'title': '기타',
+      'title': 'other'.tr(),
       'itemType': ItemType.disposable.name,
     },
   ];
@@ -62,13 +64,15 @@ class InventoryHomeController extends GetxController with GetTickerProviderState
 
     tabController.addListener(() {
       if (tabController.indexIsChanging) {
-        Get.find<InventoryController>().calculateTabHeight(tabController.index, itemSubTabList[subTabController.index]['itemType']!);
+        Get.find<InventoryController>().calculateTabHeight(tabController.index,
+            itemSubTabList[subTabController.index]['itemType']!);
       }
     });
 
     subTabController.addListener(() {
       if (subTabController.indexIsChanging) {
-        Get.find<InventoryController>().calculateTabHeight(tabController.index, itemSubTabList[subTabController.index]['itemType']!);
+        Get.find<InventoryController>().calculateTabHeight(tabController.index,
+            itemSubTabList[subTabController.index]['itemType']!);
       }
     });
   }

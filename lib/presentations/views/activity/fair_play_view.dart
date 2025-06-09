@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/components/fair_play_content.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class FairPlayView extends StatelessWidget {
   const FairPlayView({super.key});
@@ -8,7 +9,7 @@ class FairPlayView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultContainer(
-      titleText: '경고 & 퇴장 카드 규정',
+      titleText: 'warning_ejection_rules'.tr(),
       child: FairPlayContent(),
     );
   }

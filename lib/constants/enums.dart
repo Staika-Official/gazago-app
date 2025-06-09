@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 enum LoginType {
   apple,
   google,
@@ -155,15 +157,15 @@ extension ExerciseStateLabel on ExerciseState {
   String get label {
     switch (this) {
       case ExerciseState.init:
-        return '초기화 완료';
+        return 'init_complete'.tr();
       case ExerciseState.ready:
-        return '운동 준비중';
+        return 'exercise_preparing'.tr();
       case ExerciseState.ongoing:
-        return '운동 중';
+        return 'exercising'.tr();
       case ExerciseState.paused:
-        return '운동 휴식 중';
+        return 'exercise_resting'.tr();
       case ExerciseState.finished:
-        return '운동 완료';
+        return 'exercise_complete'.tr();
     }
   }
 }
@@ -191,17 +193,17 @@ extension PaymentPurposeLabel on PaymentPurpose {
   String get label {
     switch (this) {
       case PaymentPurpose.rechargeStamina:
-        return 'RECHARGE_STAMINA'; // '체력충전';
+        return 'RECHARGE_STAMINA'; // 'stamina_recharge'.tr();
       case PaymentPurpose.rechargeDurability:
-        return 'RECHARGE_DURABILITY'; // '내구도충전';
+        return 'RECHARGE_DURABILITY'; // 'durability_recharge'.tr();
       case PaymentPurpose.repairItem:
-        return 'REPAIR_ITEM'; // '아이템수리';
+        return 'REPAIR_ITEM'; // 'item_repair'.tr();
       case PaymentPurpose.buyItem:
-        return 'BUY_BADGE'; // '아이템구매';
+        return 'BUY_BADGE'; // 'item_purchase'.tr();
       case PaymentPurpose.badgeSynthesize:
-        return 'BUY_ITEM'; // '배지합성';
+        return 'BUY_ITEM'; // 'badge_synthesis'.tr();
       case PaymentPurpose.buyBadge:
-        return 'COMPOSE_BADGE'; // '배지구매';
+        return 'COMPOSE_BADGE'; // 'badge_purchase'.tr();
     }
   }
 }
@@ -317,11 +319,11 @@ extension MobileCompanyName on MobileCompany {
       case MobileCompany.lg:
         return 'LG U+';
       case MobileCompany.sk_cheap:
-        return 'SKT 알뜰폰';
+        return 'skt_budget_phone'.tr();
       case MobileCompany.kt_cheap:
-        return 'KT 알뜰폰';
+        return 'kt_budget_phone'.tr();
       case MobileCompany.lg_cheap:
-        return 'LG U+ 알뜰폰';
+        return 'lg_u_plus_budget_phone'.tr();
     }
   }
 }

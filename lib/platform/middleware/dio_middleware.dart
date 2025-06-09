@@ -15,24 +15,30 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:get/get.dart' as getx;
+import 'package:get/get.dart' as getx hide Trans;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:logger/logger.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class Api {
-  static final Logger _logger = Logger(printer: PrettyPrinter(colors: true, printEmojis: true));
+  static final Logger _logger =
+      Logger(printer: PrettyPrinter(colors: true, printEmojis: true));
   static int retryAttempt = 0;
   static bool needToRefreshToken = true;
 
   static final Dio _dio = Dio()
     ..interceptors.addAll([
       InterceptorsWrapper(
-        onRequest: (RequestOptions options, RequestInterceptorHandler handler) => _requestInterceptor(options, handler),
-        onResponse: (Response response, ResponseInterceptorHandler handler) => _responseInterceptor(response, handler),
+        onRequest:
+            (RequestOptions options, RequestInterceptorHandler handler) =>
+                _requestInterceptor(options, handler),
+        onResponse: (Response response, ResponseInterceptorHandler handler) =>
+            _responseInterceptor(response, handler),
       ),
       QueuedInterceptorsWrapper(
-        onError: (DioException e, ErrorInterceptorHandler handler) => _onErrorInterceptor(e, handler),
+        onError: (DioException e, ErrorInterceptorHandler handler) =>
+            _onErrorInterceptor(e, handler),
       ),
       // LogInterceptor(
       //   error: true,
@@ -62,7 +68,10 @@ class Api {
       'showLoading': showLoading,
     };
     _dio.options.headers['Content-Type'] = 'application/json; charset=utf-8';
-    String headerLang = HiveStore.loadString(key: HiveKey.serviceLanguage.name) == 'ko'? 'ko-KR' : 'ja-JP';
+    String headerLang =
+        HiveStore.loadString(key: HiveKey.serviceLanguage.name) == 'ko'
+            ? 'ko-KR'
+            : 'ja-JP';
 
     _dio.options.headers['Accept-Language'] = headerLang;
 
@@ -78,7 +87,8 @@ class Api {
       }
 
       if (!isPatch && !isFile) {
-        _dio.options.headers['Content-Type'] = 'application/json; charset=utf-8';
+        _dio.options.headers['Content-Type'] =
+            'application/json; charset=utf-8';
       }
 
       if (accessToken != null) {
@@ -98,7 +108,8 @@ class Api {
     return _dio;
   }
 
-  static _requestInterceptor(RequestOptions options, RequestInterceptorHandler handler) {
+  static _requestInterceptor(
+      RequestOptions options, RequestInterceptorHandler handler) {
     // if (options.extra['showLoading'] && getx.Get.isDialogOpen != true) {
     //   getx.Get.dialog(
     //     Dialog(
@@ -116,15 +127,19 @@ class Api {
     // }
 
     if (appliedEndpoint != null && appliedEndpoint!['activateStageMode']) {
-      if (!options.path.contains('/sign-in/social') && options.baseUrl.contains(BaseUrl.prod)) {
-        options.baseUrl = options.baseUrl.replaceAll(BaseUrl.prod, BaseUrl.stage);
+      if (!options.path.contains('/sign-in/social') &&
+          options.baseUrl.contains(BaseUrl.prod)) {
+        options.baseUrl =
+            options.baseUrl.replaceAll(BaseUrl.prod, BaseUrl.stage);
       }
     }
 
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
       List requestLogs = HiveStore.load(key: HiveKey.requestLogs.name) ?? [];
       dynamic logForm;
-      if (options.data != null && options.headers['Content-Type'] != null && options.headers['Content-Type'].contains('multipart')) {
+      if (options.data != null &&
+          options.headers['Content-Type'] != null &&
+          options.headers['Content-Type'].contains('multipart')) {
         final Map optData = json.decode(json.encode(options.data));
         if (optData["locations"] != null) {
           optData["locations"] = null;
@@ -170,7 +185,8 @@ class Api {
     handler.next(options);
   }
 
-  static _responseInterceptor(Response response, ResponseInterceptorHandler handler) async {
+  static _responseInterceptor(
+      Response response, ResponseInterceptorHandler handler) async {
     _logger.d(
       '------------->'
       '\nRESPONSE'
@@ -192,8 +208,8 @@ class Api {
     });
   }
 
-  static _onErrorInterceptor(DioException e, ErrorInterceptorHandler handler) async {
-
+  static _onErrorInterceptor(
+      DioException e, ErrorInterceptorHandler handler) async {
     _logger.e(
       '------------->'
       '\nERROR'
@@ -210,11 +226,13 @@ class Api {
     FirebaseCrashlytics.instance.recordError(
       e,
       e.stackTrace,
-      reason: 'api error : ${e.response?.statusCode}, $errorMessage, ${e.requestOptions.path}, ${getx.Get.currentRoute}',
+      reason:
+          'api error : ${e.response?.statusCode}, $errorMessage, ${e.requestOptions.path}, ${getx.Get.currentRoute}',
     );
 
     if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
-      List responseErrorLogs = HiveStore.load(key: HiveKey.responseErrorLogs.name) ?? [];
+      List responseErrorLogs =
+          HiveStore.load(key: HiveKey.responseErrorLogs.name) ?? [];
       dynamic errorLogForm;
       errorLogForm = {
         'logInfo': '==================================================='
@@ -227,15 +245,16 @@ class Api {
       };
 
       responseErrorLogs.add(errorLogForm);
-      HiveStore.save(key: HiveKey.responseErrorLogs.name, value: responseErrorLogs);
+      HiveStore.save(
+          key: HiveKey.responseErrorLogs.name, value: responseErrorLogs);
     }
 
     if (e.response?.statusCode == ResponseStatus.unauthorized.code) {
+      final String refreshToken =
+          HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
 
-      final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
-      
       if (refreshToken == '') {
-        showToastPopup('토큰이 만료되었습니다.\n다시 로그인해주세요.');
+        showToastPopup('token_expired'.tr());
         resetToLogin(e, handler);
         return;
       }
@@ -243,12 +262,19 @@ class Api {
       await _getNewAccessToken(e, handler);
     } else {
       if (e.response?.data != null && e.response?.data != '') {
-        ErrorResponseDataModel errorData = ErrorResponseDataModel.fromJson(e.response?.data);
+        ErrorResponseDataModel errorData =
+            ErrorResponseDataModel.fromJson(e.response?.data);
 
-        if (errorData.errorMessage != null && !e.requestOptions.extra['allowCustomErrorHandler']) {
+        if (errorData.errorMessage != null &&
+            !e.requestOptions.extra['allowCustomErrorHandler']) {
           showToastPopup(errorData.errorMessage!);
         }
-      } else if ([DioExceptionType.connectionTimeout, DioExceptionType.sendTimeout, DioExceptionType.receiveTimeout, DioExceptionType.unknown].any((element) => element == e.type)) {
+      } else if ([
+        DioExceptionType.connectionTimeout,
+        DioExceptionType.sendTimeout,
+        DioExceptionType.receiveTimeout,
+        DioExceptionType.unknown
+      ].any((element) => element == e.type)) {
         e.copyWith(
           response: Response(
             requestOptions: RequestOptions(
@@ -258,19 +284,23 @@ class Api {
           ),
         );
 
-        showToastPopup('통신이 원활하지 않습니다.\n잠시후 다시 시도해주세요');
+        showToastPopup('poor_connection'.tr());
       }
     }
 
     if (!handler.isCompleted) {
-      if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+      if (e.requestOptions.extra['showLoading'] &&
+          getx.Get.isDialogOpen == true) {
         getx.Get.back();
       }
-      e.response != null && e.response!.data != 'unknown' ? handler.resolve(e.response!) : handler.next(e);
+      e.response != null && e.response!.data != 'unknown'
+          ? handler.resolve(e.response!)
+          : handler.next(e);
     }
   }
 
-  static Future<void> _retryFailedRequest(DioException e, ErrorInterceptorHandler handler) async {
+  static Future<void> _retryFailedRequest(
+      DioException e, ErrorInterceptorHandler handler) async {
     String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);
 
     if (accessToken == null) {
@@ -301,7 +331,8 @@ class Api {
           '\nResponse: ${response.data}',
         );
 
-        if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+        if (e.requestOptions.extra['showLoading'] &&
+            getx.Get.isDialogOpen == true) {
           getx.Get.back();
         }
         retryAttempt = 0;
@@ -323,7 +354,7 @@ class Api {
 
       retryAttempt++;
       if (retryAttempt > 5) {
-        showToastPopup('연결이 불안정합니다. 잠시 후 재시도 해주세요');
+        showToastPopup('unstable_connection'.tr());
         _logger.e(
           '------------->'
           '\nRETRY ERROR'
@@ -332,7 +363,8 @@ class Api {
         );
 
         if (!handler.isCompleted) {
-          if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+          if (e.requestOptions.extra['showLoading'] &&
+              getx.Get.isDialogOpen == true) {
             getx.Get.back();
           }
           if (e.response != null) {
@@ -348,8 +380,10 @@ class Api {
     });
   }
 
-  static Future<void> _getNewAccessToken(DioException e, ErrorInterceptorHandler handler) async {
-    final String refreshToken = HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
+  static Future<void> _getNewAccessToken(
+      DioException e, ErrorInterceptorHandler handler) async {
+    final String refreshToken =
+        HiveStore.loadString(key: HiveKey.refreshToken.name) ?? '';
     String fcmToken = HiveStore.loadString(key: HiveKey.fcmToken.name)!;
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
@@ -376,9 +410,16 @@ class Api {
       'deviceId': deviceId,
       'fcmToken': fcmToken,
       'platform': Platform.isAndroid ? 'Android' : 'iOS',
-      "deviceModel": Platform.isAndroid ? androidDeviceInfo!.model : iosDeviceInfo!.utsname.machine,
-      "osVersion": Platform.isAndroid ? androidDeviceInfo!.version.sdkInt.toString() : iosDeviceInfo!.systemVersion,
-      "providerEnv": appliedEndpoint != null && appliedEndpoint!['activateStageMode'] ? 'STAGE' : null,
+      "deviceModel": Platform.isAndroid
+          ? androidDeviceInfo!.model
+          : iosDeviceInfo!.utsname.machine,
+      "osVersion": Platform.isAndroid
+          ? androidDeviceInfo!.version.sdkInt.toString()
+          : iosDeviceInfo!.systemVersion,
+      "providerEnv":
+          appliedEndpoint != null && appliedEndpoint!['activateStageMode']
+              ? 'STAGE'
+              : null,
     }).then((Response res) async {
       _logger.d(
         '------------->'
@@ -391,13 +432,16 @@ class Api {
 
       AccessTokenModel newToken = AccessTokenModel.fromJson(res.data);
 
-      HiveStore.save(key: HiveKey.accessToken.name, value: newToken.accessToken);
-      HiveStore.save(key: HiveKey.refreshToken.name, value: newToken.refreshToken);
+      HiveStore.save(
+          key: HiveKey.accessToken.name, value: newToken.accessToken);
+      HiveStore.save(
+          key: HiveKey.refreshToken.name, value: newToken.refreshToken);
       _dio.options.headers['Authorization'] = 'Bearer ${newToken.accessToken}';
       // e.requestOptions.headers['Authorization'] = 'Bearer ${newToken.accessToken}';
       needToRefreshToken = false;
       print('_retryFailedRequest');
-      print('_retryFailedRequest : res.requestOptions.path ${res.requestOptions.path}');
+      print(
+          '_retryFailedRequest : res.requestOptions.path ${res.requestOptions.path}');
       await _retryFailedRequest(e, handler);
     }).onError((DioException error, stacktrace) {
       _logger.e(
@@ -410,13 +454,15 @@ class Api {
         '\nError ResponseMessage: ${error.response?.statusMessage}'
         '\nError ResponseData: ${error.response?.data}',
       );
-      showToastPopup('토큰이 만료되었습니다.\n다시 로그인해주세요.');
+      showToastPopup('token_expired'.tr());
       resetToLogin(e, handler);
     });
   }
 
-  static void resetToLogin(DioException e, ErrorInterceptorHandler handler) async {
-    if (e.requestOptions.extra['showLoading'] && getx.Get.isDialogOpen == true) {
+  static void resetToLogin(
+      DioException e, ErrorInterceptorHandler handler) async {
+    if (e.requestOptions.extra['showLoading'] &&
+        getx.Get.isDialogOpen == true) {
       getx.Get.back();
     }
 
@@ -436,7 +482,8 @@ class Api {
     }
 
     if (getx.Get.isRegistered<ActivityController>()) {
-      ActivityController activityController = getx.Get.find<ActivityController>();
+      ActivityController activityController =
+          getx.Get.find<ActivityController>();
       if (activityController.exerciseTimer != null) {
         activityController.exerciseTimer!.cancel();
         activityController.updateTimer!.cancel();
@@ -447,6 +494,7 @@ class Api {
       activityController.locationSubscription = null;
     }
 
-    if (getx.Get.currentRoute != Routes.login) getx.Get.offAllNamed(Routes.login);
+    if (getx.Get.currentRoute != Routes.login)
+      getx.Get.offAllNamed(Routes.login);
   }
 }

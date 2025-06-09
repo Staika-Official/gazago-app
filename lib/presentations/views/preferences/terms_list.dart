@@ -4,7 +4,8 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class TermsList extends StatelessWidget {
   const TermsList({super.key});
@@ -12,7 +13,7 @@ class TermsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultContainer(
-      titleText: '약관',
+      titleText: 'terms_and_conditions'.tr(),
       backgroundColor: subBg01Color,
       headerBackgroundColor: subBg01Color,
       child: Padding(
@@ -20,16 +21,19 @@ class TermsList extends StatelessWidget {
         child: Column(
           children: [
             TermsListItem(
-              title: '이용약관',
-              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'TERMS'}),
+              title: 'terms_of_use'.tr(),
+              onTap: () =>
+                  Get.toNamed(Routes.term, arguments: {'termType': 'TERMS'}),
             ),
             TermsListItem(
-              title: '개인정보 처리방침',
-              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'PRIVACY'}),
+              title: 'privacy_policy'.tr(),
+              onTap: () =>
+                  Get.toNamed(Routes.term, arguments: {'termType': 'PRIVACY'}),
             ),
             TermsListItem(
-              title: '위치기반서비스 이용약관',
-              onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'LOCATION'}),
+              title: 'location_based_service_terms'.tr(),
+              onTap: () =>
+                  Get.toNamed(Routes.term, arguments: {'termType': 'LOCATION'}),
             ),
           ],
         ),
@@ -46,7 +50,12 @@ class TermsListItem extends StatelessWidget {
   final VoidCallback? onTap;
   final String? description;
 
-  const TermsListItem({super.key, required this.title, this.type = ItemType.functional, this.onTap, this.description});
+  const TermsListItem(
+      {super.key,
+      required this.title,
+      this.type = ItemType.functional,
+      this.onTap,
+      this.description});
 
   @override
   Widget build(BuildContext context) {

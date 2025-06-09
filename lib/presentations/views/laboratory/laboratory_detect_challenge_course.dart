@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
@@ -8,13 +10,14 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class LaboratoryDetectChallengeCourse extends StatelessWidget {
   const LaboratoryDetectChallengeCourse({super.key});
 
   List<Widget> renderCourseList(ActivityController controller) {
-    return controller.nearByCourses.map((item){
+    return controller.nearByCourses.map((item) {
       return Padding(
         padding: EdgeInsets.only(top: 8.0.sp),
         child: Container(
@@ -37,11 +40,9 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 StyledText(
-                    '${item.firstName.toString()} - ${item.secondName.toString()}'
-                ),
+                    '${item.firstName.toString()} - ${item.secondName.toString()}'),
                 StyledText(
-                    '${item.startLat.toString()}, ${item.startLon.toString()}'
-                ),
+                    '${item.startLat.toString()}, ${item.startLon.toString()}'),
               ],
             ),
           ),
@@ -55,7 +56,7 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
     ActivityController controller = Get.find<ActivityController>();
 
     return DefaultContainer(
-        titleText: 'GPS 챌린지 코스',
+        titleText: 'gps_challenge_course'.tr(),
         child: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(20),
@@ -68,10 +69,30 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
                       width: double.infinity,
                       height: 420.sp,
                       color: Colors.grey,
-                      child: NaverMap(
-                        onMapReady: (mapController) {
-                          mapController.setLocationTrackingMode(NLocationTrackingMode.follow);
-                            controller.naverMapController = mapController;
+                      child: GoogleMap(
+                        markers: Set.of(controller.drawingMarkers),
+                        polylines: Set.of(controller.drawingPolylines),
+                        polygons: Set.of(controller.drawingPolygons),
+                        circles: Set.of(controller.drawingCircles),
+                        tiltGesturesEnabled: false,
+                        mapType: MapType.normal,
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(
+                              controller.currentLocation.value.latitude,
+                              controller.currentLocation.value.longitude),
+                          zoom: 14,
+                          tilt: 1,
+                        ),
+                        gestureRecognizers: <Factory<
+                            OneSequenceGestureRecognizer>>{
+                          Factory<OneSequenceGestureRecognizer>(
+                            () => EagerGestureRecognizer(),
+                          ),
+                        },
+                        onMapCreated: (mapController) {
+                          // mapController.setLocationTrackingMode(
+                          //     NLocationTrackingMode.follow);
+                          controller.googleMapController = mapController;
                           if (controller.nearByCourses.value != null) {
                             List overlays = [];
                             controller.nearByCourses.value.forEach((item) {
@@ -79,35 +100,21 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
                               overlays.addAll(renderMarkers(item));
                             });
                             print(overlays);
-          
-                            mapController.addOverlayAll({...overlays});
+
+                            Future.delayed(const Duration(milliseconds: 100),
+                                () {
+                              controller.addOverlayAll({...overlays});
+                            });
                           }
                         },
-                        options:  NaverMapViewOptions(
-                          nightModeEnable: true,
-                          tiltGesturesEnable: false,
-                          mapType: NMapType.basic,
-                          activeLayerGroups: const [NLayerGroup.mountain],
-                          initialCameraPosition: NCameraPosition(
-                            target: NLatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude), zoom: 14,
-                              tilt: 1,
-                          ),
-          
-                        ),
-          
-                        forceGesture: true,
-          
-                      )
-          
-                      ),
+                      )),
                   Padding(
                     padding: EdgeInsets.only(top: 10.0.sp),
                     child: Row(
                       children: [
-                        StyledText('가까운 챌린지 : '),
+                        StyledText('nearest_challenge'.tr()),
                         StyledText(
-                            '${controller.nearChallengeLocation.value!.firstName.toString()} - ${controller.nearChallengeLocation.value!.secondName.toString()}'
-                        ),
+                            '${controller.nearChallengeLocation.value!.firstName.toString()} - ${controller.nearChallengeLocation.value!.secondName.toString()}'),
                       ],
                     ),
                   ),
@@ -115,10 +122,9 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
                     padding: EdgeInsets.only(top: 10.0.sp),
                     child: Row(
                       children: [
-                        StyledText('가까운 챌린지 위치 : '),
+                        StyledText('nearest_challenge_location'.tr()),
                         StyledText(
-                            '${controller.nearChallengeLocation.value!.startLat.toString()} - ${controller.nearChallengeLocation.value!.startLon.toString()}'
-                        ),
+                            '${controller.nearChallengeLocation.value!.startLat.toString()} - ${controller.nearChallengeLocation.value!.startLon.toString()}'),
                       ],
                     ),
                   ),
@@ -126,10 +132,9 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
                     padding: EdgeInsets.only(top: 10.0.sp),
                     child: Row(
                       children: [
-                        StyledText('가까운 챌린지와의 거리 : '),
+                        StyledText('distance_to_nearest_challenge'.tr()),
                         StyledText(
-                            '${formatDecimalPlaces(controller.betweenDistance.value, 0)} m'
-                        ),
+                            '${formatDecimalPlaces(controller.betweenDistance.value, 0)} m'),
                       ],
                     ),
                   ),
@@ -137,10 +142,9 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
                     padding: EdgeInsets.only(top: 10.0.sp),
                     child: Row(
                       children: [
-                        StyledText('내 위치 : '),
+                        StyledText('my_location'.tr()),
                         StyledText(
-                            '${controller.currentLocation.value.latitude.toString()} - ${controller.currentLocation.value.longitude.toString()}'
-                        ),
+                            '${controller.currentLocation.value.latitude.toString()} - ${controller.currentLocation.value.longitude.toString()}'),
                       ],
                     ),
                   ),
@@ -150,8 +154,7 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
                       children: [
                         StyledText('speed : '),
                         StyledText(
-                            '${formatDecimalPlaces(controller.gpsSpeed.value, 0)} km/h'
-                        ),
+                            '${formatDecimalPlaces(controller.gpsSpeed.value, 0)} km/h'),
                       ],
                     ),
                   ),
@@ -160,15 +163,14 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
                     child: Row(
                       children: [
                         StyledText('Detect Delay : '),
-                        StyledText(
-                            '${controller.detectDelay} 초'
-                        ),
+                        StyledText('detection_delay'
+                            .tr(args: [controller.detectDelay.toString()])),
                       ],
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 10.0.sp),
-                    child: StyledText('근처 챌린지 코스 리스트'),
+                    child: StyledText('nearby_challenge_list'.tr()),
                   ),
                   Column(
                     children: [...renderCourseList(controller)],

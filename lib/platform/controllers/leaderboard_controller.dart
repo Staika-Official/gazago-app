@@ -6,13 +6,17 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/ranker_model.dart';
 import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
 import 'package:gaza_go/platform/services/dashboard_service.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class LeaderboardController extends GetxController with GetTickerProviderStateMixin {
+class LeaderboardController extends GetxController
+    with GetTickerProviderStateMixin {
   late TabController tabController;
-  HomeMenuController homeMenuController = Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>() : Get.put(HomeMenuController());
+  HomeMenuController homeMenuController = Get.isRegistered<HomeMenuController>()
+      ? Get.find<HomeMenuController>()
+      : Get.put(HomeMenuController());
   Rx<DateTime?> selectedDate = Rx(DateTime.now());
   CalendarFormat calendarFormat = CalendarFormat.month;
   Rx<DateTime?> today = Rx(DateTime.now());
@@ -36,21 +40,27 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
   ScrollController leaderboardScrollController = ScrollController();
 
   RxString get formattedDate {
-    return RxString(DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()).toString());
+    return RxString(DateFormat('yyyy-MM-dd')
+        .format(selectedDate.value!.toLocal())
+        .toString());
   }
 
   RxString get leaderboardDate {
-    if (DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()) == DateFormat('yyyy-MM-dd').format(today.value!.toLocal())) {
+    if (DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()) ==
+        DateFormat('yyyy-MM-dd').format(today.value!.toLocal())) {
       return RxString('Today');
     }
-    return RxString(DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()).toString());
+    return RxString(DateFormat('yyyy-MM-dd')
+        .format(selectedDate.value!.toLocal())
+        .toString());
   }
 
   RxString get checkRewardDate {
-    if (DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()) == DateFormat('yyyy-MM-dd').format(today.value!.toLocal())) {
-      return RxString('실시간 랭킹');
+    if (DateFormat('yyyy-MM-dd').format(selectedDate.value!.toLocal()) ==
+        DateFormat('yyyy-MM-dd').format(today.value!.toLocal())) {
+      return RxString('real_time_ranking'.tr());
     }
-    return RxString('랭킹');
+    return RxString('ranking'.tr());
   }
 
   RxInt page = RxInt(0);
@@ -58,8 +68,6 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
 
   @override
   void onInit() {
-
-
     initController();
     tabController = TabController(vsync: this, length: 2, initialIndex: 0)
       ..addListener(() {
@@ -196,7 +204,8 @@ class LeaderboardController extends GetxController with GetTickerProviderStateMi
   }
 
   void loadDataOnScroll() {
-    double scrollBottom = leaderboardScrollController.positions.last.maxScrollExtent;
+    double scrollBottom =
+        leaderboardScrollController.positions.last.maxScrollExtent;
     double scrollPosition = leaderboardScrollController.positions.last.pixels;
 
     if (scrollPosition == scrollBottom) {

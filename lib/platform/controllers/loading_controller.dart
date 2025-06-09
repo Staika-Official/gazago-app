@@ -16,28 +16,43 @@ import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class LoadingController extends GetxController {
   final RxInt retryCount = RxInt(0);
   final RxDouble progress = RxDouble(0);
-  final RxString progressMessage = RxString("로드중......");
+  final RxString progressMessage = RxString('loading'.tr());
   Timer? _timer;
   final RxInt time = RxInt(0);
   final RxList<TermsStatusModel> termsList = RxList.empty();
   RxBool get allRequiredAgreed {
     if (termsList.isNotEmpty &&
-        termsList.singleWhere((term) => term.boardType == 'TERMS', orElse: () => TermsStatusModel(activated: false, boardType: 'TERMS')).activated &&
-        termsList.singleWhere((term) => term.boardType == 'LOCATION', orElse: () => TermsStatusModel(activated: false, boardType: 'LOCATION')).activated &&
-        termsList.singleWhere((term) => term.boardType == 'PRIVACY', orElse: () => TermsStatusModel(activated: false, boardType: 'PRIVACY')).activated) {
+        termsList
+            .singleWhere((term) => term.boardType == 'TERMS',
+                orElse: () =>
+                    TermsStatusModel(activated: false, boardType: 'TERMS'))
+            .activated &&
+        termsList
+            .singleWhere((term) => term.boardType == 'LOCATION',
+                orElse: () =>
+                    TermsStatusModel(activated: false, boardType: 'LOCATION'))
+            .activated &&
+        termsList
+            .singleWhere((term) => term.boardType == 'PRIVACY',
+                orElse: () =>
+                    TermsStatusModel(activated: false, boardType: 'PRIVACY'))
+            .activated) {
       return RxBool(true);
     } else {
       return RxBool(false);
     }
   }
 
-  bool underMaintenance = getConfig(dataType: ConfigType.bool, configKey: 'under_maintenance');
-  bool hasEmergencyNotice = getConfig(dataType: ConfigType.bool, configKey: 'has_emergency_notice');
+  bool underMaintenance =
+      getConfig(dataType: ConfigType.bool, configKey: 'under_maintenance');
+  bool hasEmergencyNotice =
+      getConfig(dataType: ConfigType.bool, configKey: 'has_emergency_notice');
 
   @override
   void onInit() async {
@@ -50,15 +65,20 @@ class LoadingController extends GetxController {
   @override
   void onReady() async {
     if (isUnderMaintenance()) {
-      String emergencyNoticeContent = getConfig(dataType: ConfigType.string, configKey: 'emergency_notice_content');
+      String emergencyNoticeContent = getConfig(
+          dataType: ConfigType.string, configKey: 'emergency_notice_content');
       if (underMaintenance) {
         await BoardService.getNoticePopupList(
           successCallback: (List<NoticePopupModel> records) async {
-            NoticePopupModel popup = records.firstWhere((element) => element.type == 'INSPECTION', orElse: () => NoticePopupModel(id: -1));
+            NoticePopupModel popup = records.firstWhere(
+                (element) => element.type == 'INSPECTION',
+                orElse: () => NoticePopupModel(id: -1));
             if (popup.id != -1) {
               String rawText = popup.label!;
-              String type = rawText.contains('|') ? rawText.split('|')[0] : 'ING';
-              String contentText = rawText.contains('|') ? rawText.split('|')[1] : rawText;
+              String type =
+                  rawText.contains('|') ? rawText.split('|')[0] : 'ING';
+              String contentText =
+                  rawText.contains('|') ? rawText.split('|')[1] : rawText;
 
               if (isShowMaintenancePreviewForToday()) {
                 showMaintenanceAlert(
@@ -72,7 +92,9 @@ class LoadingController extends GetxController {
                           },
                           () async {
                             DateTime now = DateTime.now();
-                            HiveStore.save(key: HiveKey.closeMaintenancePreviewDate.name, value: now);
+                            HiveStore.save(
+                                key: HiveKey.closeMaintenancePreviewDate.name,
+                                value: now);
                             Get.back();
                             await initLoading();
                           },
@@ -83,15 +105,18 @@ class LoadingController extends GetxController {
                 await initLoading();
               }
             } else {
-              showMaintenanceAlert(type: 'EMERGENCY', contentText: emergencyNoticeContent);
+              showMaintenanceAlert(
+                  type: 'EMERGENCY', contentText: emergencyNoticeContent);
             }
           },
           errorCallback: () {
-            showMaintenanceAlert(type: 'EMERGENCY', contentText: emergencyNoticeContent);
+            showMaintenanceAlert(
+                type: 'EMERGENCY', contentText: emergencyNoticeContent);
           },
         );
       } else if (hasEmergencyNotice) {
-        showMaintenanceAlert(type: 'EMERGENCY', contentText: emergencyNoticeContent);
+        showMaintenanceAlert(
+            type: 'EMERGENCY', contentText: emergencyNoticeContent);
       }
     } else {
       await initLoading();
@@ -107,14 +132,16 @@ class LoadingController extends GetxController {
 
   void showRestartAppPopup() async {
     timerStop();
-    bool isInDebugMode = HiveStore.load(key: HiveKey.isDebuggingMode.name) ?? false;
+    bool isInDebugMode =
+        HiveStore.load(key: HiveKey.isDebuggingMode.name) ?? false;
     if (isInDebugMode) {
-      await FirebaseCrashlytics.instance.recordError(Exception('LOADING ERROR'), StackTrace.current,
-          information: [
-            ...HiveStore.load(key: HiveKey.requestLogs.name),
-            ...HiveStore.load(key: HiveKey.responseErrorLogs.name),
-          ],
-          fatal: true);
+      await FirebaseCrashlytics.instance
+          .recordError(Exception('LOADING ERROR'), StackTrace.current,
+              information: [
+                ...HiveStore.load(key: HiveKey.requestLogs.name),
+                ...HiveStore.load(key: HiveKey.responseErrorLogs.name),
+              ],
+              fatal: true);
     } else {
       initDebugMode();
     }
@@ -122,7 +149,8 @@ class LoadingController extends GetxController {
   }
 
   Future<void> initLoading() async {
-    DatabaseReference inspectionNoticeRef = FirebaseDatabase.instance.ref('inspectionNotice');
+    DatabaseReference inspectionNoticeRef =
+        FirebaseDatabase.instance.ref('inspectionNotice');
     await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
       if (snapshot.value == false) {
         await checkTermsAgreeStatus();
@@ -154,7 +182,7 @@ class LoadingController extends GetxController {
 
       if (time.value > 60) {
         if (retryCount.value == 1) {
-          showToastPopup('재시도에 실패하여 로그아웃 되었습니다.');
+          showToastPopup('logout_after_retry_failed'.tr());
           forceLogout();
         } else {
           showRestartAppPopup();
@@ -177,14 +205,16 @@ class LoadingController extends GetxController {
         this.termsList.value = termsList;
         if (allRequiredAgreed.value) {
           // if (Get.isRegistered<WalletMasterController>()) Get.find<WalletMasterController>().initializeController();
-          if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().initializeController();
+          if (Get.isRegistered<ActivityController>())
+            Get.find<ActivityController>().initializeController();
         } else {
           timerStop();
           Get.offNamed(Routes.joinTerms, arguments: {'platform': 'gazago'});
         }
       },
       errorCallback: (ErrorResponseDataModel? error) {
-        if (error != null && error.status != 401) showToastPopup('약관 동의 여부를 확인할 수 없습니다.');
+        if (error != null && error.status != 401)
+          showToastPopup('terms_agreement_check_failed'.tr());
         timerStop();
         HiveStore.deleteMultipleKeys(keys: [
           HiveKey.accessToken.name,
@@ -211,7 +241,8 @@ class LoadingController extends GetxController {
   }
 
   bool isShowMaintenancePreviewForToday() {
-    DateTime? date = HiveStore.load(key: HiveKey.closeMaintenancePreviewDate.name);
+    DateTime? date =
+        HiveStore.load(key: HiveKey.closeMaintenancePreviewDate.name);
     DateTime? viewableTime = date?.add(const Duration(hours: 24));
     DateTime now = DateTime.now();
     if (date == null || viewableTime!.isBefore(now)) {

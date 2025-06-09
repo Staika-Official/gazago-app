@@ -7,19 +7,35 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class Permissions extends StatelessWidget {
   Permissions({super.key});
 
-  final List<PermissionItemModel> permissionsList = [
-    PermissionItemModel(iconPath: 'assets/images/permissions/ico_activity.svg', permissionName: '신체활동', isRequired: true, description: '걸음 수 확인 등'),
-    PermissionItemModel(iconPath: 'assets/images/permissions/ico_location.svg', permissionName: '위치', isRequired: true, description: '사용자 위치 파악, 운동 내역 계산 등'),
-    PermissionItemModel(iconPath: 'assets/images/permissions/ico_gallery.svg', permissionName: '사진', isRequired: false, description: '프로필 사진 등록 및 변경, 운동 기록 저장 등'),
-    PermissionItemModel(iconPath: 'assets/images/permissions/ico_camera.svg', permissionName: '카메라', isRequired: false, description: '프로필 사진 등록, 운동 코스 기록 등'),
-  ];
-
   List<Widget> renderPermissionList() {
+    List<PermissionItemModel> permissionsList = [
+      PermissionItemModel(
+          iconPath: 'assets/images/permissions/ico_activity.svg',
+          permissionName: 'physical_activity'.tr(),
+          isRequired: true,
+          description: 'step_count_etc'.tr()),
+      PermissionItemModel(
+          iconPath: 'assets/images/permissions/ico_location.svg',
+          permissionName: 'location_access'.tr(),
+          isRequired: true,
+          description: 'location_tracking_etc'.tr()),
+      PermissionItemModel(
+          iconPath: 'assets/images/permissions/ico_gallery.svg',
+          permissionName: 'photo'.tr(),
+          isRequired: false,
+          description: 'profile_photo_etc'.tr()),
+      PermissionItemModel(
+          iconPath: 'assets/images/permissions/ico_camera.svg',
+          permissionName: 'camera'.tr(),
+          isRequired: false,
+          description: 'profile_photo_course_etc'.tr()),
+    ];
     return permissionsList
         .map((permission) => Padding(
               padding: EdgeInsets.symmetric(vertical: 12.sp, horizontal: 0.sp),
@@ -27,7 +43,7 @@ class Permissions extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top:2.0.sp),
+                    padding: EdgeInsets.only(top: 2.0.sp),
                     child: SvgPicture.asset(permission.iconPath),
                   ),
                   Padding(
@@ -39,17 +55,25 @@ class Permissions extends StatelessWidget {
                           children: [
                             Text(
                               permission.permissionName,
-                              style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
-                                    color: AppColorData.regular().colorTextPrimary,
+                              style: AppTextStyleData.regular()
+                                  .koBodyMediumXl
+                                  .copyWith(
+                                    color:
+                                        AppColorData.regular().colorTextPrimary,
                                   ),
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 5.sp),
                               child: Text(
-                                permission.isRequired ? '(필수)' : '(선택)',
-                                style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
-                                  color: AppColorData.regular().colorTextPrimary,
-                                ),
+                                permission.isRequired
+                                    ? 'required_access'.tr()
+                                    : 'optional_access'.tr(),
+                                style: AppTextStyleData.regular()
+                                    .koBodyMediumXl
+                                    .copyWith(
+                                      color: AppColorData.regular()
+                                          .colorTextPrimary,
+                                    ),
                               ),
                             )
                           ],
@@ -58,9 +82,12 @@ class Permissions extends StatelessWidget {
                           padding: EdgeInsets.only(top: 0.sp),
                           child: Text(
                             permission.description,
-                            style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                              color: AppColorData.regular().colorTextSecondary,
-                            ),
+                            style: AppTextStyleData.regular()
+                                .koBodyMediumMd
+                                .copyWith(
+                                  color:
+                                      AppColorData.regular().colorTextSecondary,
+                                ),
                           ),
                         ),
                       ],
@@ -80,7 +107,8 @@ class Permissions extends StatelessWidget {
       isLeadingShow: false,
       backgroundColor: subBg01Color,
       child: Padding(
-        padding: EdgeInsets.only(top: 20.sp, left: 16.sp, right: 16.sp, bottom: 30.sp),
+        padding: EdgeInsets.only(
+            top: 20.sp, left: 16.sp, right: 16.sp, bottom: 30.sp),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -88,25 +116,25 @@ class Permissions extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    '접근 권한 안내',
-                  style: AppTextStyleData.regular().koHeadingSemiboldMd.copyWith(
-                    color: AppColorData.regular().colorTextPrimary,
-                  ),
+                  'access_permission_guide'.tr(),
+                  style:
+                      AppTextStyleData.regular().koHeadingSemiboldMd.copyWith(
+                            color: AppColorData.regular().colorTextPrimary,
+                          ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 9.sp, bottom: 10.sp),
                   child: Text(
-                    '서비스 이용을 위해 아래 권한을 허용해 주시기 바랍니다.',
+                    'access_permission_request'.tr(),
                     style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                      color: AppColorData.regular().colorTextSecondary,
-                    ),
-
+                          color: AppColorData.regular().colorTextSecondary,
+                        ),
                   ),
                 ),
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(top:5.0.sp),
+              padding: EdgeInsets.only(top: 5.0.sp),
               child: Divider(
                 thickness: 1,
                 height: 40.sp,
@@ -119,10 +147,10 @@ class Permissions extends StatelessWidget {
                 top: 20.sp,
               ),
               child: Text(
-                "ㆍgazaGO는 운동 기록과 뱃지 획득 등의 기능 사용을 위해 앱이 닫혀 있을 때도 위치 데이터를 필요로 합니다. 원활한 서비스 이용을 위해 단말의 설정에서 위치 엑세스  권한을 ‘항상 허용'으로 설정해 주시길 바랍니다.",
+                'location_access_details'.tr(),
                 style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                  color: AppColorData.regular().colorTextTertiary,
-                ),
+                      color: AppColorData.regular().colorTextTertiary,
+                    ),
               ),
             ),
             Expanded(
@@ -134,7 +162,6 @@ class Permissions extends StatelessWidget {
                     color: AppColorData.regular().colorBgInteractivePrimary,
                     border: Border.all(width: 2.sp, color: Colors.black),
                     borderRadius: BorderRadius.circular(8.sp),
-
                   ),
                   child: InkWell(
                     onTap: () => controller.requestPermissions(),
@@ -142,10 +169,11 @@ class Permissions extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 12.0.sp),
                       child: Center(
                           child: Text(
-                        '확인',
-                            style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
-                              color: AppColorData.regular().colorBaseBalck,
-                            ),
+                        'confirm'.tr(),
+                        style:
+                            AppTextStyleData.regular().koBodyMediumXl.copyWith(
+                                  color: AppColorData.regular().colorBaseBalck,
+                                ),
                       )),
                     ),
                   ),

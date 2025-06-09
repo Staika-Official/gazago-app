@@ -10,7 +10,8 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class ArchiveHome extends StatelessWidget {
   const ArchiveHome({super.key});
@@ -19,7 +20,9 @@ class ArchiveHome extends StatelessWidget {
     return controller.archiveList
         .map(
           (archive) => InkWell(
-            onTap: () => controller.dataGetLoading.value ? null : controller.toDetail(archive.id!),
+            onTap: () => controller.dataGetLoading.value
+                ? null
+                : controller.toDetail(archive.id!),
             child: Container(
               margin: EdgeInsets.only(bottom: 15.sp),
               decoration: BoxDecoration(
@@ -28,7 +31,11 @@ class ArchiveHome extends StatelessWidget {
                   width: 2,
                   color: Colors.black,
                 ),
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
                 boxShadow: [
                   BoxShadow(
                     color: const Color(0xFF000000),
@@ -42,7 +49,11 @@ class ArchiveHome extends StatelessWidget {
                 elevation: 0,
                 color: AppColorData.regular().colorBgTertiary,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 16.0.sp, left: 20.0.sp, right: 20.0.sp, bottom: 12.0.sp),
+                  padding: EdgeInsets.only(
+                      top: 16.0.sp,
+                      left: 20.0.sp,
+                      right: 20.0.sp,
+                      bottom: 12.0.sp),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -88,17 +99,21 @@ class ArchiveHome extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                    formatDateUntilDay(archive.startedDate!),
-                                    style: AppTextStyleData.regular().koBodySemiboldLg.copyWith(
-                                      color: AppColorData.regular().colorTextPrimary
-                                    ),
+                                  formatDateUntilDay(archive.startedDate!),
+                                  style: AppTextStyleData.regular()
+                                      .koBodySemiboldLg
+                                      .copyWith(
+                                          color: AppColorData.regular()
+                                              .colorTextPrimary),
                                 ),
                                 if (archive.challengeTitle != null)
                                   Text(
-                                      archive.challengeTitle!,
-                                    style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                        color: AppColorData.regular().colorTextSecondary
-                                    ),
+                                    archive.challengeTitle!,
+                                    style: AppTextStyleData.regular()
+                                        .koBodyMediumMd
+                                        .copyWith(
+                                            color: AppColorData.regular()
+                                                .colorTextSecondary),
                                   ),
                               ],
                             ),
@@ -123,9 +138,12 @@ class ArchiveHome extends StatelessWidget {
                                 ),
                                 Text(
                                   formatSeconds(archive.time!),
-                                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                      color: AppColorData.regular().colorTextInteractivePrimary,
-                                  ),
+                                  style: AppTextStyleData.regular()
+                                      .koBodyMediumMd
+                                      .copyWith(
+                                        color: AppColorData.regular()
+                                            .colorTextInteractivePrimary,
+                                      ),
                                 )
                               ],
                             ),
@@ -138,9 +156,12 @@ class ArchiveHome extends StatelessWidget {
                               ),
                               Text(
                                 '${formatDecimalPlaces(convertMetersToKm(archive.rewardDistance!), 3, isAutoDecimal: true)} km',
-                                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                  color: AppColorData.regular().colorTextInteractivePrimary,
-                                ),
+                                style: AppTextStyleData.regular()
+                                    .koBodyMediumMd
+                                    .copyWith(
+                                      color: AppColorData.regular()
+                                          .colorTextInteractivePrimary,
+                                    ),
                               ),
                             ],
                           ),
@@ -154,9 +175,12 @@ class ArchiveHome extends StatelessWidget {
                                 ),
                                 Text(
                                   '${archive.steps}',
-                                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                    color: AppColorData.regular().colorTextInteractivePrimary,
-                                  ),
+                                  style: AppTextStyleData.regular()
+                                      .koBodyMediumMd
+                                      .copyWith(
+                                        color: AppColorData.regular()
+                                            .colorTextInteractivePrimary,
+                                      ),
                                 ),
                               ],
                             ),
@@ -198,11 +222,13 @@ class ArchiveHome extends StatelessWidget {
                   ? controller.dataGetLoading.value
                       ? Padding(
                           padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                          child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
+                          child: const Center(
+                              child: CircularProgressIndicator(
+                                  color: skyBlueColor)),
                         )
                       : Padding(
-                        padding: EdgeInsets.only(top:20.0.sp),
-                        child: Container(
+                          padding: EdgeInsets.only(top: 20.0.sp),
+                          child: Container(
                             width: double.infinity,
                             padding: EdgeInsets.symmetric(vertical: 50.sp),
                             decoration: BoxDecoration(
@@ -215,8 +241,8 @@ class ArchiveHome extends StatelessWidget {
                                 iconEmpty,
                                 Padding(
                                   padding: EdgeInsets.only(top: 20.sp),
-                                  child: const StyledText(
-                                    '운동 기록이 없습니다.',
+                                  child: StyledText(
+                                    'no_exercise_record'.tr(),
                                     color: Color(0xff7b7b7b),
                                     fontSize: 16,
                                     lineHeight: 10,
@@ -225,9 +251,9 @@ class ArchiveHome extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(top: 13.sp),
-                                  child: const StyledText(
-                                    '운동하고 GO를 쌓아보세요!',
-                                    color: Color(0xff7b7b7b),
+                                  child: StyledText(
+                                    'exercise_to_earn_go'.tr(),
+                                    color: const Color(0xff7b7b7b),
                                     fontSize: 16,
                                     lineHeight: 10,
                                     fontWeight: 500,
@@ -236,7 +262,7 @@ class ArchiveHome extends StatelessWidget {
                               ],
                             ),
                           ),
-                      )
+                        )
                   : Expanded(
                       child: SingleChildScrollView(
                         controller: controller.scroll,
@@ -249,8 +275,11 @@ class ArchiveHome extends StatelessWidget {
                               ...renderArchiveList(controller),
                               if (controller.dataGetLoading.value)
                                 Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                                  child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
+                                  padding:
+                                      EdgeInsets.symmetric(vertical: 20.0.sp),
+                                  child: const Center(
+                                      child: CircularProgressIndicator(
+                                          color: skyBlueColor)),
                                 )
                             ],
                           ),

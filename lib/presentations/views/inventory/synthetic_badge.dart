@@ -4,7 +4,8 @@ import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/controllers/inventory_controller.dart';
 import 'package:gaza_go/platform/controllers/synthetic_badge_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class SyntheticBadge extends StatelessWidget {
   const SyntheticBadge({super.key});
@@ -14,7 +15,8 @@ class SyntheticBadge extends StatelessWidget {
     HomeMenuController homeMenuController = Get.find();
     InventoryController controller = Get.find();
 
-    SyntheticBadgeController syntheticBadgeController = Get.put(SyntheticBadgeController(controller.selectedBadge));
+    SyntheticBadgeController syntheticBadgeController =
+        Get.put(SyntheticBadgeController(controller.selectedBadge));
 
     return Scaffold(
       appBar: homeMenuController.appbarList[1],
@@ -35,14 +37,31 @@ class SyntheticBadge extends StatelessWidget {
                       alignment: WrapAlignment.center,
                       crossAxisAlignment: WrapCrossAlignment.start,
                       children: [
-                        for (int i = 0; i < syntheticBadgeController.selectedBadgeLevel.value; i++)
+                        for (int i = 0;
+                            i <
+                                syntheticBadgeController
+                                    .selectedBadgeLevel.value;
+                            i++)
                           Obx(() {
                             return GestureDetector(
-                              onTap: () => i != 0 ? syntheticBadgeController.showSelectBadgePopup(controller.userBadgesList, controller.selectedBadge.value, i) : null,
+                              onTap: () => i != 0
+                                  ? syntheticBadgeController
+                                      .showSelectBadgePopup(
+                                          controller.userBadgesList,
+                                          controller.selectedBadge.value,
+                                          i)
+                                  : null,
                               child: CircleAvatar(
-                                backgroundImage: const AssetImage('assets/images/inventory/ico_circle_plus.png'),
+                                backgroundImage: const AssetImage(
+                                    'assets/images/inventory/ico_circle_plus.png'),
                                 foregroundImage: NetworkImage(
-                                  syntheticBadgeController.selectedBadgeList[i] != null ? syntheticBadgeController.selectedBadgeList[i]!.imageUrl ?? '' : '',
+                                  syntheticBadgeController
+                                              .selectedBadgeList[i] !=
+                                          null
+                                      ? syntheticBadgeController
+                                              .selectedBadgeList[i]!.imageUrl ??
+                                          ''
+                                      : '',
                                   headers: imageNetworkHeader,
                                 ),
                                 radius: 54,
@@ -58,10 +77,13 @@ class SyntheticBadge extends StatelessWidget {
                 return SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: syntheticBadgeController.selectedBadgeList.length == syntheticBadgeController.selectedBadgeLevel.value
-                        ? () => syntheticBadgeController.handleOpenSyntheticBadgeConfirmPopup()
+                    onPressed: syntheticBadgeController
+                                .selectedBadgeList.length ==
+                            syntheticBadgeController.selectedBadgeLevel.value
+                        ? () => syntheticBadgeController
+                            .handleOpenSyntheticBadgeConfirmPopup()
                         : null,
-                    child: const Text('합성'),
+                    child: Text('synthesis'.tr()),
                   ),
                 );
               }),

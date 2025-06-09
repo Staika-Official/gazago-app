@@ -3,7 +3,8 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class LaboratoryEndPoint extends StatelessWidget {
   const LaboratoryEndPoint({super.key});
@@ -13,7 +14,7 @@ class LaboratoryEndPoint extends StatelessWidget {
     DebuggingController debuggingController = Get.find<DebuggingController>();
 
     return DefaultContainer(
-        titleText: '엔드포인트 변경',
+        titleText: 'change_endpoint'.tr(),
         child: Center(
           child: Container(
             padding: const EdgeInsets.all(20),
@@ -23,9 +24,16 @@ class LaboratoryEndPoint extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   RadioListTile(
-                      title: const StyledText('STAGE'), value: EndPointType.stage, groupValue: debuggingController.endPointType.value, onChanged: (val) => debuggingController.setEndPoint(val!)),
+                      title: const StyledText('STAGE'),
+                      value: EndPointType.stage,
+                      groupValue: debuggingController.endPointType.value,
+                      onChanged: (val) =>
+                          debuggingController.setEndPoint(val!)),
                   RadioListTile(
-                      title: const StyledText('PROD'), value: EndPointType.prod, groupValue: debuggingController.endPointType.value, onChanged: (val) => debuggingController.setEndPoint(val!))
+                      title: const StyledText('PROD'),
+                      value: EndPointType.prod,
+                      groupValue: debuggingController.endPointType.value,
+                      onChanged: (val) => debuggingController.setEndPoint(val!))
                 ],
               );
             }),

@@ -3,7 +3,7 @@
     "project_number": "232716676384",
     "firebase_url": "https://app-step-dev-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "app-step-dev",
-    "storage_bucket": "app-step-dev.appspot.com"
+    "storage_bucket": "app-step-dev.firebasestorage.app"
   },
   "client": [
     {
@@ -36,6 +36,14 @@
           "android_info": {
             "package_name": "kr.co.eztechfin.gazaGo.dev",
             "certificate_hash": "c512e2b32e474e51ea6b8680d4413860cf52f91e"
+          }
+        },
+        {
+          "client_id": "232716676384-kahm3vcitp8hlkt3ng953vb20lb3itde.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo.dev",
+            "certificate_hash": "56cc8123a2135e721c5419326ab22c56041fcce4"
           }
         },
         {

@@ -4,7 +4,8 @@ import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class WithdrawCompleted extends StatelessWidget {
   const WithdrawCompleted({super.key});
@@ -29,16 +30,16 @@ class WithdrawCompleted extends StatelessWidget {
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const StyledText(
-                          '회원 탈퇴 완료',
+                        StyledText(
+                          'withdrawal_complete'.tr(),
                           fontSize: 22,
                           fontWeight: 500,
                           lineHeight: 22,
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 14.0.sp),
-                          child: const StyledText(
-                            '그동안 이용해 주셔서 감사합니다.',
+                          child: StyledText(
+                            'thank_you_message_1'.tr(),
                             fontSize: 16,
                             fontWeight: 500,
                             lineHeight: 22,
@@ -73,9 +74,9 @@ class WithdrawCompleted extends StatelessWidget {
                   onTap: () => controller.handleWithdrawComplete(),
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 12.0.sp),
-                    child: const Center(
+                    child: Center(
                         child: StyledText(
-                      '확인',
+                      'confirm'.tr(),
                       fontSize: 18,
                       lineHeight: 18,
                       fontWeight: 500,

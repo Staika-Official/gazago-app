@@ -6,8 +6,9 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class GlobalController extends SuperController {
   // final Rx<ConnectivityResult> connectivityResult = Rx(ConnectivityResult.none);
@@ -16,7 +17,8 @@ class GlobalController extends SuperController {
 
   // Create customized instance which can be registered via dependency injection
   final RxBool internetConnection = RxBool(false);
-  final InternetConnectionChecker customInstance = InternetConnectionChecker.createInstance(
+  final InternetConnectionChecker customInstance =
+      InternetConnectionChecker.createInstance(
     checkTimeout: const Duration(seconds: 1),
     checkInterval: const Duration(seconds: 1),
   );
@@ -72,7 +74,8 @@ class GlobalController extends SuperController {
   Future<void> execute(
     InternetConnectionChecker internetConnectionChecker,
   ) async {
-    internetConnectionListener = InternetConnectionChecker().onStatusChange.listen(
+    internetConnectionListener =
+        InternetConnectionChecker().onStatusChange.listen(
       (InternetConnectionStatus status) {
         switch (status) {
           case InternetConnectionStatus.connected:
@@ -80,7 +83,7 @@ class GlobalController extends SuperController {
             break;
           case InternetConnectionStatus.disconnected:
             internetConnection.value = false;
-            showToastPopup('인터넷 상태를 확인해주세요.');
+            showToastPopup('check_internet_connection'.tr());
             break;
         }
       },
@@ -103,7 +106,7 @@ class GlobalController extends SuperController {
       await UaaService.checkLoginStatus(
         successCallback: () => null,
         errorCallback: () {
-          showToastPopup('로그인 유효시간이 만료되었습니다');
+          showToastPopup('login_session_expired'.tr());
           HiveStore.deleteMultipleKeys(keys: [
             HiveKey.accessToken.name,
             HiveKey.refreshToken.name,

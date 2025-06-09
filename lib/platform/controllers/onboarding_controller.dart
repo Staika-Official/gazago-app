@@ -1,5 +1,6 @@
 import 'package:gaza_go/constants/routes.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class OnBoardingController extends GetxController {
   final RxInt _current = 0.obs;
@@ -12,9 +13,15 @@ class OnBoardingController extends GetxController {
   }
 
   final List<Map<String, String>> _content = [
-    {'title': '가자고! 산으로', 'content': '대한민국 명산 중 원하는 코스를 골라\n도전하고 뱃지를 보상으로 받아요'},
-    {'title': '받자고! 혜택을', 'content': '빠아침 햇살 내린 동네 앞길을 산책하면\n어느덧 토큰으로 보상이 쌓여요'},
-    {'title': '만나자고! 다함께', 'content': '몸과 마음 그리고 혜택까지 챙겨주는 가자고를\n친구, 가족, 그리고 연인과 함께 가자고!'}
+    {
+      'title': 'gazago_mountain'.tr(),
+      'content': 'mountain_challenge_description'.tr()
+    },
+    {
+      'title': 'gazago_benefits'.tr(),
+      'content': 'walking_reward_description'.tr()
+    },
+    {'title': 'gazago_together'.tr(), 'content': 'gazago_with_friends'.tr()}
   ];
 
   final List<Map<String, dynamic>> imgList = [

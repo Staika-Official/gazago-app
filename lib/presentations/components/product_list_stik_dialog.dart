@@ -9,7 +9,8 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 List<Widget> renderMyTikList(WalletMasterController controller) {
   return controller.allTikUiList
@@ -30,7 +31,9 @@ List<Widget> renderMyTikList(WalletMasterController controller) {
                     ),
                   ),
                   StyledText(
-                    product.value.name! == 'Taika' ? '활동으로 받은 TIK' : '충전한 TIK (STIK 교환 불가)',
+                    product.value.name! == 'Taika'
+                        ? 'earned_tik'.tr()
+                        : 'charged_tik_no_stik_exchange'.tr(),
                     fontSize: 12,
                     fontWeight: 400,
                     lineHeight: 18,
@@ -41,7 +44,8 @@ List<Widget> renderMyTikList(WalletMasterController controller) {
               Row(
                 children: [
                   StyledText(
-                    formatDecimalPlaces(double.parse(product.value.uiAmountString!), 0),
+                    formatDecimalPlaces(
+                        double.parse(product.value.uiAmountString!), 0),
                     fontSize: 12,
                     fontWeight: 700,
                     lineHeight: 20,
@@ -87,7 +91,11 @@ List<Widget> renderMySpendingTokenList(WalletMasterController controller) {
                     Row(
                       children: [
                         StyledText(
-                          formatDecimalPlaces(double.parse(product.value.uiAmountString!), product.value.symbol! == 'TOTAL_TIK' ? 0 : 4, isAutoDecimal: true, roundType: RoundType.floor),
+                          formatDecimalPlaces(
+                              double.parse(product.value.uiAmountString!),
+                              product.value.symbol! == 'TOTAL_TIK' ? 0 : 4,
+                              isAutoDecimal: true,
+                              roundType: RoundType.floor),
                           fontSize: 14,
                           fontWeight: 700,
                           lineHeight: 20,
@@ -96,7 +104,9 @@ List<Widget> renderMySpendingTokenList(WalletMasterController controller) {
                         Padding(
                           padding: EdgeInsets.only(left: 3.0.sp),
                           child: StyledText(
-                            product.value.symbol! == 'TOTAL_TIK' ? 'TIK' : product.value.symbol!,
+                            product.value.symbol! == 'TOTAL_TIK'
+                                ? 'TIK'
+                                : product.value.symbol!,
                             fontSize: 14,
                             fontWeight: 400,
                             lineHeight: 20,
@@ -122,13 +132,15 @@ List<Widget> renderMySpendingTokenList(WalletMasterController controller) {
       .toList();
 }
 
-List<Widget> renderProductStikList(GoWalletController controller, WalletMasterController walletMasterController) {
+List<Widget> renderProductStikList(GoWalletController controller,
+    WalletMasterController walletMasterController) {
   return controller.productList
       .asMap()
       .entries
       .map(
         (product) => Padding(
-          padding: EdgeInsets.only(left: 25.sp, top: 17.sp, right: 17.sp, bottom: 17.sp),
+          padding: EdgeInsets.only(
+              left: 25.sp, top: 17.sp, right: 17.sp, bottom: 17.sp),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -136,7 +148,12 @@ List<Widget> renderProductStikList(GoWalletController controller, WalletMasterCo
                 children: [
                   Padding(
                     padding: EdgeInsets.only(right: 12.sp),
-                    child: product.value!.toTokenSymbol! == 'STIK' ? Image.asset('assets/images/wallet/ico_product_list_stik.png', width: 20, height: 20) : iconTik,
+                    child: product.value!.toTokenSymbol! == 'STIK'
+                        ? Image.asset(
+                            'assets/images/wallet/ico_product_list_stik.png',
+                            width: 20,
+                            height: 20)
+                        : iconTik,
                   ),
                   StyledText(
                     '${formatDecimalPlaces(product.value!.toTokenSymbol! == 'STIK' ? double.parse(product.value.toUiAmountString!) : productMinusFeePrice(product.value.toUiAmountString!, product.value.uiFeeString!), 0)} ${product.value!.toTokenSymbol!}',
@@ -168,11 +185,17 @@ List<Widget> renderProductStikList(GoWalletController controller, WalletMasterCo
                       onTap: () => controller.checkShortBalance(product.value),
                       borderRadius: BorderRadius.circular(50),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.sp, vertical: 15.sp),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 15.sp, vertical: 15.sp),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            product.value!.fromTokenSymbol! == 'STIK' ? Image.asset('assets/images/wallet/ico_product_list_stik.png', width: 14, height: 14) : iconTikSmall,
+                            product.value!.fromTokenSymbol! == 'STIK'
+                                ? Image.asset(
+                                    'assets/images/wallet/ico_product_list_stik.png',
+                                    width: 14,
+                                    height: 14)
+                                : iconTikSmall,
                             Padding(
                               padding: EdgeInsets.only(left: 5.0.sp),
                               child: StyledText(
@@ -216,7 +239,8 @@ void showProductStikList(String assetsName) {
               Padding(
                 padding: EdgeInsets.only(top: 15.0.sp, bottom: 5.sp),
                 child: StyledText(
-                  '${assetsName == 'TAIKA' ? 'STIK' : 'TIK'}으로 교환',
+                  'exchange_to_stik_or_tik'
+                      .tr(args: [assetsName == 'TAIKA' ? 'STIK' : 'TIK']),
                   fontSize: 18,
                   lineHeight: 18,
                   fontWeight: 500,
@@ -234,15 +258,16 @@ void showProductStikList(String assetsName) {
               ),
             ],
           ),
-          // titleText: 'TIK으로 교환',
+          // titleText: 'exchange_to_tik'.tr(),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 30.0.sp, bottom: 10.sp, left: 20.sp, right: 20.sp),
-                child: const StyledText(
-                  '현재 보유 자산',
+                padding: EdgeInsets.only(
+                    top: 30.0.sp, bottom: 10.sp, left: 20.sp, right: 20.sp),
+                child: StyledText(
+                  'current_assets'.tr(),
                   fontSize: 16,
                   fontWeight: 600,
                   lineHeight: 20,
@@ -264,14 +289,15 @@ void showProductStikList(String assetsName) {
                     children: [
                       ...renderProductStikList(goWalletController, controller),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25, vertical: 30),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: 9),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 9),
                               child: StyledText(
-                                '이용안내',
+                                'usage_guide'.tr(),
                                 fontSize: 14,
                                 lineHeight: 18,
                                 fontWeight: 500,
@@ -315,9 +341,9 @@ void showProductStikList(String assetsName) {
                                       borderRadius: BorderRadius.circular(2),
                                     ),
                                   ),
-                                  const Expanded(
+                                  Expanded(
                                     child: StyledText(
-                                      '위에 안내한 금액이 일정 시간동안 유지되며 해당 가격으로 거래가 진행됩니다.',
+                                      'price_maintained_for_duration'.tr(),
                                       fontSize: 10,
                                       lineHeight: 14,
                                       fontWeight: 500,
@@ -341,9 +367,9 @@ void showProductStikList(String assetsName) {
                                       borderRadius: BorderRadius.circular(2),
                                     ),
                                   ),
-                                  const Expanded(
+                                  Expanded(
                                     child: StyledText(
-                                      '본 화면 이탈 후 재접근 시 가격이 변경될 수 있습니다.',
+                                      'price_may_change'.tr(),
                                       fontSize: 10,
                                       lineHeight: 14,
                                       fontWeight: 500,

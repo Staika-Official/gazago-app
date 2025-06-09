@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
@@ -12,22 +12,24 @@ import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
+import 'package:gaza_go/platform/helpers/map_mixin.dart';
 import 'package:gaza_go/platform/models/archive_detail_item_model.dart';
 import 'package:gaza_go/platform/models/archive_list_item_model.dart';
 import 'package:gaza_go/platform/services/archive_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:jiffy/jiffy.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class ArchiveController extends GetxController with ScrollMixin {
+class ArchiveController extends GetxController with ScrollMixin, MapMixin {
   LoaderController loaderController = Get.put(LoaderController());
   RxList<ArchiveListItemModel> archiveList = RxList.empty();
   RxInt page = RxInt(0);
   RxBool stopLoading = RxBool(false);
   RxBool dataGetLoading = RxBool(false);
   Rx<ArchiveDetailItemModel> selectedItem = Rx(ArchiveDetailItemModel());
-  RxList<NLatLng> locations = RxList.empty();
+  RxList<LatLng> locations = RxList.empty();
 
   @override
   void onInit() async {
@@ -72,7 +74,8 @@ class ArchiveController extends GetxController with ScrollMixin {
     loaderController.isLoading.value = true;
     dataGetLoading.value = true;
     final twoMonthAgo = Jiffy.now().subtract(months: 2);
-    await ArchiveService.getArchiveItem(id, Platform.operatingSystem, successCallback: (archive) async {
+    await ArchiveService.getArchiveItem(id, Platform.operatingSystem,
+        successCallback: (archive) async {
       loaderController.isLoading.value = false;
       dataGetLoading.value = false;
       if (archive != null) {
@@ -89,20 +92,40 @@ class ArchiveController extends GetxController with ScrollMixin {
     });
   }
 
-  void recordMapCreated(NaverMapController controller, RxList<NLatLng> locations) {
+  void recordMapCreated(
+      GoogleMapController controller, RxList<LatLng> locations) {
     if (locations.length > 1) {
-      double highestLat = locations.reduce((previousValue, element) => previousValue.latitude > element.latitude ? previousValue : element).latitude;
-      double lowestLat = locations.reduce((previousValue, element) => previousValue.latitude < element.latitude ? previousValue : element).latitude;
-      double highestLng = locations.reduce((previousValue, element) => previousValue.longitude > element.longitude ? previousValue : element).longitude;
-      double lowestLng = locations.reduce((previousValue, element) => previousValue.longitude < element.longitude ? previousValue : element).longitude;
-      controller.updateCamera(
-        NCameraUpdate.fitBounds(
-          NLatLngBounds(
-            northEast: NLatLng(highestLat, highestLng),
-            southWest: NLatLng(lowestLat, lowestLng),
-          ),
-          padding: EdgeInsets.all(50),
-        ),
+      double highestLat = locations
+          .reduce((previousValue, element) =>
+              previousValue.latitude > element.latitude
+                  ? previousValue
+                  : element)
+          .latitude;
+      double lowestLat = locations
+          .reduce((previousValue, element) =>
+              previousValue.latitude < element.latitude
+                  ? previousValue
+                  : element)
+          .latitude;
+      double highestLng = locations
+          .reduce((previousValue, element) =>
+              previousValue.longitude > element.longitude
+                  ? previousValue
+                  : element)
+          .longitude;
+      double lowestLng = locations
+          .reduce((previousValue, element) =>
+              previousValue.longitude < element.longitude
+                  ? previousValue
+                  : element)
+          .longitude;
+      controller.animateCamera(
+        CameraUpdate.newLatLngBounds(
+            LatLngBounds(
+              northeast: LatLng(highestLat, highestLng),
+              southwest: LatLng(lowestLat, lowestLng),
+            ),
+            50),
       );
       // controller.moveCamera(
       //   CameraUpdate.fitBounds(
@@ -121,17 +144,18 @@ class ArchiveController extends GetxController with ScrollMixin {
       archiveList.removeWhere((archive) => archive.id == id);
       Get.until((route) => Get.isBottomSheetOpen == false);
       Get.back();
-      showToastPopup('기록을 성공적으로 삭제했습니다.');
+      showToastPopup('record_deleted_successfully'.tr());
       Timer(const Duration(milliseconds: 200), () {
         if (scroll.hasClients) toggleBottomNav(scroll);
       });
     }
 
     void errorCallback() {
-      showToastPopup('기록 삭제에 실패했습니다.');
+      showToastPopup('record_deletion_failed'.tr());
     }
 
-    ArchiveService.deleteArchiveItem(id, successCallback: successCallback, errorCallback: errorCallback);
+    ArchiveService.deleteArchiveItem(id,
+        successCallback: successCallback, errorCallback: errorCallback);
   }
 
   void showConfirmDelete(int id) {
@@ -153,18 +177,20 @@ class ArchiveController extends GetxController with ScrollMixin {
   Future<void> initialiseLocations() async {
     locations.value = RxList.empty();
     List<dynamic> locationArray = List.empty(growable: true);
-    List<NLatLng> coordinates = List.empty(growable: true);
-    NLatLng coordinate;
+    List<LatLng> coordinates = List.empty(growable: true);
+    LatLng coordinate;
     if (selectedItem.value.locationsStr != null) {
       locationArray = json.decode(selectedItem.value.locationsStr!);
     } else {
       locationArray = await getLocationsData(selectedItem.value.id!);
     }
     for (List location in locationArray) {
-      if (location[0].runtimeType == String || location[1].runtimeType == String) {
-        coordinate = NLatLng(double.parse(location[0]), double.parse(location[1]));
+      if (location[0].runtimeType == String ||
+          location[1].runtimeType == String) {
+        coordinate =
+            LatLng(double.parse(location[0]), double.parse(location[1]));
       } else {
-        coordinate = NLatLng(location[0], location[1]);
+        coordinate = LatLng(location[0], location[1]);
       }
 
       coordinates.add(coordinate);

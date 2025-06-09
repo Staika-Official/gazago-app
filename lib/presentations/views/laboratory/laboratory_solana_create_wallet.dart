@@ -4,7 +4,8 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class LaboratorySolanaCreateWallet extends StatelessWidget {
   const LaboratorySolanaCreateWallet({super.key});
@@ -14,7 +15,7 @@ class LaboratorySolanaCreateWallet extends StatelessWidget {
     SolanaController solanaController = Get.put(SolanaController());
 
     return DefaultContainer(
-      titleText: '솔라나 지갑 생성',
+      titleText: 'create_solana_wallet'.tr(),
       backgroundColor: subBg01Color,
       headerBackgroundColor: const Color(0xFF23232D),
       child: Obx(() {
@@ -26,7 +27,7 @@ class LaboratorySolanaCreateWallet extends StatelessWidget {
               children: [
                 GazagoButton(
                   onTap: () => solanaController.createWallet(),
-                  buttonText: '지갑 생성 하기',
+                  buttonText: 'create_wallet_1'.tr(),
                   buttonColor: skyBlueColor,
                 ),
                 const Padding(padding: EdgeInsets.all(10.0)),

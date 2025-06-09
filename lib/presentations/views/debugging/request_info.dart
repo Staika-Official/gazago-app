@@ -5,7 +5,8 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class RequestInfo extends StatelessWidget {
@@ -14,7 +15,8 @@ class RequestInfo extends StatelessWidget {
   List<Widget> renderRequestLogList(List<dynamic> logs) {
     return logs.isNotEmpty
         ? logs
-            .map((log) => !log['path'].contains('exercise') || log['path'].contains('records')
+            .map((log) => !log['path'].contains('exercise') ||
+                    log['path'].contains('records')
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: StyledText(
@@ -45,29 +47,30 @@ class RequestInfo extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GazagoButton(
-                      onTap: () => debuggingController.handleInitLogs('requestLogs'),
-                      buttonText: '초기화',
+                      onTap: () =>
+                          debuggingController.handleInitLogs('requestLogs'),
+                      buttonText: 'reset'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                   ),
                   Expanded(
                     child: GazagoButton(
                       onTap: () => debuggingController.onDisableDebuggingMode(),
-                      buttonText: '멈춤',
+                      buttonText: 'pause'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                   ),
                   Expanded(
                     child: GazagoButton(
                       onTap: () => debuggingController.onEnableDebuggingMode(),
-                      buttonText: '시작',
+                      buttonText: 'start'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                   ),
                   // Expanded(
                   //   child: GazagoButton(
                   //     onTap: () => null,
-                  //     buttonText: '전송',
+                  //     buttonText: 'send'.tr(),
                   //     buttonColor: skyBlueColor,
                   //   ),
                   // )
@@ -78,7 +81,8 @@ class RequestInfo extends StatelessWidget {
                 builder: (context, box, widget) {
                   return Column(
                     children: [
-                      ...renderRequestLogList(box.get(HiveKey.requestLogs.name) ?? []),
+                      ...renderRequestLogList(
+                          box.get(HiveKey.requestLogs.name) ?? []),
                     ],
                   );
                 },

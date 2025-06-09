@@ -15,16 +15,18 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class DebuggingController extends GetxController {
   int doubleTouchCount = 0;
   final RxBool isShowDebuggingMenu = RxBool(false);
   final RxBool isLabPasswordConfirmed = RxBool(false);
   final TextEditingController labPasswordController = TextEditingController();
-  final TextEditingController endPointPasswordController = TextEditingController();
+  final TextEditingController endPointPasswordController =
+      TextEditingController();
   final Rx<EndPointType> endPointType = Rx(EndPointType.stage);
   final RxBool allowFakeGps = RxBool(false);
   final RxString regionLanguage = RxString('');
@@ -33,17 +35,23 @@ class DebuggingController extends GetxController {
   RxString get shareUrl {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
     if (selectedChallenge.value == null) {
-      return RxString('공유할 챌린지를 선택해주세요');
+      return RxString('select_challenge_to_share'.tr());
     } else {
-      return RxString(Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', selectedChallenge.value!.id.toString())}&inviteId=$userId").toString());
+      return RxString(Uri.parse(
+              "https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', selectedChallenge.value!.id.toString())}&inviteId=$userId")
+          .toString());
     }
   }
 
   @override
   void onInit() async {
-    isShowDebuggingMenu.value = HiveStore.load(key: HiveKey.isDebuggingMode.name);
-    endPointType.value = F.baseUrl.contains('api.stage') ? EndPointType.stage : EndPointType.prod;
-    allowFakeGps.value = HiveStore.load(key: HiveKey.allowFakeGpsTest.name) ?? false;
+    isShowDebuggingMenu.value =
+        HiveStore.load(key: HiveKey.isDebuggingMode.name);
+    endPointType.value = F.baseUrl.contains('api.stage')
+        ? EndPointType.stage
+        : EndPointType.prod;
+    allowFakeGps.value =
+        HiveStore.load(key: HiveKey.allowFakeGpsTest.name) ?? false;
     regionLanguage.value = HiveStore.load(key: HiveKey.serviceLanguage.name);
     getChallengeList();
     super.onInit();
@@ -55,7 +63,7 @@ class DebuggingController extends GetxController {
       Directory tempDir = await getTemporaryDirectory();
       if (tempDir.existsSync()) {
         tempDir.deleteSync(recursive: true);
-        showToastPopup('앱 캐시가 삭제 되었습니다.');
+        showToastPopup('app_cache_cleared'.tr());
       }
     }
     if (doubleTouchCount > 4) {
@@ -100,33 +108,36 @@ class DebuggingController extends GetxController {
       },
       errorCallback: () {
         isLabPasswordConfirmed.value = false;
-        // showToastPopup('비밀번호가 틀렸습니다.');
+        // showToastPopup('incorrect_password'.tr());
       },
     );
   }
 
   Future<bool> verifyEndPointPassword() async {
     bool passwordVerified = false;
-    await UaaService.requestLabSignIn(endPointPasswordController.text, successCallback: (AccessTokenModel token) {
+    await UaaService.requestLabSignIn(endPointPasswordController.text,
+        successCallback: (AccessTokenModel token) {
       passwordVerified = true;
       HiveStore.save(key: HiveKey.accessToken.name, value: token.accessToken);
       HiveStore.save(key: HiveKey.refreshToken.name, value: token.refreshToken);
     }, errorCallback: () {
       passwordVerified = false;
-      // showToastPopup('비밀번호가 틀렸습니다.');
+      // showToastPopup('incorrect_password'.tr());
     });
     Get.back();
     return passwordVerified;
   }
 
   void setEndPoint(EndPointType val) async {
-    if (F.isDev && val != EndPointType.stage || !F.isDev && val != EndPointType.prod) {
-      String savedEndPoint = HiveStore.load(key: HiveKey.endPointType.name) ?? (F.isDev ? EndPointType.stage.name : EndPointType.prod.name);
+    if (F.isDev && val != EndPointType.stage ||
+        !F.isDev && val != EndPointType.prod) {
+      String savedEndPoint = HiveStore.load(key: HiveKey.endPointType.name) ??
+          (F.isDev ? EndPointType.stage.name : EndPointType.prod.name);
       HiveStore.save(key: HiveKey.endPointType.name, value: val.name);
       bool isPasswordConfirmed = await verifyEndPointPasswordAlert(this);
       if (isPasswordConfirmed) {
         endPointType.value = val;
-        showToastPopup('2초 후 로딩화면으로 이동합니다.');
+        showToastPopup('redirect_to_loading_screen'.tr());
         Timer(const Duration(seconds: 2), () async {
           await Get.put(LoginController()).getAccountInfo();
           Get.offAllNamed(Routes.loading);
@@ -149,12 +160,11 @@ class DebuggingController extends GetxController {
   void setRegionLanguage(String val) {
     regionLanguage.value = val;
     HiveStore.save(key: HiveKey.serviceLanguage.name, value: val);
-
-
   }
 
   Future<void> getChallengeList() async {
-    await ActivityService.getNewChallenges(successCallback: (List<NewChallengeModel> data) {
+    await ActivityService.getNewChallenges(
+        successCallback: (List<NewChallengeModel> data) {
       challengesList.addAll(data);
     });
   }
@@ -164,17 +174,28 @@ class DebuggingController extends GetxController {
   }
 
   Future<void> shareChallenge() async {
-    bool isKakaoTalkSharingAvailable = await ShareClient.instance.isKakaoTalkSharingAvailable();
+    bool isKakaoTalkSharingAvailable =
+        await ShareClient.instance.isKakaoTalkSharingAvailable();
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
 
     final dynamicLinkParams = DynamicLinkParameters(
-      link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', selectedChallenge.value!.id.toString())}&inviteId=$userId"),
-      uriPrefix: F.isDev ? "https://gazagostage.page.link" : "https://gazago.page.link",
-      androidParameters: AndroidParameters(packageName: F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo"),
-      iosParameters: IOSParameters(bundleId: F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo"),
+      link: Uri.parse(
+          "https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', selectedChallenge.value!.id.toString())}&inviteId=$userId"),
+      uriPrefix: F.isDev
+          ? "https://gazagostage.page.link"
+          : "https://gazago.page.link",
+      androidParameters: AndroidParameters(
+          packageName: F.isDev
+              ? "kr.co.eztechfin.gazaGo.dev"
+              : "kr.co.eztechfin.gazaGo"),
+      iosParameters: IOSParameters(
+          bundleId: F.isDev
+              ? "kr.co.eztechfin.gazaGo.dev"
+              : "kr.co.eztechfin.gazaGo"),
     );
 
-    final dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
+    final dynamicLink =
+        await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams);
 
     final FeedTemplate defaultFeed = FeedTemplate(
         objectType: 'feed',
@@ -187,17 +208,18 @@ class DebuggingController extends GetxController {
             mobileWebUrl: dynamicLink.shortUrl,
           ),
         ),
-        buttonTitle: '가자고~!');
+        buttonTitle: 'gazago_exclamation'.tr());
 
     if (isKakaoTalkSharingAvailable) {
       try {
-        Uri uri = await ShareClient.instance.shareDefault(template: defaultFeed, serverCallbackArgs: {
+        Uri uri = await ShareClient.instance
+            .shareDefault(template: defaultFeed, serverCallbackArgs: {
           'userId': '${HiveStore.loadString(key: HiveKey.userId.name)}',
           'challengeId': '${selectedChallenge.value!.id}',
         });
         await ShareClient.instance.launchKakaoTalk(uri);
       } catch (error) {
-        showToastPopup('공유 실패');
+        showToastPopup('sharing_failed'.tr());
       }
     } else {
       // try {
@@ -206,9 +228,9 @@ class DebuggingController extends GetxController {
       //   Future.delayed(const Duration(seconds: 2));
       //   askSharedCompleteDialog(this);
       // } catch (error) {
-      //   showToastPopup('공유 실패');
+      //   showToastPopup('sharing_failed'.tr());
       // }
-      showToastPopup('카카오톡을 설치해주세요');
+      showToastPopup('install_kakao_talk'.tr());
     }
   }
 }

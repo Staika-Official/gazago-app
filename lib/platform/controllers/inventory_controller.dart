@@ -28,13 +28,22 @@ import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/nft_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:get_event_bus/get_event_bus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class InventoryController extends GetxController with LinearProgressMixin, InventoryMixin, ActivityMixin, ConsumerItemMixin, GetTickerProviderStateMixin {
+class InventoryController extends GetxController
+    with
+        LinearProgressMixin,
+        InventoryMixin,
+        ActivityMixin,
+        ConsumerItemMixin,
+        GetTickerProviderStateMixin {
   final WalletMasterController walletMasterController = Get.find();
-  ActivityController activityController = Get.isRegistered<ActivityController>() ? Get.find<ActivityController>() : Get.put(ActivityController());
+  ActivityController activityController = Get.isRegistered<ActivityController>()
+      ? Get.find<ActivityController>()
+      : Get.put(ActivityController());
   late AnimationController progressController;
   final RxDouble viewportWidth = RxDouble(0);
   final RxDouble listHeight = RxDouble(0);
@@ -61,8 +70,10 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   final RxList<InventoryItemModel> equippedItemList = RxList.empty();
 
   ScrollController singleChildScrollController = ScrollController();
-  ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
-  ScrollController badgeScrollController = ScrollController(keepScrollOffset: false);
+  ScrollController itemScrollController =
+      ScrollController(keepScrollOffset: false);
+  ScrollController badgeScrollController =
+      ScrollController(keepScrollOffset: false);
 
   final Rxn isConsumerItemUsing = Rxn(null);
   final RxBool requestDetailFromWallet = RxBool(false);
@@ -133,53 +144,84 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   );
 
   Rxn get equippedTop {
-    return Rxn(equippedItemList.firstWhereOrNull((element) => element.itemCategory == 'TOP'));
+    return Rxn(equippedItemList
+        .firstWhereOrNull((element) => element.itemCategory == 'TOP'));
   }
 
   Rxn get equippedShoe {
-    return Rxn(equippedItemList.firstWhereOrNull((element) => element.itemCategory == 'SHOES'));
+    return Rxn(equippedItemList
+        .firstWhereOrNull((element) => element.itemCategory == 'SHOES'));
   }
 
   Rxn get equippedAccessory {
-    return Rxn(equippedItemList.firstWhereOrNull((element) => element.itemCategory == 'ACCESSORY'));
+    return Rxn(equippedItemList
+        .firstWhereOrNull((element) => element.itemCategory == 'ACCESSORY'));
   }
 
   Rxn get equippedBottom {
-    return Rxn(equippedItemList.firstWhereOrNull((element) => element.itemCategory == 'BOTTOM'));
+    return Rxn(equippedItemList
+        .firstWhereOrNull((element) => element.itemCategory == 'BOTTOM'));
   }
 
   Rxn get equippedHat {
-    return Rxn(equippedItemList.firstWhereOrNull((element) => element.itemCategory == 'HAT'));
+    return Rxn(equippedItemList
+        .firstWhereOrNull((element) => element.itemCategory == 'HAT'));
   }
 
   RxMap<String, List<InventoryItemModel>> get allItems {
     return RxMap(
       {
         ItemType.all.name: myAllItems,
-        ItemType.top.name: myAllItems.where((item) => item.itemCategory == 'TOP').toList(),
-        ItemType.shoes.name: myAllItems.where((item) => item.itemCategory == 'SHOES').toList(),
-        ItemType.accessory.name: myAllItems.where((item) => item.itemCategory == 'ACCESSORY').toList(),
-        ItemType.bottom.name: myAllItems.where((item) => item.itemCategory == 'BOTTOM').toList(),
-        ItemType.hat.name: myAllItems.where((item) => item.itemCategory == 'HAT').toList(),
-        ItemType.disposable.name: myAllItems.where((item) => item.itemCategory == 'DISPOSABLE').toList(),
+        ItemType.top.name:
+            myAllItems.where((item) => item.itemCategory == 'TOP').toList(),
+        ItemType.shoes.name:
+            myAllItems.where((item) => item.itemCategory == 'SHOES').toList(),
+        ItemType.accessory.name: myAllItems
+            .where((item) => item.itemCategory == 'ACCESSORY')
+            .toList(),
+        ItemType.bottom.name:
+            myAllItems.where((item) => item.itemCategory == 'BOTTOM').toList(),
+        ItemType.hat.name:
+            myAllItems.where((item) => item.itemCategory == 'HAT').toList(),
+        ItemType.disposable.name: myAllItems
+            .where((item) => item.itemCategory == 'DISPOSABLE')
+            .toList(),
       },
     );
   }
 
   double get equippedAbrasionRate {
-    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + (element.itemStat != null ? element.itemStat!.durability! : 0));
+    return equippedItemList.fold(
+        0.0,
+        (summedValue, element) =>
+            summedValue +
+            (element.itemStat != null ? element.itemStat!.durability! : 0));
   }
 
   double get equippedRewardRate {
-    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + (element.itemStat != null ? element.itemStat!.goProfit! : 0)) + equippedBadge.value.badge.rewardRate;
+    return equippedItemList.fold(
+            0.0,
+            (summedValue, element) =>
+                summedValue +
+                (element.itemStat != null ? element.itemStat!.goProfit! : 0)) +
+        equippedBadge.value.badge.rewardRate;
   }
 
   double get equippedStaminaReduceRate {
-    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + (element.itemStat != null ? element.itemStat!.stamina! : 0));
+    return equippedItemList.fold(
+        0.0,
+        (summedValue, element) =>
+            summedValue +
+            (element.itemStat != null ? element.itemStat!.stamina! : 0));
   }
 
   double get equippedLuckRate {
-    return equippedItemList.fold(0.0, (summedValue, element) => summedValue + (element.itemStat != null ? element.itemStat!.luck! : 0)) + equippedBadge.value.badge.luckRate;
+    return equippedItemList.fold(
+            0.0,
+            (summedValue, element) =>
+                summedValue +
+                (element.itemStat != null ? element.itemStat!.luck! : 0)) +
+        equippedBadge.value.badge.luckRate;
   }
 
   final RxString itemGoMax = RxString('0');
@@ -209,14 +251,17 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   @override
   void onReady() {
-    equippedInfoHeight.value = equippedInfoKey.currentContext != null ? equippedInfoKey.currentContext!.size!.height : 0;
+    equippedInfoHeight.value = equippedInfoKey.currentContext != null
+        ? equippedInfoKey.currentContext!.size!.height
+        : 0;
     isLoaded.value = true;
     super.onReady();
   }
 
   @override
   void onClose() {
-    singleChildScrollController.removeListener(() => toggleBottomNav(singleChildScrollController));
+    singleChildScrollController
+        .removeListener(() => toggleBottomNav(singleChildScrollController));
     super.onClose();
   }
 
@@ -229,7 +274,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     await getUserBadgesList();
     singleChildScrollController.addListener(() {
       toggleBottomNav(singleChildScrollController);
-      if (singleChildScrollController.position.pixels == singleChildScrollController.position.maxScrollExtent) {
+      if (singleChildScrollController.position.pixels ==
+          singleChildScrollController.position.maxScrollExtent) {
         onEndScroll();
       }
     });
@@ -238,12 +284,18 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void getItemMaxValue() {
-    itemGoMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_go_max');
-    itemDurabilityMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_durability_max');
-    itemHealthMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_health_max');
-    itemLuckMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_luck_max');
-    badgeGoMax.value = getConfig(dataType: ConfigType.string, configKey: 'badge_go_max');
-    badgeLuckMax.value = getConfig(dataType: ConfigType.string, configKey: 'badge_luck_max');
+    itemGoMax.value =
+        getConfig(dataType: ConfigType.string, configKey: 'item_go_max');
+    itemDurabilityMax.value = getConfig(
+        dataType: ConfigType.string, configKey: 'item_durability_max');
+    itemHealthMax.value =
+        getConfig(dataType: ConfigType.string, configKey: 'item_health_max');
+    itemLuckMax.value =
+        getConfig(dataType: ConfigType.string, configKey: 'item_luck_max');
+    badgeGoMax.value =
+        getConfig(dataType: ConfigType.string, configKey: 'badge_go_max');
+    badgeLuckMax.value =
+        getConfig(dataType: ConfigType.string, configKey: 'badge_luck_max');
   }
 
   Future<void> refreshController() async {
@@ -263,7 +315,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     if (Get.previousRoute == Routes.challengeDetail) {
       Get.back();
     } else {
-      Get.toNamed(Routes.challengeDetail.replaceAll(':id', selectedItem.value.challenge!.challengeId.toString()));
+      Get.toNamed(Routes.challengeDetail.replaceAll(
+          ':id', selectedItem.value.challenge!.challengeId.toString()));
     }
   }
 
@@ -297,8 +350,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void initStats() {
     statList.value = [
-      StatModel(name: '이동 보상율', currentStat: 78),
-      StatModel(name: '행운지수율', currentStat: 78),
+      StatModel(name: 'movement_reward_rate'.tr(), currentStat: 78),
+      StatModel(name: 'luck_index_rate'.tr(), currentStat: 78),
     ];
   }
 
@@ -331,7 +384,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   void toBadgeDetail(int id) {
-    selectedBadge.value = userBadgesList.firstWhere((item) => item.badgeId == id);
+    selectedBadge.value =
+        userBadgesList.firstWhere((item) => item.badgeId == id);
     setGetBadgeDate(id);
     Get.toNamed(Routes.badgeDetail);
   }
@@ -344,7 +398,9 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   }
 
   Future<void> getUserAllItems() async {
-    Get.isRegistered<InventoryHomeController>() ? Get.find<InventoryHomeController>() : Get.put(InventoryHomeController());
+    Get.isRegistered<InventoryHomeController>()
+        ? Get.find<InventoryHomeController>()
+        : Get.put(InventoryHomeController());
     dataGetLoading.value = true;
     await ItemService.getAllMyItems(
       page.value,
@@ -356,13 +412,17 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         myAllItems.value = allItems;
         getUniqueItemList(allItems);
         calculateTabHeight(
-            Get.find<InventoryHomeController>().tabController.index, Get.find<InventoryHomeController>().itemSubTabList[Get.find<InventoryHomeController>().subTabController.index]['itemType']!);
+            Get.find<InventoryHomeController>().tabController.index,
+            Get.find<InventoryHomeController>().itemSubTabList[
+                    Get.find<InventoryHomeController>().subTabController.index]
+                ['itemType']!);
         dataGetLoading.value = false;
       },
     );
   }
 
-  Future<void> getUserItemsByCategory(List<Map<String, String>> subTabList, int tabIndex) async {
+  Future<void> getUserItemsByCategory(
+      List<Map<String, String>> subTabList, int tabIndex) async {
     String category = subTabList[tabIndex]['itemType']!.toUpperCase();
 
     dataGetLoading.value = true;
@@ -401,13 +461,16 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
           });
         }
 
-        currentStat.value = equippedItems.items.firstWhere((element) => element.itemCategory == 'SHOES').durability;
+        currentStat.value = equippedItems.items
+            .firstWhere((element) => element.itemCategory == 'SHOES')
+            .durability;
       },
     );
   }
 
   void checkEquippedInventoryChallengeItem(int itemId, String category) {
-    InventoryItemModel? filteredItem = equippedItemList.firstWhereOrNull((element) => element.itemCategory == category);
+    InventoryItemModel? filteredItem = equippedItemList
+        .firstWhereOrNull((element) => element.itemCategory == category);
     if (filteredItem != null) {
       if (filteredItem.challengeItem != null && filteredItem.challengeItem!) {
         checkChallengeItemEquip(this, itemId);
@@ -432,8 +495,11 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       itemId,
       successCallback: (InventoryItemModel item) async {
         selectedItem.value = item;
-        int allItemsPrevEquippedIndex = myAllItems.indexWhere((element) => element.itemCategory == selectedItem.value.itemCategory && element.equipped!);
-        int allItemsIndex = myAllItems.indexWhere((element) => element.id == item.id);
+        int allItemsPrevEquippedIndex = myAllItems.indexWhere((element) =>
+            element.itemCategory == selectedItem.value.itemCategory &&
+            element.equipped!);
+        int allItemsIndex =
+            myAllItems.indexWhere((element) => element.id == item.id);
         // int equippedIndex = equippedItemList.indexWhere((element) => element.itemCategory == item.itemCategory);
 
         if (allItemsPrevEquippedIndex >= 0) {
@@ -453,7 +519,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         myAllItems.refresh();
         equippedItemList.refresh();
 
-        showToastPopup('아이템이 장착되었습니다.');
+        showToastPopup('item_equipped'.tr());
       },
     );
   }
@@ -471,13 +537,14 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
           });
         }
 
-        showToastPopup('뱃지가 장착되었습니다.');
+        showToastPopup('badge_equipped'.tr());
       },
     );
   }
 
   void setGetBadgeDate(int id) {
-    getBadgeDate.value = userBadgesList.firstWhere((item) => item.badgeId == id).issueEndedTime!;
+    getBadgeDate.value =
+        userBadgesList.firstWhere((item) => item.badgeId == id).issueEndedTime!;
   }
 
   void toSyntheticBadgeDetail(int id) {
@@ -518,7 +585,9 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
     await getMyConsumerItemsByType('REPAIR', isNotEmptyCallback: () {
       targetShoeId.value = id;
       selectedType.value = 'DURABILITY';
-      currentStat.value = id == equippedShoe.value.id ? equippedShoe.value.durability : selectedItem.value.durability;
+      currentStat.value = id == equippedShoe.value.id
+          ? equippedShoe.value.durability
+          : selectedItem.value.durability;
 
       consumerItemUsagePopup(this, context);
     }, isEmptyCallback: () {
@@ -557,7 +626,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void getUniqueItemList(List<InventoryItemModel> targetList) {
     Set<int> itemSet = myAllItems.map((element) => element.id).toSet();
-    List<InventoryItemModel> uniqueItemList = targetList.where((item) => itemSet.add(item.id)).toList();
+    List<InventoryItemModel> uniqueItemList =
+        targetList.where((item) => itemSet.add(item.id)).toList();
     myAllItems.value = [...myAllItems, ...uniqueItemList];
     myAllItems.refresh();
   }
@@ -567,7 +637,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
       int gridCount = viewportWidth.value < 350 ? 2 : 3;
       int rowCount = (listLength / gridCount).ceil();
       double totalHorizontalPadding = (gridCount - 1) * 10 + 40;
-      double itemWidth = (viewportWidth.value - totalHorizontalPadding) / gridCount;
+      double itemWidth =
+          (viewportWidth.value - totalHorizontalPadding) / gridCount;
       double itemHeight = itemWidth * 1.5;
       listHeight.value = itemHeight * rowCount + rowCount * 10 + 70;
     } else {
@@ -592,7 +663,8 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
   void moveToExternalBrowser(linkUrl) async {
     Uri url = Uri.parse(linkUrl!);
     if (await canLaunchUrl(url)) {
-      await ActivityService.fetchChallengeAllianceLinkRecord(selectedItem.value.challenge!.challengeId, linkUrl);
+      await ActivityService.fetchChallengeAllianceLinkRecord(
+          selectedItem.value.challenge!.challengeId, linkUrl);
       await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }
@@ -606,15 +678,21 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
 
   void moveToSolscan(String? tokenAddress) {
     if (tokenAddress != null) {
-      Get.toNamed(Routes.webView, arguments: {'linkUrl': "https://solscan.io/token/${tokenAddress}${F.isDev ? '?cluster=devnet' : ''}"});
+      Get.toNamed(Routes.webView, arguments: {
+        'linkUrl':
+            "https://solscan.io/token/${tokenAddress}${F.isDev ? '?cluster=devnet' : ''}"
+      });
     } else {
-      Get.toNamed(Routes.webView, arguments: {'linkUrl': "https://solscan.io${F.isDev ? '?cluster=devnet' : ''}"});
+      Get.toNamed(Routes.webView, arguments: {
+        'linkUrl': "https://solscan.io${F.isDev ? '?cluster=devnet' : ''}"
+      });
     }
   }
 
-  void confirmSendNftToStaika(InventoryController controller, InventoryItemModel item) {
+  void confirmSendNftToStaika(
+      InventoryController controller, InventoryItemModel item) {
     if (item.nftTokenAddress == null || item.nftTokenAddress == '') {
-      errorBottomSheet('NFT가 민팅 중입니다.\n잠시 후 시도해주세요.');
+      errorBottomSheet('nft_minting'.tr());
       return;
     }
     showSendToStaikaConfirmAlert(controller, item);
@@ -634,7 +712,7 @@ class InventoryController extends GetxController with LinearProgressMixin, Inven
         } else if (error.errorCode == 'NOT_FOUND_WALLET') {
           showStaikaStatusAlert(hasWallet: false);
         } else {
-          errorBottomSheet(error?.errorMessage ?? '에러가 발생했습니다.');
+          errorBottomSheet(error?.errorMessage ?? 'error_occurred_2'.tr());
         }
       },
     );

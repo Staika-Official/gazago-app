@@ -1,22 +1,29 @@
 import 'dart:async';
 
-import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-bool catchSinglePointAbuse(List<NLatLng> locationData) {
+bool catchSinglePointAbuse(List<LatLng> locationData) {
   final double radius = abusingRadius;
   double abuseRatio = abusingInsideRadiusRatio;
   double percentageInsideRadius = 0;
-  NLatLng startingPosition;
+  LatLng startingPosition;
 
   if (locationData.length > 1) {
     startingPosition = locationData.first;
-    final int countInsideRadius =
-        locationData.skip(1).where((location) => Geolocator.distanceBetween(location.latitude, location.longitude, startingPosition.latitude, startingPosition.longitude) <= radius).length;
-    percentageInsideRadius = (countInsideRadius / (locationData.length - 1)) * 100;
+    final int countInsideRadius = locationData
+        .skip(1)
+        .where((location) =>
+            Geolocator.distanceBetween(location.latitude, location.longitude,
+                startingPosition.latitude, startingPosition.longitude) <=
+            radius)
+        .length;
+    percentageInsideRadius =
+        (countInsideRadius / (locationData.length - 1)) * 100;
   }
   return percentageInsideRadius > abuseRatio;
 }
@@ -50,9 +57,14 @@ Future<List<dynamic>> getLocationsData(int exerciseId) async {
   return completer.future;
 }
 
-void filterCoordinates(NLatLng lastPosition, NLatLng newPosition, int exerciseId) {
-  double distance = Geolocator.distanceBetween(lastPosition.latitude, lastPosition.longitude, newPosition.latitude, newPosition.longitude);
+void filterCoordinates(
+    LatLng lastPosition, LatLng newPosition, int exerciseId) {
+  double distance = Geolocator.distanceBetween(lastPosition.latitude,
+      lastPosition.longitude, newPosition.latitude, newPosition.longitude);
   if (distance > 10) {
-    MemberService.reportAbuse(abusingType: "EXERCISE", exerciseId: exerciseId, description: '직전 좌표와 10 미터 이상 차이가 납니다.');
+    MemberService.reportAbuse(
+        abusingType: "EXERCISE",
+        exerciseId: exerciseId,
+        description: 'large_coordinate_difference'.tr());
   }
 }

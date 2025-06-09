@@ -13,13 +13,15 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as sp;
 
 class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppbar({super.key});
 
-  List<Widget> renderWalletItems(WalletMasterController walletMasterController) {
+  List<Widget> renderWalletItems(
+      WalletMasterController walletMasterController) {
     return walletMasterController.spendingTokenUiList.map((token) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 6.sp),
@@ -29,11 +31,11 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
               radius: 11.sp,
               foregroundImage: token.logoUrl != '' && token.logoUrl != null
                   ? CachedNetworkImageProvider(
-                token.logoUrl!,
-                headers: imageNetworkHeader,
-
-              )
-                  : sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                      token.logoUrl!,
+                      headers: imageNetworkHeader,
+                    )
+                  : sp.Svg('assets/images/common/ico_token_tik.svg')
+                      as ImageProvider,
             ),
             Padding(
               padding: EdgeInsets.only(left: 4.sp),
@@ -42,16 +44,16 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
-                      token.symbol! == 'STIK' ? formatDecimalPlaces(double.parse(token.uiAmountString!), 2, isAutoDecimal: true) : formatDecimalPlaces(double.parse(token.uiAmountString!), 0),
-                      style: AppTextStyleData
-                          .regular()
-                          .koBodyMediumSm
-                          .copyWith(
-                        color: Colors.white,
-                        fontSize: 12.sp,
-
-                      )
-                  ),
+                      token.symbol! == 'STIK'
+                          ? formatDecimalPlaces(
+                              double.parse(token.uiAmountString!), 2,
+                              isAutoDecimal: true)
+                          : formatDecimalPlaces(
+                              double.parse(token.uiAmountString!), 0),
+                      style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                            color: Colors.white,
+                            fontSize: 12.sp,
+                          )),
                 ),
               ),
             ),
@@ -67,12 +69,13 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     NoticePopupController controller = Get.put(NoticePopupController());
-    WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
+    WalletMasterController walletMasterController =
+        Get.isRegistered<WalletMasterController>()
+            ? Get.find<WalletMasterController>()
+            : Get.put(WalletMasterController());
 
     return AppBar(
-      backgroundColor: AppColorData
-          .regular()
-          .colorBgPrimary,
+      backgroundColor: AppColorData.regular().colorBgPrimary,
       bottomOpacity: 0.0,
       elevation: 0.0,
       automaticallyImplyLeading: false,
@@ -84,7 +87,10 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
               focusColor: Colors.transparent,
               highlightColor: Colors.transparent,
               splashColor: Colors.transparent,
-              onTap: () =>  walletMasterController.isWalletGetLoading.value == true ? null : walletMasterController.getSpendingWalletBalances(),
+              onTap: () =>
+                  walletMasterController.isWalletGetLoading.value == true
+                      ? null
+                      : walletMasterController.getSpendingWalletBalances(),
               child: Container(
                 decoration: BoxDecoration(
                   color: popupBgColor,
@@ -95,7 +101,6 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(20),
                   ),
-
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(
@@ -108,65 +113,63 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                       left: 8.sp,
                       right: 8.sp,
                     ),
-                    child: walletMasterController.spendingTokens.value.isEmpty ?
-                    Row(
-                      children: [
-                        Stack(children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 15.0.sp),
-                            child: iconHeaderStik,
-                          ),
-                          iconHeaderTik
-                        ]),
-                        walletMasterController.isWalletGetLoading.value == true ?
-                        Padding(
-                          padding: EdgeInsets.only(left:4.0.sp, right: 3.sp),
-                          child: Text(
-                            '지갑 불러오는중...',
-                            style: AppTextStyleData
-                                .regular()
-                                .koBodyMediumMd
-                                .copyWith(
-                              color: AppColorData
-                                  .regular()
-                                  .colorTextPrimary,
-
-                            ),
-                          ),
-                        ) : Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(left:4.0.sp),
-                              child: Text(
-                                '지갑 다시 불러오기',
-                                style: AppTextStyleData
-                                    .regular()
-                                    .koBodyMediumMd
-                                    .copyWith(
-                                  color: AppColorData
-                                      .regular()
-                                      .colorTextPrimary,
-
+                    child: walletMasterController.spendingTokens.value.isEmpty
+                        ? Row(
+                            children: [
+                              Stack(children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: 15.0.sp),
+                                  child: iconHeaderStik,
                                 ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left:4.0.sp, right: 0.0.sp),
-                              child: iconHeaderRefresh,
-                            )
-                          ],
-                        ),
-
-                      ],
-                    )
+                                iconHeaderTik
+                              ]),
+                              walletMasterController.isWalletGetLoading.value ==
+                                      true
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 4.0.sp, right: 3.sp),
+                                      child: Text(
+                                        'loading_wallet'.tr(),
+                                        style: AppTextStyleData.regular()
+                                            .koBodyMediumMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorTextPrimary,
+                                            ),
+                                      ),
+                                    )
+                                  : Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(left: 4.0.sp),
+                                          child: Text(
+                                            'reload_wallet'.tr(),
+                                            style: AppTextStyleData.regular()
+                                                .koBodyMediumMd
+                                                .copyWith(
+                                                  color: AppColorData.regular()
+                                                      .colorTextPrimary,
+                                                ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 4.0.sp, right: 0.0.sp),
+                                          child: iconHeaderRefresh,
+                                        )
+                                      ],
+                                    ),
+                            ],
+                          )
                         : InkWell(
-                      onTap: () => walletMasterController.moveToWallet(),
-                      child: Row(
-                        children: [
-                          ...renderWalletItems(walletMasterController),
-                        ],
-                      ),
-                    ),
+                            onTap: () => walletMasterController.moveToWallet(),
+                            child: Row(
+                              children: [
+                                ...renderWalletItems(walletMasterController),
+                              ],
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -178,7 +181,7 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                 Stack(
                   children: [
                     IconButton(
-                      padding: EdgeInsets.symmetric(horizontal:9.sp),
+                      padding: EdgeInsets.symmetric(horizontal: 9.sp),
                       onPressed: () => controller.moveToNotificationsListPage(),
                       icon: iconHeaderBell,
                       splashRadius: 15.sp,
@@ -190,24 +193,23 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                     Obx(() {
                       return controller.hasNewNotice.value
                           ? Positioned(
-                        top: 12.sp,
-                        right: 12.sp,
-                        child: Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: const Color(0xffFF1414),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      )
+                              top: 12.sp,
+                              right: 12.sp,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xffFF1414),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            )
                           : Container();
                     })
                   ],
                 ),
-
                 IconButton(
-                  padding: EdgeInsets.symmetric(horizontal:9.sp),
+                  padding: EdgeInsets.symmetric(horizontal: 9.sp),
                   onPressed: () {
                     Get.toNamed(Routes.preferences);
                     Adjust.trackEvent(AdjustEvent('j66t7q'));

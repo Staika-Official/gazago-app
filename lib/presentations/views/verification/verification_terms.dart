@@ -5,7 +5,8 @@ import 'package:gaza_go/platform/controllers/verification_terms_controller.dart'
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class VerificationTerms extends StatelessWidget {
   const VerificationTerms({super.key});
@@ -39,7 +40,9 @@ class VerificationTerms extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             StyledText(
-                              term.isRequired ? '[필수]' : '[선택]',
+                              term.isRequired
+                                  ? 'required'.tr()
+                                  : 'optional'.tr(),
                               fontWeight: 500,
                               fontSize: 16,
                               lineHeight: 24,
@@ -66,7 +69,10 @@ class VerificationTerms extends StatelessWidget {
                         padding: EdgeInsets.only(top: 2.0.sp),
                         child: SizedBox(
                           child: GestureDetector(
-                            onTap: () => Get.toNamed(Routes.term, arguments: {'termType': term.boardType, 'termId': term.id}),
+                            onTap: () => Get.toNamed(Routes.term, arguments: {
+                              'termType': term.boardType,
+                              'termId': term.id
+                            }),
                             child: Icon(
                               Icons.chevron_right,
                               color: deepGrayColor,
@@ -86,7 +92,8 @@ class VerificationTerms extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    VerificationTermsController controller = Get.put(VerificationTermsController());
+    VerificationTermsController controller =
+        Get.put(VerificationTermsController());
 
     return DefaultContainer(
       backgroundColor: subBg01Color,
@@ -114,8 +121,8 @@ class VerificationTerms extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(top: 5.0.sp),
-              child: const StyledText(
-                '본인인증이 필요합니다.',
+              child: StyledText(
+                'verification_required'.tr(),
                 fontSize: 24,
                 lineHeight: 26,
                 fontWeight: 500,
@@ -147,8 +154,8 @@ class VerificationTerms extends StatelessWidget {
                               ),
                         Padding(
                           padding: EdgeInsets.only(left: 12.0.sp),
-                          child: const StyledText(
-                            '필수항목 모두 동의하기',
+                          child: StyledText(
+                            'agree_all_required'.tr(),
                             color: Colors.white,
                             fontWeight: 500,
                             fontSize: 16,
@@ -174,7 +181,8 @@ class VerificationTerms extends StatelessWidget {
               return Container(
                 height: 55.sp,
                 decoration: BoxDecoration(
-                  color: controller.allAgreed.value ? skyBlueColor : popupBgColor,
+                  color:
+                      controller.allAgreed.value ? skyBlueColor : popupBgColor,
                   border: Border.all(width: 2.sp, color: Colors.black),
                   borderRadius: BorderRadius.circular(8.sp),
                   boxShadow: [
@@ -185,16 +193,19 @@ class VerificationTerms extends StatelessWidget {
                   ],
                 ),
                 child: InkWell(
-                  onTap: () => controller.allAgreed.value ? controller.nextStep() : null,
+                  onTap: () =>
+                      controller.allAgreed.value ? controller.nextStep() : null,
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 12.0.sp),
                     child: Center(
                         child: StyledText(
-                      '다음',
+                      'next_action'.tr(),
                       fontSize: 18,
                       lineHeight: 18,
                       fontWeight: 500,
-                      color: controller.allAgreed.value ? Colors.black : deepGrayColor,
+                      color: controller.allAgreed.value
+                          ? Colors.black
+                          : deepGrayColor,
                     )),
                   ),
                 ),

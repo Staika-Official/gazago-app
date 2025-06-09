@@ -6,7 +6,8 @@ import 'package:gaza_go/platform/models/terms_history_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class TermController extends GetxController {
   final RxString platform = RxString('');
@@ -21,7 +22,8 @@ class TermController extends GetxController {
     platform.value = Get.arguments['platform'] ?? 'gazago';
     termType.value = Get.arguments['termType'] ?? '';
     termId.value = Get.arguments['termId'] ?? 0;
-    if (termType.value == 'MARKETING' && Get.previousRoute != Routes.joinTerms) {
+    if (termType.value == 'MARKETING' &&
+        Get.previousRoute != Routes.joinTerms) {
       initMarketingAgreeStatus();
     }
 
@@ -30,7 +32,9 @@ class TermController extends GetxController {
   }
 
   Future<void> getTermInfo() async {
-    await BoardService.getPostListByType(termType.value, platform: platform.value, successCallback: (List<TermItemModel> termItems) {
+    await BoardService.getPostListByType(termType.value,
+        platform: platform.value,
+        successCallback: (List<TermItemModel> termItems) {
       termTitle.value = termItems.first.title!;
       termContent.value = termItems.first.content!;
       termId.value = termItems.first.id!;
@@ -43,8 +47,11 @@ class TermController extends GetxController {
       clientId: platform.value.toUpperCase(),
       successCallback: (memberUserModel) {
         agreeMarketing.value = memberUserModel.marketingChecked;
-        HiveStore.save(key: HiveKey.profileImageUrl.name, value: memberUserModel.profileImageUrl);
-        HiveStore.save(key: HiveKey.nickname.name, value: memberUserModel.nickname);
+        HiveStore.save(
+            key: HiveKey.profileImageUrl.name,
+            value: memberUserModel.profileImageUrl);
+        HiveStore.save(
+            key: HiveKey.nickname.name, value: memberUserModel.nickname);
       },
       errorCallback: (message) {
         showToastPopup(message);
@@ -54,15 +61,21 @@ class TermController extends GetxController {
 
   void toggleSwitch(val, {Function(String)? error}) async {
     agreeMarketing.value = val;
-    await MemberService.fetchTermsAgree([TermsHistoryModel(terms: termTitle.value, postId: termId.value, boardType: termType.value, activated: val, clientId: platform.value.toUpperCase())],
-        successCallback: (effectedCount) async {
+    await MemberService.fetchTermsAgree([
+      TermsHistoryModel(
+          terms: termTitle.value,
+          postId: termId.value,
+          boardType: termType.value,
+          activated: val,
+          clientId: platform.value.toUpperCase())
+    ], successCallback: (effectedCount) async {
       if (agreeMarketing.value) {
-        showToastPopup('마케팅 정보 수신 동의를 하였습니다.');
+        showToastPopup('marketing_info_consent'.tr());
       } else {
-        showToastPopup('마케팅 정보 수신 동의를 철회하였습니다.');
+        showToastPopup('marketing_info_withdrawal'.tr());
       }
     }, errorCallback: () {
-      showToastPopup('마케팅 정보 수신 동의를 실패');
+      showToastPopup('marketing_info_consent_failed'.tr());
       agreeMarketing.value = !val;
     });
     // await _termsUseCase.agreeJoinTerms([TermsHistoryModel(terms: term.value.title, postId: term.value.id, activated: val, boardType: term.value.boardType)], error: error);

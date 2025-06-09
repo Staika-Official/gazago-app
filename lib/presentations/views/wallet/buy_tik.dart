@@ -7,7 +7,8 @@ import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class BuyTik extends StatelessWidget {
   const BuyTik({super.key});
@@ -28,8 +29,8 @@ class BuyTik extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(top: 40.sp, bottom: 22.sp),
-              child: const StyledText(
-                'Taika를 충전하시겠습니까?',
+              child: StyledText(
+                'charge_taika'.tr(),
                 fontSize: 20,
                 fontWeight: 600,
                 lineHeight: 20,
@@ -41,12 +42,14 @@ class BuyTik extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  foregroundImage: controller.tik.value.logoUrl != '' && controller.tik.value.logoUrl != null
+                  foregroundImage: controller.tik.value.logoUrl != '' &&
+                          controller.tik.value.logoUrl != null
                       ? CachedNetworkImageProvider(
                           controller.tik.value.logoUrl!,
                           headers: imageNetworkHeader,
                         )
-                      : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                      : const Svg('assets/images/common/ico_token_tik.svg')
+                          as ImageProvider,
                   radius: 12.5.sp,
                 ),
                 Padding(
@@ -72,16 +75,16 @@ class BuyTik extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(bottom: 20.sp),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         StyledText(
-                          '사용 STIK',
+                          'used_stik'.tr(),
                           fontSize: 18,
                           lineHeight: 18,
                           fontWeight: 500,
                         ),
-                        StyledText(
+                        const StyledText(
                           'STIK',
                           fontSize: 18,
                           lineHeight: 18,
@@ -92,16 +95,16 @@ class BuyTik extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 20.sp),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         StyledText(
-                          '충전 수수료',
+                          'charge_fee'.tr(),
                           fontSize: 18,
                           lineHeight: 18,
                           fontWeight: 500,
                         ),
-                        StyledText(
+                        const StyledText(
                           'text',
                           fontSize: 18,
                           lineHeight: 18,
@@ -112,16 +115,16 @@ class BuyTik extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 20.sp),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         StyledText(
-                          '충전 후 STIK잔액',
+                          'remaining_stik'.tr(),
                           fontSize: 18,
                           lineHeight: 18,
                           fontWeight: 500,
                         ),
-                        StyledText(
+                        const StyledText(
                           'text',
                           fontSize: 18,
                           lineHeight: 18,
@@ -139,17 +142,18 @@ class BuyTik extends StatelessWidget {
               color: const Color(0xff5e5e66),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 25.sp, bottom: 30.sp, left: 30.sp, right: 30.sp),
-              child: const Row(
+              padding: EdgeInsets.only(
+                  top: 25.sp, bottom: 30.sp, left: 30.sp, right: 30.sp),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   StyledText(
-                    '총 충전 TIK',
+                    'total_tik_charged'.tr(),
                     fontSize: 18,
                     lineHeight: 18,
                     fontWeight: 500,
                   ),
-                  Row(
+                  const Row(
                     children: [
                       StyledText(
                         '000',
@@ -168,10 +172,10 @@ class BuyTik extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(
+            SizedBox(
               width: double.infinity,
               child: StyledText(
-                '충전이 완료되면 취소할 수 없습니다.',
+                'cannot_cancel_after_charge'.tr(),
                 color: skyBlueColor,
                 fontSize: 14,
                 fontWeight: 500,
@@ -207,11 +211,11 @@ class BuyTik extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12.sp),
                             child: Padding(
                               padding: EdgeInsets.all(20.sp),
-                              child: const StyledText(
-                                '아니요',
+                              child: StyledText(
+                                'no'.tr(),
                                 fontWeight: 600,
                                 fontSize: 18,
-                                color: Color(0xfffffdfd),
+                                color: const Color(0xfffffdfd),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -219,7 +223,7 @@ class BuyTik extends StatelessWidget {
                         ),
                         // child: ElevatedButton(
                         //   onPressed: () => Get.back(),
-                        //   child: const Text('취소'),
+                        //   child: const Text('cancel'.tr()),
                         // ),
                       ),
                     ),
@@ -241,12 +245,13 @@ class BuyTik extends StatelessWidget {
                         ),
                         child: Ink(
                           child: InkWell(
-                            onTap: () => controller.buyTik(int.parse(controller.buyTikAmount.value)),
+                            onTap: () => controller.buyTik(
+                                int.parse(controller.buyTikAmount.value)),
                             borderRadius: BorderRadius.circular(12.sp),
                             child: Padding(
                               padding: EdgeInsets.all(20.sp),
-                              child: const StyledText(
-                                '네',
+                              child: StyledText(
+                                'yes'.tr(),
                                 fontWeight: 600,
                                 fontSize: 18,
                                 color: Colors.black,
@@ -258,7 +263,7 @@ class BuyTik extends StatelessWidget {
                       ),
                       // child: ElevatedButton(
                       //   onPressed: () => controller.buyTik(int.parse(controller.buyTikAmount.value)),
-                      //   child: const Text('진행'),
+                      //   child: const Text('in_progress_2'.tr()),
                       // ),
                     ),
                   ),
@@ -282,8 +287,8 @@ class BuyTik extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.all(8.0.sp),
-              child: const StyledText(
-                'Taika를 충전하시겠습니까?',
+              child: StyledText(
+                'charge_taika'.tr(),
                 fontSize: 20,
                 lineHeight: 20,
                 fontWeight: 600,
@@ -295,9 +300,11 @@ class BuyTik extends StatelessWidget {
             //   child: Text('100TIK \u2248 \$10'),
             // ),
             Padding(
-              padding: EdgeInsets.only(top: 30.sp, left: 30.sp, right: 30.sp, bottom: 15.sp),
+              padding: EdgeInsets.only(
+                  top: 30.sp, left: 30.sp, right: 30.sp, bottom: 15.sp),
               child: Container(
-                padding: EdgeInsets.only(top: 13.sp, left: 14.sp, right: 14.sp, bottom: 18.sp),
+                padding: EdgeInsets.only(
+                    top: 13.sp, left: 14.sp, right: 14.sp, bottom: 18.sp),
                 decoration: BoxDecoration(
                   color: subBg02Color,
                   borderRadius: BorderRadius.circular(12.sp),
@@ -305,12 +312,14 @@ class BuyTik extends StatelessWidget {
                 child: Column(
                   children: [
                     CircleAvatar(
-                      foregroundImage: controller.tik.value.logoUrl! != '' || controller.tik.value.logoUrl != null
+                      foregroundImage: controller.tik.value.logoUrl! != '' ||
+                              controller.tik.value.logoUrl != null
                           ? CachedNetworkImageProvider(
                               controller.tik.value.logoUrl!,
                               headers: imageNetworkHeader,
                             )
-                          : const Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                          : const Svg('assets/images/common/ico_token_tik.svg')
+                              as ImageProvider,
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 13.sp),
@@ -345,7 +354,8 @@ class BuyTik extends StatelessWidget {
                         autofocus: true,
                         cursorColor: Colors.white,
                         keyboardType: TextInputType.number,
-                        onChanged: (value) => controller.enterBuyTikAmount(value),
+                        onChanged: (value) =>
+                            controller.enterBuyTikAmount(value),
                       ),
                     ),
                   ],
@@ -479,23 +489,23 @@ class BuyTik extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 30.sp, vertical: 20.sp),
               child: Column(
                 children: [
-                  const StyledText(
-                    '* 최소 1,000 TIK부터 충전할 수 있습니다.',
+                  StyledText(
+                    'min_charge_1000_tik'.tr(),
                     fontSize: 12,
                     fontWeight: 400,
                     lineHeight: 14,
                     letterSpacing: -0.5,
-                    color: Color(0xff727380),
+                    color: const Color(0xff727380),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 4.sp),
-                    child: const StyledText(
-                      '* 충전 수수료 30 TIK 제외 후 나머지 금액이 충전됩니다.',
+                    child: StyledText(
+                      'charge_fee_30_tik'.tr(),
                       fontSize: 12,
                       fontWeight: 400,
                       lineHeight: 14,
                       letterSpacing: -0.5,
-                      color: Color(0xff727380),
+                      color: const Color(0xff727380),
                     ),
                   ),
                 ],
@@ -509,14 +519,15 @@ class BuyTik extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Ink(
-                        decoration: const BoxDecoration(color: Color(0xff3E3E4A)),
+                        decoration:
+                            const BoxDecoration(color: Color(0xff3E3E4A)),
                         child: InkWell(
                           onTap: () => Get.back(),
                           child: Padding(
                             padding: EdgeInsets.all(20.sp),
-                            child: const SizedBox(
+                            child: SizedBox(
                               child: StyledText(
-                                '취소',
+                                'cancel'.tr(),
                                 fontSize: 18,
                                 fontWeight: 600,
                                 lineHeight: 18,
@@ -532,12 +543,13 @@ class BuyTik extends StatelessWidget {
                       child: Ink(
                         decoration: const BoxDecoration(color: skyBlueColor),
                         child: InkWell(
-                          onTap: () => controller.showBuyConfirmation(getConfirmationBottomSheet(controller)),
+                          onTap: () => controller.showBuyConfirmation(
+                              getConfirmationBottomSheet(controller)),
                           child: Padding(
                             padding: EdgeInsets.all(20.sp),
-                            child: const SizedBox(
+                            child: SizedBox(
                               child: StyledText(
-                                '충전하기',
+                                'recharge_1'.tr(),
                                 fontSize: 18,
                                 fontWeight: 600,
                                 lineHeight: 18,

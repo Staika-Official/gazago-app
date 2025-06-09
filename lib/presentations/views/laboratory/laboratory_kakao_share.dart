@@ -4,7 +4,8 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class LaboratoryKakaoShare extends StatelessWidget {
   const LaboratoryKakaoShare({super.key});
@@ -26,7 +27,7 @@ class LaboratoryKakaoShare extends StatelessWidget {
     }
 
     return DefaultContainer(
-        titleText: '카톡 공유하기 테스트',
+        titleText: 'kakao_share_test'.tr(),
         child: Center(
           child: Container(
             padding: const EdgeInsets.all(20),
@@ -45,14 +46,16 @@ class LaboratoryKakaoShare extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     child: StyledText(debuggingController.shareUrl.value),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     child: GazagoButton(
                       onTap: () => debuggingController.shareChallenge(),
-                      buttonText: '전송하기',
+                      buttonText: 'submit'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                   ),

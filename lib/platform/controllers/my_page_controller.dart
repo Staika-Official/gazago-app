@@ -14,14 +14,15 @@ import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
+import 'package:easy_localization/easy_localization.dart';
 
 class MyPageController extends GetxController with PreferenceMixin {
   final PreferenceController preferenceController = Get.find();
-  
+
   final ImagePicker _picker = ImagePicker();
   final Rx<XFile?> pickedImage = Rx(null);
   final RxBool isEditMode = RxBool(false);
@@ -32,7 +33,9 @@ class MyPageController extends GetxController with PreferenceMixin {
 
   @override
   void onInit() async {
-    Get.arguments != null ? provider.value = Get.arguments['provider'] : provider.value = '';
+    Get.arguments != null
+        ? provider.value = Get.arguments['provider']
+        : provider.value = '';
 
     await getProfileInfo();
 
@@ -42,13 +45,14 @@ class MyPageController extends GetxController with PreferenceMixin {
   void checkAvailableNicknameChange() {
     if (!profile.value.availableChangeNickname!) {
       focusNode.unfocus();
-      showToastPopup('닉네임 수정 이력이 있어요.\n닉네임은 최초 1회 이후 수정할 수 없어요');
+      showToastPopup('nickname_modification_history'.tr());
       return;
     }
   }
 
   Future<void> modifyMyAccountInfo() async {
-    if (pickedImage.value == null && profile.value.nickname == originalNickname.value) {
+    if (pickedImage.value == null &&
+        profile.value.nickname == originalNickname.value) {
       toggleEditMode();
       return;
     }
@@ -57,7 +61,9 @@ class MyPageController extends GetxController with PreferenceMixin {
 
     if (pickedImage.value != null) {
       String imagePath = pickedImage.value!.path;
-      dio.MultipartFile profileImage = await dio.MultipartFile.fromFile(imagePath, contentType: MediaType('image', imagePath.split('.').last));
+      dio.MultipartFile profileImage = await dio.MultipartFile.fromFile(
+          imagePath,
+          contentType: MediaType('image', imagePath.split('.').last));
       File file = File(imagePath);
 
       await UaaService.fetchUploadImageUrl(
@@ -71,14 +77,16 @@ class MyPageController extends GetxController with PreferenceMixin {
           );
         },
         errorCallback: () {
-          showToastPopup('이미지 업로드에 실패했습니다.');
+          showToastPopup('image_upload_failed'.tr());
           return;
         },
       );
     }
 
-    Uri profileImageUrl = Uri.parse(uploadUrl ?? 'https://image.staika.io/ic_launcher.png');
-    profile.value.profileImageUrl = profileImageUrl.origin + profileImageUrl.path;
+    Uri profileImageUrl =
+        Uri.parse(uploadUrl ?? 'https://image.staika.io/ic_launcher.png');
+    profile.value.profileImageUrl =
+        profileImageUrl.origin + profileImageUrl.path;
 
     final Map<String, String> params = {};
     if (profile.value.nickname != originalNickname.value) {
@@ -93,9 +101,10 @@ class MyPageController extends GetxController with PreferenceMixin {
       params,
       successCallback: (UserAccountModel account) {
         preferenceController.onInit();
-        HiveStore.save(key: HiveKey.profileImageUrl.name, value: account.profileImageUrl);
+        HiveStore.save(
+            key: HiveKey.profileImageUrl.name, value: account.profileImageUrl);
         HiveStore.save(key: HiveKey.nickname.name, value: account.nickname);
-        showToastPopup('수정되었습니다.');
+        showToastPopup('updated'.tr());
         Get.back();
       },
       errorCallback: (ErrorResponseDataModel data) {
@@ -118,13 +127,20 @@ class MyPageController extends GetxController with PreferenceMixin {
   void pickImage() async {
     bool hasPhotoPermission = false;
     ph.PermissionStatus permissionStatus;
-    final AndroidDeviceInfo? androidInfo = Platform.isAndroid ? await DeviceInfoPlugin().androidInfo : null;
-    if (Platform.isAndroid && androidInfo != null && androidInfo.version.sdkInt <= 32) {
+    final AndroidDeviceInfo? androidInfo =
+        Platform.isAndroid ? await DeviceInfoPlugin().androidInfo : null;
+    if (Platform.isAndroid &&
+        androidInfo != null &&
+        androidInfo.version.sdkInt <= 32) {
       permissionStatus = await ph.Permission.storage.status;
     } else {
       permissionStatus = await ph.Permission.photos.status;
     }
-    hasPhotoPermission = [ph.PermissionStatus.granted, ph.PermissionStatus.restricted, ph.PermissionStatus.limited].any((permission) => permission == permissionStatus);
+    hasPhotoPermission = [
+      ph.PermissionStatus.granted,
+      ph.PermissionStatus.restricted,
+      ph.PermissionStatus.limited
+    ].any((permission) => permission == permissionStatus);
     if (!hasPhotoPermission) {
       hasPhotoPermission = await showGalleryPermissionAlert(this);
     }
@@ -141,7 +157,7 @@ class MyPageController extends GetxController with PreferenceMixin {
         double mbSize = await getImageSizeMB(pickedImage.value!);
 
         if (mbSize > 2) {
-          showToastPopup('첨부된 사진의 크기가 너무 큽니다.');
+          showToastPopup('image_too_large'.tr());
           pickedImage.value = null;
         }
       }
@@ -150,13 +166,20 @@ class MyPageController extends GetxController with PreferenceMixin {
 
   Future<bool> requestPhotoPermission() async {
     ph.PermissionStatus permissionStatus;
-    final AndroidDeviceInfo? androidInfo = Platform.isAndroid ? await DeviceInfoPlugin().androidInfo : null;
-    if (Platform.isAndroid && androidInfo != null && androidInfo.version.sdkInt <= 32) {
+    final AndroidDeviceInfo? androidInfo =
+        Platform.isAndroid ? await DeviceInfoPlugin().androidInfo : null;
+    if (Platform.isAndroid &&
+        androidInfo != null &&
+        androidInfo.version.sdkInt <= 32) {
       permissionStatus = await ph.Permission.storage.request();
     } else {
       permissionStatus = await ph.Permission.photos.request();
     }
-    if ([ph.PermissionStatus.granted, ph.PermissionStatus.restricted, ph.PermissionStatus.limited].any((permission) => permission == permissionStatus)) {
+    if ([
+      ph.PermissionStatus.granted,
+      ph.PermissionStatus.restricted,
+      ph.PermissionStatus.limited
+    ].any((permission) => permission == permissionStatus)) {
       return true;
     } else {
       ph.openAppSettings();
@@ -167,7 +190,7 @@ class MyPageController extends GetxController with PreferenceMixin {
   void updateNickName(nickname) {
     if (!profile.value.availableChangeNickname!) {
       nicknameTextController.text = originalNickname.value;
-      showToastPopup('닉네임 수정 이력이 있어요.\n닉네임은 최초 1회 이후 수정할 수 없어요');
+      showToastPopup('nickname_modification_history'.tr());
       return;
     }
     profile.update((profile) {
@@ -194,9 +217,10 @@ class MyPageController extends GetxController with PreferenceMixin {
 
   void validateProfileEdit() {
     focusNode.unfocus();
-    if (profile.value.availableChangeNickname! && profile.value.nickname != originalNickname.value) {
+    if (profile.value.availableChangeNickname! &&
+        profile.value.nickname != originalNickname.value) {
       if (profile.value.nickname!.length < 3) {
-        showToastPopup('닉네임은 3자 이상 입력해주세요.');
+        showToastPopup('nickname_min_length'.tr());
         return;
       }
       showConfirmNicknameChange(this);

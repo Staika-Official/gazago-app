@@ -7,7 +7,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/flavors.dart';
@@ -28,6 +27,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'constants/routes.dart';
 
@@ -42,6 +42,8 @@ import 'constants/routes.dart';
 //
 //   //TODO. message 처리 필요
 // }
+
+const supportedLocales = [Locale('en', 'US'), Locale('ko', 'KR')];
 
 Future<PermissionStatus> requestNotificationPermission() async {
   return await Permission.notification.request();
@@ -71,7 +73,8 @@ Future<void> initializeAdMob() async {
 void getStreamData(snapshot) async {
   print(snapshot.value);
   HiveStore.save(key: HiveKey.serviceStatus.name, value: snapshot.value);
-  if (Get.currentRoute == Routes.login && (Get.isDialogOpen! || Get.isBottomSheetOpen!)) {
+  if (Get.currentRoute == Routes.login &&
+      (Get.isDialogOpen! || Get.isBottomSheetOpen!)) {
     Get.back();
   }
   if (snapshot.value == 2) {
@@ -94,7 +97,8 @@ void getStreamData(snapshot) async {
 }
 
 Future<void> checkInspectionNotice() async {
-  DatabaseReference inspectionNoticeRef = FirebaseDatabase.instance.ref('inspection');
+  DatabaseReference inspectionNoticeRef =
+      FirebaseDatabase.instance.ref('inspection');
   Stream<DatabaseEvent> stream = inspectionNoticeRef.onValue;
   await inspectionNoticeRef.get().then((DataSnapshot snapshot) async {
     getStreamData(snapshot);
@@ -119,22 +123,26 @@ void main() async {
   await runZonedGuarded(() async {
     int isServiceInspection = 0;
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
+    await EasyLocalization.ensureInitialized();
 
-    AdjustConfig adjustConfig = new AdjustConfig('egsa3l7qwj5s', F.isDev ? AdjustEnvironment.sandbox : AdjustEnvironment.production);
+    AdjustConfig adjustConfig = new AdjustConfig('egsa3l7qwj5s',
+        F.isDev ? AdjustEnvironment.sandbox : AdjustEnvironment.production);
     adjustConfig.logLevel = AdjustLogLevel.verbose;
     Adjust.start(adjustConfig);
+
     await Hive.initFlutter();
     HiveStore.registerAdapters();
     await HiveStore.openBox();
     KakaoSdk.init(
-      nativeAppKey: F.isDev ? '930bba5aed33cd931e3f56280a663785' : '2e02e4417b2bc7cdecb41b59d6196206',
+      nativeAppKey: F.isDev
+          ? '930bba5aed33cd931e3f56280a663785'
+          : '2e02e4417b2bc7cdecb41b59d6196206',
     );
     await checkRegion();
     initDebuggingMode();
     await initFirebase();
     await initFirebasePackages();
     await initializeAdMob();
-    await NaverMapSdk.instance.initialize();
     // Geolocation Engine이 2개가 생성되는 문제가 있어서(2개가 생성되면 Foreground 운동측정이 사라지지 않는다). 주석처리
     // 추후에 백그라운드 데이터로 처리가 필요한 경우 다시 고민해보자.
     // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -149,7 +157,12 @@ void main() async {
     await requestNotificationPermission();
     await requestTrackingPermission();
     await checkInspectionNotice();
-    runApp(const MyApp());
+
+    runApp(EasyLocalization(
+        supportedLocales: supportedLocales,
+        path: 'assets/translations',
+        fallbackLocale: const Locale('en', 'US'),
+        child: const MyApp()));
   }, (error, stack) {
     recordCrashlyticsError(error, stack);
   });
@@ -159,7 +172,8 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   Widget build(BuildContext context) {
@@ -191,20 +205,29 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       minTextAdapt: true,
       fontSizeResolver: (fontSize, screenUtil) {
-        return screenUtil.screenWidth < 400 ? FontSizeResolvers.width(fontSize, screenUtil) : fontSize * screenUtil.scaleText;
+        return screenUtil.screenWidth < 400
+            ? FontSizeResolvers.width(fontSize, screenUtil)
+            : fontSize * screenUtil.scaleText;
       },
       builder: (BuildContext context, Widget? child) {
         return GetMaterialApp(
           builder: (context, child) {
             // 시스템 폰트 크기 무시
             return ScrollConfiguration(
-              behavior: const MaterialScrollBehavior().copyWith(overscroll: false),
+              behavior:
+                  const MaterialScrollBehavior().copyWith(overscroll: false),
               child: MediaQuery(
-                data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1)), //텍스트가 시스템 설정에 영향받지 않음
+                data: MediaQuery.of(context).copyWith(
+                    textScaler:
+                        const TextScaler.linear(1)), //텍스트가 시스템 설정에 영향받지 않음
                 child: child!,
               ),
             );
           },
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          fallbackLocale: const Locale('en', 'US'),
           theme: ThemeData(
             fontFamily: 'Pretendard',
             primarySwatch: gazagoColor,
@@ -229,18 +252,6 @@ class MyApp extends StatelessWidget {
               }),
             ),
           ),
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          locale: const Locale.fromSubtags(languageCode: 'ko'),
-          fallbackLocale: const Locale('ko'),
-          supportedLocales: const [
-            Locale.fromSubtags(languageCode: 'ko', countryCode: 'KR'),
-            Locale.fromSubtags(languageCode: 'en', countryCode: 'US'),
-            Locale.fromSubtags(languageCode: 'ja', countryCode: 'JP'),
-          ],
           navigatorObservers: <NavigatorObserver>[observer],
           initialRoute: Routes.login,
           getPages: [...Routes.pages],

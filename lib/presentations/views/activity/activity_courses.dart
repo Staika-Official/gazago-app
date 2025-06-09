@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -14,14 +16,16 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class ActivityChallengeCourses extends StatelessWidget {
   const ActivityChallengeCourses({super.key});
 
   List<Widget> renderCourseList(ActivityController controller) {
     if (controller.doableCoursesByChallenge.isNotEmpty) {
-      return controller.doableCoursesByChallenge.map((ChallengeCourseModel course) {
+      return controller.doableCoursesByChallenge
+          .map((ChallengeCourseModel course) {
         bool isSelected = course.id == controller.selectedCourse.value?.id;
 
         return InkWell(
@@ -33,7 +37,9 @@ class ActivityChallengeCourses extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SvgPicture.asset(
-                  isSelected ? 'assets/images/activity/ico_challenge_checked.svg' : 'assets/images/activity/ico_challenge_unchecked.svg',
+                  isSelected
+                      ? 'assets/images/activity/ico_challenge_checked.svg'
+                      : 'assets/images/activity/ico_challenge_unchecked.svg',
                   width: 16.sp,
                   height: 11.sp,
                 ),
@@ -56,7 +62,7 @@ class ActivityChallengeCourses extends StatelessWidget {
                           ),
                           child: StyledText(
                             controller.getCourseRouteString(course),
-                            // course.startPointName != null ? '시작: ${course.startPointName!} - 도착: ${course.endPointName!}' : course.firstName!,
+                            // course.startPointName != null ? 'start_end_points'.tr('${course.startPointName!}', '${course.endPointName!}') : course.firstName!,
                             fontSize: 14,
                             fontWeight: 500,
                             lineHeight: 18,
@@ -87,26 +93,36 @@ class ActivityChallengeCourses extends StatelessWidget {
           fit: StackFit.expand,
           alignment: Alignment.topCenter,
           children: [
-            NaverMap(
-              onMapReady: (mapController) {
-                controller.challengeMapController = mapController;
-                controller.onChallengeMapCreated();
-                mapController.addOverlayAll(
-                  {
-                    ...renderCircleOverlays(controller.selectedCourse.value),
-                    ...renderMarkers(controller.selectedCourse.value),
-                  },
-                );
-              },
-              options:  NaverMapViewOptions(
-                nightModeEnable: true,
-                tiltGesturesEnable: false,
-                mapType: NMapType.basic,
-                activeLayerGroups: const [NLayerGroup.mountain],
-                initialCameraPosition: NCameraPosition(
-                  target: NLatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
+            Obx(
+              () => GoogleMap(
+                markers: Set.of(controller.drawingMarkers),
+                polylines: Set.of(controller.drawingPolylines),
+                polygons: Set.of(controller.drawingPolygons),
+                circles: Set.of(controller.drawingCircles),
+                mapType: MapType.normal,
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(controller.currentLocation.value.latitude,
+                      controller.currentLocation.value.longitude),
                   zoom: 14,
                 ),
+                gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                  Factory<OneSequenceGestureRecognizer>(
+                    () => EagerGestureRecognizer(),
+                  ),
+                },
+                onMapCreated: (mapController) {
+                  controller.challengeMapController = mapController;
+                  controller.onChallengeMapCreated();
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    controller.addOverlayAll(
+                      {
+                        ...renderCircleOverlays(
+                            controller.selectedCourse.value),
+                        ...renderMarkers(controller.selectedCourse.value),
+                      },
+                    );
+                  });
+                },
               ),
             ),
             Positioned(
@@ -115,22 +131,34 @@ class ActivityChallengeCourses extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(72),
                 child: GestureDetector(
-                  onTap: () => controller.moveToChallengeDetail(controller.selectedChallenge.value!, true),
-                  child: controller.selectedChallenge.value!.thumbnailImageUrl.contains('.svg')
+                  onTap: () => controller.moveToChallengeDetail(
+                      controller.selectedChallenge.value!, true),
+                  child: controller.selectedChallenge.value!.thumbnailImageUrl
+                          .contains('.svg')
                       ? SvgPicture.network(
                           controller.selectedChallenge.value!.thumbnailImageUrl,
                           fit: BoxFit.fitHeight,
                           width: 72.sp,
                           height: 72.sp,
-                          placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
+                          placeholderBuilder: (BuildContext context) =>
+                              const Center(
+                                  child: SizedBox.square(
+                                      dimension: 30,
+                                      child: CircularProgressIndicator(
+                                          color: skyBlueColor))),
                           headers: imageNetworkHeader,
                         )
                       : CachedNetworkImage(
                           fit: BoxFit.fitHeight,
                           width: 72.sp,
                           height: 72.sp,
-                          imageUrl: controller.selectedChallenge.value!.thumbnailImageUrl,
-                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
+                          imageUrl: controller
+                              .selectedChallenge.value!.thumbnailImageUrl,
+                          placeholder: (context, url) => const Center(
+                              child: SizedBox.square(
+                                  dimension: 30,
+                                  child: CircularProgressIndicator(
+                                      color: skyBlueColor))),
                           httpHeaders: imageNetworkHeader,
                         ),
                 ),
@@ -158,7 +186,7 @@ class ActivityChallengeCourses extends StatelessWidget {
                         bottom: 15.sp,
                       ),
                       child: Text(
-                        '도전할 챌린지를 선택해주세요.',
+                        'item_655'.tr(),
                         style: TextStyle(
                           fontSize: 20.sp,
                           fontWeight: FontWeight.w500,
@@ -189,11 +217,17 @@ class ActivityChallengeCourses extends StatelessWidget {
                         onTap: controller.doableCoursesByChallenge.isNotEmpty
                             ? () async {
                                 if (await handleCheckUserVerified()) {
-                                  if (controller.selectedCourse.value != null && controller.selectedChallenge.value != null) {
-                                    ExerciseType type = ExerciseType.values.singleWhere((type) => type.value == controller.selectedChallenge.value?.exerciseTypes[0]);
+                                  if (controller.selectedCourse.value != null &&
+                                      controller.selectedChallenge.value !=
+                                          null) {
+                                    ExerciseType type = ExerciseType.values
+                                        .singleWhere((type) =>
+                                            type.value ==
+                                            controller.selectedChallenge.value
+                                                ?.exerciseTypes[0]);
                                     controller.selectExerciseType(type);
                                   } else {
-                                    showToastPopup('도전할 챌린지를 선택해주세요.');
+                                    showToastPopup('item_655'.tr());
                                   }
                                 } else {
                                   showChallengeNeedVerificationAlert();
@@ -204,7 +238,11 @@ class ActivityChallengeCourses extends StatelessWidget {
                           padding: EdgeInsets.all(20.sp),
                           width: double.infinity.sp,
                           decoration: BoxDecoration(
-                            color: controller.selectedCourse.value != null && controller.doableCoursesByChallenge.isNotEmpty ? skyBlueColor : popupBgColor,
+                            color: controller.selectedCourse.value != null &&
+                                    controller
+                                        .doableCoursesByChallenge.isNotEmpty
+                                ? skyBlueColor
+                                : popupBgColor,
                             borderRadius: BorderRadius.circular(12.sp),
                             border: Border.all(
                               width: 2.sp,
@@ -221,13 +259,17 @@ class ActivityChallengeCourses extends StatelessWidget {
                             ],
                           ),
                           child: Text(
-                            '가자GO',
+                            'gazago_1'.tr(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
                               height: (16 / 18).sp,
-                              color: controller.selectedCourse.value != null && controller.doableCoursesByChallenge.isNotEmpty ? Colors.black : lightGrayColor,
+                              color: controller.selectedCourse.value != null &&
+                                      controller
+                                          .doableCoursesByChallenge.isNotEmpty
+                                  ? Colors.black
+                                  : lightGrayColor,
                             ),
                           ),
                         ),
@@ -251,7 +293,8 @@ class ActivityChallengeCourses extends StatelessWidget {
             Positioned(
               top: 50.sp,
               child: Container(
-                padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
+                padding: EdgeInsets.only(
+                    top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
                 decoration: BoxDecoration(
                   color: popupBgColor,
                   borderRadius: BorderRadius.circular(14.sp),
@@ -265,8 +308,8 @@ class ActivityChallengeCourses extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: const StyledText(
-                  '챌린지 고르기',
+                child: StyledText(
+                  'select_challenge'.tr(),
                   fontSize: 16,
                   fontWeight: 500,
                   lineHeight: 22,

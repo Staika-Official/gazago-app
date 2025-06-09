@@ -9,7 +9,8 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class ActivitySelect extends StatelessWidget {
   const ActivitySelect({super.key});
@@ -42,12 +43,16 @@ class ActivitySelect extends StatelessWidget {
                 child: Obx(() {
                   return InkWell(
                     onTap: controller.doableCourses.isNotEmpty &&
-                            controller.doableCourses.any((course) => course.challengeId == challenge.id) &&
-                            DateTime.now().isAfter(DateTime.parse(challenge.fromDate))
+                            controller.doableCourses.any((course) =>
+                                course.challengeId == challenge.id) &&
+                            DateTime.now()
+                                .isAfter(DateTime.parse(challenge.fromDate))
                         ? () {
                             Get.back();
                             controller.moveToCourseSelection(
-                              course: controller.doableCourses.firstWhere((course) => course.challengeId == challenge.id),
+                              course: controller.doableCourses.firstWhere(
+                                  (course) =>
+                                      course.challengeId == challenge.id),
                               challenge: challenge,
                             );
                           }
@@ -56,7 +61,8 @@ class ActivitySelect extends StatelessWidget {
                           },
                     borderRadius: BorderRadius.circular(14),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 26.sp, vertical: 10.sp),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 26.sp, vertical: 10.sp),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -68,7 +74,13 @@ class ActivitySelect extends StatelessWidget {
                                     fit: BoxFit.fitHeight,
                                     width: 72.sp,
                                     height: 72.sp,
-                                    placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
+                                    placeholderBuilder:
+                                        (BuildContext context) => const Center(
+                                            child: SizedBox.square(
+                                                dimension: 30,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        color: skyBlueColor))),
                                     headers: imageNetworkHeader,
                                   )
                                 : CachedNetworkImage(
@@ -76,7 +88,11 @@ class ActivitySelect extends StatelessWidget {
                                     width: 72.sp,
                                     height: 72.sp,
                                     imageUrl: challenge.thumbnailImageUrl,
-                                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
+                                    placeholder: (context, url) => const Center(
+                                        child: SizedBox.square(
+                                            dimension: 30,
+                                            child: CircularProgressIndicator(
+                                                color: skyBlueColor))),
                                     httpHeaders: imageNetworkHeader,
                                   ),
                           ),
@@ -88,13 +104,16 @@ class ActivitySelect extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 9.sp, vertical: 4.sp),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 9.sp, vertical: 4.sp),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(9.sp),
                                       color: const Color(0xff0E2627),
                                     ),
                                     child: StyledText(
-                                      challenge.challengeType == 'COURSE' ? '코스형 챌린지' : '챌린지',
+                                      challenge.challengeType == 'COURSE'
+                                          ? 'course_type_challenge'.tr()
+                                          : 'challenge'.tr(),
                                       color: skyBlueColor,
                                       fontSize: 10,
                                       fontWeight: 600,
@@ -118,7 +137,8 @@ class ActivitySelect extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10),
                                     child: StyledText(
-                                      challenge.subTitle.replaceAll('\\n', '\n'),
+                                      challenge.subTitle
+                                          .replaceAll('\\n', '\n'),
                                       color: Colors.white,
                                       fontSize: 11,
                                       fontWeight: 600,
@@ -164,7 +184,11 @@ class ActivitySelect extends StatelessWidget {
           children: [
             Align(
               // challengeList가 2개 이상이고, 미래에셋 광고 있을때 20.sp, 없을때 topCenter
-              alignment: controller.challengeList.length > 1 && controller.promotionAdsList.isNotEmpty && controller.promotionAdsList[0].imageUrl != null ? Alignment.topCenter : Alignment.center,
+              alignment: controller.challengeList.length > 1 &&
+                      controller.promotionAdsList.isNotEmpty &&
+                      controller.promotionAdsList[0].imageUrl != null
+                  ? Alignment.topCenter
+                  : Alignment.center,
               child: Padding(
                 padding: EdgeInsets.only(top: 20.0.sp),
                 child: Column(
@@ -174,7 +198,7 @@ class ActivitySelect extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(bottom: 20.sp),
                       child: Text(
-                        '어떤 운동을 할까요?',
+                        'choose_exercise'.tr(),
                         style: TextStyle(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.w700,
@@ -199,10 +223,12 @@ class ActivitySelect extends StatelessWidget {
                         ],
                       ),
                       child: InkWell(
-                        onTap: () => controller.selectExerciseType(ExerciseType.walking),
+                        onTap: () =>
+                            controller.selectExerciseType(ExerciseType.walking),
                         borderRadius: BorderRadius.circular(14),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 26.sp, vertical: 24.sp),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 26.sp, vertical: 24.sp),
                           child: Row(
                             children: [
                               ClipRRect(
@@ -219,23 +245,25 @@ class ActivitySelect extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 9.sp, vertical: 4.sp),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 9.sp, vertical: 4.sp),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(9.sp),
+                                        borderRadius:
+                                            BorderRadius.circular(9.sp),
                                         color: const Color(0xff0E2627),
                                       ),
-                                      child: const StyledText(
-                                        '일반',
-                                        color: Color(0xff2EFF75),
+                                      child: StyledText(
+                                        'general'.tr(),
+                                        color: const Color(0xff2EFF75),
                                         fontSize: 10,
                                         fontWeight: 600,
                                         lineHeight: 10,
                                       ),
                                     ),
-                                    const Padding(
-                                      padding: EdgeInsets.only(top: 9),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 9),
                                       child: StyledText(
-                                        '걷기',
+                                        'walking'.tr(),
                                         color: Colors.black,
                                         fontSize: 19,
                                         fontWeight: 600,
@@ -243,10 +271,10 @@ class ActivitySelect extends StatelessWidget {
                                         letterSpacing: -0.3,
                                       ),
                                     ),
-                                    const Padding(
-                                      padding: EdgeInsets.only(top: 10),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10),
                                       child: StyledText(
-                                        '오늘도 건강하게 걸어보자고!',
+                                        'healthy_walk'.tr(),
                                         color: Colors.black,
                                         fontSize: 11,
                                         fontWeight: 600,
@@ -322,7 +350,7 @@ class ActivitySelect extends StatelessWidget {
                     //                       color: const Color(0xff0E2627),
                     //                     ),
                     //                     child: const StyledText(
-                    //                       '코스형 챌린지',
+                    //                       'course_type_challenge'.tr(),
                     //                       color: Color(0xff0EE6F3),
                     //                       fontSize: 10,
                     //                       fontWeight: 600,
@@ -332,7 +360,7 @@ class ActivitySelect extends StatelessWidget {
                     //                   const Padding(
                     //                     padding: EdgeInsets.only(top: 9),
                     //                     child: StyledText(
-                    //                       '100대 명산 챌린지',
+                    //                       '100_famous_mountains_challenge'.tr(),
                     //                       color: Colors.white,
                     //                       fontSize: 19,
                     //                       fontWeight: 600,
@@ -343,7 +371,7 @@ class ActivitySelect extends StatelessWidget {
                     //                   const Padding(
                     //                     padding: EdgeInsets.only(top: 10),
                     //                     child: StyledText(
-                    //                       '기념 뱃지 획득 도전!',
+                    //                       'badge_challenge'.tr(),
                     //                       color: Colors.white,
                     //                       fontSize: 11,
                     //                       fontWeight: 600,
@@ -372,8 +400,13 @@ class ActivitySelect extends StatelessWidget {
                             physics: const ClampingScrollPhysics(),
                             child: controller.isFetchingCourseList.value
                                 ? Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 50.0.sp),
-                                    child: const Center(child: SizedBox.square(dimension: 30, child: CircularProgressIndicator(color:skyBlueColor))),
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 50.0.sp),
+                                    child: const Center(
+                                        child: SizedBox.square(
+                                            dimension: 30,
+                                            child: CircularProgressIndicator(
+                                                color: skyBlueColor))),
                                   )
                                 : controller.challengeList.isNotEmpty
                                     ? Column(
@@ -411,9 +444,10 @@ class ActivitySelect extends StatelessWidget {
                                 onTap: () => Get.toNamed(Routes.fairPlayView),
                                 borderRadius: BorderRadius.circular(10),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 16.sp, vertical: 14.sp),
-                                  child: const StyledText(
-                                    '경고 & 퇴장 카드 규정',
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16.sp, vertical: 14.sp),
+                                  child: StyledText(
+                                    'warning_ejection_rules'.tr(),
                                     color: lightGrayColor,
                                     fontSize: 14,
                                     fontWeight: 600,
@@ -436,7 +470,10 @@ class ActivitySelect extends StatelessWidget {
                           height: 57.sp,
                           decoration: BoxDecoration(
                             color: const Color(0xff18191F),
-                            border: Border.all(width: 1, style: BorderStyle.solid, color: Colors.white),
+                            border: Border.all(
+                                width: 1,
+                                style: BorderStyle.solid,
+                                color: Colors.white),
                             borderRadius: BorderRadius.circular(113.sp),
                           ),
                           child: Center(
@@ -453,18 +490,24 @@ class ActivitySelect extends StatelessWidget {
                 ),
               ),
             ),
-            if (controller.promotionAdsList.isNotEmpty && controller.promotionAdsList[0].subImageUrl != null)
+            if (controller.promotionAdsList.isNotEmpty &&
+                controller.promotionAdsList[0].subImageUrl != null)
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 20.0.sp),
+                padding: EdgeInsets.symmetric(
+                    vertical: 20.0.sp, horizontal: 20.0.sp),
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: InkWell(
-                      onTap: () => controller.moveToWebView(controller.promotionAdsList[0]),
+                      onTap: () => controller
+                          .moveToWebView(controller.promotionAdsList[0]),
                       child: CachedNetworkImage(
                         imageUrl: controller.promotionAdsList[0].subImageUrl!,
                         fit: BoxFit.fill,
-                        placeholder: (context, url) => const CircularProgressIndicator(color:skyBlueColor),
-                        errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(
+                                color: skyBlueColor),
+                        errorWidget: (context, url, error) =>
+                            Image.asset("assets/images/@temp_badge.png"),
                         httpHeaders: imageNetworkHeader,
                       )),
                 ),

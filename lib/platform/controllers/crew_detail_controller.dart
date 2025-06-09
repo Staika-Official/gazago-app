@@ -8,17 +8,26 @@ import 'package:gaza_go/platform/models/error_response_data_model.dart';
 import 'package:gaza_go/platform/services/crew_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:gaza_go/platform/helpers/map_mixin.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class CrewDetailController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
+class CrewDetailController extends GetxController
+    with GetTickerProviderStateMixin, MapMixin, ChallengeMixin {
   RxInt dailyBlockCount = RxInt(0);
   Rx<CrewModel> get selectedCrew {
-    if (!Get.isRegistered<ChallengesDetailController>()) Get.put(ChallengesDetailController());
+    if (!Get.isRegistered<ChallengesDetailController>())
+      Get.put(ChallengesDetailController());
     return Rx(Get.find<ChallengesDetailController>().myCrew.value!['crew']);
   }
 
   RxInt get crewRanking {
-    return Get.find<ChallengesDetailController>().crewList.isNotEmpty ? RxInt(Get.find<ChallengesDetailController>().crewList.indexWhere((crew) => crew.id == selectedCrew.value.id) + 1) : RxInt(0);
+    return Get.find<ChallengesDetailController>().crewList.isNotEmpty
+        ? RxInt(Get.find<ChallengesDetailController>()
+                .crewList
+                .indexWhere((crew) => crew.id == selectedCrew.value.id) +
+            1)
+        : RxInt(0);
   }
 
   RxList<CrewMemberModel> get crewList {
@@ -26,11 +35,13 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
   }
 
   RxInt get accumulatedCrewInvite {
-    return RxInt(selectedCrew.value.crewMemberList!.fold(0, (prevValue, element) => prevValue + element.inviteCount!));
+    return RxInt(selectedCrew.value.crewMemberList!
+        .fold(0, (prevValue, element) => prevValue + element.inviteCount!));
   }
 
   RxInt get accumulatedCrewBlock {
-    return RxInt(selectedCrew.value.crewMemberList!.fold(0, (prevValue, element) => prevValue + element.blockQuantity!));
+    return RxInt(selectedCrew.value.crewMemberList!
+        .fold(0, (prevValue, element) => prevValue + element.blockQuantity!));
   }
 
   RxBool get isFounder {
@@ -70,7 +81,9 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
       selectedCrew.value.id!,
       selectedCrew.value.crewRecruitStatus! == 'OPEN' ? 'CLOSE' : 'OPEN',
       successCallback: () {
-        selectedCrew.value.crewRecruitStatus! == 'OPEN' ? showToastPopup('크루 모집이 제한되었습니다.') : showToastPopup('크루 모집 중 입니다.');
+        selectedCrew.value.crewRecruitStatus! == 'OPEN'
+            ? showToastPopup('crew_recruitment_restricted'.tr())
+            : showToastPopup('crew_recruiting'.tr());
       },
       errorCallback: (ErrorResponseDataModel error) {
         if (error.errorCode == 'NOT_AVAILABLE_RECRUIT_OPEN') {
@@ -86,7 +99,8 @@ class CrewDetailController extends GetxController with GetTickerProviderStateMix
     await CrewService.getDailyBlockCount(
       selectedCrew.value.id!,
       successCallback: (data) {
-        if (data['dailyCrewBlockQuantity'] != null) dailyBlockCount.value = data['dailyCrewBlockQuantity'];
+        if (data['dailyCrewBlockQuantity'] != null)
+          dailyBlockCount.value = data['dailyCrewBlockQuantity'];
       },
     );
   }

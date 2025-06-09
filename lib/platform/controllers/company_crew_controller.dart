@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/helpers/map_mixin.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 
-class CompanyCrewController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
+class CompanyCrewController extends GetxController
+    with GetTickerProviderStateMixin, MapMixin, ChallengeMixin {
   RxString challengeId = RxString('');
   RxInt myCrewJoinedCount = RxInt(0);
   RxInt myCrewTotalCount = RxInt(0);
@@ -43,16 +45,19 @@ class CompanyCrewController extends GetxController with GetTickerProviderStateMi
   }
 
   void streamGetCompanyChallengeUserList() async {
-    DatabaseReference expiredItemsRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/${challengeId.value}');
+    DatabaseReference expiredItemsRef = FirebaseDatabase.instance
+        .ref('crewChallengeLeaderboard/${challengeId.value}');
 
     subscription = expiredItemsRef.onValue.listen((DatabaseEvent event) {
       if (event.snapshot.value != null) {
         myCrewList = RxList.empty();
         myCrewInfo.clear();
-        Map<dynamic, dynamic>? data = event.snapshot.value as Map<dynamic, dynamic>?;
+        Map<dynamic, dynamic>? data =
+            event.snapshot.value as Map<dynamic, dynamic>?;
 
         if (data != null) {
-          List<List<Map<String, dynamic>>> groupedData = groupDataByCrewId(data);
+          List<List<Map<String, dynamic>>> groupedData =
+              groupDataByCrewId(data);
           List<Map<String, dynamic>> modifiedGroupedData = [];
 
           for (var crewData in groupedData) {
@@ -66,9 +71,11 @@ class CompanyCrewController extends GetxController with GetTickerProviderStateMi
                 myCrewId = userData['crewId'];
               }
             }
-            double distance = objectCount > 0 ? totalRewardDistance / objectCount : 0.0;
+            double distance =
+                objectCount > 0 ? totalRewardDistance / objectCount : 0.0;
             String crewName = crewData.first['crewName'] as String;
-            String crewIconImageUrl = crewData.first['crewIconImageUrl'] as String;
+            String crewIconImageUrl =
+                crewData.first['crewIconImageUrl'] as String;
             bool listFixed = crewData.first['listFixed'] as bool;
             int crewId = crewData.first['crewId'] as int;
             int maxMemberCount = crewData.first['maxMemberCount'] as int;
@@ -81,8 +88,10 @@ class CompanyCrewController extends GetxController with GetTickerProviderStateMi
               'maxMemberCount': maxMemberCount,
             });
 
-            if (myCrewId != 0 && crewData.any((userData) => userData['crewId'] == myCrewId)) {
-              myCrewList.addAll(crewData.where((userData) => userData['crewId'] == myCrewId));
+            if (myCrewId != 0 &&
+                crewData.any((userData) => userData['crewId'] == myCrewId)) {
+              myCrewList.addAll(
+                  crewData.where((userData) => userData['crewId'] == myCrewId));
             }
           }
           modifiedGroupedData.sort((a, b) {
@@ -117,9 +126,13 @@ class CompanyCrewController extends GetxController with GetTickerProviderStateMi
             }
           });
 
-          crewManagerList.value = modifiedGroupedData.where((crew) => crew['listFixed'] == true).toList();
+          crewManagerList.value = modifiedGroupedData
+              .where((crew) => crew['listFixed'] == true)
+              .toList();
 
-          myCrewInfo = RxMap(modifiedGroupedData.firstWhere((crew) => crew['crewId'] == myCrewId, orElse: () => {}));
+          myCrewInfo = RxMap(modifiedGroupedData.firstWhere(
+              (crew) => crew['crewId'] == myCrewId,
+              orElse: () => {}));
           crewRankingList.value = modifiedGroupedData;
           myCrewList.refresh();
           myCrewInfo.refresh();
@@ -130,7 +143,8 @@ class CompanyCrewController extends GetxController with GetTickerProviderStateMi
 
   void setCrewRankingList() {}
 
-  List<List<Map<String, dynamic>>> groupDataByCrewId(Map<dynamic, dynamic> data) {
+  List<List<Map<String, dynamic>>> groupDataByCrewId(
+      Map<dynamic, dynamic> data) {
     Map<int, List<Map<String, dynamic>>> groupedData = {};
 
     data.forEach((key, value) {
@@ -141,7 +155,8 @@ class CompanyCrewController extends GetxController with GetTickerProviderStateMi
           if (!groupedData.containsKey(crewId)) {
             groupedData[crewId] = [];
           }
-          groupedData[crewId]!.add(value.cast<String, dynamic>()); // Map<dynamic, dynamic>을 Map<String, dynamic>으로 변환
+          groupedData[crewId]!.add(value.cast<String,
+              dynamic>()); // Map<dynamic, dynamic>을 Map<String, dynamic>으로 변환
         }
       }
     });

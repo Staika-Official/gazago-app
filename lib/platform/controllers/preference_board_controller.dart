@@ -1,7 +1,8 @@
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class PreferenceBoardController extends GetxController {
   RxString boardType = RxString('');
@@ -16,7 +17,7 @@ class PreferenceBoardController extends GetxController {
   );
   RxString get boardName {
     if (boardType.value == 'NOTICE') {
-      return RxString('공지사항');
+      return RxString('notice'.tr());
     } else {
       return RxString('FAQ');
     }
@@ -30,7 +31,8 @@ class PreferenceBoardController extends GetxController {
   }
 
   void getPostList() async {
-    await BoardService.getPostListByType(boardType.value, successCallback: (List<TermItemModel> terms) {
+    await BoardService.getPostListByType(boardType.value,
+        successCallback: (List<TermItemModel> terms) {
       boardList.value = terms;
     });
   }

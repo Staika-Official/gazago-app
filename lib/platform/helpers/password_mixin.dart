@@ -1,5 +1,6 @@
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/helpers/security_helper.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 mixin PasswordMixin {
   setErrorState(
@@ -48,7 +49,7 @@ mixin PasswordMixin {
     if (confirmText.isEmpty) {
       return FormStatus.empty;
     }
-    if (confirmText != '확인했습니다') {
+    if (confirmText != 'confirmed'.tr()) {
       return FormStatus.insufficient;
     }
     return FormStatus.sufficient;

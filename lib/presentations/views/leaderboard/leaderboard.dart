@@ -14,15 +14,17 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/leaderboard/calendar_cell.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart' as bs;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class LeaderboardHome extends StatelessWidget {
   const LeaderboardHome({super.key});
 
-  Widget showBottomCalender(BuildContext context, LeaderboardController controller) {
+  Widget showBottomCalender(
+      BuildContext context, LeaderboardController controller) {
     return Container(
       decoration: BoxDecoration(
         color: popupBgColor,
@@ -58,14 +60,17 @@ class LeaderboardHome extends StatelessWidget {
                         calendarBuilders: CalendarBuilders(
                           markerBuilder: (context, date, events) {
                             if (events.isNotEmpty) {
-                              UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
+                              UserRewardStatisticsModel reward =
+                                  events.first as UserRewardStatisticsModel;
                               return Padding(
                                 padding: EdgeInsets.only(top: 40.0.sp),
                                 child: date.day != controller.today.value?.day
                                     ? Column(
                                         mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           if (reward.tik != null)
                                             FittedBox(
@@ -101,7 +106,8 @@ class LeaderboardHome extends StatelessWidget {
                           dowBuilder: (context, day) {
                             final text = DateFormat.E().format(day);
 
-                            if (day.weekday == DateTime.sunday || day.weekday == DateTime.saturday) {
+                            if (day.weekday == DateTime.sunday ||
+                                day.weekday == DateTime.saturday) {
                               return Center(
                                 child: Text(
                                   text,
@@ -151,17 +157,24 @@ class LeaderboardHome extends StatelessWidget {
                           },
                         ),
                         headerStyle: HeaderStyle(
-                          titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
+                          titleTextStyle: TextStyle(
+                              fontSize: 18.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500),
                           titleCentered: true,
                           formatButtonVisible: false,
-                          leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.white),
+                          leftChevronIcon: const Icon(Icons.chevron_left,
+                              color: Colors.white),
                           rightChevronIcon: const Icon(
                             Icons.chevron_right,
                             color: Colors.white,
                           ),
-                          headerPadding: EdgeInsets.only(top: 30.sp, bottom: 20.sp),
-                          leftChevronPadding: EdgeInsets.only(left: 60.sp, top: 10.sp, bottom: 10.sp),
-                          rightChevronPadding: EdgeInsets.only(right: 60.sp, top: 10.sp, bottom: 10.sp),
+                          headerPadding:
+                              EdgeInsets.only(top: 30.sp, bottom: 20.sp),
+                          leftChevronPadding: EdgeInsets.only(
+                              left: 60.sp, top: 10.sp, bottom: 10.sp),
+                          rightChevronPadding: EdgeInsets.only(
+                              right: 60.sp, top: 10.sp, bottom: 10.sp),
                         ),
                         calendarFormat: controller.calendarFormat,
                         calendarStyle: const CalendarStyle(
@@ -236,9 +249,15 @@ class LeaderboardHome extends StatelessWidget {
                                       color: tikColor,
                                     ),
                                     TextSpan(
-                                      text: formatDecimalPlaces(controller.totalTikRewarded.value.toDouble(), 0),
+                                      text: formatDecimalPlaces(
+                                          controller.totalTikRewarded.value
+                                              .toDouble(),
+                                          0),
                                       children: const [
-                                        TextSpan(text: ' TIK', style: TextStyle(fontWeight: FontWeight.w400)),
+                                        TextSpan(
+                                            text: ' TIK',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w400)),
                                       ],
                                     ),
                                   ),
@@ -262,9 +281,15 @@ class LeaderboardHome extends StatelessWidget {
                                         color: stikColor,
                                       ),
                                       TextSpan(
-                                        text: formatDecimalPlaces(controller.totalStikRewarded.value, 2, isAutoDecimal: true),
+                                        text: formatDecimalPlaces(
+                                            controller.totalStikRewarded.value,
+                                            2,
+                                            isAutoDecimal: true),
                                         children: const [
-                                          TextSpan(text: ' STIK', style: TextStyle(fontWeight: FontWeight.w400)),
+                                          TextSpan(
+                                              text: ' STIK',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w400)),
                                         ],
                                       ),
                                     ),
@@ -292,7 +317,8 @@ class LeaderboardHome extends StatelessWidget {
       width: double.maxFinite,
       height: 90.sp,
       color: AppColorData.regular().colorBgSecondary,
-      padding: EdgeInsets.only(top: 8.sp, left: 11.sp, right: 17.sp, bottom: 8.sp),
+      padding:
+          EdgeInsets.only(top: 8.sp, left: 11.sp, right: 17.sp, bottom: 8.sp),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -313,7 +339,10 @@ class LeaderboardHome extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 10),
                 child: Text(
                   myRank.rank!.toString(),
-                  style: TextStyle(color: skyBlueColor, fontSize: 14.sp, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                      color: skyBlueColor,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -328,7 +357,8 @@ class LeaderboardHome extends StatelessWidget {
                         width: 44.0.sp,
                         height: 44.0.sp,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(50.0.sp)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(50.0.sp)),
                           border: Border.all(
                             color: skyBlueColor,
                             width: 1.5.sp,
@@ -375,12 +405,19 @@ class LeaderboardHome extends StatelessWidget {
                             ),
                           ),
                         Text(
-                          myRank.nickname.contains('@') ? myRank.nickname.substring(0, myRank.nickname.indexOf('@')) : myRank.nickname,
+                          myRank.nickname.contains('@')
+                              ? myRank.nickname
+                                  .substring(0, myRank.nickname.indexOf('@'))
+                              : myRank.nickname,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600),
                           textAlign: TextAlign.left,
                         ),
-                        if (myRank.additionStik != null || myRank.additionTik != null)
+                        if (myRank.additionStik != null ||
+                            myRank.additionTik != null)
                           Padding(
                             padding: EdgeInsets.only(top: 6.0.sp),
                             child: Text.rich(
@@ -393,17 +430,21 @@ class LeaderboardHome extends StatelessWidget {
                               ),
                               myRank.additionStik != null
                                   ? TextSpan(
-                                      text: formatDecimalPlaces(myRank.additionStik ?? 0, 9, isAutoDecimal: true),
+                                      text: formatDecimalPlaces(
+                                          myRank.additionStik ?? 0, 9,
+                                          isAutoDecimal: true),
                                       children: [
                                         const TextSpan(
                                             text: ' STIK',
                                             style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                             )),
-                                        if (myRank.additionTik != null) const TextSpan(text: ' + '),
+                                        if (myRank.additionTik != null)
+                                          const TextSpan(text: ' + '),
                                         if (myRank.additionTik != null)
                                           TextSpan(
-                                              text: formatDecimalPlaces(myRank.additionTik ?? 0, 0),
+                                              text: formatDecimalPlaces(
+                                                  myRank.additionTik ?? 0, 0),
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.w700,
                                               )),
@@ -443,20 +484,15 @@ class LeaderboardHome extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '${formatDecimalPlaces(myRank.rewardGo, 2, isAutoDecimal: true)} GO',
-                style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                  color: AppColorData.regular().colorBaseWhite,
-                  height: 1.1
-                )
-              ),
+                  '${formatDecimalPlaces(myRank.rewardGo, 2, isAutoDecimal: true)} GO',
+                  style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
+                      color: AppColorData.regular().colorBaseWhite,
+                      height: 1.1)),
               Padding(padding: EdgeInsets.only(top: 7.sp)),
-              Text(
-                '${formatDecimalPlaces(myRank.rewardTik, 0)} TIK',
+              Text('${formatDecimalPlaces(myRank.rewardTik, 0)} TIK',
                   style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
                       color: AppColorData.regular().colorBrandgray200,
-                    height: 1.1
-                  )
-              ),
+                      height: 1.1)),
             ],
           ),
         ],
@@ -509,15 +545,17 @@ class LeaderboardHome extends StatelessWidget {
                                   padding: const EdgeInsets.only(top: 7.0),
                                   child: CircleAvatar(
                                     radius: 16.sp,
-                                    foregroundImage: (ranker.profileImageUrl == null || ranker.profileImageUrl == '')
-                                        ? Image.asset(
-                                            'assets/images/ic_launcher.png',
-                                            width: 30.sp,
-                                          ).image
-                                        : NetworkImage(
-                                            ranker.profileImageUrl!,
-                                            headers: imageNetworkHeader,
-                                          ),
+                                    foregroundImage:
+                                        (ranker.profileImageUrl == null ||
+                                                ranker.profileImageUrl == '')
+                                            ? Image.asset(
+                                                'assets/images/ic_launcher.png',
+                                                width: 30.sp,
+                                              ).image
+                                            : NetworkImage(
+                                                ranker.profileImageUrl!,
+                                                headers: imageNetworkHeader,
+                                              ),
                                   ),
                                 ),
                               ),
@@ -570,44 +608,54 @@ class LeaderboardHome extends StatelessWidget {
                                   )
                                 : ranker.nickname),
                             overflow: TextOverflow.ellipsis,
-                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                              color: AppColorData.regular().colorBaseWhite
-                            ),
+                            style: AppTextStyleData.regular()
+                                .koBodyMediumLg
+                                .copyWith(
+                                    color:
+                                        AppColorData.regular().colorBaseWhite),
                             textAlign: TextAlign.left,
                           ),
-                          if (ranker.additionStik != null || ranker.additionTik != null)
+                          if (ranker.additionStik != null ||
+                              ranker.additionTik != null)
                             Padding(
                               padding: EdgeInsets.only(top: 6.0.sp),
                               child: Text.rich(
                                 textAlign: TextAlign.start,
-                                style: AppTextStyleData.regular().enCaptionSemiboldMd.copyWith(
-                                  color: AppColorData.regular().colorTextBrand
-                                ),
+                                style: AppTextStyleData.regular()
+                                    .enCaptionSemiboldMd
+                                    .copyWith(
+                                        color: AppColorData.regular()
+                                            .colorTextBrand),
                                 ranker.additionStik != null
                                     ? TextSpan(
-                                        text: formatDecimalPlaces(ranker.additionStik ?? 0, 9, isAutoDecimal: true),
+                                        text: formatDecimalPlaces(
+                                            ranker.additionStik ?? 0, 9,
+                                            isAutoDecimal: true),
                                         children: [
                                           const TextSpan(
-                                              text: ' STIK',
-                                              ),
-                                          if (ranker.additionTik != null) const TextSpan(text: ' + '),
+                                            text: ' STIK',
+                                          ),
+                                          if (ranker.additionTik != null)
+                                            const TextSpan(text: ' + '),
                                           if (ranker.additionTik != null)
                                             TextSpan(
-                                                text: formatDecimalPlaces(ranker.additionTik ?? 0, 0),
-                                                ),
+                                              text: formatDecimalPlaces(
+                                                  ranker.additionTik ?? 0, 0),
+                                            ),
                                           if (ranker.additionTik != null)
                                             const TextSpan(
-                                                text: ' TIK',
-                                                ),
+                                              text: ' TIK',
+                                            ),
                                         ],
                                       )
                                     : ranker.additionTik != null
                                         ? TextSpan(
-                                            text: '${ranker.additionTik ?? '0'}',
+                                            text:
+                                                '${ranker.additionTik ?? '0'}',
                                             children: const [
                                               TextSpan(
-                                                  text: ' TIK',
-                                                  ),
+                                                text: ' TIK',
+                                              ),
                                             ],
                                           )
                                         : const TextSpan(
@@ -629,9 +677,9 @@ class LeaderboardHome extends StatelessWidget {
             children: [
               Text(
                 '${formatDecimalPlaces(ranker.rewardGo, 2, isAutoDecimal: true)} GO',
-               style: AppTextStyleData.regular().koBodySemiboldMd.copyWith(
-                 color: AppColorData.regular().colorBaseWhite
-               ),
+                style: AppTextStyleData.regular()
+                    .koBodySemiboldMd
+                    .copyWith(color: AppColorData.regular().colorBaseWhite),
                 textAlign: TextAlign.right,
               ),
               // Padding(
@@ -669,10 +717,10 @@ class LeaderboardHome extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  '오늘의 리워드',
-                  style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
-                    color: AppColorData.regular().colorBaseWhite
-                  ),
+                  'todays_reward'.tr(),
+                  style: AppTextStyleData.regular()
+                      .koBodySemiboldXl
+                      .copyWith(color: AppColorData.regular().colorBaseWhite),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 5.0.sp),
@@ -703,13 +751,14 @@ class LeaderboardHome extends StatelessWidget {
               ),
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical:12.0.sp, horizontal: 20.sp ),
+              padding:
+                  EdgeInsets.symmetric(vertical: 12.0.sp, horizontal: 20.sp),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top:3.0.sp),
+                    padding: EdgeInsets.only(top: 3.0.sp),
                     child: iconTodayTik,
                   ),
                   Padding(
@@ -720,14 +769,18 @@ class LeaderboardHome extends StatelessWidget {
                       children: [
                         Obx(() {
                           return Row(
-
                             children: [
                               Text(
-                                controller.todayTikAmount.value > 0 ? formatDecimalPlaces(controller.todayTikAmount.value, 0) : 0.toString(),
-                                style: AppTextStyleData.regular().numHeadingSemiboldLg.copyWith(
-                                  color: AppColorData.regular().colorBaseWhite,
-                                  height: 1.2
-                                ),
+                                controller.todayTikAmount.value > 0
+                                    ? formatDecimalPlaces(
+                                        controller.todayTikAmount.value, 0)
+                                    : 0.toString(),
+                                style: AppTextStyleData.regular()
+                                    .numHeadingSemiboldLg
+                                    .copyWith(
+                                        color: AppColorData.regular()
+                                            .colorBaseWhite,
+                                        height: 1.2),
                               ),
                               // Padding(
                               //   padding: EdgeInsets.only(left: 2.0.sp),
@@ -778,15 +831,15 @@ class LeaderboardHome extends StatelessWidget {
           //                 letterSpacing: -0.2,
           //               ),
           //               TextSpan(
-          //                 text: '리더보드 참여자 모두에게 획득한 GO만큼 ',
+          //                 text: 'go_distribution'.tr(),
           //                 children: [
           //                   TextSpan(
-          //                       text: '오늘의 리워드를',
+          //                       text: 'todays_reward_1'.tr(),
           //                       style: TextStyle(
           //                         color: lightGrayColor,
           //                         fontWeight: FontWeight.w700,
           //                       )),
-          //                   TextSpan(text: ' 모두 분배해요.')
+          //                   TextSpan(text: 'reward_distribution'.tr())
           //                 ],
           //               ),
           //             ),
@@ -816,12 +869,12 @@ class LeaderboardHome extends StatelessWidget {
           //               TextSpan(
           //                 children: [
           //                   TextSpan(
-          //                       text: '오늘의 리워드',
+          //                       text: 'todays_reward'.tr(),
           //                       style: TextStyle(
           //                         color: lightGrayColor,
           //                         fontWeight: FontWeight.w700,
           //                       )),
-          //                   TextSpan(text: '는 확정되었습니다!')
+          //                   TextSpan(text: 'reward_confirmed'.tr())
           //                 ],
           //               ),
           //             ),
@@ -849,7 +902,7 @@ class LeaderboardHome extends StatelessWidget {
           //                 height: 1.2,
           //               ),
           //               TextSpan(
-          //                 text: 'TIK은 매일 자정(KST)에 확정되어 분배해요.',
+          //                 text: 'tik_distribution_time'.tr(),
           //               ),
           //             ),
           //           ],
@@ -859,7 +912,8 @@ class LeaderboardHome extends StatelessWidget {
           //   ),
           // ),
           Container(
-            padding: EdgeInsets.only(top: 24.sp, left: 16.sp, right: 20.sp, bottom: 12.sp),
+            padding: EdgeInsets.only(
+                top: 24.sp, left: 16.sp, right: 20.sp, bottom: 12.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -867,9 +921,10 @@ class LeaderboardHome extends StatelessWidget {
                   children: [
                     Text(
                       controller.checkRewardDate.value,
-                      style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
-                          color: AppColorData.regular().colorBaseWhite,
-                      ),
+                      style:
+                          AppTextStyleData.regular().koBodySemiboldXl.copyWith(
+                                color: AppColorData.regular().colorBaseWhite,
+                              ),
                     ),
                     // Padding(
                     //   padding: EdgeInsets.only(left: 10.0.sp),
@@ -878,7 +933,7 @@ class LeaderboardHome extends StatelessWidget {
                     //     child: Row(
                     //       children: [
                     //         StyledText(
-                    //           '더보기',
+                    //           'show_more'.tr(),
                     //           color: lightGrayColor,
                     //           fontSize: 12,
                     //           lineHeight: 14,
@@ -914,9 +969,11 @@ class LeaderboardHome extends StatelessWidget {
                           Obx(() {
                             return Text(
                               controller.leaderboardDate.value,
-                              style: AppTextStyleData.regular().enBodyMediumMd.copyWith(
-                                color: AppColorData.regular().colorTextSecondary
-                              ),
+                              style: AppTextStyleData.regular()
+                                  .enBodyMediumMd
+                                  .copyWith(
+                                      color: AppColorData.regular()
+                                          .colorTextSecondary),
                             );
                           }),
                           Padding(padding: EdgeInsets.only(left: 4.sp)),
@@ -937,7 +994,8 @@ class LeaderboardHome extends StatelessWidget {
             child: controller.dataGetLoading.value
                 ? Padding(
                     padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                    child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
+                    child: const Center(
+                        child: CircularProgressIndicator(color: skyBlueColor)),
                   )
                 : controller.rankings.isEmpty
                     ? Center(
@@ -947,8 +1005,8 @@ class LeaderboardHome extends StatelessWidget {
                             iconEmpty,
                             Padding(
                               padding: EdgeInsets.only(top: 20.sp),
-                              child: const StyledText(
-                                '랭킹 기록이 없어요.',
+                              child: StyledText(
+                                'no_ranking_record'.tr(),
                                 color: Color(0xff7b7b7b),
                                 fontSize: 16,
                                 lineHeight: 10,
@@ -964,9 +1022,12 @@ class LeaderboardHome extends StatelessWidget {
                           Flexible(
                             child: ListView.separated(
                               physics: const ClampingScrollPhysics(),
-                              padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
-                              controller: controller.leaderboardScrollController,
-                              separatorBuilder: (context, index) => const Divider(
+                              padding: const EdgeInsets.only(
+                                  bottom: kBottomNavigationBarHeight),
+                              controller:
+                                  controller.leaderboardScrollController,
+                              separatorBuilder: (context, index) =>
+                                  const Divider(
                                 thickness: 2,
                                 indent: 0,
                                 endIndent: 0,
@@ -976,7 +1037,8 @@ class LeaderboardHome extends StatelessWidget {
                               itemCount: controller.rankings.length + 1,
                               itemBuilder: (context, index) {
                                 if (index < controller.rankings.length) {
-                                  return renderRanker(controller.rankings[index], context);
+                                  return renderRanker(
+                                      controller.rankings[index], context);
                                 }
                               },
                             ),
@@ -988,7 +1050,8 @@ class LeaderboardHome extends StatelessWidget {
                                 child: SizedBox(
                                   width: 20.sp,
                                   height: 20.sp,
-                                  child: const CircularProgressIndicator(color:skyBlueColor),
+                                  child: const CircularProgressIndicator(
+                                      color: skyBlueColor),
                                 ),
                               ),
                             )
@@ -1002,7 +1065,7 @@ class LeaderboardHome extends StatelessWidget {
                 child: SizedBox(
                   width: 20.sp,
                   height: 20.sp,
-                  child: const CircularProgressIndicator(color:skyBlueColor),
+                  child: const CircularProgressIndicator(color: skyBlueColor),
                 ),
               ),
             )

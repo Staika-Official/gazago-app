@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class Notifications extends StatelessWidget {
   const Notifications({super.key});
@@ -21,7 +22,8 @@ class Notifications extends StatelessWidget {
               margin: const EdgeInsets.only(top: 14),
               child: GestureDetector(
                 onTap: () => controller.moveToWebView(notice),
-                child: notice.subImageUrl != null && notice.subImageUrl!.contains('http')
+                child: notice.subImageUrl != null &&
+                        notice.subImageUrl!.contains('http')
                     ? Image.network(
                         notice.subImageUrl!,
                       )
@@ -33,7 +35,7 @@ class Notifications extends StatelessWidget {
     }
 
     return DefaultContainer(
-      titleText: '알림',
+      titleText: 'notification'.tr(),
       backgroundColor: subBg01Color,
       child: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),

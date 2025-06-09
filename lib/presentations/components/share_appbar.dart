@@ -57,7 +57,7 @@ class ShareAppbar extends StatelessWidget implements PreferredSizeWidget {
                     fit: BoxFit.scaleDown,
                     child: StyledText(
                       titleText!,
-                      // '크루 릴레이',
+                      // 'crew_relay_1'.tr(),
                       fontSize: 18,
                       lineHeight: 18,
                       fontWeight: 500,

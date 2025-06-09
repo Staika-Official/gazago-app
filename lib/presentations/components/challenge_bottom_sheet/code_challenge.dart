@@ -6,9 +6,11 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:intl/intl.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 // 챌린지 전 - 접수 전
-Map renderCodeReadyRegisterReady(ChallengesDetailController challengesDetailController) {
+Map renderCodeReadyRegisterReady(
+    ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
     onTap: () => null,
     child: Container(
@@ -28,8 +30,8 @@ Map renderCodeReadyRegisterReady(ChallengesDetailController challengesDetailCont
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: const StyledText(
-            '접수 전',
+          child: StyledText(
+            'before_registration'.tr(),
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
@@ -49,7 +51,12 @@ Map renderCodeReadyRegisterReady(ChallengesDetailController challengesDetailCont
       ),
       children: [
         TextSpan(
-          text: '접수 예정일  ${DateFormat('MM.dd HH:mm', 'ko').format(DateTime.parse(challengesDetailController.challengeDetails.value.reservedDate!).toLocal())}',
+          text: 'scheduled_date'.tr(args: [
+            DateFormat('MM.dd HH:mm', 'ko').format(DateTime.parse(
+                    challengesDetailController
+                        .challengeDetails.value.reservedDate!)
+                .toLocal())
+          ]),
           style: const TextStyle(color: skyBlueColor),
         ),
       ],
@@ -60,7 +67,8 @@ Map renderCodeReadyRegisterReady(ChallengesDetailController challengesDetailCont
 }
 
 // 챌린지 전 - 참가중
-Map renderCodeReadyJoined(ChallengesDetailController challengesDetailController) {
+Map renderCodeReadyJoined(
+    ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
     onTap: () => null,
     child: Container(
@@ -80,8 +88,8 @@ Map renderCodeReadyJoined(ChallengesDetailController challengesDetailController)
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: const StyledText(
-            '챌린지 전',
+          child: StyledText(
+            'before_challenge'.tr(),
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
@@ -99,12 +107,12 @@ Map renderCodeReadyJoined(ChallengesDetailController challengesDetailController)
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: const [
+      children: [
         TextSpan(
-          text: '참여코드 인증완료!\n',
+          text: 'participation_code_verified'.tr(),
         ),
         TextSpan(
-          text: '챌린지 시작을 기다려주세요',
+          text: 'awaiting_challenge_start'.tr(),
           style: TextStyle(color: skyBlueColor),
         ),
       ],
@@ -115,9 +123,13 @@ Map renderCodeReadyJoined(ChallengesDetailController challengesDetailController)
 }
 
 // 챌린지 전 - 접수 중
-Map renderCodeReadyJoinedElse(ChallengesDetailController challengesDetailController) {
+Map renderCodeReadyJoinedElse(
+    ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
-    onTap: () => challengesDetailController.isDisableButton.value ? null : challengesDetailController.requestJoinChallenge(participateInChallengeByCodeAlert),
+    onTap: () => challengesDetailController.isDisableButton.value
+        ? null
+        : challengesDetailController
+            .requestJoinChallenge(participateInChallengeByCodeAlert),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,
@@ -135,8 +147,8 @@ Map renderCodeReadyJoinedElse(ChallengesDetailController challengesDetailControl
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: const StyledText(
-            '참가하기',
+          child: StyledText(
+            'participate_in_challenge'.tr(),
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
@@ -153,12 +165,12 @@ Map renderCodeReadyJoinedElse(ChallengesDetailController challengesDetailControl
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: const [
+      children: [
         TextSpan(
-          text: '참여코드 인증하고\n',
+          text: 'participate_after_code_verification'.tr(),
         ),
         TextSpan(
-          text: '챌린지 참여하기!',
+          text: 'join_challenge'.tr(),
           style: TextStyle(color: skyBlueColor),
         ),
       ],
@@ -169,7 +181,8 @@ Map renderCodeReadyJoinedElse(ChallengesDetailController challengesDetailControl
 }
 
 // 챌린지 진행 중 - 참가 중
-Map renderCodeInProgressJoined(ChallengesDetailController challengesDetailController) {
+Map renderCodeInProgressJoined(
+    ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
     onTap: () => null,
     child: Container(
@@ -184,8 +197,8 @@ Map renderCodeInProgressJoined(ChallengesDetailController challengesDetailContro
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: const StyledText(
-            '참가 중',
+          child: StyledText(
+            'participating_challenge'.tr(),
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
@@ -203,16 +216,16 @@ Map renderCodeInProgressJoined(ChallengesDetailController challengesDetailContro
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: const [
+      children: [
         TextSpan(
-          text: '참여코드 인증으로\n',
+          text: 'participating_via_code'.tr(),
         ),
         TextSpan(
-          text: '챌린지 참가중',
+          text: 'challenge_participating'.tr(),
           style: TextStyle(color: skyBlueColor),
         ),
         TextSpan(
-          text: '입니다.',
+          text: 'challenge_participation_status'.tr(),
         ),
       ],
     ),
@@ -222,9 +235,13 @@ Map renderCodeInProgressJoined(ChallengesDetailController challengesDetailContro
 }
 
 // 챌린지 진행 중 - 참가 가능
-Map renderCodeInProgressJoinedAvailable(ChallengesDetailController challengesDetailController) {
+Map renderCodeInProgressJoinedAvailable(
+    ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
-    onTap: () => challengesDetailController.isDisableButton.value ? null : challengesDetailController.requestJoinChallenge(participateInChallengeByCodeAlert),
+    onTap: () => challengesDetailController.isDisableButton.value
+        ? null
+        : challengesDetailController
+            .requestJoinChallenge(participateInChallengeByCodeAlert),
     child: Container(
         decoration: BoxDecoration(
           color: popupBgColor,
@@ -242,8 +259,8 @@ Map renderCodeInProgressJoinedAvailable(ChallengesDetailController challengesDet
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: const StyledText(
-            '참가하기',
+          child: StyledText(
+            'participate_in_challenge'.tr(),
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
@@ -260,12 +277,12 @@ Map renderCodeInProgressJoinedAvailable(ChallengesDetailController challengesDet
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: const [
+      children: [
         TextSpan(
-          text: '참여코드 인증하고\n',
+          text: 'participate_after_code_verification'.tr(),
         ),
         TextSpan(
-          text: '챌린지 참여하기!',
+          text: 'join_challenge'.tr(),
           style: TextStyle(color: skyBlueColor),
         ),
       ],
@@ -276,7 +293,8 @@ Map renderCodeInProgressJoinedAvailable(ChallengesDetailController challengesDet
 }
 
 // 챌린지 진행 중 - 참가 마감
-Map renderCodeInProgressJoinedClosed(ChallengesDetailController challengesDetailController) {
+Map renderCodeInProgressJoinedClosed(
+    ChallengesDetailController challengesDetailController) {
   Widget suffix = InkWell(
     onTap: () => null,
     child: Container(
@@ -296,8 +314,8 @@ Map renderCodeInProgressJoinedClosed(ChallengesDetailController challengesDetail
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-          child: const StyledText(
-            '참가마감',
+          child: StyledText(
+            'participation_closed_1'.tr(),
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
@@ -315,12 +333,12 @@ Map renderCodeInProgressJoinedClosed(ChallengesDetailController challengesDetail
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: const [
+      children: [
         TextSpan(
-          text: '모집인원 달성!\n',
+          text: 'participant_limit_reached'.tr(),
         ),
         TextSpan(
-          text: '다음 챌린지를 기대해주세요',
+          text: 'awaiting_next_challenge'.tr(),
           style: TextStyle(color: skyBlueColor),
         ),
       ],
@@ -331,7 +349,8 @@ Map renderCodeInProgressJoinedClosed(ChallengesDetailController challengesDetail
 }
 
 // 챌린지 진행 중 - 챌린지 달성
-Map renderCodeInProgressElse(ChallengesDetailController challengesDetailController) {
+Map renderCodeInProgressElse(
+    ChallengesDetailController challengesDetailController) {
   Widget suffix = iconChallengeSuccess;
 
   Widget content = RichText(
@@ -342,12 +361,12 @@ Map renderCodeInProgressElse(ChallengesDetailController challengesDetailControll
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: const [
+      children: [
         TextSpan(
-          text: '수고하셨습니다.\n',
+          text: 'challenge_completion_message'.tr(),
         ),
         TextSpan(
-          text: '리더보드를 확인해주세요!',
+          text: 'check_leaderboard'.tr(),
         ),
       ],
     ),
@@ -357,7 +376,8 @@ Map renderCodeInProgressElse(ChallengesDetailController challengesDetailControll
 }
 
 // 챌린지 종료 - 챌린지 달성
-Map renderCodeEndedComplete(ChallengesDetailController challengesDetailController) {
+Map renderCodeEndedComplete(
+    ChallengesDetailController challengesDetailController) {
   Widget suffix = iconChallengeSuccess;
 
   Widget content = RichText(
@@ -368,12 +388,12 @@ Map renderCodeEndedComplete(ChallengesDetailController challengesDetailControlle
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: const [
+      children: [
         TextSpan(
-          text: '수고하셨습니다.\n',
+          text: 'challenge_completion_message'.tr(),
         ),
         TextSpan(
-          text: '리더보드를 확인해주세요!',
+          text: 'check_leaderboard'.tr(),
         ),
       ],
     ),
@@ -383,7 +403,8 @@ Map renderCodeEndedComplete(ChallengesDetailController challengesDetailControlle
 }
 
 // 챌린지 종료 - 챌린지 미달성
-Map renderCodeEndedInComplete(ChallengesDetailController challengesDetailController) {
+Map renderCodeEndedInComplete(
+    ChallengesDetailController challengesDetailController) {
   Widget suffix = iconChallengeFailure;
 
   Widget content = RichText(
@@ -394,12 +415,12 @@ Map renderCodeEndedInComplete(ChallengesDetailController challengesDetailControl
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: const [
+      children: [
         TextSpan(
-          text: '챌린지에 참가해주셔서\n',
+          text: 'thank_you_for_participation'.tr(),
         ),
         TextSpan(
-          text: '감사합니다!',
+          text: 'thank_you_message'.tr(),
         ),
       ],
     ),
@@ -429,8 +450,8 @@ Map renderCodeEndedElse(ChallengesDetailController challengesDetailController) {
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 40.sp),
-          child: const StyledText(
-            '종료',
+          child: StyledText(
+            'finished'.tr(),
             fontWeight: 500,
             fontSize: 18,
             lineHeight: 18,
@@ -448,12 +469,12 @@ Map renderCodeEndedElse(ChallengesDetailController challengesDetailController) {
         fontSize: 16.sp,
         height: 20.sp / 16,
       ),
-      children: const [
+      children: [
         TextSpan(
-          text: '챌린지가 종료되었습니다\n',
+          text: 'challenge_ended_1'.tr(),
         ),
         TextSpan(
-          text: '다음챌린지를 기대해주세요',
+          text: 'awaiting_next_challenge_short'.tr(),
         ),
       ],
     ),

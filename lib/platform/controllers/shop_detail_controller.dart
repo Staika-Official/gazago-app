@@ -18,13 +18,16 @@ import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/shop_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ShopDetailController extends GetxController {
   final WalletMasterController walletMasterController = Get.find();
   final HomeMenuController homeMenuController = Get.put(HomeMenuController());
-  ShopController shopController = Get.isRegistered<ShopController>() ? Get.find<ShopController>() : Get.put(ShopController());
+  ShopController shopController = Get.isRegistered<ShopController>()
+      ? Get.find<ShopController>()
+      : Get.put(ShopController());
   // ChallengesDetailController challengesDetailController = Get.isRegistered<ChallengesDetailController>() ? Get.find<ChallengesDetailController>() : Get.put(ChallengesDetailController());
 
   LoaderController loaderController = Get.put(LoaderController());
@@ -36,17 +39,17 @@ class ShopDetailController extends GetxController {
   }
 
   final List<Map<String, String>> sortingList = [
-    {'title': '최근 등록 순', 'value': 'id,DESC'},
-    // {'title': '높은 가격 순', 'value': 'price,DESC'},
-    // {'title': '낮은 가격 순', 'value': 'price,ASC'}
+    {'title': 'latest_registration'.tr(), 'value': 'id,DESC'},
+    // {'title': 'highest_price'.tr(), 'value': 'price,DESC'},
+    // {'title': 'lowest_price'.tr(), 'value': 'price,ASC'}
   ];
 
   final List<Map<String, String>> categoryFilterList = [
-    {'title': '모자', 'value': 'HAT'},
-    {'title': '하의', 'value': 'BOTTOM'},
-    {'title': '상의', 'value': 'TOP'},
-    {'title': '신발', 'value': 'SHOES'},
-    {'title': '악세사리', 'value': 'ACCESSORY'},
+    {'title': 'hat'.tr(), 'value': 'HAT'},
+    {'title': 'bottom'.tr(), 'value': 'BOTTOM'},
+    {'title': 'top'.tr(), 'value': 'TOP'},
+    {'title': 'shoes'.tr(), 'value': 'SHOES'},
+    {'title': 'accessories_2'.tr(), 'value': 'ACCESSORY'},
   ];
 
   final List<Map<String, String>> gradeFilterList = [
@@ -68,10 +71,12 @@ class ShopDetailController extends GetxController {
   RxBool isFilteredItems = RxBool(false);
   RxBool dataGetLoading = RxBool(false);
 
-  Rx isSelectedSortValue = Rx({'title': '최근 등록 순', 'value': 'id,DESC'});
-  RxString isSelectedSortString = RxString('최근 등록 순');
+  Rx isSelectedSortValue =
+      Rx({'title': 'latest_registration'.tr(), 'value': 'id,DESC'});
+  RxString isSelectedSortString = RxString('latest_registration'.tr());
   RxInt itemId = RxInt(0);
-  ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
+  ScrollController itemScrollController =
+      ScrollController(keepScrollOffset: false);
   RxBool isShortBalance = RxBool(false);
 
   Rx<ShopItemModel> selectedItem = Rx(ShopItemModel(
@@ -130,10 +135,12 @@ class ShopDetailController extends GetxController {
 
   @override
   void onClose() {
-    itemScrollController.removeListener(() => toggleBottomNav(itemScrollController));
+    itemScrollController
+        .removeListener(() => toggleBottomNav(itemScrollController));
     shopController.getShopItemsList();
 
-    if (Get.previousRoute.contains('challenge_detail') && Get.isRegistered<ChallengesDetailController>()) {
+    if (Get.previousRoute.contains('challenge_detail') &&
+        Get.isRegistered<ChallengesDetailController>()) {
       Get.find<ChallengesDetailController>().refreshController();
     }
     super.onClose();
@@ -142,7 +149,8 @@ class ShopDetailController extends GetxController {
   Future<void> initController() async {
     getItemDetail(itemId.value);
     getItemMaxValue();
-    itemScrollController.addListener(() => toggleBottomNav(itemScrollController));
+    itemScrollController
+        .addListener(() => toggleBottomNav(itemScrollController));
   }
 
   Future<void> refreshController() async {}
@@ -151,19 +159,25 @@ class ShopDetailController extends GetxController {
     if (Get.previousRoute == Routes.challengeDetail) {
       Get.back();
     } else {
-      Get.toNamed(Routes.challengeDetail.replaceAll(':id', selectedItem.value.challengeId.toString()));
+      Get.toNamed(Routes.challengeDetail
+          .replaceAll(':id', selectedItem.value.challengeId.toString()));
     }
   }
 
   void getItemMaxValue() {
-    itemGoMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_go_max');
-    itemDurabilityMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_durability_max');
-    itemHealthMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_health_max');
-    itemLuckMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_luck_max');
+    itemGoMax.value =
+        getConfig(dataType: ConfigType.string, configKey: 'item_go_max');
+    itemDurabilityMax.value = getConfig(
+        dataType: ConfigType.string, configKey: 'item_durability_max');
+    itemHealthMax.value =
+        getConfig(dataType: ConfigType.string, configKey: 'item_health_max');
+    itemLuckMax.value =
+        getConfig(dataType: ConfigType.string, configKey: 'item_luck_max');
   }
 
   void getItemDetail(int itemId) async {
-    await ShopService.getShopItemDetails(itemId, successCallback: (ShopItemModel items) {
+    await ShopService.getShopItemDetails(itemId,
+        successCallback: (ShopItemModel items) {
       selectedItem.value = items;
 
       // Get.toNamed(Routes.shopItemDetail);
@@ -172,10 +186,13 @@ class ShopDetailController extends GetxController {
 
   void handlePurchaseShopItem(int itemId) async {
     Get.back();
-    int itemCount = selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemCount.value : 1;
+    int itemCount = selectedItem.value.itemCategory == 'DISPOSABLE'
+        ? purchaseItemCount.value
+        : 1;
     loaderController.isLoading.value = true;
 
-    await ShopService.fetchPurchaseShopItem(itemId, itemCount, successCallback: (ShopItemPurchaseResponseModel items) {
+    await ShopService.fetchPurchaseShopItem(itemId, itemCount,
+        successCallback: (ShopItemPurchaseResponseModel items) {
       loaderController.isLoading.value = false;
       purchaseCompleteItem.value = items;
 
@@ -202,8 +219,9 @@ class ShopDetailController extends GetxController {
     await ItemService.fetchEquippedItem(
       itemId,
       successCallback: (InventoryItemModel item) {
-        showToastPopup('아이템이 장착되었습니다.');
-        if (Get.isRegistered<ChallengesDetailController>() && Get.find<ChallengesDetailController>().challengeId.value != 0) {
+        showToastPopup('item_equipped'.tr());
+        if (Get.isRegistered<ChallengesDetailController>() &&
+            Get.find<ChallengesDetailController>().challengeId.value != 0) {
           Get.find<ChallengesDetailController>().getChallengeDetail();
         }
       },
@@ -215,9 +233,12 @@ class ShopDetailController extends GetxController {
   }
 
   void handleCheckPurchaseAvailable(tradeSymbol) {
-    
-    if ((tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!)) <
-        (selectedItem.value.itemCategory == 'DISPOSABLE' ? purchaseItemSumPrice.value : selectedItem.value.price)) {
+    if ((tradeSymbol == 'STIK'
+            ? double.parse(walletMasterController.stik.value.uiAmountString!)
+            : double.parse(walletMasterController.tik.value.uiAmountString!)) <
+        (selectedItem.value.itemCategory == 'DISPOSABLE'
+            ? purchaseItemSumPrice.value
+            : selectedItem.value.price)) {
       isShortBalance.value = true;
       showShortBalancePopup(tradeSymbol);
     } else {
@@ -245,12 +266,21 @@ class ShopDetailController extends GetxController {
 
   void showItemPurchasePopup(tradeSymbol) {
     itemPurchaseAlert(
-        this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.uiAmountString!.toString()), tradeSymbol);
+        this,
+        tradeSymbol == 'STIK'
+            ? double.parse(walletMasterController.stik.value.uiAmountString!)
+            : double.parse(
+                walletMasterController.tik.value.uiAmountString!.toString()),
+        tradeSymbol);
   }
 
   void showShortBalancePopup(tradeSymbol) {
     itemPurchaseShortBalanceAlert(
-        this, tradeSymbol == 'STIK' ? double.parse(walletMasterController.stik.value.uiAmountString!) : double.parse(walletMasterController.tik.value.amount!.toString()), tradeSymbol);
+        this,
+        tradeSymbol == 'STIK'
+            ? double.parse(walletMasterController.stik.value.uiAmountString!)
+            : double.parse(walletMasterController.tik.value.amount!.toString()),
+        tradeSymbol);
   }
 
   void showItemPurchaseCompletePopup() {
@@ -268,7 +298,8 @@ class ShopDetailController extends GetxController {
   void moveToExternalBrowser(linkUrl) async {
     Uri url = Uri.parse(linkUrl!);
     if (await canLaunchUrl(url)) {
-      await ActivityService.fetchChallengeAllianceLinkRecord(selectedItem.value.challenge!.challengeId, linkUrl);
+      await ActivityService.fetchChallengeAllianceLinkRecord(
+          selectedItem.value.challenge!.challengeId, linkUrl);
       await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }

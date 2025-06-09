@@ -10,10 +10,12 @@ import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
-  ConfirmWalletPasswordController controller = Get.put(ConfirmWalletPasswordController());
+  ConfirmWalletPasswordController controller =
+      Get.put(ConfirmWalletPasswordController());
   controller.passwordFormStatus.value = FormStatus.empty;
   Completer<String> completer = Completer();
 
@@ -42,16 +44,16 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
                     fontSize: 22.sp,
                     height: 32.sp / 22,
                   ),
-                  children: const [
+                  children: [
                     TextSpan(
-                      text: '안전한 지갑 사용을 위해\n',
+                      text: 'for_secure_wallet'.tr(),
                     ),
                     TextSpan(
-                      text: '이체 비밀번호',
+                      text: 'transfer_password'.tr(),
                       style: TextStyle(color: skyBlueColor),
                     ),
                     TextSpan(
-                      text: '를 한번 확인합니다.',
+                      text: 'verify_transfer_password'.tr(),
                     ),
                   ],
                 ),
@@ -59,15 +61,16 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(left: 24, right: 24, top: 36, bottom: 20),
+                padding: const EdgeInsets.only(
+                    left: 24, right: 24, top: 36, bottom: 20),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(left: 10),
                       child: StyledText(
-                        '이체 비밀번호',
+                        'transfer_password'.tr(),
                         color: lightGrayColor,
                         fontSize: 16,
                         lineHeight: 12,
@@ -91,11 +94,12 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
                             child: TextField(
                               cursorColor: Colors.white,
                               obscureText: true,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 border: InputBorder.none,
-                                contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                                hintText: '이체 비밀번호를 입력해주세요',
-                                hintStyle: TextStyle(
+                                contentPadding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                hintText: 'enter_transfer_password'.tr(),
+                                hintStyle: const TextStyle(
                                   color: deepGrayColor,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,
@@ -107,16 +111,22 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
                                 color: Colors.white,
                               ),
                               focusNode: controller.passwordFocusNode,
-                              onChanged: (password) => controller.updatePassword(password),
-                              onSubmitted: (String text) async => await controller.isValidPassword(completer),
+                              onChanged: (password) =>
+                                  controller.updatePassword(password),
+                              onSubmitted: (String text) async =>
+                                  await controller.isValidPassword(completer),
                             ),
                           ),
                           Obx(
                             () => Visibility(
-                              visible: controller.passwordFormStatus.value != FormStatus.empty,
+                              visible: controller.passwordFormStatus.value !=
+                                  FormStatus.empty,
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 15),
-                                child: controller.passwordFormStatus.value == FormStatus.insufficient ? iconPasswordInvalid : iconPasswordValid,
+                                child: controller.passwordFormStatus.value ==
+                                        FormStatus.insufficient
+                                    ? iconPasswordInvalid
+                                    : iconPasswordValid,
                               ),
                             ),
                           ),
@@ -125,11 +135,11 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
                     ),
                     Obx(() {
                       if (controller.isFocused.value)
-                        return const Padding(
-                          padding: EdgeInsets.only(top: 12, left: 10),
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 12, left: 10),
                           child: Text(
-                            '• 8~16자로 영문, 숫자, 특수문자가 조합되어 있습니다.',
-                            style: TextStyle(
+                            'password_format'.tr(),
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: Color(0xffa4a4a4),
@@ -151,8 +161,11 @@ Future<String> showConfirmPasswordDialog(WalletMasterController controller) {
                   onTap: () async {
                     await controller.isValidPassword(completer);
                   },
-                  buttonText: '확인',
-                  buttonColor: controller.passwordFormStatus.value == FormStatus.sufficient ? skyBlueColor : deepGrayColor,
+                  buttonText: 'confirm'.tr(),
+                  buttonColor: controller.passwordFormStatus.value ==
+                          FormStatus.sufficient
+                      ? skyBlueColor
+                      : deepGrayColor,
                   // textColor: Colors.white,
                   // buttonColor: popupBgColor,
                 );

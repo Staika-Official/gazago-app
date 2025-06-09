@@ -12,7 +12,8 @@ import 'package:gaza_go/platform/controllers/preference_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class Preferences extends StatelessWidget {
   const Preferences({super.key});
@@ -23,7 +24,7 @@ class Preferences extends StatelessWidget {
     DebuggingController debuggingController = Get.put(DebuggingController());
 
     return DefaultContainer(
-      titleText: '설정',
+      titleText: 'settings'.tr(),
       backgroundColor: subBg01Color,
       headerBackgroundColor: const Color(0xFF23232D),
       child: SingleChildScrollView(
@@ -34,7 +35,9 @@ class Preferences extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 10.0.sp),
                 child: Obx(() {
                   return InkWell(
-                    onTap: () => Get.toNamed(Routes.myPage, arguments: {'provider': controller.profile.value.provider}),
+                    onTap: () => Get.toNamed(Routes.myPage, arguments: {
+                      'provider': controller.profile.value.provider
+                    }),
                     child: Container(
                       color: const Color(0xFF23232D),
                       child: Padding(
@@ -49,9 +52,15 @@ class Preferences extends StatelessWidget {
                               children: [
                                 CircleAvatar(
                                   radius: 30.sp,
-                                  foregroundImage: controller.profile.value.profileImageUrl != null && controller.profile.value.profileImageUrl != ''
+                                  foregroundImage: controller.profile.value
+                                                  .profileImageUrl !=
+                                              null &&
+                                          controller.profile.value
+                                                  .profileImageUrl !=
+                                              ''
                                       ? CachedNetworkImageProvider(
-                                          controller.profile.value.profileImageUrl!,
+                                          controller
+                                              .profile.value.profileImageUrl!,
                                           headers: imageNetworkHeader,
                                         )
                                       : Image.asset(
@@ -63,7 +72,11 @@ class Preferences extends StatelessWidget {
                                   Padding(
                                     padding: EdgeInsets.only(left: 14.0.sp),
                                     child: StyledText(
-                                      controller.profile.value.provider == 'APPLE' ? controller.profile.value.nickname!.split('@')[0] : controller.profile.value.nickname!,
+                                      controller.profile.value.provider ==
+                                              'APPLE'
+                                          ? controller.profile.value.nickname!
+                                              .split('@')[0]
+                                          : controller.profile.value.nickname!,
                                       fontWeight: 500,
                                       fontSize: 14,
                                       lineHeight: 20,
@@ -82,7 +95,8 @@ class Preferences extends StatelessWidget {
                   );
                 }),
               ),
-              controller.profile.value.authorities!.contains('ROLE_CERTIFIED_USER')
+              controller.profile.value.authorities!
+                      .contains('ROLE_CERTIFIED_USER')
                   ? SizedBox(
                       height: 60.sp,
                       child: Padding(
@@ -90,8 +104,8 @@ class Preferences extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const StyledText(
-                                '본인인증',
+                              StyledText(
+                                'identity_verification'.tr(),
                                 fontSize: 18,
                               ),
                               Padding(
@@ -106,9 +120,10 @@ class Preferences extends StatelessWidget {
                                     ),
                                   ),
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 2.0.sp, horizontal: 10.sp),
-                                    child: const StyledText(
-                                      '인증완료',
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 2.0.sp, horizontal: 10.sp),
+                                    child: StyledText(
+                                      'authentication_complete_1'.tr(),
                                       color: skyBlueColor,
                                       fontWeight: 500,
                                       fontSize: 14,
@@ -121,7 +136,7 @@ class Preferences extends StatelessWidget {
                           )),
                     )
                   : PreferenceItem(
-                      title: '본인인증',
+                      title: 'identity_verification'.tr(),
                       onTap: () => Get.toNamed(Routes.verificationTerms),
                     ),
               Padding(
@@ -131,8 +146,8 @@ class Preferences extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const StyledText(
-                        '행운 효과음',
+                      StyledText(
+                        'lucky_sound_effect'.tr(),
                         fontSize: 18,
                         lineHeight: 18,
                         fontWeight: 500,
@@ -141,28 +156,35 @@ class Preferences extends StatelessWidget {
                       Switch.adaptive(
                         activeColor: skyBlueColor,
                         activeTrackColor: skyBlueColor,
-                        inactiveTrackColor: const Color.fromRGBO(120, 120, 128, 0.16),
+                        inactiveTrackColor:
+                            const Color.fromRGBO(120, 120, 128, 0.16),
                         thumbColor: WidgetStateProperty.all(Colors.white),
-                        overlayColor: WidgetStateProperty.all(Colors.transparent),
+                        overlayColor:
+                            WidgetStateProperty.all(Colors.transparent),
                         value: controller.isAbleLuckSound.value,
-                        onChanged: (val) => controller.toggleLuckSoundAlarm(val),
+                        onChanged: (val) =>
+                            controller.toggleLuckSoundAlarm(val),
                       )
                     ],
                   ),
                 ),
               ),
               PreferenceItem(
-                title: '알림',
+                title: 'notification'.tr(),
                 onTap: () {
-                  Get.find<NoticePopupController>().moveToNotificationsListPage();
+                  Get.find<NoticePopupController>()
+                      .moveToNotificationsListPage();
                 },
               ),
               PreferenceItem(
-                title: '공지사항',
+                title: 'notice'.tr(),
                 // onTap: () => Get.toNamed(Routes.noticeList, arguments: {'boardType': 'NOTICE'}),
                 onTap: () {
                   Adjust.trackEvent(AdjustEvent('pk4dwp'));
-                  Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'});
+                  Get.toNamed(Routes.webView, arguments: {
+                    'linkUrl':
+                        'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
+                  });
                 },
               ),
               PreferenceItem(
@@ -170,14 +192,18 @@ class Preferences extends StatelessWidget {
                 // onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'FAQ'}),
                 onTap: () {
                   Adjust.trackEvent(AdjustEvent('bkeekw'));
-                  Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'});
+                  Get.toNamed(Routes.webView, arguments: {
+                    'linkUrl':
+                        'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
+                  });
                 },
               ),
               PreferenceItem(
                 title: 'How to GO',
                 onTap: () {
                   Adjust.trackEvent(AdjustEvent('tbldgc'));
-                  Get.toNamed(Routes.webView, arguments: {'linkUrl': F.howToGoUrl});
+                  Get.toNamed(Routes.webView,
+                      arguments: {'linkUrl': F.howToGoUrl});
                 },
               ),
               Container(
@@ -186,12 +212,13 @@ class Preferences extends StatelessWidget {
                 color: const Color(0xFF23232D),
               ),
               PreferenceItem(
-                title: '약관',
+                title: 'terms_and_conditions'.tr(),
                 onTap: () => Get.toNamed(Routes.termsList),
               ),
               PreferenceItem(
-                title: '마케팅 동의',
-                onTap: () => Get.toNamed(Routes.term, arguments: {'termType': 'MARKETING'}),
+                title: 'marketing_agreement'.tr(),
+                onTap: () => Get.toNamed(Routes.term,
+                    arguments: {'termType': 'MARKETING'}),
               ),
               Container(
                 width: double.infinity,
@@ -199,14 +226,15 @@ class Preferences extends StatelessWidget {
                 color: const Color(0xFF23232D),
               ),
               PreferenceItem(
-                title: '로그아웃',
+                title: 'logout'.tr(),
                 onTap: () => controller.showLogoutConfirmation(),
               ),
               Obx(() {
                 return GestureDetector(
-                  onDoubleTap: () => debuggingController.onDebuggingModeTouchCount(),
+                  onDoubleTap: () =>
+                      debuggingController.onDebuggingModeTouchCount(),
                   child: PreferenceItem(
-                    title: '버전정보',
+                    title: 'version_info'.tr(),
                     type: ItemType.descriptive,
                     description: controller.appVersion.value,
                   ),
@@ -219,7 +247,7 @@ class Preferences extends StatelessWidget {
               ),
               (F.isDev || debuggingController.isShowDebuggingMenu.value)
                   ? PreferenceItem(
-                      title: '실험실',
+                      title: 'lab'.tr(),
                       onTap: () => Get.toNamed(Routes.laboratory),
                     )
                   : Container(),
@@ -268,7 +296,12 @@ class PreferenceItem extends StatelessWidget {
   final VoidCallback? onTap;
   final String? description;
 
-  const PreferenceItem({super.key, required this.title, this.type = ItemType.functional, this.onTap, this.description});
+  const PreferenceItem(
+      {super.key,
+      required this.title,
+      this.type = ItemType.functional,
+      this.onTap,
+      this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +320,8 @@ class PreferenceItem extends StatelessWidget {
                 fontSize: 18,
               ),
               type == ItemType.functional
-                  ? Icon(Icons.chevron_right, color: const Color(0xFFBDC0C7), size: 24.sp)
+                  ? Icon(Icons.chevron_right,
+                      color: const Color(0xFFBDC0C7), size: 24.sp)
                   : Padding(
                       padding: EdgeInsets.only(right: 5.sp),
                       child: StyledText(

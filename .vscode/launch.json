@@ -1,108 +1,24 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "app-boilerplate",
-      "cwd": "Users/iwpark/Projects/app-boilerplate",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "app-boilerplate (profile mode)",
-      "cwd": "Users/iwpark/Projects/app-boilerplate",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "app-boilerplate (release mode)",
-      "cwd": "Users/iwpark/Projects/app-boilerplate",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    },
-    {
-      "name": "app-step",
-      "cwd": "Users/iwpark/Projects/app-step",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "app-step (profile mode)",
-      "cwd": "Users/iwpark/Projects/app-step",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "app-step (release mode)",
-      "cwd": "Users/iwpark/Projects/app-step",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    },
-    {
-      "name": "flutter_clean_arch_sample_demo-master",
-      "cwd": "Users/iwpark/Projects/flutter_clean_arch_sample_demo-master",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "flutter_clean_arch_sample_demo-master (profile mode)",
-      "cwd": "Users/iwpark/Projects/flutter_clean_arch_sample_demo-master",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "flutter_clean_arch_sample_demo-master (release mode)",
-      "cwd": "Users/iwpark/Projects/flutter_clean_arch_sample_demo-master",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    },
-    {
-      "name": "staika-app",
-      "cwd": "Users/iwpark/Projects/staika-app",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "staika-app (profile mode)",
-      "cwd": "Users/iwpark/Projects/staika-app",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "staika-app (release mode)",
-      "cwd": "Users/iwpark/Projects/staika-app",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    },
-    {
-      "name": "stylebot",
-      "cwd": "Users/iwpark/Projects/stylebot",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "stylebot (profile mode)",
-      "cwd": "Users/iwpark/Projects/stylebot",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "stylebot (release mode)",
-      "cwd": "Users/iwpark/Projects/stylebot",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
-    }
-  ]
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "production",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main_prod.dart",
+            "flutterMode": "debug",
+            "args": ["--flavor", "prod"]
+        },
+        {
+            "name": "stage",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main_stage.dart",
+            "flutterMode": "debug",
+            "args": ["--flavor", "stage"]
+        }
+    ]
 }

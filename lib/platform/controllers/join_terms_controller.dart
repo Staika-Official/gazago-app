@@ -4,17 +4,22 @@ import 'package:gaza_go/platform/models/term_item_model.dart';
 import 'package:gaza_go/platform/models/terms_history_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class JoinTermsController extends GetxController {
   final RxString platform = RxString('');
   final RxList<TermItemModel> termsList = RxList.empty();
   RxBool get allAgreed {
-    return RxBool(termsList.isNotEmpty ? termsList.every((term) => term.isChecked == true) : false);
+    return RxBool(termsList.isNotEmpty
+        ? termsList.every((term) => term.isChecked == true)
+        : false);
   }
 
   RxBool get allRequiredAgreed {
-    return RxBool(termsList.where((term) => term.isRequired == true).every((term) => term.isChecked == true));
+    return RxBool(termsList
+        .where((term) => term.isRequired == true)
+        .every((term) => term.isChecked == true));
   }
 
   @override
@@ -25,7 +30,8 @@ class JoinTermsController extends GetxController {
   }
 
   void getTermsList() async {
-    await BoardService.getPostListByType('TERMS,PRIVACY,LOCATION,MARKETING', platform: platform.value, successCallback: (List<TermItemModel> terms) {
+    await BoardService.getPostListByType('TERMS,PRIVACY,LOCATION,MARKETING',
+        platform: platform.value, successCallback: (List<TermItemModel> terms) {
       termsList.value = terms;
     });
   }
@@ -38,7 +44,6 @@ class JoinTermsController extends GetxController {
       }
       return term;
     }).toList();
-
   }
 
   void toggleAllTerms() {
@@ -48,14 +53,19 @@ class JoinTermsController extends GetxController {
       term.isChecked = allChecked;
       return term;
     }).toList();
-
   }
 
   void requestJoin() async {
     if (allRequiredAgreed.value) {
       await MemberService.fetchTermsAgree(
-          termsList.map((term) => TermsHistoryModel(terms: term.title!, postId: term.id!, activated: term.isChecked, boardType: term.boardType!, clientId: platform.value.toUpperCase())).toList(),
-          successCallback: (effectedCount) async {
+          termsList
+              .map((term) => TermsHistoryModel(
+                  terms: term.title!,
+                  postId: term.id!,
+                  activated: term.isChecked,
+                  boardType: term.boardType!,
+                  clientId: platform.value.toUpperCase()))
+              .toList(), successCallback: (effectedCount) async {
         if (effectedCount == termsList.length) {
           if (platform.value == 'gazago') {
             Get.toNamed(Routes.permissions);
@@ -64,10 +74,10 @@ class JoinTermsController extends GetxController {
           }
         }
       }, errorCallback: () {
-        showToastPopup('약관 동의에 실패하였습니다.');
+        showToastPopup('terms_agreement_failed'.tr());
       });
     } else {
-      showToastPopup('필수 약관에 동의해주세요');
+      showToastPopup('agree_to_terms'.tr());
     }
   }
 }

@@ -12,90 +12,99 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:simple_animations/simple_animations.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Home extends StatelessWidget {
   Home({super.key});
 
-  List navigation = [
-    {
-      'icon': iconMenuChallenges,
-      'selectedIcon': iconMenuChallengesActive,
-      'label': '챌린지',
-    },
-    {
-      'icon': iconMenuItems,
-      'selectedIcon': iconMenuItemsActive,
-      'label': '내 장비',
-    },
-    {
-      'icon': iconMenuHome,
-      'selectedIcon': iconMenuHomeActive,
-      'label': '홈',
-    },
-    {
-      'icon': iconMenuShop,
-      'selectedIcon': iconMenuShopActive,
-      'label': '상점',
-    },
-    {
-      'icon': iconMenuRanking,
-      'selectedIcon': iconMenuRankingActive,
-      'label': '랭킹',
-    }
-  ];
-
   List<Widget> renderNavigation(HomeMenuController controller) {
+    List navigation = [
+      {
+        'icon': iconMenuChallenges,
+        'selectedIcon': iconMenuChallengesActive,
+        'label': 'challenge'.tr(),
+      },
+      {
+        'icon': iconMenuItems,
+        'selectedIcon': iconMenuItemsActive,
+        'label': 'my_equipment'.tr(),
+      },
+      {
+        'icon': iconMenuHome,
+        'selectedIcon': iconMenuHomeActive,
+        'label': 'home'.tr(),
+      },
+      {
+        'icon': iconMenuShop,
+        'selectedIcon': iconMenuShopActive,
+        'label': 'shop'.tr(),
+      },
+      {
+        'icon': iconMenuRanking,
+        'selectedIcon': iconMenuRankingActive,
+        'label': 'ranking'.tr(),
+      }
+    ];
     return navigation
         .asMap()
         .entries
         .map(
-          (item) => InkWell(
-            onTap: () {
-              controller.selectMenu(item.key);
-            },
-            child: Container(
-              key: ValueKey(item.key),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      SizedBox(
-                        width: 28,
-                        height: 28,
-                        child: Center(
-                          child: controller.selectedIndex.value == item.key ? item.value['selectedIcon'] : item.value['icon'],
+          (item) => Expanded(
+            child: InkWell(
+              onTap: () {
+                controller.selectMenu(item.key);
+              },
+              child: Container(
+                key: ValueKey(item.key),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        SizedBox(
+                          width: 28,
+                          height: 28,
+                          child: Center(
+                            child: controller.selectedIndex.value == item.key
+                                ? item.value['selectedIcon']
+                                : item.value['icon'],
+                          ),
                         ),
-                      ),
-                      if (controller.hasNewChallenge.value == true && item.key == 0)
-                        Positioned(
-                          top: 0,
-                          right: -2,
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffFF1414),
-                              borderRadius: BorderRadius.circular(8),
+                        if (controller.hasNewChallenge.value == true &&
+                            item.key == 0)
+                          Positioned(
+                            top: 0,
+                            right: -2,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: const Color(0xffFF1414),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
-                          ),
-                        )
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 4.0),
-                    child: Text(
-                      item.value['label'],
-                      style: AppTextStyleData.regular().koCaptionSemiboldMd.copyWith(
-                            color: controller.selectedIndex.value == item.key ? AppColorData.regular().colorTextBrand : Colors.white,
-                            fontSize: 10,
-                          ),
+                          )
+                      ],
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: Text(
+                        item.value['label'],
+                        style: AppTextStyleData.regular()
+                            .koCaptionSemiboldMd
+                            .copyWith(
+                              color: controller.selectedIndex.value == item.key
+                                  ? AppColorData.regular().colorTextBrand
+                                  : Colors.white,
+                              fontSize: 10,
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -104,10 +113,14 @@ class Home extends StatelessWidget {
   }
 
   MovieTween challengeMovie = MovieTween()
-    ..scene(begin: const Duration(seconds: 1), duration: const Duration(milliseconds: 300))
-        .tween('opacity', Tween<double>(begin: 0, end: 1), curve: Curves.easeOut)
+    ..scene(
+            begin: const Duration(seconds: 1),
+            duration: const Duration(milliseconds: 300))
+        .tween('opacity', Tween<double>(begin: 0, end: 1),
+            curve: Curves.easeOut)
         .thenFor(duration: const Duration(seconds: 1))
-        .thenTween('opacity', Tween<double>(begin: 1, end: 0), duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+        .thenTween('opacity', Tween<double>(begin: 1, end: 0),
+            duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
 
   Widget bottomNavigationBar(HomeMenuController controller) {
     return Container(
@@ -155,8 +168,8 @@ class Home extends StatelessWidget {
                                 color: Colors.black,
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const StyledText(
-                                '새로운 챌린지가 오픈했어요',
+                              child: StyledText(
+                                'new_challenge_opened'.tr(),
                                 color: skyBlueColor,
                                 fontSize: 14,
                                 fontWeight: 600,
@@ -199,7 +212,6 @@ class Home extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ...renderNavigation(controller),
                     ],
@@ -219,7 +231,7 @@ class Home extends StatelessWidget {
               //           NavigationDestination(
               //             icon: iconMenuChallenges,
               //             selectedIcon: iconMenuChallengesActive,
-              //             label: '챌린지',
+              //             label: 'challenge'.tr(),
               //           ),
               //           if (controller.hasNewChallenge.value == true)
               //             Positioned(
@@ -241,22 +253,22 @@ class Home extends StatelessWidget {
               //     NavigationDestination(
               //       icon: iconMenuItems,
               //       selectedIcon: iconMenuItemsActive,
-              //       label: '내 장비',
+              //       label: 'my_equipment'.tr(),
               //     ),
               //     NavigationDestination(
               //       icon: iconMenuHome,
               //       selectedIcon: iconMenuHomeActive,
-              //       label: '홈',
+              //       label: 'home'.tr(),
               //     ),
               //     NavigationDestination(
               //       icon: iconMenuShop,
               //       selectedIcon: iconMenuShopActive,
-              //       label: '상점',
+              //       label: 'shop'.tr(),
               //     ),
               //     NavigationDestination(
               //       icon: iconMenuRanking,
               //       selectedIcon: iconMenuRankingActive,
-              //       label: '랭킹',
+              //       label: 'ranking'.tr(),
               //     )
               //   ],
               // ),
@@ -277,13 +289,13 @@ class Home extends StatelessWidget {
       canPop: false,
       onPopInvoked: (bool canPop) async {
         showAlert(
-          title: '알림',
-          contentText: '운동 중인 기록은 저장되지 않습니다.\ngazaGO를 종료 하시겠습니까?',
+          title: 'notification'.tr(),
+          contentText: 'unsaved_exercise_data'.tr(),
           actions: [
             Expanded(
               child: GazagoButton(
                 onTap: () => Get.back(),
-                buttonText: '아니요',
+                buttonText: 'no'.tr(),
                 textColor: Colors.white,
                 buttonColor: popupBgColor,
               ),
@@ -296,7 +308,7 @@ class Home extends StatelessWidget {
                 onTap: () {
                   SystemNavigator.pop();
                 },
-                buttonText: '예',
+                buttonText: 'yes_1'.tr(),
                 buttonColor: skyBlueColor,
               ),
             ),
@@ -308,14 +320,17 @@ class Home extends StatelessWidget {
           // extendBody: true,
           backgroundColor: subBg01Color,
           appBar: controller.appbar,
-          body: controller.mainViewWidgetList.elementAt(controller.selectedIndex.value),
+          body: controller.mainViewWidgetList
+              .elementAt(controller.selectedIndex.value),
           bottomNavigationBar: controller.selectedIndex.value == 2
               ? bottomNavigationBar(
                   controller,
                 )
               : AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  height: controller.hideBottomNav.value ? 0 : controller.bottomNavHeight.value,
+                  height: controller.hideBottomNav.value
+                      ? 0
+                      : controller.bottomNavHeight.value,
                   child: Wrap(
                     children: [
                       bottomNavigationBar(

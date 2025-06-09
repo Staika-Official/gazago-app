@@ -8,7 +8,8 @@ import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class CreateWalletPassword extends StatelessWidget {
   const CreateWalletPassword({super.key});
@@ -18,14 +19,17 @@ class CreateWalletPassword extends StatelessWidget {
       visible: status != FormStatus.empty,
       child: Padding(
         padding: const EdgeInsets.only(right: 15),
-        child: status == FormStatus.insufficient ? iconPasswordInvalid : iconPasswordValid,
+        child: status == FormStatus.insufficient
+            ? iconPasswordInvalid
+            : iconPasswordValid,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    CreateWalletPasswordController controller = Get.put(CreateWalletPasswordController());
+    CreateWalletPasswordController controller =
+        Get.put(CreateWalletPasswordController());
     double appBarHeight = AppBar().preferredSize.height;
     return LayoutBuilder(builder: (context, constraints) {
       return DefaultContainer(
@@ -60,31 +64,32 @@ class CreateWalletPassword extends StatelessWidget {
                           fontSize: 22.sp,
                           height: 32.sp / 22,
                         ),
-                        children: const [
+                        children: [
                           TextSpan(
-                            text: '안전한 지갑 사용을 위해\n',
+                            text: 'for_secure_wallet'.tr(),
                           ),
                           TextSpan(
-                            text: '이체 비밀번호',
+                            text: 'transfer_password'.tr(),
                             style: TextStyle(color: skyBlueColor),
                           ),
                           TextSpan(
-                            text: '를 등록해주세요.',
+                            text: 'register_password'.tr(),
                           ),
                         ],
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 24, right: 24, top: 36, bottom: 20),
+                    padding: const EdgeInsets.only(
+                        left: 24, right: 24, top: 36, bottom: 20),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: StyledText(
-                            '이체 비밀번호',
+                            'transfer_password'.tr(),
                             color: lightGrayColor,
                             fontSize: 16,
                             lineHeight: 12,
@@ -108,11 +113,12 @@ class CreateWalletPassword extends StatelessWidget {
                                 child: TextField(
                                   cursorColor: Colors.white,
                                   obscureText: true,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                                    hintText: '이체 비밀번호를 입력해주세요',
-                                    hintStyle: TextStyle(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 15),
+                                    hintText: 'enter_transfer_password'.tr(),
+                                    hintStyle: const TextStyle(
                                       color: deepGrayColor,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -123,10 +129,12 @@ class CreateWalletPassword extends StatelessWidget {
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
-                                  onChanged: (password) => controller.updatePassword(password),
+                                  onChanged: (password) =>
+                                      controller.updatePassword(password),
                                 ),
                               ),
-                              Obx(() => validatePassword(controller.passwordFormStatus.value)),
+                              Obx(() => validatePassword(
+                                  controller.passwordFormStatus.value)),
                             ],
                           ),
                         ),
@@ -149,8 +157,9 @@ class CreateWalletPassword extends StatelessWidget {
                                   obscureText: true,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 15.sp),
-                                    hintText: '이체 비밀번호를 확인해주세요',
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 15.sp),
+                                    hintText: 'verify_transfer_pin'.tr(),
                                     hintStyle: const TextStyle(
                                       color: deepGrayColor,
                                       fontSize: 16,
@@ -163,23 +172,29 @@ class CreateWalletPassword extends StatelessWidget {
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
-                                  onChanged: (password) => controller.updateConfirmPassword(password),
+                                  onChanged: (password) => controller
+                                      .updateConfirmPassword(password),
                                   onSubmitted: (password) {
-                                    if (controller.confirmPasswordFormStatus.value == FormStatus.sufficient && controller.confirmTextStatus.value == FormStatus.sufficient) {
+                                    if (controller.confirmPasswordFormStatus
+                                                .value ==
+                                            FormStatus.sufficient &&
+                                        controller.confirmTextStatus.value ==
+                                            FormStatus.sufficient) {
                                       controller.nextStep();
                                     }
                                   },
                                 ),
                               ),
-                              Obx(() => validatePassword(controller.confirmPasswordFormStatus.value)),
+                              Obx(() => validatePassword(
+                                  controller.confirmPasswordFormStatus.value)),
                             ],
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 12, left: 10),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12, left: 10),
                           child: Text(
-                            '• 8~16자로 영문, 숫자, 특수문자가 조합해주세요.',
-                            style: TextStyle(
+                            'password_combination'.tr(),
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: Color(0xffa4a4a4),
@@ -205,7 +220,8 @@ class CreateWalletPassword extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 12.sp),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 20.0.sp, horizontal: 12.sp),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,9 +233,9 @@ class CreateWalletPassword extends StatelessWidget {
                                       iconExcludeRed,
                                       Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp),
-                                        child: const StyledText(
-                                          '비밀번호 등록 전에 꼭 확인하세요!',
-                                          color: Color(0XFFEB4C4C),
+                                        child: StyledText(
+                                          'verify_before_registration'.tr(),
+                                          color: const Color(0XFFEB4C4C),
                                           fontSize: 16,
                                           lineHeight: 16,
                                           fontWeight: 600,
@@ -230,13 +246,14 @@ class CreateWalletPassword extends StatelessWidget {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(left: 2.0.sp),
-                                  child: const Column(
+                                  child: Column(
                                     children: [
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          StyledText(
+                                          const StyledText(
                                             '• ',
                                             fontWeight: 500,
                                             fontSize: 16,
@@ -246,7 +263,8 @@ class CreateWalletPassword extends StatelessWidget {
                                           ),
                                           Flexible(
                                             child: StyledText(
-                                              '스타이카 월렛은 탈중앙화 지갑이에요',
+                                              'staika_wallet_decentralized'
+                                                  .tr(),
                                               fontWeight: 500,
                                               fontSize: 14,
                                               lineHeight: 22,
@@ -257,7 +275,8 @@ class CreateWalletPassword extends StatelessWidget {
                                       ),
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           StyledText(
                                             '• ',
@@ -269,31 +288,7 @@ class CreateWalletPassword extends StatelessWidget {
                                           ),
                                           Flexible(
                                             child: StyledText(
-                                              '이체 비밀번호는 ‘개인키’이므로 저희 서비스에서는 일체 보관하지 않고 있어요.',
-                                              fontWeight: 500,
-                                              fontSize: 14,
-                                              lineHeight: 22,
-                                              letterSpacing: -.1,
-                                              color: lightGrayColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          StyledText(
-                                            '• ',
-                                            fontWeight: 500,
-                                            fontSize: 16,
-                                            lineHeight: 22,
-                                            letterSpacing: -.1,
-                                            color: lightGrayColor,
-                                          ),
-                                          Flexible(
-                                            child: StyledText(
-                                              '이체 비밀번호를 분실할 시 계정을 복구할 수 없어요.',
+                                              'password_not_stored'.tr(),
                                               fontWeight: 500,
                                               fontSize: 14,
                                               lineHeight: 22,
@@ -305,7 +300,8 @@ class CreateWalletPassword extends StatelessWidget {
                                       ),
                                       Row(
                                         mainAxisSize: MainAxisSize.max,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           StyledText(
                                             '• ',
@@ -317,7 +313,32 @@ class CreateWalletPassword extends StatelessWidget {
                                           ),
                                           Flexible(
                                             child: StyledText(
-                                              '이체 비밀번호를 안전한 곳에 기록하여 보관해 주세요.',
+                                              'password_loss_irreversible'.tr(),
+                                              fontWeight: 500,
+                                              fontSize: 14,
+                                              lineHeight: 22,
+                                              letterSpacing: -.1,
+                                              color: lightGrayColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          StyledText(
+                                            '• ',
+                                            fontWeight: 500,
+                                            fontSize: 16,
+                                            lineHeight: 22,
+                                            letterSpacing: -.1,
+                                            color: lightGrayColor,
+                                          ),
+                                          Flexible(
+                                            child: StyledText(
+                                              'store_password_safely'.tr(),
                                               fontWeight: 500,
                                               fontSize: 14,
                                               lineHeight: 22,
@@ -354,11 +375,13 @@ class CreateWalletPassword extends StatelessWidget {
                                   child: TextField(
                                     cursorColor: Colors.white,
                                     obscureText: false,
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
                                       border: InputBorder.none,
-                                      contentPadding: EdgeInsets.symmetric(horizontal: 15),
-                                      hintText: '확인했습니다',
-                                      hintStyle: TextStyle(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 15),
+                                      hintText: 'confirmed'.tr(),
+                                      hintStyle: const TextStyle(
                                         color: deepGrayColor,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
@@ -369,18 +392,20 @@ class CreateWalletPassword extends StatelessWidget {
                                     style: const TextStyle(
                                       color: Colors.white,
                                     ),
-                                    onChanged: (text) => controller.updateConfirmText(text),
+                                    onChanged: (text) =>
+                                        controller.updateConfirmText(text),
                                   ),
                                 ),
-                                Obx(() => validatePassword(controller.confirmTextStatus.value)),
+                                Obx(() => validatePassword(
+                                    controller.confirmTextStatus.value)),
                               ],
                             ),
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 20.0.sp, left: 15.0.sp),
-                          child: const StyledText(
-                            '위 내용을 인지했다면 \'확인했습니다\'를 입력해주세요',
+                          child: StyledText(
+                            'confirm_understanding'.tr(),
                             fontSize: 12,
                             fontWeight: 500,
                             color: deepGrayColor,
@@ -395,20 +420,34 @@ class CreateWalletPassword extends StatelessWidget {
                         alignment: Alignment.bottomCenter,
                         child: Container(
                           height: 100,
-                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 15),
                           width: double.infinity,
                           child: GazagoButton(
                             onTap: () {
                               // print('click');
-                              if (controller.confirmPasswordFormStatus.value == FormStatus.sufficient && controller.confirmTextStatus.value == FormStatus.sufficient) {
+                              if (controller.confirmPasswordFormStatus.value ==
+                                      FormStatus.sufficient &&
+                                  controller.confirmTextStatus.value ==
+                                      FormStatus.sufficient) {
                                 controller.nextStep();
                               }
                             },
-                            buttonText: '확인',
+                            buttonText: 'confirm'.tr(),
                             buttonColor:
-                                (controller.confirmPasswordFormStatus.value == FormStatus.sufficient && controller.confirmTextStatus.value == FormStatus.sufficient) ? skyBlueColor : popupBgColor,
+                                (controller.confirmPasswordFormStatus.value ==
+                                            FormStatus.sufficient &&
+                                        controller.confirmTextStatus.value ==
+                                            FormStatus.sufficient)
+                                    ? skyBlueColor
+                                    : popupBgColor,
                             textColor:
-                                (controller.confirmPasswordFormStatus.value == FormStatus.sufficient && controller.confirmTextStatus.value == FormStatus.sufficient) ? Colors.black : deepGrayColor,
+                                (controller.confirmPasswordFormStatus.value ==
+                                            FormStatus.sufficient &&
+                                        controller.confirmTextStatus.value ==
+                                            FormStatus.sufficient)
+                                    ? Colors.black
+                                    : deepGrayColor,
                             // buttonColor: popupBgColor,
                           ),
                         ),

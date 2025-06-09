@@ -5,7 +5,8 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class LaboratorySolanaTransfer extends StatelessWidget {
   const LaboratorySolanaTransfer({super.key});
@@ -15,7 +16,7 @@ class LaboratorySolanaTransfer extends StatelessWidget {
     SolanaController solanaController = Get.put(SolanaController());
 
     return DefaultContainer(
-      titleText: '솔라나 전송',
+      titleText: 'send_solana'.tr(),
       backgroundColor: subBg01Color,
       headerBackgroundColor: const Color(0xFF23232D),
       child: SingleChildScrollView(
@@ -39,7 +40,7 @@ class LaboratorySolanaTransfer extends StatelessWidget {
                 ),
                 ListTile(
                   title: StyledText(
-                    '스타이카',
+                    'staika'.tr(),
                     fontSize: 20.sp,
                     color: Colors.white,
                   ),
@@ -73,7 +74,7 @@ class LaboratorySolanaTransfer extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    hintText: "받는 주소를 입력해주세요",
+                    hintText: 'enter_recipient_address'.tr(),
                     hintStyle: TextStyle(
                       color: deepGrayColor,
                       fontSize: 20.sp,
@@ -115,7 +116,7 @@ class LaboratorySolanaTransfer extends StatelessWidget {
                 ),
                 GazagoButton(
                   onTap: () => solanaController.sendTransfer(),
-                  buttonText: '전송하기',
+                  buttonText: 'submit'.tr(),
                   buttonColor: skyBlueColor,
                 ),
                 const Padding(padding: EdgeInsets.all(20.0)),
@@ -147,7 +148,7 @@ class LaboratorySolanaTransfer extends StatelessWidget {
                 ),
                 GazagoButton(
                   onTap: () => solanaController.launchURL(),
-                  buttonText: 'Solscan 바로가기',
+                  buttonText: 'solscan_link'.tr(),
                   buttonColor: skyBlueColor,
                 ),
               ],

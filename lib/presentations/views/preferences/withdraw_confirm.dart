@@ -4,7 +4,8 @@ import 'package:gaza_go/platform/controllers/withdraw_confirm_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class WithdrawConfirm extends StatelessWidget {
   const WithdrawConfirm({super.key});
@@ -58,17 +59,17 @@ class WithdrawConfirm extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 StyledText(
-                  '정말로 gazaGO 서비스를',
+                  'withdrawal_confirmation_1'.tr(),
                   fontSize: 22,
                   fontWeight: 700,
                   lineHeight: 22,
                 ),
                 StyledText(
-                  '탈퇴 하시겠습니까?',
+                  'withdrawal_confirmation_question'.tr(),
                   fontSize: 22,
                   fontWeight: 700,
                   lineHeight: 32,
@@ -101,8 +102,8 @@ class WithdrawConfirm extends StatelessWidget {
                               ),
                         Padding(
                           padding: EdgeInsets.only(left: 8.0.sp),
-                          child: const StyledText(
-                            '탈퇴 전 꼭 확인해 주세요.',
+                          child: StyledText(
+                            'withdrawal_confirmation_2'.tr(),
                             color: Colors.white,
                             fontWeight: 500,
                             fontSize: 16,
@@ -113,7 +114,8 @@ class WithdrawConfirm extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 5.0.sp),
+                    padding: EdgeInsets.symmetric(
+                        vertical: 8.0.sp, horizontal: 5.0.sp),
                     child: Column(
                       children: [
                         ...renderCheckList(controller),
@@ -145,9 +147,9 @@ class WithdrawConfirm extends StatelessWidget {
                         onTap: () => controller.showWithdrawConfirmPopup(),
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 12.0.sp),
-                          child: const Center(
+                          child: Center(
                               child: StyledText(
-                            '다음',
+                            'next_action'.tr(),
                             fontSize: 18,
                             lineHeight: 18,
                             fontWeight: 500,

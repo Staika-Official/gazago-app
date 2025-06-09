@@ -9,7 +9,8 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class ChallengesHome extends StatelessWidget {
   const ChallengesHome({super.key});
@@ -49,7 +50,11 @@ class ChallengesHome extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14),
               ),
               child: InkWell(
-                onTap: () => controller.moveToDetail(item.id, item.challengeType, item.challengeUserState, item.challengeState),
+                onTap: () => controller.moveToDetail(
+                    item.id,
+                    item.challengeType,
+                    item.challengeUserState,
+                    item.challengeState),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -60,19 +65,36 @@ class ChallengesHome extends StatelessWidget {
                         fit: StackFit.expand,
                         clipBehavior: Clip.none,
                         children: [
-                          if (item.thumbnailImageUrl != null || item.thumbnailImageUrl != '')
+                          if (item.thumbnailImageUrl != null ||
+                              item.thumbnailImageUrl != '')
                             item.thumbnailImageUrl!.contains('.svg')
                                 ? SvgPicture.network(
                                     fit: BoxFit.cover,
                                     item.thumbnailImageUrl!,
-                                    placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                    placeholderBuilder:
+                                        (BuildContext context) => const Center(
+                                            child: SizedBox.square(
+                                                dimension: 40,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        color: skyBlueColor))),
                                     headers: imageNetworkHeader,
                                   )
                                 : CachedNetworkImage(
                                     imageUrl: item.thumbnailImageUrl!,
                                     fit: BoxFit.cover,
-                                    placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
-                                    errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                    placeholder: (context, url) => const Center(
+                                        child: SizedBox.square(
+                                            dimension: 40,
+                                            child: CircularProgressIndicator(
+                                                color: skyBlueColor))),
+                                    errorWidget: (context, url, error) =>
+                                        const Center(
+                                            child: SizedBox.square(
+                                                dimension: 40,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        color: skyBlueColor))),
                                     httpHeaders: imageNetworkHeader,
                                   ),
                           // Image.asset("assets/images/challenges/@temp_img.png", fit: BoxFit.cover),
@@ -91,9 +113,12 @@ class ChallengesHome extends StatelessWidget {
                                       ),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 5.0.sp, horizontal: 8.0.sp),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 5.0.sp, horizontal: 8.0.sp),
                                       child: StyledText(
-                                        controller.getChallengeActivationTypeString(item.challengeActivationType),
+                                        controller
+                                            .getChallengeActivationTypeString(
+                                                item.challengeActivationType),
                                         fontWeight: 500,
                                         fontSize: 12,
                                         lineHeight: 14,
@@ -102,42 +127,56 @@ class ChallengesHome extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                if (item.challengeUserState != 'COMPLETE' && item.challengeUserState != 'INCOMPLETE')
-                                 item.challengeUserState != null
+                                if (item.challengeUserState != 'COMPLETE' &&
+                                    item.challengeUserState != 'INCOMPLETE')
+                                  item.challengeUserState != null
                                       ? Container(
-
-                                    decoration: BoxDecoration(
-                                      color: item.challengeUserState == 'JOINED'
-                                          ? AppColorData.regular().colorBgInteractivePrimaryPressed
-                                          : item.challengeUserState == 'JOIN_AVAILABLE' || item.challengeUserState == 'REGISTER_AVAILABLE'
-                                          ? AppColorData.regular().colorBgInteractivePrimary
-                                          : AppColorData.regular().colorBgInteractivePrimaryDisabled,
-                                        borderRadius: BorderRadius.all(
-                                         Radius.circular(3.sp),
-                                        ),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 4.0.sp, horizontal: 8.0.sp),
-                                      child: StyledText(
-                                        controller.getChallengeUserStatus(item.challengeUserState!, item.challengeState!),
-                                        fontWeight: 500,
-                                        fontSize: 12,
-                                        lineHeight: 15,
-                                        color: Colors.black,
-                                        letterSpacing: -.1,
-                                      ),
-                                    ),
-                                  )
+                                          decoration: BoxDecoration(
+                                            color: item.challengeUserState ==
+                                                    'JOINED'
+                                                ? AppColorData.regular()
+                                                    .colorBgInteractivePrimaryPressed
+                                                : item.challengeUserState ==
+                                                            'JOIN_AVAILABLE' ||
+                                                        item.challengeUserState ==
+                                                            'REGISTER_AVAILABLE'
+                                                    ? AppColorData.regular()
+                                                        .colorBgInteractivePrimary
+                                                    : AppColorData.regular()
+                                                        .colorBgInteractivePrimaryDisabled,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(3.sp),
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 4.0.sp,
+                                                horizontal: 8.0.sp),
+                                            child: StyledText(
+                                              controller.getChallengeUserStatus(
+                                                  item.challengeUserState!,
+                                                  item.challengeState!),
+                                              fontWeight: 500,
+                                              fontSize: 12,
+                                              lineHeight: 15,
+                                              color: Colors.black,
+                                              letterSpacing: -.1,
+                                            ),
+                                          ),
+                                        )
                                       : Container(),
                               ],
                             ),
                           ),
 
-                          if (item.challengeUserState == 'COMPLETE' || item.challengeUserState == 'INCOMPLETE')
+                          if (item.challengeUserState == 'COMPLETE' ||
+                              item.challengeUserState == 'INCOMPLETE')
                             Positioned(
                               right: 5.sp,
                               bottom: -30.sp,
-                              child: item.challengeUserState == 'COMPLETE' ? iconChallengeSuccess : iconChallengeFailure,
+                              child: item.challengeUserState == 'COMPLETE'
+                                  ? iconChallengeSuccess
+                                  : iconChallengeFailure,
                             )
                         ],
                       ),
@@ -182,7 +221,8 @@ class ChallengesHome extends StatelessWidget {
                                   letterSpacing: -.1,
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 2.0.sp),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 2.0.sp),
                                   child: const StyledText(
                                     ' · ',
                                     color: lightGrayColor,
@@ -193,7 +233,8 @@ class ChallengesHome extends StatelessWidget {
                                   ),
                                 ),
                                 StyledText(
-                                  controller.getChallengeStatus(item.challengeState!),
+                                  controller
+                                      .getChallengeStatus(item.challengeState!),
                                   color: item.challengeState == 'READY'
                                       ? lightGreenColor
                                       : item.challengeState == 'IN_PROGRESS'
@@ -214,19 +255,27 @@ class ChallengesHome extends StatelessWidget {
                                     children: [
                                       ...item.exerciseTypes!.map(
                                         (type) => Padding(
-                                          padding: EdgeInsets.only(right: 5.0.sp),
+                                          padding:
+                                              EdgeInsets.only(right: 5.0.sp),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: AppColorData.regular().colorIconSecondary,
-                                              border: Border.all(width: 1.sp, color: Colors.black),
+                                              color: AppColorData.regular()
+                                                  .colorIconSecondary,
+                                              border: Border.all(
+                                                  width: 1.sp,
+                                                  color: Colors.black),
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(15.sp),
                                               ),
                                             ),
                                             child: Padding(
-                                              padding: EdgeInsets.symmetric(vertical: 3.0.sp, horizontal: 8.sp),
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 3.0.sp,
+                                                  horizontal: 8.sp),
                                               child: StyledText(
-                                                controller.getChallengeExerciseType(type),
+                                                controller
+                                                    .getChallengeExerciseType(
+                                                        type),
                                                 color: subBg01Color,
                                                 fontSize: 10,
                                                 fontWeight: 600,
@@ -257,8 +306,8 @@ class ChallengesHome extends StatelessWidget {
                                         child: Row(
                                           children: [
                                             item.challengeState == 'READY'
-                                                ? const StyledText(
-                                                    '모집인원',
+                                                ? StyledText(
+                                                    'enrollment_capacity'.tr(),
                                                     color: lightGrayColor,
                                                     fontWeight: 500,
                                                     fontSize: 12,
@@ -266,7 +315,16 @@ class ChallengesHome extends StatelessWidget {
                                                     letterSpacing: -.1,
                                                   )
                                                 : StyledText(
-                                                    '${formatDecimalPlaces((item.soldQuantity ?? 0).toDouble(), 0)}명',
+                                                    'participants_count'.tr(
+                                                      args: [
+                                                        formatDecimalPlaces(
+                                                          (item.soldQuantity ??
+                                                                  0)
+                                                              .toDouble(),
+                                                          0,
+                                                        ),
+                                                      ],
+                                                    ),
                                                     color: lightGrayColor,
                                                     fontWeight: 500,
                                                     fontSize: 12,
@@ -275,8 +333,14 @@ class ChallengesHome extends StatelessWidget {
                                                   ),
                                             StyledText(
                                               item.quantity >= 0
-                                                  ? '${item.challengeState == 'READY' ? '' : ' /'} ${formatDecimalPlaces(item.quantity.toDouble(), 0)}명'
-                                                  : controller.getUnlimitedParticipationStatus(item.challengeState!),
+                                                  ? 'challenge_progress'
+                                                      .tr(args: [
+                                                      '${item.challengeState == 'READY' ? '' : ' /'}',
+                                                      '${formatDecimalPlaces(item.quantity.toDouble(), 0)}'
+                                                    ])
+                                                  : controller
+                                                      .getUnlimitedParticipationStatus(
+                                                          item.challengeState!),
                                               color: lightGrayColor,
                                               fontWeight: 500,
                                               fontSize: 12,
@@ -311,7 +375,8 @@ class ChallengesHome extends StatelessWidget {
       return Padding(
         padding: EdgeInsets.only(left: 20.sp, right: 20.sp, top: 12.sp),
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+          constraints:
+              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -367,7 +432,7 @@ class ChallengesHome extends StatelessWidget {
               //             Padding(
               //               padding: EdgeInsets.only(right: 10.0.sp),
               //               child: StyledText(
-              //                 '전체',
+              //                 'all'.tr(),
               //                 fontWeight: 600,
               //                 fontSize: 14,
               //                 lineHeight: 22,
@@ -411,7 +476,9 @@ class ChallengesHome extends StatelessWidget {
                   ? challengesController.dataGetLoading.value
                       ? Padding(
                           padding: EdgeInsets.symmetric(vertical: 120.0.sp),
-                          child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
+                          child: const Center(
+                              child: CircularProgressIndicator(
+                                  color: skyBlueColor)),
                         )
                       : Container(
                           width: double.infinity,
@@ -427,8 +494,8 @@ class ChallengesHome extends StatelessWidget {
                               iconNoneChallenges,
                               Padding(
                                 padding: EdgeInsets.only(top: 22.0.sp),
-                                child: const StyledText(
-                                  '진행중인 챌린지가 없습니다\n빠른시일에 만나요!',
+                                child: StyledText(
+                                  'no_ongoing_challenges'.tr(),
                                   color: deepGrayColor,
                                   fontSize: 16,
                                   lineHeight: 20,

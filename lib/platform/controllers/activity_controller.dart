@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:io';
 import 'dart:math';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -24,6 +24,7 @@ import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
+import 'package:gaza_go/platform/helpers/map_mixin.dart';
 import 'package:gaza_go/platform/helpers/promotion_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
@@ -40,21 +41,42 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class ActivityController extends SuperController with ActivityMixin, ChallengeMixin, GetTickerProviderStateMixin, ConsumerItemMixin, PromotionMixin {
+class ActivityController extends SuperController
+    with
+        ActivityMixin,
+        MapMixin,
+        ChallengeMixin,
+        GetTickerProviderStateMixin,
+        ConsumerItemMixin,
+        PromotionMixin {
   final WalletMasterController walletMasterController = Get.find();
   // ActivityController activityController = Get.isRegistered<ActivityController>() ? Get.find<ActivityController>() : Get.put(ActivityController());
-  LoaderController loaderController = Get.isRegistered<LoaderController>() ? Get.find<LoaderController>() : Get.put(LoaderController());
+  LoaderController loaderController = Get.isRegistered<LoaderController>()
+      ? Get.find<LoaderController>()
+      : Get.put(LoaderController());
   RxList<StatModel> get statList {
     return RxList([
-      StatModel(name: '체력', currentStat: userState.value.state != null ? userState.value.state!.stamina! : 0, type: 'STAMINA'),
-      StatModel(name: '내구도', currentStat: userState.value.shoes != null ? userState.value.shoes!.durability! : 0, type: 'DURABILITY'),
+      StatModel(
+          name: 'stamina'.tr(),
+          currentStat: userState.value.state != null
+              ? userState.value.state!.stamina!
+              : 0,
+          type: 'STAMINA'),
+      StatModel(
+          name: 'durability'.tr(),
+          currentStat: userState.value.shoes != null
+              ? userState.value.shoes!.durability!
+              : 0,
+          type: 'DURABILITY'),
     ]);
   }
 
@@ -66,23 +88,31 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   final RxBool isListeningToLocation = RxBool(false);
   final RxBool hasPermission = RxBool(false);
   final Rx<ExerciseType> selectedExerciseType = Rx(ExerciseType.walking);
-  final Rx<LocationPermission> _locationPermission = Rx(LocationPermission.unableToDetermine);
-  final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
+  final Rx<LocationPermission> _locationPermission =
+      Rx(LocationPermission.unableToDetermine);
+  final Rx<LocationAccuracyStatus> _locationAccuracyStatus =
+      Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
   Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
   Rx<DateTime> calcNearCourseTime = Rx(DateTime.now());
-  NOverlayImage? startMarker;
-  NOverlayImage? endMarker;
-  List<NOverlayImage> checkpointMarkers = List.empty(growable: true);
+  BitmapDescriptor? startMarker;
+  BitmapDescriptor? endMarker;
+  List<Marker> checkpointMarkers = List.empty(growable: true);
+
   RxnInt challengeSelectedIndex = RxnInt(null);
   Control activityLoadControl = Control.play;
   RxBool disableButton = RxBool(false);
   RxBool disableActivityButton = RxBool(true);
-  final Throttling thr = Throttling(duration: const Duration(milliseconds: 500));
-  final Throttling exerciseStartThr = Throttling(duration: const Duration(milliseconds: 500));
-  final Throttling exerciseUpdateThr = Throttling(duration: const Duration(milliseconds: 500));
-  final Throttling exerciseEndThr = Throttling(duration: const Duration(milliseconds: 500));
-  final Throttling locationThr = Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling thr =
+      Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling exerciseStartThr =
+      Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling exerciseUpdateThr =
+      Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling exerciseEndThr =
+      Throttling(duration: const Duration(milliseconds: 500));
+  final Throttling locationThr =
+      Throttling(duration: const Duration(milliseconds: 500));
   late AnimationController challengeGuideController;
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   final RxBool isButtonDisabled = RxBool(false);
@@ -92,18 +122,23 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   RxBool isShowGpsAccuracyAlert = RxBool(false);
   RxnInt isShowGpsAccuracyCount = RxnInt(0);
   Timer? gpsAccuracyTimer;
-  List gpsNoticeList = ['절전모드 중이라면 해제해주세요.', '넓게 트인 야외로 이동해보세요.', '지속적으로 GPS 수신이 원활하지 않을 경우, 휴대폰을 껐다 켠 다음 다시 시도해주세요.'];
+  List gpsNoticeList = [
+    'disable_power_saving_mode'.tr(),
+    'move_to_open_area'.tr(),
+    'restart_phone_for_gps'.tr()
+  ];
   RxBool isNewCollection = RxBool(false);
   RxList nearChallengeAllLocation = RxList.empty();
   Rxn<ChallengeCourseModel> nearChallengeLocation = Rxn(null);
-  NaverMapController? naverMapController;
+  GoogleMapController? googleMapController;
   RxDouble betweenDistance = RxDouble(0.0);
   RxInt detectDelay = RxInt(30);
   RxInt calcDelay = RxInt(300);
   bool _isRequestingChallenges = false;
   RxBool isClickedBtn = RxBool(false);
   void checkNewCollectionStatus() {
-    if (HiveStore.load(key: HiveKey.isNewCollection.name) != null && HiveStore.load(key: HiveKey.isNewCollection.name) == true) {
+    if (HiveStore.load(key: HiveKey.isNewCollection.name) != null &&
+        HiveStore.load(key: HiveKey.isNewCollection.name) == true) {
       isNewCollection.value = true;
     } else {
       isNewCollection.value = false;
@@ -114,7 +149,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     challengeGuideController = AnimationController(vsync: this);
     checkConnectivityStatus();
 
-    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value) && !isFakeGps.value && !isTestingFakeGps()) {
+    if ([ExerciseState.ongoing, ExerciseState.paused]
+            .any((state) => state == exerciseState.value) &&
+        !isFakeGps.value &&
+        !isTestingFakeGps()) {
       showPendingExerciseAlert(this);
     }
     disableActivityButton.value = false;
@@ -127,8 +165,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         await initActivityStatus();
       }
 
-      gpsAccuracyTimer = Timer.periodic(const Duration(minutes: 10), (timer) async {
-        if (gpsAccuracySensitive.value > 30 && exerciseState.value == ExerciseState.ongoing) {
+      gpsAccuracyTimer =
+          Timer.periodic(const Duration(minutes: 10), (timer) async {
+        if (gpsAccuracySensitive.value > 30 &&
+            exerciseState.value == ExerciseState.ongoing) {
           showLocalNotificationLowGps();
         }
       });
@@ -152,7 +192,10 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void showLocalNotificationLowGps() {
-    showLocalNotification(notificationType: NotificationType.gpsLow, title: 'GPS 수신이 원활하지 않습니다.', message: '운동 기록이 되지 않고 있습니다.');
+    showLocalNotification(
+        notificationType: NotificationType.gpsLow,
+        title: 'gps_signal_weak'.tr(),
+        message: 'exercise_record_failed'.tr());
   }
 
   Future<void> refreshController() async {
@@ -169,24 +212,32 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> loadMakerImages() async {
-    startMarker = const NOverlayImage.fromAssetImage(
+    startMarker = await BitmapDescriptor.asset(
+      const ImageConfiguration(), // 필요시 크기 조절
       'assets/images/activity/ico_challenge_start_marker.png',
     );
 
-    endMarker = const NOverlayImage.fromAssetImage(
+    endMarker = await BitmapDescriptor.asset(
+      const ImageConfiguration(), // 필요시 크기 조절
       'assets/images/activity/ico_challenge_end_marker.png',
     );
 
     int index = 0;
     while (index < 10) {
-      checkpointMarkers.add(await NOverlayImage.fromAssetImage(
+      BitmapDescriptor checkpointMarkerIcon = await BitmapDescriptor.asset(
+        const ImageConfiguration(), // 필요시 크기 조절
         'assets/images/activity/ico_challenge_checkpoint_marker_${index + 1}.png',
+      );
+      checkpointMarkers.add(Marker(
+        markerId: MarkerId('checkpointMarker_$index'),
+        position: const LatLng(0, 0),
+        icon: checkpointMarkerIcon,
       ));
       index++;
     }
   }
 
-  NMarker generateDefaultMarker(ChallengeCourseModel course) {
+  Marker generateDefaultMarker(ChallengeCourseModel course) {
     return getCustomMarker(
       id: course.id.toString(),
       markerType: "START",
@@ -222,9 +273,29 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     generateChallengeMarkerList();
   }
 
+  LatLngBounds _createBoundsFromLatLngList(List<LatLng> list) {
+    double minLat = list.first.latitude;
+    double maxLat = list.first.latitude;
+    double minLng = list.first.longitude;
+    double maxLng = list.first.longitude;
+
+    for (final latLng in list) {
+      if (latLng.latitude < minLat) minLat = latLng.latitude;
+      if (latLng.latitude > maxLat) maxLat = latLng.latitude;
+      if (latLng.longitude < minLng) minLng = latLng.longitude;
+      if (latLng.longitude > maxLng) maxLng = latLng.longitude;
+    }
+
+    return LatLngBounds(
+      southwest: LatLng(minLat, minLng),
+      northeast: LatLng(maxLat, maxLng),
+    );
+  }
+
   void showPathPointMarkers(ChallengeCourseModel course) {
     if (challengeSelectedIndex.value != null) {
-      challengeMarkers.add(generateDefaultMarker(allCoursesList.firstWhere((element) => element.id == challengeSelectedIndex.value)));
+      challengeMarkers.add(generateDefaultMarker(allCoursesList.firstWhere(
+          (element) => element.id == challengeSelectedIndex.value)));
     }
 
     challengeSelectedIndex.value = course.id!;
@@ -233,55 +304,68 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       return element.info.id == challengeSelectedIndex.value.toString();
     });
 
-    selectedChallengeMarkers.add(getCustomMarker(id: course.id.toString(), markerType: "START", course: course, markerIcon: startMarker));
+    selectedChallengeMarkers.add(getCustomMarker(
+        id: course.id.toString(),
+        markerType: "START",
+        course: course,
+        markerIcon: startMarker));
 
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
       course.checkpoints!.asMap().forEach((index, checkpoint) {
-        selectedChallengeMarkers.add(getCheckpointMarker(checkpoint, checkpointMarkers[index]));
+        selectedChallengeMarkers.add(
+            getCheckpointMarker(checkpoint, checkpointMarkers[index]?.icon));
       });
     }
 
-    selectedChallengeMarkers.add(getCustomMarker(id: course.id.toString(), markerType: "END", course: course, markerIcon: endMarker));
-    challengeMapController.clearOverlays();
-    challengeMapController.addOverlayAll(
+    selectedChallengeMarkers.add(getCustomMarker(
+        id: course.id.toString(),
+        markerType: "END",
+        course: course,
+        markerIcon: endMarker));
+    clearOverlays();
+    addOverlayAll(
       {...selectedChallengeMarkers},
     );
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
-      List<NLatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
-      challengeMapController.updateCamera(
-        NCameraUpdate.fitBounds(
-          NLatLngBounds.from(markers),
-          padding: EdgeInsets.all(120),
-        ),
+      List<LatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
+      challengeMapController.animateCamera(
+        CameraUpdate.newLatLngBounds(_createBoundsFromLatLngList(markers), 120),
       );
     } else {
-      challengeMapController.updateCamera(
-        NCameraUpdate.fitBounds(
-          NLatLngBounds.from(
-            [
-              NLatLng(course.startLat!, course.startLon!),
-              NLatLng(course.endLat!, course.endLon!),
-            ],
-          ),
-          padding: EdgeInsets.all(100),
-        ),
+      challengeMapController.animateCamera(
+        CameraUpdate.newLatLngBounds(
+            _createBoundsFromLatLngList(
+              [
+                LatLng(course.startLat!, course.startLon!),
+                LatLng(course.endLat!, course.endLon!),
+              ],
+            ),
+            100),
       );
     }
   }
 
-  List<NLatLng> getfitBoundCourseMarker(markers) {
-    double minLat = markers.map((marker) => marker.position.latitude).reduce((a, b) => a < b ? a : b);
-    double maxLat = markers.map((marker) => marker.position.latitude).reduce((a, b) => a > b ? a : b);
-    double minLng = markers.map((marker) => marker.position.longitude).reduce((a, b) => a < b ? a : b);
-    double maxLng = markers.map((marker) => marker.position.longitude).reduce((a, b) => a > b ? a : b);
+  List<LatLng> getfitBoundCourseMarker(markers) {
+    double minLat = markers
+        .map((marker) => marker.position.latitude)
+        .reduce((a, b) => a < b ? a : b);
+    double maxLat = markers
+        .map((marker) => marker.position.latitude)
+        .reduce((a, b) => a > b ? a : b);
+    double minLng = markers
+        .map((marker) => marker.position.longitude)
+        .reduce((a, b) => a < b ? a : b);
+    double maxLng = markers
+        .map((marker) => marker.position.longitude)
+        .reduce((a, b) => a > b ? a : b);
 
     // double aspectRatio = (maxLng - minLng) / (maxLat - minLat);
 
-    List<NLatLng> outermostCoords = [];
+    List<LatLng> outermostCoords = [];
 
     outermostCoords = [
-      NLatLng(minLat, minLng),
-      NLatLng(maxLat, maxLng),
+      LatLng(minLat, minLng),
+      LatLng(maxLat, maxLng),
     ];
 
     return outermostCoords;
@@ -324,13 +408,16 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         Adjust.trackEvent(AdjustEvent('spa2cy'));
       }
     }
-    await getMyConsumerItemsByType(stat.type == 'STAMINA' ? 'RECOVERY' : 'REPAIR', isNotEmptyCallback: () {
+    await getMyConsumerItemsByType(
+        stat.type == 'STAMINA' ? 'RECOVERY' : 'REPAIR', isNotEmptyCallback: () {
       loaderController.isLoading.value = false;
       selectedType.value = stat.type;
       if (stat.type != 'STAMINA') {
         targetShoeId.value = userState.value.shoes!.id!;
       }
-      currentStat.value = stat.type == 'STAMINA' ? userState.value.state!.stamina! : userState.value.shoes!.durability!;
+      currentStat.value = stat.type == 'STAMINA'
+          ? userState.value.state!.stamina!
+          : userState.value.shoes!.durability!;
       consumerItemUsagePopup(this, context);
     }, isEmptyCallback: () {
       loaderController.isLoading.value = false;
@@ -387,14 +474,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   //           state?.state = newUserState;
   //         });
   //         walletMasterController.getSpendingWalletBalances();
-  //         showToastPopup('체력이 충전되었습니다.');
+  //         showToastPopup('stamina_recharged'.tr());
   //         closeRepairPopup();
   //       }, errorCallback: () {
-  //         showToastPopup('충전 요청이 실패했습니다.');
+  //         showToastPopup('recharge_failed'.tr());
   //         initRepairButton();
   //       });
   //     } else {
-  //       showToastPopup('충전할 게이지를 확인해주세요.');
+  //       showToastPopup('check_gauge'.tr());
   //       initRepairButton();
   //     }
   //   } else {
@@ -420,14 +507,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   //           state!.shoes!.durability = newRepairModel.durability;
   //         });
   //         walletMasterController.getSpendingWalletBalances();
-  //         showToastPopup('내구도 충전이 완료되었습니다.');
+  //         showToastPopup('durability_recharge_complete'.tr());
   //         closeRepairPopup();
   //       }, errorCallback: () {
-  //         showToastPopup('충전 요청이 실패했습니다.');
+  //         showToastPopup('recharge_failed'.tr());
   //         initRepairButton();
   //       });
   //     } else {
-  //       showToastPopup('충전할 게이지를 확인해주세요.');
+  //       showToastPopup('check_gauge'.tr());
   //       initRepairButton();
   //     }
   //   } else {
@@ -447,13 +534,18 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           state?.shoes = currentUserState.shoes;
         });
         if (currentUserState.exercise != null) {
-          HiveStore.save(key: HiveKey.savedStepCount.name, value: currentUserState.exercise!.steps!);
+          HiveStore.save(
+              key: HiveKey.savedStepCount.name,
+              value: currentUserState.exercise!.steps!);
         }
         if (userState.value.exercise == null) {
           exerciseState.value = ExerciseState.ready;
         } else {
-          CurrentUserStateModel? savedUserState = HiveStore.loadCurrentUserState();
-          if (savedUserState != null && savedUserState.exercise!.steps! < currentUserState.exercise!.steps!) {
+          CurrentUserStateModel? savedUserState =
+              HiveStore.loadCurrentUserState();
+          if (savedUserState != null &&
+              savedUserState.exercise!.steps! <
+                  currentUserState.exercise!.steps!) {
             HiveStore.saveCurrentUserState(
               userState: CurrentUserStateModel(
                 state: currentUserState.state,
@@ -461,23 +553,31 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
                 shoes: currentUserState.shoes,
               ),
             );
-            savedUserState = CurrentUserStateModel.fromJson(currentUserState.toJson());
+            savedUserState =
+                CurrentUserStateModel.fromJson(currentUserState.toJson());
           }
-          if (savedUserState != null && savedUserState.exercise != null && savedUserState.exercise!.recordState != null && savedUserState.exercise!.recordState! == 'NORMAL') {
+          if (savedUserState != null &&
+              savedUserState.exercise != null &&
+              savedUserState.exercise!.recordState != null &&
+              savedUserState.exercise!.recordState! == 'NORMAL') {
             savedUserState.exercise!.locationUpdateTime = DateTime.now();
             userState.update((state) {
               state?.exercise = savedUserState!.exercise;
             });
 
-            int savedSteps = HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
+            int savedSteps =
+                HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
             if (savedUserState.exercise!.steps! > savedSteps) {
-              HiveStore.save(key: HiveKey.savedStepCount.name, value: savedUserState.exercise!.steps!);
+              HiveStore.save(
+                  key: HiveKey.savedStepCount.name,
+                  value: savedUserState.exercise!.steps!);
             }
           }
 
           if (userState.value.exercise?.challengeCourseId != null) {
             //  산행중인 정보 가져오기
-            ChallengeCourseModel challenge = await getChallengeCourse(userState.value.exercise!.challengeCourseId!);
+            ChallengeCourseModel challenge = await getChallengeCourse(
+                userState.value.exercise!.challengeCourseId!);
             if (challenge.id != null) {
               selectedCourse.value = challenge;
             }
@@ -487,7 +587,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
             exerciseData.add(userState.value.exercise!);
             await syncExerciseData(userState.value);
             coordinates.value = List.empty(growable: true);
-            coordinates.addAll(await parseCoordinates(userState.value.exercise!.id));
+            coordinates
+                .addAll(await parseCoordinates(userState.value.exercise!.id));
           }
 
           final state = userState.value.exercise!.state!;
@@ -501,7 +602,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
         await retrySavedRequests(source: 'getUserState');
 
-        if (Get.isRegistered<LoadingController>()) Get.find<LoadingController>().updateProgress("곧 가자고와 가자고~!");
+        if (Get.isRegistered<LoadingController>())
+          Get.find<LoadingController>()
+              .updateProgress('coming_soon_gazago'.tr());
       },
       errorCallback: (int? statusCode) {
         if (statusCode != null && statusCode == 404) {
@@ -528,7 +631,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         initializeActivity();
       }
       if (globalController.internetConnection.value) {
-        bool hasSeenFairPlayAlert = HiveStore.load(key: HiveKey.hasSeenFairPlayAlert.name) ?? false;
+        bool hasSeenFairPlayAlert =
+            HiveStore.load(key: HiveKey.hasSeenFairPlayAlert.name) ?? false;
         if (!hasSeenFairPlayAlert) {
           // 최초 Go 버튼 이벤트
           Adjust.trackEvent(AdjustEvent('v2xlbe'));
@@ -536,14 +640,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           await showFairPlayAlert();
         }
 
-        if (userState.value.state!.locked != null && userState.value.state!.locked! == true) {
+        if (userState.value.state!.locked != null &&
+            userState.value.state!.locked! == true) {
           showLockedUserAlert();
         } else {
           await getCourseList();
           getActivityRoute();
         }
       } else {
-        showToastPopup('원할한 네트워크에서 진행해주세요.');
+        showToastPopup('use_stable_network'.tr());
       }
     } else {
       await requestPermissionStepByStep();
@@ -554,9 +659,12 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<bool> checkAvailabilities() async {
     bool isGpsAvailable = await checkGpsSensor();
     bool hasActivityPermission = await checkActivityPermission();
-    bool hasLocationPermissionWithAccuracy = await checkLocationPermissionAndAccuracy();
+    bool hasLocationPermissionWithAccuracy =
+        await checkLocationPermissionAndAccuracy();
 
-    return isGpsAvailable && hasActivityPermission && hasLocationPermissionWithAccuracy;
+    return isGpsAvailable &&
+        hasActivityPermission &&
+        hasLocationPermissionWithAccuracy;
   }
 
   Future<bool> requestPermissionStepByStep() async {
@@ -569,12 +677,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       await showRequestActivityAlert();
     }
 
-    bool hasLocationPermissionWithAccuracy = await checkLocationPermissionAndAccuracy();
+    bool hasLocationPermissionWithAccuracy =
+        await checkLocationPermissionAndAccuracy();
     if (!hasLocationPermissionWithAccuracy) {
       await showRequestLocationAlert();
     }
 
-    return isGpsAvailable && hasActivityPermission && hasLocationPermissionWithAccuracy;
+    return isGpsAvailable &&
+        hasActivityPermission &&
+        hasLocationPermissionWithAccuracy;
   }
 
   Future<void> showRequestLocationAlert() async {
@@ -599,11 +710,13 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     LocationPermission locationPermission = await Geolocator.checkPermission();
     _locationPermission.value = locationPermission;
 
-    return [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission);
+    return [LocationPermission.always, LocationPermission.whileInUse]
+        .any((permission) => permission == locationPermission);
   }
 
   Future<bool> checkLocationAccuracy() async {
-    LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy();
+    LocationAccuracyStatus accuracyStatus =
+        await Geolocator.getLocationAccuracy();
     _locationAccuracyStatus.value = accuracyStatus;
 
     return accuracyStatus == LocationAccuracyStatus.precise;
@@ -625,9 +738,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   Future<bool> checkActivityPermission() async {
     bool hasActivityPermission = false;
     if (Platform.isAndroid) {
-      hasActivityPermission = ph.PermissionStatus.granted == await ph.Permission.activityRecognition.status;
+      hasActivityPermission = ph.PermissionStatus.granted ==
+          await ph.Permission.activityRecognition.status;
     } else if (Platform.isIOS) {
-      hasActivityPermission = ph.PermissionStatus.granted == await ph.Permission.sensors.status;
+      hasActivityPermission =
+          ph.PermissionStatus.granted == await ph.Permission.sensors.status;
     }
 
     return hasActivityPermission;
@@ -637,9 +752,11 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     Completer<bool> activityRecognitionPermission = Completer();
     bool permissionGranted = false;
     if (Platform.isAndroid) {
-      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.activityRecognition.request();
+      permissionGranted = ph.PermissionStatus.granted ==
+          await ph.Permission.activityRecognition.request();
     } else if (Platform.isIOS) {
-      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.sensors.request();
+      permissionGranted =
+          ph.PermissionStatus.granted == await ph.Permission.sensors.request();
       await health.requestAuthorization([HealthDataType.STEPS]);
 
       // permissionGranted = sensorGranted && healthGranted;
@@ -654,9 +771,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<bool> requestLocationPermission() async {
     Completer<bool> locationPermissionCompleter = Completer();
-    LocationPermission locationPermission = await Geolocator.requestPermission();
-    LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy();
-    bool gotPermission = [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission) && LocationAccuracyStatus.precise == accuracyStatus;
+    LocationPermission locationPermission =
+        await Geolocator.requestPermission();
+    LocationAccuracyStatus accuracyStatus =
+        await Geolocator.getLocationAccuracy();
+    bool gotPermission = [
+          LocationPermission.always,
+          LocationPermission.whileInUse
+        ].any((permission) => permission == locationPermission) &&
+        LocationAccuracyStatus.precise == accuracyStatus;
     if (!gotPermission) {
       Geolocator.openAppSettings();
     }
@@ -667,17 +790,21 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void getActivityRoute() {
-    if ([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState.value)) {
+    if ([ExerciseState.ongoing, ExerciseState.paused]
+        .any((state) => state == exerciseState.value)) {
       Get.toNamed(Routes.activityActive);
     } else {
       if (Get.isDialogOpen == null || Get.isDialogOpen == false) {
-        print('운동선택');
-        Get.dialog(const ActivitySelect(), barrierDismissible: false, barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
+        print('exercise_selection'.tr());
+        Get.dialog(const ActivitySelect(),
+            barrierDismissible: false,
+            barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
       }
     }
   }
 
-  void loadExercise(ExerciseType exerciseType, [ChallengeCourseModel? challenge]) {
+  void loadExercise(ExerciseType exerciseType,
+      [ChallengeCourseModel? challenge]) {
     loadingTime.value = 1;
 
     if (loadingTimer != null) {
@@ -697,7 +824,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       const Duration(seconds: 1),
       (timer) {
         if (loadingTime.value >= 3) {
-          exerciseStartThr.throttle(() => startExercise(exerciseType, challenge));
+          exerciseStartThr
+              .throttle(() => startExercise(exerciseType, challenge));
           timer.cancel();
           loadingTimer = null;
         } else {
@@ -708,7 +836,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     );
   }
 
-  void passThrowActivityLoading(ExerciseType exerciseType, [ChallengeCourseModel? challenge]) {
+  void passThrowActivityLoading(ExerciseType exerciseType,
+      [ChallengeCourseModel? challenge]) {
     loadingTimer?.cancel();
     loadingTimer = null;
     Get.back();
@@ -717,12 +846,14 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   Future<void> selectExerciseType(ExerciseType exerciseType) async {
     if (exerciseType == ExerciseType.walking) {
-      if (selectedCourse.value != null && selectedCourse.value!.challengeId == null) {
+      if (selectedCourse.value != null &&
+          selectedCourse.value!.challengeId == null) {
         selectedCourse.value = null;
         selectedChallenge.value = null;
       }
 
-      bool adjustFirstWalkingEvent = HiveStore.load(key: HiveKey.adjustFirstWalkingEvent.name) ?? false;
+      bool adjustFirstWalkingEvent =
+          HiveStore.load(key: HiveKey.adjustFirstWalkingEvent.name) ?? false;
       if (!adjustFirstWalkingEvent) {
         Adjust.trackEvent(AdjustEvent('v2xlbe'));
         HiveStore.save(key: HiveKey.adjustFirstWalkingEvent.name, value: true);
@@ -773,7 +904,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     );
   }
 
-  void moveToCourseSelection({required ChallengeCourseModel course, required ChallengeModel challenge}) async {
+  void moveToCourseSelection(
+      {required ChallengeCourseModel course,
+      required ChallengeModel challenge}) async {
     // 코스형 챌린지 이벤트
     Adjust.trackEvent(AdjustEvent('tx7196'));
 
@@ -808,9 +941,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           useMSLAltitude: true,
           //(Optional) Set foreground notification config to keep the app alive
           //when going to the background
-          foregroundNotificationConfig: const ForegroundNotificationConfig(
-            notificationText: "운동 기록을 측정중",
-            notificationTitle: "위치 기록 중",
+          foregroundNotificationConfig: ForegroundNotificationConfig(
+            notificationText: 'measuring_exercise_record'.tr(),
+            notificationTitle: 'recording_location'.tr(),
             enableWakeLock: true,
           ));
     } else if (Platform.isIOS) {
@@ -824,21 +957,25 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
       );
     }
 
-    locationSubscription ??= Geolocator.getPositionStream(locationSettings: locationSettings).listen((
+    locationSubscription ??=
+        Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+            (
       Position position,
     ) async {
       currentLocation.value = position;
       gpsAccuracySensitive.value = position.accuracy;
       // gpsAccuracySensitive.value = 40;
-      print('등록');
+      print('registration'.tr());
       isFakeGps.value = position.isMocked;
       print('position : $position');
       print('position.accuracy : ${position.accuracy}');
       // HiveStore.save(key: HiveKey.currentPosition.name, value: null);
       detectFakeGps();
 
-      if (HiveStore.load(key: HiveKey.isDebuggingMode.name) && exerciseState.value == ExerciseState.ongoing) {
-        List positionRawData = HiveStore.load(key: HiveKey.positionRawDataLogs.name) ?? [];
+      if (HiveStore.load(key: HiveKey.isDebuggingMode.name) &&
+          exerciseState.value == ExerciseState.ongoing) {
+        List positionRawData =
+            HiveStore.load(key: HiveKey.positionRawDataLogs.name) ?? [];
 
         var logForm = {
           'positionRawDataInfo': '===================================='
@@ -854,7 +991,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         HiveStore.savePositionRawData(value: positionRawData);
       }
 
-      if (exerciseState.value == ExerciseState.ongoing && position.accuracy < gpsAccuracy) {
+      if (exerciseState.value == ExerciseState.ongoing &&
+          position.accuracy < gpsAccuracy) {
         exerciseData.add(UserExerciseModel(
           altitude: position.altitude,
           speed: convertMStoKMH(position.speed),
@@ -862,21 +1000,29 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           locationUpdateTime: DateTime.now(),
         ));
 
-        coordinates.add(NLatLng(position.latitude, position.longitude));
+        coordinates.add(LatLng(position.latitude, position.longitude));
         if (coordinates.isNotEmpty && coordinates.length > 1) {
           //TODO. need to edit filter test
-          filterCoordinates(coordinates.last, NLatLng(position.latitude, position.longitude), userState.value.exercise!.id!);
+          filterCoordinates(
+              coordinates.last,
+              LatLng(position.latitude, position.longitude),
+              userState.value.exercise!.id!);
           exerciseDistance.value = exerciseDistance.value +
-              Geolocator.distanceBetween(coordinates[coordinates.length - 2].latitude, coordinates[coordinates.length - 2].longitude, coordinates.last.latitude, coordinates.last.longitude);
+              Geolocator.distanceBetween(
+                  coordinates[coordinates.length - 2].latitude,
+                  coordinates[coordinates.length - 2].longitude,
+                  coordinates.last.latitude,
+                  coordinates.last.longitude);
         }
 
-        if (Get.currentRoute == Routes.activityMap && coordinates.length >= 10) {
-          print('여기에 들어왔다');
-          challengeMapController.addOverlay(NPathOverlay(
-            id: 'path',
+        if (Get.currentRoute == Routes.activityMap &&
+            coordinates.length >= 10) {
+          print('entered_here'.tr());
+          addOverlay(Polyline(
+            polylineId: PolylineId('path'),
             width: 3,
             color: Colors.red,
-            coords: coordinates,
+            points: coordinates,
             // outlineColor: Colors.white,
           ));
         }
@@ -891,21 +1037,29 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
           // List<String>? prevPosition = HiveStore.load(key: HiveKey.currentPosition.name) != null ? HiveStore.load(key: HiveKey.currentPosition.name).split(',') : null;
 
-          // final cameraUpdate = NCameraUpdate.scrollAndZoomTo(target: NLatLng(currentLocation.value.latitude, currentLocation.value.longitude));
+          // final cameraUpdate = NCameraUpdate.scrollAndZoomTo(target: LatLng(currentLocation.value.latitude, currentLocation.value.longitude));
 
           print('Get.currentRoute : ${Get.currentRoute}');
           if (Get.currentRoute == '/laboratory/detect_challenge_course') {
-            final cameraUpdate = NCameraUpdate.withParams(
-              target: NLatLng(currentLocation.value.latitude, currentLocation.value.longitude),
-              zoom: 16,
+            LatLng target = LatLng(
+              currentLocation.value.latitude,
+              currentLocation.value.longitude,
             );
-            naverMapController?.updateCamera(cameraUpdate);
+
+            googleMapController?.animateCamera(
+              CameraUpdate.newLatLngZoom(target, 16),
+            );
           }
 
-          double prevPositionLat = nearChallengeLocation.value != null ? double.parse(nearChallengeLocation.value!.startLat.toString()) : position.latitude;
-          double prevPositionLng = nearChallengeLocation.value != null ? double.parse(nearChallengeLocation.value!.startLon.toString()) : position.longitude;
+          double prevPositionLat = nearChallengeLocation.value != null
+              ? double.parse(nearChallengeLocation.value!.startLat.toString())
+              : position.latitude;
+          double prevPositionLng = nearChallengeLocation.value != null
+              ? double.parse(nearChallengeLocation.value!.startLon.toString())
+              : position.longitude;
 
-          betweenDistance.value = calculateDistance(prevPositionLat, prevPositionLng, position.latitude, position.longitude);
+          betweenDistance.value = calculateDistance(prevPositionLat,
+              prevPositionLng, position.latitude, position.longitude);
 
           gpsSpeed.value = convertMStoKMH(position.speed);
           // gpsSpeed.value = betweenDistance.value * 3.6 / 1000;
@@ -920,11 +1074,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           print('title : ${nearChallengeLocation.value?.firstName}');
           print('title : ${nearChallengeLocation.value?.endPointName}');
           print('dis : ${betweenDistance.value}');
-          print('nearChallengeLocation.value : ${nearChallengeLocation.value!.startLat}');
+          print(
+              'nearChallengeLocation.value : ${nearChallengeLocation.value!.startLat}');
 
           // 주기적으로 가장 가까운 챌린지 코스 지점 5분마다 재조회
-          if (calcNearCourseTime.value.add(Duration(seconds: 300)).isBefore(now)) {
-            calculateNearByHierarchyCourse(position.latitude, position.longitude);
+          if (calcNearCourseTime.value
+              .add(Duration(seconds: 300))
+              .isBefore(now)) {
+            calculateNearByHierarchyCourse(
+                position.latitude, position.longitude);
           }
 
           if (betweenDistance.value < 1000) {
@@ -939,7 +1097,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
           print('detectDelay : ${detectDelay}');
 
           // print('detectDelay.value : ${detectDelay.value}');
-          if (receiveLocationTime.value.add(Duration(seconds: detectDelay.value)).isBefore(now)) {
+          if (receiveLocationTime.value
+              .add(Duration(seconds: detectDelay.value))
+              .isBefore(now)) {
             if (gpsSpeed.value < 12 && betweenDistance.value < 1000) {
               await findCourses();
             }
@@ -951,7 +1111,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         }
       }
 
-      HiveStore.save(key: HiveKey.currentPosition.name, value: '${position.latitude},${position.longitude}');
+      HiveStore.save(
+          key: HiveKey.currentPosition.name,
+          value: '${position.latitude},${position.longitude}');
       locationThr.throttle(() {
         detectChallengeZone(position);
       });
@@ -961,7 +1123,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   void calculateNearByHierarchyCourse(currentLat, currentLon) {
     print('555555');
 
-    nearChallengeLocation.value = findNearestCourse(currentLat, currentLon, nearChallengeAllLocation.expand((c) => c.course).toList());
+    nearChallengeLocation.value = findNearestCourse(currentLat, currentLon,
+        nearChallengeAllLocation.expand((c) => c.course).toList());
     print('nearChallengeLocation.value');
     print(nearChallengeLocation.value);
     nearChallengeLocation.refresh();
@@ -975,7 +1138,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         if (data != null) {
           nearChallengeAllLocation.value = data;
           nearChallengeAllLocation.refresh();
-          calculateNearByHierarchyCourse(currentLocation.value.latitude, currentLocation.value.longitude);
+          calculateNearByHierarchyCourse(
+              currentLocation.value.latitude, currentLocation.value.longitude);
         }
       },
       errorCallback: () {},
@@ -1003,7 +1167,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     double shortestDistance = double.infinity;
 
     for (var course in courses) {
-      double distance = calculateDistance(myPosLat, myPosLon, course.startLat, course.startLon);
+      double distance = calculateDistance(
+          myPosLat, myPosLon, course.startLat, course.startLon);
       if (distance < shortestDistance) {
         shortestDistance = distance;
         nearestCourse = course;
@@ -1033,14 +1198,18 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 //   }
   void detectFakeGps() async {
     //안드로이드만 탐지 가능
-    if (isFakeGps.value && Get.isBottomSheetOpen != true && !isTestingFakeGps()) {
+    if (isFakeGps.value &&
+        Get.isBottomSheetOpen != true &&
+        !isTestingFakeGps()) {
       showFakeGpsAlert();
-      MemberService.reportAbuse(description: 'Fake GPS 사용 감지', abusingType: 'GPS');
+      MemberService.reportAbuse(
+          description: 'fake_gps_detected'.tr(), abusingType: 'GPS');
     }
   }
 
   void initGpsServiceStream() {
-    _serviceStatusStream ??= Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+    _serviceStatusStream ??=
+        Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
       if (status == ServiceStatus.disabled) {
         showGpsAlert();
       }
@@ -1051,7 +1220,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     return degree * pi / 180;
   }
 
-  double calculateDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
+  double calculateDistance(double startLatitude, double startLongitude,
+      double endLatitude, double endLongitude) {
     double earthRadius = 6371000;
     double lat1 = radians(startLatitude);
     double lon1 = radians(startLongitude);
@@ -1061,18 +1231,22 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     double dLat = lat2 - lat1;
     double dLon = lon2 - lon1;
 
-    double a = sin(dLat / 2) * sin(dLat / 2) + cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
+    double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
     double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
     return earthRadius * c;
   }
 
   Future<void> getCurrentLocation() async {
-    await Geolocator.getCurrentPosition(desiredAccuracy: locationAccuracyQuality, timeLimit: const Duration(seconds: 5)).then((location) {
+    await Geolocator.getCurrentPosition(
+            desiredAccuracy: locationAccuracyQuality,
+            timeLimit: const Duration(seconds: 5))
+        .then((location) {
       currentLocation.value = location;
       isListeningToLocation.value = true;
     }).onError((error, stackTrace) {
-      showToastPopup('위치정보를 가져오지 못했습니다.');
+      showToastPopup('location_info_unavailable'.tr());
     });
   }
 
@@ -1090,7 +1264,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
 
   // 챌린지 찾기
   Future<void> findCourses() async {
-    if (currentLocation.value.latitude != 0 && currentLocation.value.longitude != 0) {
+    if (currentLocation.value.latitude != 0 &&
+        currentLocation.value.longitude != 0) {
       // lan or lon의 오차범위가 5m 이상일 경우 새로운 코스를 찾는다. (추후 작업 필요)
       await getNearByCourses(currentLocation.value, exerciseState.value);
       print('findCourses.Get.currentRoute : ${Get.currentRoute}');
@@ -1103,16 +1278,15 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   void refreshUpdateCamera() {
-    if (nearByCourses.value != null && naverMapController != null) {
+    if (nearByCourses.value != null && googleMapController != null) {
       List overlays = [];
       nearByCourses.value.forEach((item) {
         overlays.addAll(renderCircleOverlays(item));
         overlays.addAll(renderMarkers(item));
       });
       print(overlays);
-      // controller.naverMapController?.clearOverlays();
-      naverMapController?.clearOverlays();
-      naverMapController?.addOverlayAll({...overlays});
+      clearOverlays();
+      addOverlayAll({...overlays});
     }
   }
 
@@ -1135,7 +1309,9 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
   }
 
   Future<void> retrySavedRequests({required String source}) async {
-    if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null && HiveStore.load(key: HiveKey.endExerciseRequested.name) && userState.value.exercise != null) {
+    if (HiveStore.load(key: HiveKey.endExerciseRequested.name) != null &&
+        HiveStore.load(key: HiveKey.endExerciseRequested.name) &&
+        userState.value.exercise != null) {
       await endExercise(source: source);
     }
   }
@@ -1154,13 +1330,16 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     // 100대명산 챌린지 이벤트
     Adjust.trackEvent(AdjustEvent('r9akvp'));
 
-    Get.toNamed(Routes.challengeCourseDetail, arguments: {'id': challenge.id, 'hideCourses': hideLinkToCourses}, preventDuplicates: false);
+    Get.toNamed(Routes.challengeCourseDetail,
+        arguments: {'id': challenge.id, 'hideCourses': hideLinkToCourses},
+        preventDuplicates: false);
   }
 
   void moveToWebView(PromotionAdModel item) async {
     // 메인팝업 클릭 이벤트
     Adjust.trackEvent(AdjustEvent('4znz3j'));
-    bool bannerAdClick = HiveStore.load(key: HiveKey.bannerAdClick.name) ?? false;
+    bool bannerAdClick =
+        HiveStore.load(key: HiveKey.bannerAdClick.name) ?? false;
     if (!bannerAdClick) {
       Adjust.trackEvent(AdjustEvent('ytqi48'));
       HiveStore.save(key: HiveKey.bannerAdClick.name, value: true);
@@ -1177,14 +1356,16 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
         switch (item.linkUrl) {
           case 'CHALLENGES':
             Get.find<HomeMenuController>().selectMenu(0);
-            Get.toNamed(Routes.challengeDetail.replaceAll(':id', item.referenceId.toString()));
+            Get.toNamed(Routes.challengeDetail
+                .replaceAll(':id', item.referenceId.toString()));
             break;
           case 'ARCHIVE':
             Get.find<HomeMenuController>().selectMenu(4);
             if (Get.isRegistered<LeaderboardController>()) {
               Get.find<LeaderboardController>().tabController.animateTo(1);
             } else {
-              LeaderboardController leaderboardController = Get.put(LeaderboardController());
+              LeaderboardController leaderboardController =
+                  Get.put(LeaderboardController());
               leaderboardController.tabController.animateTo(1);
             }
 
@@ -1200,7 +1381,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
             if (Get.isRegistered<LeaderboardController>()) {
               Get.find<LeaderboardController>().tabController.animateTo(0);
             } else {
-              LeaderboardController leaderboardController = Get.put(LeaderboardController());
+              LeaderboardController leaderboardController =
+                  Get.put(LeaderboardController());
               leaderboardController.tabController.animateTo(0);
             }
             break;
@@ -1210,17 +1392,24 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
             break;
           case 'NOTICE':
             // Get.toNamed(Routes.noticeList);
-            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'});
+            Get.toNamed(Routes.webView, arguments: {
+              'linkUrl':
+                  'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
+            });
             break;
           case 'FAQ':
             // Get.toNamed(Routes.preferenceBoard);
-            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'});
+            Get.toNamed(Routes.webView, arguments: {
+              'linkUrl':
+                  'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
+            });
             break;
         }
         break;
       case 'INTERNAL_WEB_VIEW':
         // Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
-        showModalWebview(this, Get.context, title: item.label!, linkUrl: item.linkUrl!);
+        showModalWebview(this, Get.context,
+            title: item.label!, linkUrl: item.linkUrl!);
         break;
       case 'EXTERNAL_BROWSER':
         Uri url = Uri.parse(item.linkUrl!);
@@ -1275,7 +1464,8 @@ class ActivityController extends SuperController with ActivityMixin, ChallengeMi
     print('onResumed activity');
     checkNewCollectionStatus();
 
-    if (Get.currentRoute != Routes.login && Get.currentRoute != Routes.loading) {
+    if (Get.currentRoute != Routes.login &&
+        Get.currentRoute != Routes.loading) {
       getUserState(showLoading: true);
     }
     // TODO: implement onResumed

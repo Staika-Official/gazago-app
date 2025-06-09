@@ -12,7 +12,8 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class ShopItemDetail extends StatelessWidget {
   const ShopItemDetail({super.key});
@@ -60,20 +61,26 @@ class ShopItemDetail extends StatelessWidget {
                         child: SizedBox(
                           child: Stack(
                             children: [
-                              if (controller.selectedItem.value.itemCategory != '' && controller.selectedItem.value.itemGrade != 'NONE')
+                              if (controller.selectedItem.value.itemCategory !=
+                                      '' &&
+                                  controller.selectedItem.value.itemGrade !=
+                                      'NONE')
                                 Positioned(
                                   right: 32.sp,
                                   top: 0,
-                                  child: getItemGradeIcon(controller.selectedItem.value.itemGrade),
+                                  child: getItemGradeIcon(
+                                      controller.selectedItem.value.itemGrade),
                                 ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 12.sp, vertical: 20.0.sp),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 12.sp, vertical: 20.0.sp),
                                 child: Obx(
                                   () {
                                     return Column(
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.only(top: 5.0.sp, bottom: 10.sp),
+                                          padding: EdgeInsets.only(
+                                              top: 5.0.sp, bottom: 10.sp),
                                           child: Column(
                                             children: [
                                               // Image(
@@ -86,29 +93,80 @@ class ShopItemDetail extends StatelessWidget {
                                                 width: double.infinity,
                                                 child: Stack(
                                                   children: [
-                                                    if (controller.selectedItem.value.publishType == 'NFT')
-                                                      Positioned.fill(left: 24.sp, right: 24.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
+                                                    if (controller
+                                                            .selectedItem
+                                                            .value
+                                                            .publishType ==
+                                                        'NFT')
+                                                      Positioned.fill(
+                                                          left: 24.sp,
+                                                          right: 24.sp,
+                                                          child: SvgPicture.asset(
+                                                              'assets/images/shop/ico_nft_detail.svg')),
                                                     Padding(
-                                                      padding: EdgeInsets.symmetric(vertical: 20.0.sp),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical:
+                                                                  20.0.sp),
                                                       child: Center(
                                                         child: SizedBox(
                                                           width: 150.sp,
-                                                          child: controller.selectedItem.value.itemImageUrl != null && controller.selectedItem.value.itemImageUrl!.contains('.svg')
-                                                              ? SvgPicture.network(
-                                                                  fit: BoxFit.contain,
-                                                                  controller.selectedItem.value.itemImageUrl!,
-                                                                  placeholderBuilder: (BuildContext context) => Container(
-                                                                    padding: const EdgeInsets.all(30.0),
-                                                                    child: const CircularProgressIndicator(color:skyBlueColor),
+                                                          child: controller
+                                                                          .selectedItem
+                                                                          .value
+                                                                          .itemImageUrl !=
+                                                                      null &&
+                                                                  controller
+                                                                      .selectedItem
+                                                                      .value
+                                                                      .itemImageUrl!
+                                                                      .contains(
+                                                                          '.svg')
+                                                              ? SvgPicture
+                                                                  .network(
+                                                                  fit: BoxFit
+                                                                      .contain,
+                                                                  controller
+                                                                      .selectedItem
+                                                                      .value
+                                                                      .itemImageUrl!,
+                                                                  placeholderBuilder:
+                                                                      (BuildContext
+                                                                              context) =>
+                                                                          Container(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            30.0),
+                                                                    child: const CircularProgressIndicator(
+                                                                        color:
+                                                                            skyBlueColor),
                                                                   ),
-                                                                  headers: imageNetworkHeader,
+                                                                  headers:
+                                                                      imageNetworkHeader,
                                                                 )
                                                               : CachedNetworkImage(
-                                                                  imageUrl: controller.selectedItem.value.itemImageUrl!,
-                                                                  fit: BoxFit.fitWidth,
-                                                                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
-                                                                  errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
-                                                                  httpHeaders: imageNetworkHeader,
+                                                                  imageUrl: controller
+                                                                      .selectedItem
+                                                                      .value
+                                                                      .itemImageUrl!,
+                                                                  fit: BoxFit
+                                                                      .fitWidth,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      const Center(
+                                                                          child: SizedBox.square(
+                                                                              dimension: 40,
+                                                                              child: CircularProgressIndicator(color: skyBlueColor))),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      const Center(
+                                                                          child: SizedBox.square(
+                                                                              dimension: 40,
+                                                                              child: CircularProgressIndicator(color: skyBlueColor))),
+                                                                  httpHeaders:
+                                                                      imageNetworkHeader,
                                                                 ),
                                                         ),
                                                       ),
@@ -120,18 +178,26 @@ class ShopItemDetail extends StatelessWidget {
                                           ),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.only(bottom: 15.0),
+                                          padding: const EdgeInsets.only(
+                                              bottom: 15.0),
                                           child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                              if (controller.selectedItem.value.publishType == 'NFT')
+                                              if (controller.selectedItem.value
+                                                      .publishType ==
+                                                  'NFT')
                                                 Padding(
-                                                  padding: EdgeInsets.only(right: 5.0.sp),
-                                                  child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
+                                                  padding: EdgeInsets.only(
+                                                      right: 5.0.sp),
+                                                  child: SvgPicture.asset(
+                                                      'assets/images/shop/ico_nft_label.svg'),
                                                 ),
                                               StyledText(
-                                                controller.selectedItem.value.name,
+                                                controller
+                                                    .selectedItem.value.name,
                                                 fontSize: 18,
                                                 lineHeight: 19,
                                                 fontWeight: 500,
@@ -148,15 +214,16 @@ class ShopItemDetail extends StatelessWidget {
                           ),
                         ),
                       ),
-                      if (controller.selectedItem.value.itemCategory != 'DISPOSABLE')
+                      if (controller.selectedItem.value.itemCategory !=
+                          'DISPOSABLE')
                         Padding(
                           padding: EdgeInsets.only(top: 25.0.sp),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              const StyledText(
-                                '능력치',
+                              StyledText(
+                                'stats'.tr(),
                                 fontWeight: 600,
                                 fontSize: 18,
                                 lineHeight: 19,
@@ -178,15 +245,17 @@ class ShopItemDetail extends StatelessWidget {
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       iconShopRewardPng,
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 8.0),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
                                         child: StyledText(
-                                          'GO 적립량',
+                                          'go_accumulation'.tr(),
                                           fontWeight: 500,
                                           fontSize: 14,
                                           lineHeight: 15,
@@ -197,7 +266,10 @@ class ShopItemDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.minGoProfit!, 0),
+                                        formatDecimalPlaces(
+                                            controller.selectedItem.value
+                                                .minGoProfit!,
+                                            0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: skyBlueColor,
@@ -211,7 +283,10 @@ class ShopItemDetail extends StatelessWidget {
                                         letterSpacing: -.1,
                                       ),
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.maxGoProfit!, 0),
+                                        formatDecimalPlaces(
+                                            controller.selectedItem.value
+                                                .maxGoProfit!,
+                                            0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: skyBlueColor,
@@ -239,14 +314,29 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxGoProfit! / controller.selectedItem.value.minGoProfit!),
+                                              width: constraints.maxWidth /
+                                                  (controller.selectedItem.value
+                                                          .maxGoProfit! /
+                                                      controller.selectedItem
+                                                          .value.minGoProfit!),
                                               decoration: BoxDecoration(
                                                 color: skyBlueColor,
-                                                borderRadius: controller.selectedItem.value.minGoProfit == controller.selectedItem.value.maxGoProfit
+                                                borderRadius: controller
+                                                            .selectedItem
+                                                            .value
+                                                            .minGoProfit ==
+                                                        controller.selectedItem
+                                                            .value.maxGoProfit
                                                     ? BorderRadius.all(
                                                         Radius.circular(30.sp),
                                                       )
-                                                    : BorderRadius.only(topLeft: Radius.circular(30.sp), bottomLeft: Radius.circular(30.sp)),
+                                                    : BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(
+                                                                30.sp),
+                                                        bottomLeft:
+                                                            Radius.circular(
+                                                                30.sp)),
                                               ),
                                             );
                                           },
@@ -254,9 +344,14 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxGoProfit! / controller.selectedItem.value.maxGoProfit!),
+                                              width: constraints.maxWidth /
+                                                  (controller.selectedItem.value
+                                                          .maxGoProfit! /
+                                                      controller.selectedItem
+                                                          .value.maxGoProfit!),
                                               decoration: BoxDecoration(
-                                                color: skyBlueColor.withOpacity(.5),
+                                                color: skyBlueColor
+                                                    .withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -279,15 +374,17 @@ class ShopItemDetail extends StatelessWidget {
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       iconShopDurabilityLightPng,
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 8.0),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
                                         child: StyledText(
-                                          '내구도 저항',
+                                          'durability_resistance'.tr(),
                                           fontWeight: 500,
                                           fontSize: 14,
                                           lineHeight: 15,
@@ -298,24 +395,33 @@ class ShopItemDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.minDurability!, 0),
+                                        formatDecimalPlaces(
+                                            controller.selectedItem.value
+                                                .minDurability!,
+                                            0),
                                         fontSize: 12,
                                         fontWeight: 500,
-                                        color: AppColorData.regular().colorPointPurple,
-                                        letterSpacing: -.1,
-                                      ),
-                                       StyledText(
-                                        ' - ',
-                                        fontSize: 12,
-                                        fontWeight: 500,
-                                        color: AppColorData.regular().colorPointPurple,
+                                        color: AppColorData.regular()
+                                            .colorPointPurple,
                                         letterSpacing: -.1,
                                       ),
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.maxDurability!, 0),
+                                        ' - ',
                                         fontSize: 12,
                                         fontWeight: 500,
-                                        color: AppColorData.regular().colorPointPurple,
+                                        color: AppColorData.regular()
+                                            .colorPointPurple,
+                                        letterSpacing: -.1,
+                                      ),
+                                      StyledText(
+                                        formatDecimalPlaces(
+                                            controller.selectedItem.value
+                                                .maxDurability!,
+                                            0),
+                                        fontSize: 12,
+                                        fontWeight: 500,
+                                        color: AppColorData.regular()
+                                            .colorPointPurple,
                                         letterSpacing: -.1,
                                       ),
                                     ],
@@ -340,14 +446,32 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxDurability! / controller.selectedItem.value.minDurability!),
+                                              width: constraints.maxWidth /
+                                                  (controller.selectedItem.value
+                                                          .maxDurability! /
+                                                      controller
+                                                          .selectedItem
+                                                          .value
+                                                          .minDurability!),
                                               decoration: BoxDecoration(
-                                                color: AppColorData.regular().colorPointPurple,
-                                                borderRadius: controller.selectedItem.value.maxDurability == controller.selectedItem.value.minDurability
+                                                color: AppColorData.regular()
+                                                    .colorPointPurple,
+                                                borderRadius: controller
+                                                            .selectedItem
+                                                            .value
+                                                            .maxDurability ==
+                                                        controller.selectedItem
+                                                            .value.minDurability
                                                     ? BorderRadius.all(
                                                         Radius.circular(30.sp),
                                                       )
-                                                    : BorderRadius.only(topLeft: Radius.circular(30.sp), bottomLeft: Radius.circular(30.sp)),
+                                                    : BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(
+                                                                30.sp),
+                                                        bottomLeft:
+                                                            Radius.circular(
+                                                                30.sp)),
                                               ),
                                             );
                                           },
@@ -355,9 +479,17 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxDurability! / controller.selectedItem.value.maxDurability!),
+                                              width: constraints.maxWidth /
+                                                  (controller.selectedItem.value
+                                                          .maxDurability! /
+                                                      controller
+                                                          .selectedItem
+                                                          .value
+                                                          .maxDurability!),
                                               decoration: BoxDecoration(
-                                                color: AppColorData.regular().colorPointPurple.withOpacity(.5),
+                                                color: AppColorData.regular()
+                                                    .colorPointPurple
+                                                    .withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -380,15 +512,17 @@ class ShopItemDetail extends StatelessWidget {
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       iconShopStaminaPng,
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 8.0),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
                                         child: StyledText(
-                                          '체력 저항',
+                                          'stamina_resistance'.tr(),
                                           fontWeight: 500,
                                           fontSize: 14,
                                           lineHeight: 15,
@@ -399,7 +533,10 @@ class ShopItemDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.minStamina!, 0),
+                                        formatDecimalPlaces(
+                                            controller
+                                                .selectedItem.value.minStamina!,
+                                            0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: lightGreenColor,
@@ -413,7 +550,10 @@ class ShopItemDetail extends StatelessWidget {
                                         letterSpacing: -.1,
                                       ),
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.maxStamina!, 0),
+                                        formatDecimalPlaces(
+                                            controller
+                                                .selectedItem.value.maxStamina!,
+                                            0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: lightGreenColor,
@@ -441,14 +581,29 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxStamina! / controller.selectedItem.value.minStamina!),
+                                              width: constraints.maxWidth /
+                                                  (controller.selectedItem.value
+                                                          .maxStamina! /
+                                                      controller.selectedItem
+                                                          .value.minStamina!),
                                               decoration: BoxDecoration(
                                                 color: lightGreenColor,
-                                                borderRadius: controller.selectedItem.value.maxStamina == controller.selectedItem.value.minStamina
+                                                borderRadius: controller
+                                                            .selectedItem
+                                                            .value
+                                                            .maxStamina ==
+                                                        controller.selectedItem
+                                                            .value.minStamina
                                                     ? BorderRadius.all(
                                                         Radius.circular(30.sp),
                                                       )
-                                                    : BorderRadius.only(topLeft: Radius.circular(30.sp), bottomLeft: Radius.circular(30.sp)),
+                                                    : BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(
+                                                                30.sp),
+                                                        bottomLeft:
+                                                            Radius.circular(
+                                                                30.sp)),
                                               ),
                                             );
                                           },
@@ -456,9 +611,14 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxStamina! / controller.selectedItem.value.maxStamina!),
+                                              width: constraints.maxWidth /
+                                                  (controller.selectedItem.value
+                                                          .maxStamina! /
+                                                      controller.selectedItem
+                                                          .value.maxStamina!),
                                               decoration: BoxDecoration(
-                                                color: lightGreenColor.withOpacity(.5),
+                                                color: lightGreenColor
+                                                    .withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -481,15 +641,17 @@ class ShopItemDetail extends StatelessWidget {
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       iconShopLuckPng,
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 8.0),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
                                         child: StyledText(
-                                          '행운',
+                                          'luck'.tr(),
                                           fontWeight: 500,
                                           fontSize: 14,
                                           lineHeight: 15,
@@ -500,7 +662,10 @@ class ShopItemDetail extends StatelessWidget {
                                   Row(
                                     children: [
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.minLuck!, 0),
+                                        formatDecimalPlaces(
+                                            controller
+                                                .selectedItem.value.minLuck!,
+                                            0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: pinkColor,
@@ -514,7 +679,10 @@ class ShopItemDetail extends StatelessWidget {
                                         letterSpacing: -.1,
                                       ),
                                       StyledText(
-                                        formatDecimalPlaces(controller.selectedItem.value.maxLuck!, 0),
+                                        formatDecimalPlaces(
+                                            controller
+                                                .selectedItem.value.maxLuck!,
+                                            0),
                                         fontSize: 12,
                                         fontWeight: 500,
                                         color: pinkColor,
@@ -542,14 +710,29 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxLuck! / controller.selectedItem.value.minLuck!),
+                                              width: constraints.maxWidth /
+                                                  (controller.selectedItem.value
+                                                          .maxLuck! /
+                                                      controller.selectedItem
+                                                          .value.minLuck!),
                                               decoration: BoxDecoration(
                                                 color: pinkColor,
-                                                borderRadius: controller.selectedItem.value.maxLuck == controller.selectedItem.value.minLuck
+                                                borderRadius: controller
+                                                            .selectedItem
+                                                            .value
+                                                            .maxLuck ==
+                                                        controller.selectedItem
+                                                            .value.minLuck
                                                     ? BorderRadius.all(
                                                         Radius.circular(30.sp),
                                                       )
-                                                    : BorderRadius.only(topLeft: Radius.circular(30.sp), bottomLeft: Radius.circular(30.sp)),
+                                                    : BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(
+                                                                30.sp),
+                                                        bottomLeft:
+                                                            Radius.circular(
+                                                                30.sp)),
                                               ),
                                             );
                                           },
@@ -557,9 +740,14 @@ class ShopItemDetail extends StatelessWidget {
                                         LayoutBuilder(
                                           builder: (context, constraints) {
                                             return Container(
-                                              width: constraints.maxWidth / (controller.selectedItem.value.maxLuck! / controller.selectedItem.value.maxLuck!),
+                                              width: constraints.maxWidth /
+                                                  (controller.selectedItem.value
+                                                          .maxLuck! /
+                                                      controller.selectedItem
+                                                          .value.maxLuck!),
                                               decoration: BoxDecoration(
-                                                color: pinkColor.withOpacity(.5),
+                                                color:
+                                                    pinkColor.withOpacity(.5),
                                                 borderRadius: BorderRadius.all(
                                                   Radius.circular(30.sp),
                                                 ),
@@ -575,22 +763,27 @@ class ShopItemDetail extends StatelessWidget {
                             ],
                           ),
                         ),
-                      if (controller.selectedItem.value.challenge != null && controller.selectedItem.value.challenge!.extTxt != null)
+                      if (controller.selectedItem.value.challenge != null &&
+                          controller.selectedItem.value.challenge!.extTxt !=
+                              null)
                         Padding(
                           padding: EdgeInsets.only(top: 20.0.sp),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       iconStatEtc,
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 8.0),
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
                                         child: StyledText(
-                                          controller.selectedItem.value.challenge!.extTxt!,
+                                          controller.selectedItem.value
+                                              .challenge!.extTxt!,
                                           fontWeight: 500,
                                           fontSize: 14,
                                           lineHeight: 15,
@@ -633,7 +826,11 @@ class ShopItemDetail extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              if (controller.selectedItem.value.challenge != null && controller.selectedItem.value.challenge!.linkUrl != null)
+                              if (controller.selectedItem.value.challenge !=
+                                      null &&
+                                  controller.selectedItem.value.challenge!
+                                          .linkUrl !=
+                                      null)
                                 Padding(
                                   padding: EdgeInsets.only(top: 28.0.sp),
                                   child: Container(
@@ -645,7 +842,8 @@ class ShopItemDetail extends StatelessWidget {
                                         style: BorderStyle.solid,
                                         color: Colors.black,
                                       ),
-                                      borderRadius: BorderRadius.all(Radius.circular(12.sp)),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(12.sp)),
                                       boxShadow: [
                                         BoxShadow(
                                           color: Colors.black,
@@ -654,13 +852,23 @@ class ShopItemDetail extends StatelessWidget {
                                       ],
                                     ),
                                     child: InkWell(
-                                      onTap: () => controller.moveToExternalBrowser(controller.selectedItem.value.challenge!.linkUrl),
+                                      onTap: () => controller
+                                          .moveToExternalBrowser(controller
+                                              .selectedItem
+                                              .value
+                                              .challenge!
+                                              .linkUrl),
                                       child: Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 20.0.sp, horizontal: 18.sp),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 20.0.sp,
+                                            horizontal: 18.sp),
                                         child: Center(
-                                          child: controller.selectedItem.value.challenge!.extBtnLabel != null
+                                          child: controller.selectedItem.value
+                                                      .challenge!.extBtnLabel !=
+                                                  null
                                               ? StyledText(
-                                                  controller.selectedItem.value.challenge!.extBtnLabel!,
+                                                  controller.selectedItem.value
+                                                      .challenge!.extBtnLabel!,
                                                   fontSize: 18,
                                                   fontWeight: 500,
                                                   lineHeight: 18,
@@ -672,11 +880,16 @@ class ShopItemDetail extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                              if (controller.selectedItem.value.challenge != null && controller.selectedItem.value.challenge!.extTxtDetail != null)
+                              if (controller.selectedItem.value.challenge !=
+                                      null &&
+                                  controller.selectedItem.value.challenge!
+                                          .extTxtDetail !=
+                                      null)
                                 Padding(
                                   padding: EdgeInsets.only(top: 8.0.sp),
                                   child: StyledText(
-                                    controller.selectedItem.value.challenge!.extTxtDetail!,
+                                    controller.selectedItem.value.challenge!
+                                        .extTxtDetail!,
                                     fontSize: 12,
                                     letterSpacing: -.1,
                                     lineHeight: 18,
@@ -714,20 +927,22 @@ class ShopItemDetail extends StatelessWidget {
                                 child: Column(
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const StyledText(
-                                          '연관 챌린지',
+                                        StyledText(
+                                          'related_challenges'.tr(),
                                           fontWeight: 600,
                                           fontSize: 18,
                                           lineHeight: 18,
                                         ),
                                         InkWell(
-                                          onTap: () => controller.moveChallengeDetail(),
+                                          onTap: () =>
+                                              controller.moveChallengeDetail(),
                                           child: Row(
                                             children: [
-                                              const StyledText(
-                                                '바로가기',
+                                              StyledText(
+                                                'go_to'.tr(),
                                                 color: lightGrayColor,
                                                 fontSize: 14,
                                                 lineHeight: 16,
@@ -735,7 +950,8 @@ class ShopItemDetail extends StatelessWidget {
                                                 letterSpacing: -.1,
                                               ),
                                               Padding(
-                                                padding: EdgeInsets.only(left: 4.0.sp),
+                                                padding: EdgeInsets.only(
+                                                    left: 4.0.sp),
                                                 child: iconArrowRightTriangle,
                                               )
                                             ],
@@ -743,24 +959,44 @@ class ShopItemDetail extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    if (controller.selectedItem.value.challengeBannerImageUrl != null)
+                                    if (controller.selectedItem.value
+                                            .challengeBannerImageUrl !=
+                                        null)
                                       Padding(
                                         padding: EdgeInsets.only(top: 12.0.sp),
                                         child: CachedNetworkImage(
-                                          imageUrl: controller.selectedItem.value.challengeBannerImageUrl!,
+                                          imageUrl: controller.selectedItem
+                                              .value.challengeBannerImageUrl!,
                                           width: double.infinity,
                                           height: 82,
                                           fit: BoxFit.fitWidth,
-                                          imageBuilder: (context, imageProvider) => Container(
+                                          imageBuilder:
+                                              (context, imageProvider) =>
+                                                  Container(
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(12.sp),
                                               ),
-                                              image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                                              image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover),
                                             ),
                                           ),
-                                          placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
-                                          errorWidget: (context, url, error) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                          placeholder: (context, url) => const Center(
+                                              child: SizedBox.square(
+                                                  dimension: 40,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                          color:
+                                                              skyBlueColor))),
+                                          errorWidget: (context, url, error) =>
+                                              const Center(
+                                                  child: SizedBox.square(
+                                                      dimension: 40,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                              color:
+                                                                  skyBlueColor))),
                                           httpHeaders: imageNetworkHeader,
                                         ),
                                       )
@@ -770,33 +1006,41 @@ class ShopItemDetail extends StatelessWidget {
                             ],
                           ),
                         ),
-                      if (controller.selectedItem.value.itemCategory == 'DISPOSABLE')
+                      if (controller.selectedItem.value.itemCategory ==
+                          'DISPOSABLE')
                         Padding(
                           padding: EdgeInsets.only(top: 24.0.sp),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const StyledText(
-                                '효과',
+                              StyledText(
+                                'effect'.tr(),
                                 fontWeight: 600,
                                 fontSize: 18,
                                 lineHeight: 18,
                               ),
-                              if (controller.selectedItem.value.recoveryStamina != null && controller.selectedItem.value.recoveryStamina != 0)
+                              if (controller
+                                          .selectedItem.value.recoveryStamina !=
+                                      null &&
+                                  controller
+                                          .selectedItem.value.recoveryStamina !=
+                                      0)
                                 Padding(
                                   padding: EdgeInsets.only(top: 16.0.sp),
                                   child: Column(
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             children: [
                                               iconShopStaminaPng,
-                                              const Padding(
-                                                padding: EdgeInsets.only(left: 8.0),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 8.0),
                                                 child: StyledText(
-                                                  '체력 회복',
+                                                  'stamina_recovery_2'.tr(),
                                                   fontWeight: 500,
                                                   fontSize: 14,
                                                   lineHeight: 15,
@@ -823,19 +1067,23 @@ class ShopItemDetail extends StatelessWidget {
                                                 Container(
                                                   decoration: BoxDecoration(
                                                     color: subBg02Color,
-                                                    borderRadius: BorderRadius.all(
+                                                    borderRadius:
+                                                        BorderRadius.all(
                                                       Radius.circular(50.sp),
                                                     ),
                                                   ),
                                                 ),
                                                 LayoutBuilder(
-                                                  builder: (context, constraints) {
+                                                  builder:
+                                                      (context, constraints) {
                                                     return Container(
                                                       width: double.infinity,
                                                       decoration: BoxDecoration(
                                                         color: lightGreenColor,
-                                                        borderRadius: BorderRadius.all(
-                                                          Radius.circular(30.sp),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(
+                                                              30.sp),
                                                         ),
                                                       ),
                                                     );
@@ -849,21 +1097,28 @@ class ShopItemDetail extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                              if (controller.selectedItem.value.repairDurability != null && controller.selectedItem.value.repairDurability != 0)
+                              if (controller.selectedItem.value
+                                          .repairDurability !=
+                                      null &&
+                                  controller.selectedItem.value
+                                          .repairDurability !=
+                                      0)
                                 Padding(
                                   padding: EdgeInsets.only(top: 16.0.sp),
                                   child: Column(
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Row(
                                             children: [
                                               iconShopDurabilityLightPng,
-                                              const Padding(
-                                                padding: EdgeInsets.only(left: 8.0),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 8.0),
                                                 child: StyledText(
-                                                  '내구도 수리',
+                                                  'durability_repair'.tr(),
                                                   fontWeight: 500,
                                                   fontSize: 14,
                                                   lineHeight: 15,
@@ -875,7 +1130,8 @@ class ShopItemDetail extends StatelessWidget {
                                             '+${formatDecimalPlaces(controller.selectedItem.value.repairDurability!, 0)}',
                                             fontSize: 12,
                                             fontWeight: 500,
-                                            color: AppColorData.regular().colorPointPurple,
+                                            color: AppColorData.regular()
+                                                .colorPointPurple,
                                             letterSpacing: -.1,
                                           ),
                                         ],
@@ -890,19 +1146,25 @@ class ShopItemDetail extends StatelessWidget {
                                                 Container(
                                                   decoration: BoxDecoration(
                                                     color: subBg02Color,
-                                                    borderRadius: BorderRadius.all(
+                                                    borderRadius:
+                                                        BorderRadius.all(
                                                       Radius.circular(50.sp),
                                                     ),
                                                   ),
                                                 ),
                                                 LayoutBuilder(
-                                                  builder: (context, constraints) {
+                                                  builder:
+                                                      (context, constraints) {
                                                     return Container(
                                                       width: double.infinity,
                                                       decoration: BoxDecoration(
-                                                        color: AppColorData.regular().colorPointPurple,
-                                                        borderRadius: BorderRadius.all(
-                                                          Radius.circular(30.sp),
+                                                        color: AppColorData
+                                                                .regular()
+                                                            .colorPointPurple,
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(
+                                                              30.sp),
                                                         ),
                                                       ),
                                                     );
@@ -928,15 +1190,16 @@ class ShopItemDetail extends StatelessWidget {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(bottom: 10.sp),
-                              child: const StyledText(
-                                '아이템 설명',
+                              child: StyledText(
+                                'item_description'.tr(),
                                 fontWeight: 600,
                                 fontSize: 18,
                                 lineHeight: 18,
                               ),
                             ),
                             StyledText(
-                              controller.selectedItem.value.description.toString(),
+                              controller.selectedItem.value.description
+                                  .toString(),
                               color: lightGrayColor,
                               fontWeight: 500,
                               fontSize: 14,
@@ -955,16 +1218,21 @@ class ShopItemDetail extends StatelessWidget {
                 bottom: 0,
                 right: 0,
                 child: Container(
-                  padding: EdgeInsets.only(top: 24, left: 25.sp, right: 25.sp, bottom: 36),
+                  padding: EdgeInsets.only(
+                      top: 24, left: 25.sp, right: 25.sp, bottom: 36),
                   width: double.infinity,
                   decoration: ShapeDecoration(
                     color: popupBgColor,
                     shape: CustomRoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(20.sp), topRight: Radius.circular(20.sp)),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20.sp),
+                          topRight: Radius.circular(20.sp)),
                       leftSide: BorderSide(color: skyBlueColor, width: 2.sp),
-                      topLeftCornerSide: BorderSide(color: skyBlueColor, width: 2.sp),
+                      topLeftCornerSide:
+                          BorderSide(color: skyBlueColor, width: 2.sp),
                       rightSide: BorderSide(color: skyBlueColor, width: 2.sp),
-                      topRightCornerSide: BorderSide(color: skyBlueColor, width: 2.sp),
+                      topRightCornerSide:
+                          BorderSide(color: skyBlueColor, width: 2.sp),
                       topSide: BorderSide(color: skyBlueColor, width: 2.sp),
                     ),
                   ),
@@ -977,79 +1245,111 @@ class ShopItemDetail extends StatelessWidget {
                         children: [
                           if (controller.selectedItem.value.itemLabel != null)
                             Text(
-                              controller.selectedItem.value.itemLabel! == 'CLOSE_DEADLINE' ? '마감임박' : '품절',
-                              style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                                    color: AppColorData.regular().colorPointCyan,
+                              controller.selectedItem.value.itemLabel! ==
+                                      'CLOSE_DEADLINE'
+                                  ? 'deadline_approaching'.tr()
+                                  : 'sold_out'.tr(),
+                              style: AppTextStyleData.regular()
+                                  .koBodyMediumSm
+                                  .copyWith(
+                                    color:
+                                        AppColorData.regular().colorPointCyan,
                                   ),
                             ),
                           Text(
                             '${formatDecimalPlaces(controller.selectedItem.value.price.toDouble(), controller.selectedItem.value.tradeSymbol == 'STIK' ? 2 : 0, isAutoDecimal: true)} ${controller.selectedItem.value.tradeSymbol ?? 'TIK'}',
-                            style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
-                                  color: AppColorData.regular().colorTextPrimary,
+                            style: AppTextStyleData.regular()
+                                .koHeadingMediumSm
+                                .copyWith(
+                                  color:
+                                      AppColorData.regular().colorTextPrimary,
                                 ),
                           ),
                         ],
                       ),
-                      controller.selectedItem.value.itemLabel != null && controller.selectedItem.value.itemLabel == 'SOLD_OUT'
+                      controller.selectedItem.value.itemLabel != null &&
+                              controller.selectedItem.value.itemLabel ==
+                                  'SOLD_OUT'
                           ? InkWell(
                               onTap: null,
                               child: Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     width: 2.sp,
-                                    color: AppColorData.regular().colorBorderInteractivePrimaryDisabled,
+                                    color: AppColorData.regular()
+                                        .colorBorderInteractivePrimaryDisabled,
                                   ),
                                   borderRadius: BorderRadius.circular(30.sp),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 8.0.sp, horizontal: 15.sp),
                                   child: Text(
-                                    '구매하기',
-                                    style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
-                                          color: AppColorData.regular().colorTextInteractivePrimaryDisabled,
+                                    'purchase'.tr(),
+                                    style: AppTextStyleData.regular()
+                                        .koBodyMediumXl
+                                        .copyWith(
+                                          color: AppColorData.regular()
+                                              .colorTextInteractivePrimaryDisabled,
                                         ),
                                   ),
                                 ),
                               ),
                             )
-                          : controller.selectedItem.value.itemCategory == 'DISPOSABLE' && controller.purchaseItemCount < 1
+                          : controller.selectedItem.value.itemCategory ==
+                                      'DISPOSABLE' &&
+                                  controller.purchaseItemCount < 1
                               ? InkWell(
                                   onTap: null,
                                   child: Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         width: 2.sp,
-                                        color: AppColorData.regular().colorBorderInteractivePrimaryDisabled,
+                                        color: AppColorData.regular()
+                                            .colorBorderInteractivePrimaryDisabled,
                                       ),
-                                      borderRadius: BorderRadius.circular(30.sp),
+                                      borderRadius:
+                                          BorderRadius.circular(30.sp),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8.0.sp, horizontal: 15.sp),
                                       child: Text(
-                                        '구매하기',
-                                        style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
-                                              color: AppColorData.regular().colorTextInteractivePrimaryDisabled,
+                                        'purchase'.tr(),
+                                        style: AppTextStyleData.regular()
+                                            .koBodyMediumXl
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorTextInteractivePrimaryDisabled,
                                             ),
                                       ),
                                     ),
                                   ),
                                 )
                               : InkWell(
-                                  onTap: () => controller.onClickPurchaseItem(controller.selectedItem.value.tradeSymbol),
+                                  onTap: () => controller.onClickPurchaseItem(
+                                      controller
+                                          .selectedItem.value.tradeSymbol),
                                   child: Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         width: 2.sp,
-                                        color: AppColorData.regular().colorPointCyan,
+                                        color: AppColorData.regular()
+                                            .colorPointCyan,
                                       ),
-                                      borderRadius: BorderRadius.circular(30.sp),
+                                      borderRadius:
+                                          BorderRadius.circular(30.sp),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8.0.sp, horizontal: 15.sp),
                                       child: Text(
-                                        '구매하기',
-                                        style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
-                                              color: AppColorData.regular().colorTextPrimary,
+                                        'purchase'.tr(),
+                                        style: AppTextStyleData.regular()
+                                            .koBodyMediumXl
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorTextPrimary,
                                             ),
                                       ),
                                     ),

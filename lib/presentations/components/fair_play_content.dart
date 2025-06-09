@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class FairPlayContent extends StatelessWidget {
   EdgeInsets padding = EdgeInsets.zero;
-  FairPlayContent({super.key, this.padding = const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 60)});
+  FairPlayContent(
+      {super.key,
+      this.padding =
+          const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 60)});
 
   Widget titleWidget(text, [textColor]) {
     return StyledText(
@@ -81,78 +85,86 @@ class FairPlayContent extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            titleWidget('가자고는 운동 & 챌린지 공정성을 위해 경고 & 퇴장 카드를 발급하고 있어요.'),
+            titleWidget('warning_and_ban_system_explanation'.tr()),
             Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: contentWidget('성실하고 열심히 운동한 회원님들을 보호하기 위해, 경고 & 퇴장 카드 제도를 운영하고 있어요.'),
+              child: contentWidget('system_purpose'.tr()),
             ),
-            contentWidget('운영진 최종 검토 후 카드를 발급하고 있어요.'),
+            contentWidget('card_issuance_process'.tr()),
             Padding(
               padding: const EdgeInsets.only(top: 16),
-              child: titleWidget('다음과 같은 경우에 경고 카드가 발급 될 수 있어요.'),
+              child: titleWidget('warning_card_issuance_criteria'.tr()),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: contentWidget('운동 반경 또는 경로가 정상적이지 않은 경우', 'ex) 같은 장소에서 반복적이거나, 운동 시작점에서 켜두기만 한 경우'),
+              child: contentWidget(
+                  'warning_card_criteria_irregular_movement'.tr(),
+                  'warning_card_criteria_example'.tr()),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 24),
-              child: titleWidget('다음과 같은 경우에 퇴장 카드가 발급 될 수 있어요.'),
+              child: titleWidget('ban_card_issuance_criteria'.tr()),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: contentWidget('한 계정을 여러 기기로 로그인 해서 운동하는 경우'),
+              child: contentWidget('ban_card_criteria_multiple_logins'.tr()),
             ),
-            contentWidget('한 사람이 동시에 여러 기기로 운동하는 경우', 'ex) 지속적인 동일한 운동 경로 등등'),
-            contentWidget('의도적인 GPS 조작 또는 걸음 수 조작을 위한 도구를 이용한 경우'),
-            contentWidget('경고 카드 2회 누적'),
+            contentWidget('ban_card_criteria_simultaneous_logins'.tr(),
+                'ban_card_criteria_example'.tr()),
+            contentWidget('ban_card_criteria_gps_manipulation'.tr()),
+            contentWidget('ban_card_criteria_warning_accumulation'.tr()),
             Padding(
               padding: const EdgeInsets.only(top: 20),
-              child: titleWidget('그 외에 다음과 같은 경우 카드가 발급 될 수 있어요.'),
+              child: titleWidget('ban_card_criteria_other'.tr()),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: contentWidget('다수의 회원들로부터 공정성에 의심 받았는데, 회사가 그 의심이 납득 가능하다고 판단한 경우에 사안에 따라 경고 또는 퇴장 카드 발급'),
+              child: contentWidget('ban_card_criteria_fairness_concerns'.tr()),
             ),
-            contentWidget('서비스 운영 방해', 'ex) 허위 사실 유포 또는 확인되지 않은 부분에 대해 다른 사용자에게 혼란을 초래하거나 서비스 운영에 방해가 되는 행위를 하는 경우. 서비스 이용 제한'),
-            contentWidget('서비스 오류 & 버그 악용', 'ex) 서비스 오류에 대한 이득으로 생태계에 영향을 주는 경우. 고의성 여부에 따라 경고 또는 퇴장 카드 발급'),
+            contentWidget('ban_card_criteria_service_disruption'.tr(),
+                'ban_card_criteria_service_disruption_example'.tr()),
+            contentWidget('ban_card_criteria_service_error_abuse'.tr(),
+                'ban_card_criteria_service_error_abuse_example'.tr()),
             Padding(
               padding: const EdgeInsets.only(top: 5),
-              child: contentWidget('부정 거래. 정상적이지 않은 계정을 취득 & 양도 매매하는 경우'),
+              child: contentWidget(
+                  'ban_card_criteria_fraudulent_transactions'.tr()),
             ),
-            contentWidget('개인정보 유출. 다른 사용자의 개인 정보를 동의 없이 유포하는 경우'),
+            contentWidget('ban_card_criteria_personal_information_leak'.tr()),
             Padding(
               padding: const EdgeInsets.only(top: 20),
-              child: titleWidget('경고 & 퇴장 카드를 받게 될 경우 다음과 같은 패널티가 주어져요.'),
+              child: titleWidget('card_penalties'.tr()),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: subtitleWidget('경고 카드'),
+              child: subtitleWidget('warning_card_penalty'.tr()),
             ),
-            contentWidget('당일 획득한 GO 리셋'),
-            contentWidget('30일 이용 제한 - 서비스 운영에 방해되는 경우에만 해당'),
+            contentWidget('warning_card_penalty_go_reset'.tr()),
+            contentWidget('warning_card_penalty_service_restriction'.tr()),
             Padding(
               padding: const EdgeInsets.only(top: 10),
-              child: subtitleWidget('퇴장 카드'),
+              child: subtitleWidget('ban_card_penalty'.tr()),
             ),
-            contentWidget('GO 지갑 제한'),
-            contentWidget('계정 생성 불가'),
-            contentWidget('영구적인 운동 & 챌린지 제한'),
-            contentWidget('보상으로 획득한 TIK, STIK, 기프티콘 등 회수 및 소멸'),
+            contentWidget('ban_card_penalty_go_wallet_restriction'.tr()),
+            contentWidget('ban_card_penalty_account_creation_restriction'.tr()),
+            contentWidget('ban_card_penalty_permanent_restriction'.tr()),
+            contentWidget('ban_card_penalty_reward_confiscation'.tr()),
             Padding(
               padding: const EdgeInsets.only(top: 32.0, bottom: 10),
               child: titleWidget(
-                '유의사항',
+                'notice_1'.tr(),
                 lightGrayColor,
               ),
             ),
-            contentWidget('위 내용은 운영 상황에 따라 사전 고지 없이 변경될 수 있습니다.', null, lightGrayColor),
-            contentWidget('카드 발급시 관련된 모든 계정에 동일하게 발급됩니다.', null, lightGrayColor),
-            contentWidget('경고 및 퇴장 카드 이력은 삭제되지 않습니다.', null, lightGrayColor),
-            const Padding(
-              padding: EdgeInsets.only(top: 20),
+            contentWidget('terms_change_notice'.tr(), null, lightGrayColor),
+            contentWidget(
+                'cards_issued_to_all_accounts'.tr(), null, lightGrayColor),
+            contentWidget('warning_ejection_records_permanent'.tr(), null,
+                lightGrayColor),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
               child: StyledText(
-                '공정하고 클린한 가자고 활동을 위해 여러분들의 많은 협조 부탁 드립니다.',
+                'cooperation_for_fair_play'.tr(),
                 fontWeight: 500,
                 fontSize: 14,
                 lineHeight: 21,

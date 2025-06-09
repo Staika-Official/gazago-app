@@ -40,14 +40,23 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/challenge_detail_notification.dart';
 import 'package:gaza_go/presentations/components/product_list_dialog.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:gaza_go/platform/helpers/map_mixin.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class ChallengesDetailController extends SuperController with GetTickerProviderStateMixin, ChallengeMixin {
-  ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
-  WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
+class ChallengesDetailController extends SuperController
+    with GetTickerProviderStateMixin, MapMixin, ChallengeMixin {
+  ChallengesController challengesController =
+      Get.isRegistered<ChallengesController>()
+          ? Get.find<ChallengesController>()
+          : Get.put(ChallengesController());
+  WalletMasterController walletMasterController =
+      Get.isRegistered<WalletMasterController>()
+          ? Get.find<WalletMasterController>()
+          : Get.put(WalletMasterController());
   LoaderController loaderController = Get.put(LoaderController());
   final GlobalKey webViewKey = GlobalKey();
   Rx<DateTime?> today = Rx(DateTime.now());
@@ -65,13 +74,15 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
   RxBool isHeightCalculated = RxBool(false);
   RxInt challengeTabIndex = RxInt(0);
   RxInt challengeId = RxInt(0);
-  final Rx<NewChallengeDetailModel> challengeDetails = Rx(NewChallengeDetailModel());
+  final Rx<NewChallengeDetailModel> challengeDetails =
+      Rx(NewChallengeDetailModel());
   Rxn<ChallengeRankerModel> myRank = Rxn();
   Rx<ChallengeRewardModel> challengeRewardPool = Rx(ChallengeRewardModel());
   RxList<ChallengeRankerModel> challengeRankingList = RxList.empty();
   final RxBool dataGetLoading = RxBool(false);
   ScrollController leaderboardScrollController = ScrollController();
-  final TextEditingController codeTextController = TextEditingController(text: '');
+  final TextEditingController codeTextController =
+      TextEditingController(text: '');
   final RxString participationCode = RxString('');
   final FocusNode focusNode = FocusNode();
   final RxString errorMessage = RxString('');
@@ -117,7 +128,8 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     int ranking = 0;
     CrewModel? myCrew;
     crewList.forEachIndexedWhile((int crewIndex, CrewModel crew) {
-      crew.crewMemberList!.forEachIndexedWhile((int memberIndex, CrewMemberModel member) {
+      crew.crewMemberList!
+          .forEachIndexedWhile((int memberIndex, CrewMemberModel member) {
         if (member.userId.toString() == userId) {
           ranking = crewIndex + 1;
           myCrew = crew;
@@ -152,7 +164,8 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
 
     if (challengeDetails.value.challengeType == 'CREW') {
       await getCrewList();
-      if (challengeDetails.value.challengeState == 'CLOSED' && myCrew.value != null) {
+      if (challengeDetails.value.challengeState == 'CLOSED' &&
+          myCrew.value != null) {
         crewChallengeCloseAlert(this);
       }
     } else if (challengeDetails.value.challengeType == 'CREW_COMPANY') {
@@ -221,21 +234,25 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
   }
 
   void showMoveToShopItem() {
-    moveBuyChallengeItemPageAlert(this, challengeDetails.value.itemTradeStoreId!);
+    moveBuyChallengeItemPageAlert(
+        this, challengeDetails.value.itemTradeStoreId!);
   }
 
   void fetchEquipItem(int itemId) async {
     // 첫 챌린지 참여 이벤트
-    bool adjustFirstJoinedChallengeEvent = HiveStore.load(key: HiveKey.adjustFirstJoinedChallengeEvent.name) ?? false;
+    bool adjustFirstJoinedChallengeEvent =
+        HiveStore.load(key: HiveKey.adjustFirstJoinedChallengeEvent.name) ??
+            false;
     if (!adjustFirstJoinedChallengeEvent) {
       Adjust.trackEvent(AdjustEvent('kvq7g5'));
-      HiveStore.save(key: HiveKey.adjustFirstJoinedChallengeEvent.name, value: true);
+      HiveStore.save(
+          key: HiveKey.adjustFirstJoinedChallengeEvent.name, value: true);
     }
 
     await ItemService.fetchEquippedItem(
       itemId,
       successCallback: (InventoryItemModel item) {
-        showToastPopup('아이템이 장착되었습니다.');
+        showToastPopup('item_equipped'.tr());
         getChallengeDetail();
       },
     );
@@ -243,11 +260,16 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
 
   Future<void> getChallengeDetail() async {
     isLoading.value = true;
-    await ActivityService.getChallengeDetails(challengeId.value, successCallback: (NewChallengeDetailModel data) {
+    await ActivityService.getChallengeDetails(challengeId.value,
+        successCallback: (NewChallengeDetailModel data) {
       challengeDetails.value = data;
-      fromDate.value = DateFormat('M.d (EEE)', 'ko').format(DateTime.parse(data.fromDate!));
-      toDate.value = DateFormat('M.d (EEE)', 'ko').format(DateTime.parse(data.toDate!));
-      inDays.value = DateTime.parse(data.toDate!).difference(DateTime.parse(data.fromDate!)).inDays;
+      fromDate.value =
+          DateFormat('M.d (EEE)', 'ko').format(DateTime.parse(data.fromDate!));
+      toDate.value =
+          DateFormat('M.d (EEE)', 'ko').format(DateTime.parse(data.toDate!));
+      inDays.value = DateTime.parse(data.toDate!)
+          .difference(DateTime.parse(data.fromDate!))
+          .inDays;
     });
     isLoading.value = false;
   }
@@ -255,7 +277,9 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
   Future<void> getChallengeLeaderboard() async {
     if (!loadingLeaderboard) {
       loadingLeaderboard = true;
-      await ActivityService.getChallengeLeaderboard(challengeId.value, page, size, successCallback: (List<ChallengeRankerModel> data) {
+      await ActivityService.getChallengeLeaderboard(
+          challengeId.value, page, size,
+          successCallback: (List<ChallengeRankerModel> data) {
         if (data.length < size) {
           hasMore = false;
         }
@@ -271,13 +295,15 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
   }
 
   Future<void> getChallengeLeaderboardMyRanking() async {
-    await ActivityService.getChallengeLeaderboardMyRanking(challengeId.value, successCallback: (ChallengeRankerModel? data) {
+    await ActivityService.getChallengeLeaderboardMyRanking(challengeId.value,
+        successCallback: (ChallengeRankerModel? data) {
       myRank.value = data;
     });
   }
 
   Future<void> getCrewList() async {
-    DatabaseReference crewChallengeLeaderboardRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/${challengeId.value}');
+    DatabaseReference crewChallengeLeaderboardRef = FirebaseDatabase.instance
+        .ref('crewChallengeLeaderboard/${challengeId.value}');
 
     await crewChallengeLeaderboardRef.get().then((DataSnapshot snapshot) async {
       if (snapshot.exists) {
@@ -309,7 +335,10 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
 
       crew['crewMemberList'] = members;
       if (members.length == 20 && crew['crewRecruitStatus'] != 'CLOSE') {
-        FirebaseDatabase.instance.ref('crewChallengeLeaderboard/${challengeId.value}/$key/crewRecruitStatus').set('CLOSE');
+        FirebaseDatabase.instance
+            .ref(
+                'crewChallengeLeaderboard/${challengeId.value}/$key/crewRecruitStatus')
+            .set('CLOSE');
       }
 
       CrewModel crewModel = CrewModel.fromJson(jsonDecode(jsonEncode(crew)));
@@ -320,9 +349,11 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       'REGISTER_AVAILABLE',
       'REGISTER_READY',
       'JOIN_AVAILABLE',
-    ].any((challengeUserState) => challengeUserState == challengeDetails.value.challengeUserState)) {
+    ].any((challengeUserState) =>
+        challengeUserState == challengeDetails.value.challengeUserState)) {
       crewList.sort((a, b) {
-        bool isSameMemberCount = b.crewMemberList!.length.compareTo(a.crewMemberList!.length) == 0;
+        bool isSameMemberCount =
+            b.crewMemberList!.length.compareTo(a.crewMemberList!.length) == 0;
         if (isSameMemberCount) {
           return a.name!.toLowerCase().compareTo(b.name!.toLowerCase());
         }
@@ -330,9 +361,11 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       });
     } else {
       crewList.sort((a, b) {
-        bool isSameBlockCount = b.blockQuantity!.compareTo(a.blockQuantity!) == 0;
+        bool isSameBlockCount =
+            b.blockQuantity!.compareTo(a.blockQuantity!) == 0;
         if (isSameBlockCount) {
-          bool isSameMemberCount = b.crewMemberList!.length.compareTo(a.crewMemberList!.length) == 0;
+          bool isSameMemberCount =
+              b.crewMemberList!.length.compareTo(a.crewMemberList!.length) == 0;
           if (isSameMemberCount) {
             return a.name!.toLowerCase().compareTo(b.name!.toLowerCase());
           }
@@ -346,9 +379,11 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
   void moveToExternalBrowser(linkUrl) async {
     Uri url = Uri.parse(linkUrl!);
     if (await canLaunchUrl(url)) {
-      await ActivityService.fetchChallengeAllianceLinkRecord(challengeId.value, linkUrl);
+      await ActivityService.fetchChallengeAllianceLinkRecord(
+          challengeId.value, linkUrl);
 
-      showModalWebview(this, Get.context, title: challengeDetails.value.title, linkUrl: linkUrl);
+      showModalWebview(this, Get.context,
+          title: challengeDetails.value.title, linkUrl: linkUrl);
       // Get.toNamed(Routes.inAppModalWebView, arguments: {'linkUrl': linkUrl, 'title': title});
       // await launchUrl(
       //   url,
@@ -375,12 +410,13 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
 
   Future<void> showCreateCrewForm() async {
     if (await handleCheckUserVerified()) {
-      await CrewService.getCrewMarkIcons(successCallback: (List<CrewIconModel> icons) {
+      await CrewService.getCrewMarkIcons(
+          successCallback: (List<CrewIconModel> icons) {
         crewMarkIcons.clear();
         selectedMarkIconId.value = icons.first.id;
         crewMarkIcons.addAll(icons);
       }, errorCallback: () {
-        showToastPopup('크루 마크를 불러오지 못했습니다.');
+        showToastPopup('crew_mark_load_failed'.tr());
       });
       crewName.value = '';
       crewNameController.text = '';
@@ -392,13 +428,13 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
 
   void handleCreateCrewType(String createCrewType) async {
     if (crewName.value == '') {
-      showToastPopup('크루명을 입력해주세요');
+      showToastPopup('enter_crew_name'.tr());
       return;
     }
 
-    RegExp pattern = RegExp(r'^[가-힣a-zA-Z0-9\s]{2,10}$');
+    RegExp pattern = RegExp(r'crew_name_regex'.tr());
     if (!pattern.hasMatch(crewName.value)) {
-      showToastPopup('2~10글자로 작성해주세요.\n특수문자는 사용 불가능합니다.');
+      showToastPopup('crew_name_length_rule'.tr());
       return;
     }
 
@@ -437,7 +473,8 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       formData,
       successCallback: (int crewId) async {
         await getChallengeDetail();
-        Get.until((route) => Get.isDialogOpen == false && Get.isBottomSheetOpen == false);
+        Get.until((route) =>
+            Get.isDialogOpen == false && Get.isBottomSheetOpen == false);
         await Future.delayed(const Duration(seconds: 1));
         crewCreateCompleteAlert(this);
       },
@@ -463,12 +500,18 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     tabController.index = 1;
   }
 
-  Future<void> shareChallenge({required ChallengeType challengeType, required ShareSource shareSource, String? crewName}) async {
-    bool isKakaoTalkSharingAvailable = await ShareClient.instance.isKakaoTalkSharingAvailable();
+  Future<void> shareChallenge(
+      {required ChallengeType challengeType,
+      required ShareSource shareSource,
+      String? crewName}) async {
+    bool isKakaoTalkSharingAvailable =
+        await ShareClient.instance.isKakaoTalkSharingAvailable();
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
 
-    String uriPrefix = F.isDev ? "https://gazagostage.page.link" : "https://gazago.page.link";
-    String packageName = F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo";
+    String uriPrefix =
+        F.isDev ? "https://gazagostage.page.link" : "https://gazago.page.link";
+    String packageName =
+        F.isDev ? "kr.co.eztechfin.gazaGo.dev" : "kr.co.eztechfin.gazaGo";
 
     DynamicLinkParameters? dynamicLinkParams = DynamicLinkParameters(
       link: Uri.parse(
@@ -478,9 +521,11 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       iosParameters: IOSParameters(bundleId: packageName),
     );
     if (challengeType == ChallengeType.crew) {
-      if (![ShareSource.shareAppbar, ShareSource.createCrew].any((source) => shareSource == source)) {
+      if (![ShareSource.shareAppbar, ShareSource.createCrew]
+          .any((source) => shareSource == source)) {
         dynamicLinkParams = DynamicLinkParameters(
-          link: Uri.parse("https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}&inviteId=$userId"),
+          link: Uri.parse(
+              "https://gazago.io?route=${Routes.challengeDetail.replaceAll(':id', challengeId.value.toString())}&inviteId=$userId"),
           uriPrefix: uriPrefix,
           androidParameters: AndroidParameters(packageName: packageName),
           iosParameters: IOSParameters(bundleId: packageName),
@@ -488,10 +533,12 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       }
     }
 
-    final ShortDynamicLink dynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams!);
+    final ShortDynamicLink dynamicLink =
+        await FirebaseDynamicLinks.instance.buildShortLink(dynamicLinkParams!);
 
     FeedTemplate? kakaoFeedTemplate;
-    String shareTarget = shareSource == ShareSource.crewDetail ? 'inviteCode' : 'basic';
+    String shareTarget =
+        shareSource == ShareSource.crewDetail ? 'inviteCode' : 'basic';
     if (shareTemplate.value != null) {
       kakaoFeedTemplate = FeedTemplate(
         content: Content(
@@ -508,7 +555,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
         buttonTitle: shareTemplate.value[shareTarget]['buttonTitle'],
       );
     } else {
-      showToastPopup('공유하기 템플릿 설정 미적용');
+      showToastPopup('sharing_template_not_applied'.tr());
     }
     // if (challengeType == ChallengeType.crew) {
     //   kakaoFeedTemplate = generateFeedTemplate(dynamicLink.shortUrl, challengeType: challengeType, shareSource: shareSource, crewName: crewName);
@@ -533,17 +580,22 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
 
     if (isKakaoTalkSharingAvailable) {
       try {
-        Uri uri = await ShareClient.instance.shareDefault(template: kakaoFeedTemplate!, serverCallbackArgs: {
+        Uri uri = await ShareClient.instance
+            .shareDefault(template: kakaoFeedTemplate!, serverCallbackArgs: {
           'userId': userId,
           'challengeId': '${challengeId.value}',
         });
-        if (![ShareSource.shareAppbar, ShareSource.crewDetail].any((source) => shareSource == source)) {
-          FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(true);
+        if (![ShareSource.shareAppbar, ShareSource.crewDetail]
+            .any((source) => shareSource == source)) {
+          FirebaseDatabase.instance
+              .ref(
+                  'kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton')
+              .set(true);
         }
 
         await ShareClient.instance.launchKakaoTalk(uri);
       } catch (error) {
-        showToastPopup('공유 실패');
+        showToastPopup('sharing_failed'.tr());
       }
     } else {
       // try {
@@ -552,15 +604,18 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       //   Future.delayed(const Duration(seconds: 2));
       //   askSharedCompleteDialog(this);
       // } catch (error) {
-      //   showToastPopup('공유 실패');
+      //   showToastPopup('sharing_failed'.tr());
       // }
-      showToastPopup('카카오톡을 설치해주세요');
+      showToastPopup('install_kakao_talk'.tr());
     }
   }
 
   Future<void> getFirebaseShareTemplate() async {
     try {
-      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance.collection("challengeShareTemplate").doc(challengeDetails.value.id.toString()).get();
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+          .collection("challengeShareTemplate")
+          .doc(challengeDetails.value.id.toString())
+          .get();
       shareTemplate.value = docSnapshot.data();
     } catch (e) {
       shareTemplate.value = null;
@@ -569,18 +624,26 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
 
   void setChallengeShareFlag() {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
-    FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(false);
+    FirebaseDatabase.instance
+        .ref(
+            'kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton')
+        .set(false);
   }
 
   Future<void> checkShareChallengeStatus() async {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
-    DatabaseReference kakaoShareStatus = FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId');
-    ChallengeType challengeType = challengeDetails.value.challengeActivationType == 'CREW' ? ChallengeType.crew : ChallengeType.payment;
-    ShareSource? shareSource = challengeDetails.value.challengeActivationType == 'CREW'
-        ? ShareSource.createCrew
-        : challengeDetails.value.challengeType == 'PAYMENT'
-            ? ShareSource.mirae
-            : ShareSource.spot;
+    DatabaseReference kakaoShareStatus = FirebaseDatabase.instance
+        .ref('kakaoSharedMessageRecord/${challengeId.value}/$userId');
+    ChallengeType challengeType =
+        challengeDetails.value.challengeActivationType == 'CREW'
+            ? ChallengeType.crew
+            : ChallengeType.payment;
+    ShareSource? shareSource =
+        challengeDetails.value.challengeActivationType == 'CREW'
+            ? ShareSource.createCrew
+            : challengeDetails.value.challengeType == 'PAYMENT'
+                ? ShareSource.mirae
+                : ShareSource.spot;
 
     kakaoShareStatus.get().then((DataSnapshot snapshot) async {
       Map data = snapshot.value as Map;
@@ -588,33 +651,43 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
         if (data['clickedShareButton']) {
           if (Get.isDialogOpen == false) {
             if (data['chatType'] != 'MemoChat') {
-              askSharedCompleteDialog(this, challengeType: challengeType, shareSource: shareSource);
+              askSharedCompleteDialog(this,
+                  challengeType: challengeType, shareSource: shareSource);
             } else {
-              unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
+              unableShareMyselfDialog(this,
+                  challengeType: challengeType, shareSource: shareSource);
             }
           }
         }
       } else {
         if (data['clickedShareButton']) {
-          unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
+          unableSharedHistoryDialog(this,
+              challengeType: challengeType, shareSource: shareSource);
         }
       }
-      FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(false);
+      FirebaseDatabase.instance
+          .ref(
+              'kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton')
+          .set(false);
     }).onError((error, stackTrace) {
       // unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
     });
   }
 
-  Future<void> validateKakaoShareResult({required ChallengeType challengeType, required ShareSource shareSource}) async {
+  Future<void> validateKakaoShareResult(
+      {required ChallengeType challengeType,
+      required ShareSource shareSource}) async {
     String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
-    DatabaseReference kakaoShareStatus = FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId');
+    DatabaseReference kakaoShareStatus = FirebaseDatabase.instance
+        .ref('kakaoSharedMessageRecord/${challengeId.value}/$userId');
     kakaoShareStatus.get().then((DataSnapshot snapshot) {
       if (snapshot.exists) {
         Map data = snapshot.value as Map;
         if (data['chatType'] != null) {
           if (Get.isDialogOpen == false) {
             if (data['chatType'] == 'MemoChat') {
-              unableShareMyselfDialog(this, challengeType: challengeType, shareSource: shareSource);
+              unableShareMyselfDialog(this,
+                  challengeType: challengeType, shareSource: shareSource);
             } else {
               if (challengeDetails.value.challengeActivationType == 'CREW') {
                 requestCreateCrew('INVITE');
@@ -625,35 +698,43 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
             }
           }
         } else {
-          unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
+          unableSharedHistoryDialog(this,
+              challengeType: challengeType, shareSource: shareSource);
         }
       } else {
-        unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
+        unableSharedHistoryDialog(this,
+            challengeType: challengeType, shareSource: shareSource);
       }
-      FirebaseDatabase.instance.ref('kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton').set(false);
+      FirebaseDatabase.instance
+          .ref(
+              'kakaoSharedMessageRecord/${challengeId.value}/$userId/clickedShareButton')
+          .set(false);
     }).onError((error, stackTrace) {
-      unableSharedHistoryDialog(this, challengeType: challengeType, shareSource: shareSource);
+      unableSharedHistoryDialog(this,
+          challengeType: challengeType, shareSource: shareSource);
     });
   }
 
   Future<void> handleCrewJoin(CrewModel crew) async {
     if (isAbleToJoinCrew.value) {
       if (await handleCheckUserVerified()) {
-        if (crew.crewRecruitStatus == "OPEN" && crew.crewRelayStatus == "ONGOING") {
+        if (crew.crewRecruitStatus == "OPEN" &&
+            crew.crewRelayStatus == "ONGOING") {
           crewJoinInfoAlert(crew);
         } else {
-          showToastPopup('모집이 제한된 크루입니다.');
+          showToastPopup('crew_recruitment_limited'.tr());
         }
       } else {
         showChallengeNeedVerificationAlert();
       }
     } else {
-      showToastPopup('모집인원이 마감된 크루입니다.');
+      showToastPopup('crew_recruitment_full'.tr());
     }
   }
 
   void requestJoinCrew(CrewModel crew) {
-    CrewService.joinCrew(challengeId.value, crew.id!, successCallback: () async {
+    CrewService.joinCrew(challengeId.value, crew.id!,
+        successCallback: () async {
       await getChallengeDetail();
       await Future.delayed(const Duration(seconds: 1));
       crewJoinCompleteAlert(myCrew.value!['crew']);
@@ -673,13 +754,14 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     if (myCrew.value != null && crewList.isNotEmpty) {
       Get.toNamed(Routes.crewDetail);
     } else {
-      showToastPopup('내 크루를 찾을 수 없습니다. 잠시후 시도해주세요');
+      showToastPopup('crew_not_found'.tr());
       getCrewList();
     }
   }
 
   void loadDataOnScroll() {
-    double scrollBottom = leaderboardScrollController.positions.last.maxScrollExtent;
+    double scrollBottom =
+        leaderboardScrollController.positions.last.maxScrollExtent;
     double scrollPosition = leaderboardScrollController.positions.last.pixels;
 
     if (tabController.index == 1 && scrollPosition == scrollBottom) {
@@ -701,7 +783,9 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
   }
 
   Future<void> onFetchJoinChallenge({bool isFree = false}) async {
-    ChallengeJoinModel params = ChallengeJoinModel(challengeActivationType: challengeDetails.value.challengeActivationType!);
+    ChallengeJoinModel params = ChallengeJoinModel(
+        challengeActivationType:
+            challengeDetails.value.challengeActivationType!);
     if (challengeDetails.value.challengeActivationType! == 'PAYMENT') {
       params.entryFee = isFree ? 0 : challengeDetails.value.entryFee;
       Get.back();
@@ -711,15 +795,17 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
     }
     if (challengeDetails.value.challengeActivationType! == 'CODE') {
       if (participationCode.value == '') {
-        showToastPopup('참여코드를 입력해주세요.');
+        showToastPopup('enter_participation_code'.tr());
         return;
       }
       params.code = participationCode.value;
     }
-    await ActivityService.fetchJoinChallenge(challengeId.value, params, successCallback: (JoinChallengeResponseModel landingInfo) {
+    await ActivityService.fetchJoinChallenge(challengeId.value, params,
+        successCallback: (JoinChallengeResponseModel landingInfo) {
       walletMasterController.getSpendingWalletBalances();
       if (Get.isBottomSheetOpen == true) {
-        Get.until((route) => Get.isDialogOpen == false && Get.isBottomSheetOpen == false);
+        Get.until((route) =>
+            Get.isDialogOpen == false && Get.isBottomSheetOpen == false);
       }
 
       if (challengeDetails.value.challengeActivationType! != 'ITEM') {
@@ -728,7 +814,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
       initLeaderboard();
       getChallengeLeaderboard();
       getChallengeLeaderboardMyRanking();
-      showToastPopup('챌린지 참가가 완료되었습니다.');
+      showToastPopup('challenge_participation_complete'.tr());
 
       // 광고가 있다면 띄워주기
       if (landingInfo.challengeLanding != null) {
@@ -761,7 +847,7 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
   //     await ActivityService.fetchJoinChallenge(challengeId.value, params, successCallback: (bool isSuccess) {
   //       if (isSuccess) {
   //         Get.back();
-  //         showToastPopup('챌린지 참가가 완료되었습니다.');
+  //         showToastPopup('challenge_participation_complete'.tr());
   //         initCodeTextField();
   //         getChallengeDetail();
   //         getChallengeLeaderboard();
@@ -771,12 +857,13 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
   //       errorMessage.value = message!;
   //     });
   //   } else {
-  //     showToastPopup('참여코드를 입력해주세요.');
+  //     showToastPopup('enter_participation_code'.tr());
   //   }
   // }
 
   void onJoinPayChallenge() {
-    if (double.parse(walletMasterController.tik.value.uiAmountString!) < challengeDetails.value.entryFee!) {
+    if (double.parse(walletMasterController.tik.value.uiAmountString!) <
+        challengeDetails.value.entryFee!) {
       isShortTokenBalance.value = true;
     } else {
       isShortTokenBalance.value = false;
@@ -809,7 +896,8 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
             if (Get.isRegistered<LeaderboardController>()) {
               Get.find<LeaderboardController>().tabController.animateTo(1);
             } else {
-              LeaderboardController leaderboardController = Get.put(LeaderboardController());
+              LeaderboardController leaderboardController =
+                  Get.put(LeaderboardController());
               leaderboardController.tabController.animateTo(1);
             }
 
@@ -825,7 +913,8 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
             if (Get.isRegistered<LeaderboardController>()) {
               Get.find<LeaderboardController>().tabController.animateTo(0);
             } else {
-              LeaderboardController leaderboardController = Get.put(LeaderboardController());
+              LeaderboardController leaderboardController =
+                  Get.put(LeaderboardController());
               leaderboardController.tabController.animateTo(0);
             }
             break;
@@ -835,16 +924,23 @@ class ChallengesDetailController extends SuperController with GetTickerProviderS
             break;
           case 'NOTICE':
             // Get.toNamed(Routes.noticeList);
-            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'});
+            Get.toNamed(Routes.webView, arguments: {
+              'linkUrl':
+                  'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
+            });
             break;
           case 'FAQ':
             // Get.toNamed(Routes.preferenceBoard);
-            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'});
+            Get.toNamed(Routes.webView, arguments: {
+              'linkUrl':
+                  'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
+            });
             break;
         }
         break;
       case 'INTERNAL_WEB_VIEW':
-        showModalWebview(this, Get.context, title: landingInfo.title!, linkUrl: landingInfo.linkUrl!);
+        showModalWebview(this, Get.context,
+            title: landingInfo.title!, linkUrl: landingInfo.linkUrl!);
         break;
       case 'EXTERNAL_BROWSER':
         Uri url = Uri.parse(landingInfo.linkUrl!);

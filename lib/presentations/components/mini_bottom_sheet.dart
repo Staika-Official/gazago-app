@@ -8,7 +8,8 @@ import 'package:gaza_go/presentations/components/challenge_bottom_sheet/company_
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 import 'challenge_bottom_sheet/code_challenge.dart';
 import 'challenge_bottom_sheet/item_challenge.dart';
@@ -17,9 +18,12 @@ import 'challenge_bottom_sheet/pay_challenge.dart';
 Widget renderParticipateInChallenge() {
   ChallengesDetailController challengesDetailController = Get.find();
 
-  String? userState = challengesDetailController.challengeDetails.value.challengeUserState;
-  String? challengeState = challengesDetailController.challengeDetails.value.challengeState;
-  String? challengeActivationType = challengesDetailController.challengeDetails.value.challengeActivationType;
+  String? userState =
+      challengesDetailController.challengeDetails.value.challengeUserState;
+  String? challengeState =
+      challengesDetailController.challengeDetails.value.challengeState;
+  String? challengeActivationType =
+      challengesDetailController.challengeDetails.value.challengeActivationType;
   // challengesDetailController.challengeDetails.value.userItem = NewChallengeUserItemModel(id: 0, equipped: false);
 
   Map widgets = {
@@ -49,7 +53,8 @@ Widget renderParticipateInChallenge() {
       if (userState == 'JOINED') {
         widgets = renderCodeInProgressJoined(challengesDetailController);
       } else if (userState == 'JOIN_AVAILABLE') {
-        widgets = renderCodeInProgressJoinedAvailable(challengesDetailController);
+        widgets =
+            renderCodeInProgressJoinedAvailable(challengesDetailController);
       } else if (userState == 'JOIN_CLOSED') {
         // 참가 마감
         widgets = renderCodeInProgressJoinedClosed(challengesDetailController);
@@ -81,11 +86,14 @@ Widget renderParticipateInChallenge() {
         widgets = renderItemInProgressJoinedClosed(challengesDetailController);
       } else {
         // 접수 중
-        if (challengesDetailController.challengeDetails.value.userItem != null) {
-          if (challengesDetailController.challengeDetails.value.userItem!.equipped) {
+        if (challengesDetailController.challengeDetails.value.userItem !=
+            null) {
+          if (challengesDetailController
+              .challengeDetails.value.userItem!.equipped) {
             widgets = renderItemReadyJoinedEquipped(challengesDetailController);
           } else {
-            widgets = renderItemReadyJoinedNotEquipped(challengesDetailController);
+            widgets =
+                renderItemReadyJoinedNotEquipped(challengesDetailController);
           }
         } else {
           widgets = renderItemReadyJoinedElse(challengesDetailController);
@@ -96,13 +104,17 @@ Widget renderParticipateInChallenge() {
       if (userState == 'JOINED') {
         widgets = renderItemInProgressJoined(challengesDetailController);
       } else if (userState == 'JOIN_AVAILABLE') {
-        if (challengesDetailController.challengeDetails.value.userItem != null) {
-          widgets = renderItemInProgressJoinedAvailableHaveItem(challengesDetailController);
+        if (challengesDetailController.challengeDetails.value.userItem !=
+            null) {
+          widgets = renderItemInProgressJoinedAvailableHaveItem(
+              challengesDetailController);
         } else {
-          widgets = renderItemInProgressJoinedAvailable(challengesDetailController);
+          widgets =
+              renderItemInProgressJoinedAvailable(challengesDetailController);
         }
       } else if (userState == 'JOINED_UNEQUIPPED_ITEM') {
-        widgets = renderItemInProgressJoinedAvailableHaveItem(challengesDetailController);
+        widgets = renderItemInProgressJoinedAvailableHaveItem(
+            challengesDetailController);
       } else if (userState == 'JOIN_CLOSED') {
         // 참가 마감
         widgets = renderItemInProgressJoinedClosed(challengesDetailController);
@@ -145,7 +157,8 @@ Widget renderParticipateInChallenge() {
       if (userState == 'JOINED') {
         widgets = renderPayInProgressJoined(challengesDetailController);
       } else if (userState == 'JOIN_AVAILABLE') {
-        widgets = renderPayInProgressJoinedAvailable(challengesDetailController);
+        widgets =
+            renderPayInProgressJoinedAvailable(challengesDetailController);
       } else if (userState == 'JOIN_CLOSED') {
         // 참가 마감
         widgets = renderPayInProgressJoinedClosed(challengesDetailController);
@@ -206,7 +219,15 @@ Widget renderParticipateInChallenge() {
     child: Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(top:(userState == 'COMPLETE' || userState == 'INCOMPLETE') ? 5.sp : 22.0.sp, bottom:(userState == 'COMPLETE' || userState == 'INCOMPLETE') ? 5.sp : 15.sp, left: 16.sp, right: 16.sp),
+          padding: EdgeInsets.only(
+              top: (userState == 'COMPLETE' || userState == 'INCOMPLETE')
+                  ? 5.sp
+                  : 22.0.sp,
+              bottom: (userState == 'COMPLETE' || userState == 'INCOMPLETE')
+                  ? 5.sp
+                  : 15.sp,
+              left: 16.sp,
+              right: 16.sp),
           child: Flex(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             direction: Axis.horizontal,
@@ -225,7 +246,8 @@ Widget renderParticipateInChallenge() {
           width: double.infinity,
           color: Colors.black,
           child: Padding(
-            padding: EdgeInsets.only(top: 8.0.sp, bottom: Platform.isAndroid ? 14.0.sp : 36.sp),
+            padding: EdgeInsets.only(
+                top: 8.0.sp, bottom: Platform.isAndroid ? 14.0.sp : 36.sp),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -241,17 +263,20 @@ Widget renderParticipateInChallenge() {
                           Rect.fromLTWH(0, 0, size.width, 16),
                         ),
                         child: Text(
-                          '기간 :',
-                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                            color: AppColorData.regular().colorTextBrand
-                          ),
+                          'duration'.tr(),
+                          style: AppTextStyleData.regular()
+                              .koBodyMediumSm
+                              .copyWith(
+                                  color: AppColorData.regular().colorTextBrand),
                         ),
                       )
                     : Text(
-                        '기간 :',
-                  style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                      color: AppColorData.regular().colorTextTertiary
-                  ),
+                        'duration'.tr(),
+                        style: AppTextStyleData.regular()
+                            .koBodyMediumSm
+                            .copyWith(
+                                color:
+                                    AppColorData.regular().colorTextTertiary),
                       ),
                 Padding(
                   padding: EdgeInsets.only(left: 8.0.sp),
@@ -267,16 +292,20 @@ Widget renderParticipateInChallenge() {
                           ),
                           child: Text(
                             '${formatDateUntilTime(challengesDetailController.challengeDetails.value.fromDate)} ~ ${formatDateUntilTime(challengesDetailController.challengeDetails.value.toDate)}',
-                            style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                                color: AppColorData.regular().colorTextBrand
-                            ),
+                            style: AppTextStyleData.regular()
+                                .koBodyMediumSm
+                                .copyWith(
+                                    color:
+                                        AppColorData.regular().colorTextBrand),
                           ),
                         )
                       : Text(
                           '${formatDateUntilTime(challengesDetailController.challengeDetails.value.fromDate)} ~ ${formatDateUntilTime(challengesDetailController.challengeDetails.value.toDate)}',
-                          style:AppTextStyleData.regular().koBodyMediumSm.copyWith(
-                              color: AppColorData.regular().colorTextTertiary
-                          ),
+                          style: AppTextStyleData.regular()
+                              .koBodyMediumSm
+                              .copyWith(
+                                  color:
+                                      AppColorData.regular().colorTextTertiary),
                         ),
                 ),
               ],

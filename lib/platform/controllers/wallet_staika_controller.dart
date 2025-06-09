@@ -20,10 +20,12 @@ import 'package:gaza_go/platform/services/wallet_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/wallet/confirm_wallet_password.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:solana/solana.dart';
 
-class StaikaWalletController extends GetxController with WalletMixin, SolanaMixin {
+class StaikaWalletController extends GetxController
+    with WalletMixin, SolanaMixin {
   LoaderController loaderController = Get.put(LoaderController());
   WalletMasterController walletMasterController = Get.find();
   final RxList<WalletTokenBalanceModel> coinAssetList = RxList.empty();
@@ -37,14 +39,16 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   final RxString shortStikUiAmount = RxString('0');
   final RxDouble fee = RxDouble(0.0);
   final Rx<Currency> currency = Rx(Currency.krw);
-  final TextEditingController stikAmountTextController = TextEditingController(text: '');
+  final TextEditingController stikAmountTextController =
+      TextEditingController(text: '');
   final FocusNode focusNode = FocusNode();
   final RxBool isFetching = RxBool(false);
   final RxString userEmail = RxString('');
 
   RxBool get isValid {
     if (sendStikUiAmount.value != '') {
-      return RxBool(double.parse(sendStikUiAmount.value) != 0 && sendStikUiAmount.value != '0.');
+      return RxBool(double.parse(sendStikUiAmount.value) != 0 &&
+          sendStikUiAmount.value != '0.');
     }
     return RxBool(false);
   }
@@ -89,7 +93,8 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   String getCurrencyPrice(TokenModel token, double amount) {
-    TokenQuotesModel quote = token.quotes!.singleWhere((quote) => quote.currency! == (currency.value == Currency.krw ? 'KRW' : 'USD'));
+    TokenQuotesModel quote = token.quotes!.singleWhere((quote) =>
+        quote.currency! == (currency.value == Currency.krw ? 'KRW' : 'USD'));
     double price = quote.price!;
 
     return (amount * price).toString();
@@ -99,12 +104,15 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     // HiveStore.save(key: HiveKey.onChainWalletRequestTime.name, value: false);
     await WalletService.getOnChainWallet(
       successCallback: (OnChainWalletModel data) async {
-        HiveStore.save(key: HiveKey.solanaSecretKey.name, value: data.secretKey);
+        HiveStore.save(
+            key: HiveKey.solanaSecretKey.name, value: data.secretKey);
         userWalletAddress.value = data.publicKey;
         explorerUrl.value = data.explorerUrl;
-        bool isWalletConnectionPrompted = HiveStore.load(key: HiveKey.walletConnectionPrompted.name) ?? false;
+        bool isWalletConnectionPrompted =
+            HiveStore.load(key: HiveKey.walletConnectionPrompted.name) ?? false;
         if (!isWalletConnectionPrompted) {
-          HiveStore.save(key: HiveKey.walletConnectionPrompted.name, value: true);
+          HiveStore.save(
+              key: HiveKey.walletConnectionPrompted.name, value: true);
           showStaikaStatusAlert(hasWallet: true);
         }
         await getStikPriceInfo();
@@ -113,13 +121,16 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
       },
       errorCallback: (ErrorResponseDataModel data) {
         if (data.errorCode == 'NOT_FOUND_WALLET') {
-          TabController controller = Get.find<WalletMasterController>().tabController;
+          TabController controller =
+              Get.find<WalletMasterController>().tabController;
           showStaikaStatusAlert(hasWallet: false, tabController: controller);
         } else if (data.errorCode == 'NOT_SUPPORT_WALLET') {
-          TabController controller = Get.find<WalletMasterController>().tabController;
-          showNotSupportedWalletAlert(message: data.errorMessage!, tabController: controller);
+          TabController controller =
+              Get.find<WalletMasterController>().tabController;
+          showNotSupportedWalletAlert(
+              message: data.errorMessage!, tabController: controller);
         } else if (data.errorCode == 'DATABASE_EXCEPTION') {
-          showToastPopup('잠시 후 다시 시도해 주세요');
+          showToastPopup('retry_later'.tr());
         }
       },
     );
@@ -127,7 +138,7 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
 
   void handleCopyWalletAddress() async {
     await Clipboard.setData(ClipboardData(text: userWalletAddress.value));
-    showToastPopup('주소가 복사 되었습니다.');
+    showToastPopup('address_copied'.tr());
   }
 
   void onOpenSolScanWallet() {
@@ -141,14 +152,18 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   Future<void> getOnChainTokenBalance() async {
-    HiveStore.save(key: HiveKey.onGetChainWalletBalanceTime.name, value: DateTime.now().toString());
+    HiveStore.save(
+        key: HiveKey.onGetChainWalletBalanceTime.name,
+        value: DateTime.now().toString());
     isFetching.value = true;
     initTextController();
-    await WalletService.getOnChainTokenBalance(successCallback: (List<WalletTokenBalanceModel> tokenData) {
+    await WalletService.getOnChainTokenBalance(
+        successCallback: (List<WalletTokenBalanceModel> tokenData) {
       coinAssetList.clear();
       coinAssetList.addAll(tokenData);
       try {
-        assetStik.value = tokenData.singleWhere((data) => data.symbol == 'STIK');
+        assetStik.value =
+            tokenData.singleWhere((data) => data.symbol == 'STIK');
       } catch (e) {
         assetStik.value = null;
       }
@@ -166,8 +181,11 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
   }
 
   void openSendStikGoWalletAlert() async {
-    shortStikUiAmount.value = (double.parse(assetStik.value!.uiAmountString) - double.parse(sendStikUiAmount.value)).toString();
-    if (double.parse(sendStikUiAmount.value) < double.parse(assetStik.value!.uiAmountString)) {
+    shortStikUiAmount.value = (double.parse(assetStik.value!.uiAmountString) -
+            double.parse(sendStikUiAmount.value))
+        .toString();
+    if (double.parse(sendStikUiAmount.value) <
+        double.parse(assetStik.value!.uiAmountString)) {
       if (double.parse(sendStikUiAmount.value) < 5) {
         showMinimumSendStikAmountAlert();
         return;
@@ -186,11 +204,13 @@ class StaikaWalletController extends GetxController with WalletMixin, SolanaMixi
     await WalletService.getWalletAddress(
       'SOLANA_GAZAGO_WALLET',
       successCallback: (address) {
-        solanaTokenMasterWallet = Ed25519HDPublicKey.fromBase58(address[0].value);
+        solanaTokenMasterWallet =
+            Ed25519HDPublicKey.fromBase58(address[0].value);
       },
     );
     num mod = pow(10.0, 9);
-    if (double.parse(sendStikUiAmount.value) < double.parse(assetStik.value!.uiAmountString)) {
+    if (double.parse(sendStikUiAmount.value) <
+        double.parse(assetStik.value!.uiAmountString)) {
       isFetching.value = true;
       loaderController.isLoading.value = true;
       await WalletService.fetchStikMoveToGoWallet(

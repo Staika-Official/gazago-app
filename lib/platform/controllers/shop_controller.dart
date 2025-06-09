@@ -13,7 +13,8 @@ import 'package:gaza_go/platform/models/shop_item_purchase_response_model.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
 import 'package:gaza_go/platform/services/shop_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class ShopController extends GetxController with GetTickerProviderStateMixin {
   final WalletMasterController walletMasterController = Get.find();
@@ -22,19 +23,19 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
   final RxList<ShopItemModel> shopItemsList = RxList.empty();
   late TabController tabController;
   final List<Map<String, String>> sortingList = [
-    {'title': '최근 등록 순', 'value': 'id,DESC'},
-    // {'title': '높은 가격 순', 'value': 'price,DESC'},
-    // {'title': '낮은 가격 순', 'value': 'price,ASC'}
+    {'title': 'latest_registration'.tr(), 'value': 'id,DESC'},
+    // {'title': 'highest_price'.tr(), 'value': 'price,DESC'},
+    // {'title': 'lowest_price'.tr(), 'value': 'price,ASC'}
   ];
 
   final List<Map<String, String>> categoryFilterList = [
-    {'title': '전체', 'value': 'ALL'},
-    {'title': '모자', 'value': 'HAT'},
-    {'title': '하의', 'value': 'BOTTOM'},
-    {'title': '상의', 'value': 'TOP'},
-    {'title': '신발', 'value': 'SHOES'},
-    {'title': '악세사리', 'value': 'ACCESSORY'},
-    {'title': '기타', 'value': 'DISPOSABLE'},
+    {'title': 'all'.tr(), 'value': 'ALL'},
+    {'title': 'hat'.tr(), 'value': 'HAT'},
+    {'title': 'bottom'.tr(), 'value': 'BOTTOM'},
+    {'title': 'top'.tr(), 'value': 'TOP'},
+    {'title': 'shoes'.tr(), 'value': 'SHOES'},
+    {'title': 'accessories_2'.tr(), 'value': 'ACCESSORY'},
+    {'title': 'other'.tr(), 'value': 'DISPOSABLE'},
   ];
 
   final List<Map<String, String>> gradeFilterList = [
@@ -57,10 +58,12 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
   RxBool isFilteredItems = RxBool(false);
   RxBool dataGetLoading = RxBool(false);
 
-  Rx isSelectedSortValue = Rx({'title': '최근 등록 순', 'value': 'id,DESC'});
-  RxString isSelectedSortString = RxString('최근 등록 순');
+  Rx isSelectedSortValue =
+      Rx({'title': 'latest_registration'.tr(), 'value': 'id,DESC'});
+  RxString isSelectedSortString = RxString('latest_registration'.tr());
   RxInt challengeId = RxInt(0);
-  ScrollController itemScrollController = ScrollController(keepScrollOffset: false);
+  ScrollController itemScrollController =
+      ScrollController(keepScrollOffset: false);
   RxBool isShortBalance = RxBool(false);
 
   RxList<ShopItemModel> get sortingShopItemList {
@@ -128,7 +131,8 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
 
   @override
   void onClose() {
-    itemScrollController.removeListener(() => toggleBottomNav(itemScrollController));
+    itemScrollController
+        .removeListener(() => toggleBottomNav(itemScrollController));
     super.onClose();
   }
 
@@ -136,7 +140,8 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
     getShopItemsList();
     getItemMaxValue();
     tabController = TabController(length: 7, vsync: this);
-    itemScrollController.addListener(() => toggleBottomNav(itemScrollController));
+    itemScrollController
+        .addListener(() => toggleBottomNav(itemScrollController));
   }
 
   Future<void> refreshController() async {
@@ -154,10 +159,14 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void getItemMaxValue() {
-    itemGoMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_go_max');
-    itemDurabilityMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_durability_max');
-    itemHealthMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_health_max');
-    itemLuckMax.value = getConfig(dataType: ConfigType.string, configKey: 'item_luck_max');
+    itemGoMax.value =
+        getConfig(dataType: ConfigType.string, configKey: 'item_go_max');
+    itemDurabilityMax.value = getConfig(
+        dataType: ConfigType.string, configKey: 'item_durability_max');
+    itemHealthMax.value =
+        getConfig(dataType: ConfigType.string, configKey: 'item_health_max');
+    itemLuckMax.value =
+        getConfig(dataType: ConfigType.string, configKey: 'item_luck_max');
   }
 
   void toItemDetail(int itemId) async {
@@ -165,7 +174,8 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
   }
 
   void getItemDetail(int itemId) async {
-    await ShopService.getShopItemDetails(itemId, successCallback: (ShopItemModel items) {
+    await ShopService.getShopItemDetails(itemId,
+        successCallback: (ShopItemModel items) {
       selectedItem.value = items;
     });
   }
@@ -220,7 +230,7 @@ class ShopController extends GetxController with GetTickerProviderStateMixin {
     await ItemService.fetchEquippedItem(
       itemId,
       successCallback: (InventoryItemModel item) {
-        showToastPopup('아이템이 장착되었습니다.');
+        showToastPopup('item_equipped'.tr());
       },
     );
   }

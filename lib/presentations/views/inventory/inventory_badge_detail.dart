@@ -10,7 +10,8 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class InventoryBadgeDetail extends StatelessWidget {
   const InventoryBadgeDetail({super.key});
@@ -60,10 +61,12 @@ class InventoryBadgeDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     InventoryController controller = Get.find();
 
-    SyntheticBadgeController syntheticBadgeController = Get.put(SyntheticBadgeController(controller.selectedBadge));
+    SyntheticBadgeController syntheticBadgeController =
+        Get.put(SyntheticBadgeController(controller.selectedBadge));
 
     return DefaultContainer(
-      titleText: 'Lv.${controller.selectedBadge.value.level} ${(controller.selectedBadge.value.name != null) ? controller.selectedBadge.value.name : ''}',
+      titleText:
+          'Lv.${controller.selectedBadge.value.level} ${(controller.selectedBadge.value.name != null) ? controller.selectedBadge.value.name : ''}',
       backgroundColor: mainBg01Color,
       child: Padding(
         padding: EdgeInsets.all(22.sp),
@@ -111,7 +114,8 @@ class InventoryBadgeDetail extends StatelessWidget {
                               ),
                             ),
                             child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 5.0.sp, horizontal: 10.0.sp),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5.0.sp, horizontal: 10.0.sp),
                               child: StyledText(
                                 '#${controller.selectedBadge.value.badgeId}',
                                 fontSize: 14,
@@ -129,23 +133,35 @@ class InventoryBadgeDetail extends StatelessWidget {
                               padding: EdgeInsets.only(top: 40.0.sp),
                               child: SizedBox(
                                 height: 150.sp,
-                                child: controller.selectedBadge.value.imageUrl!.contains('.svg')
+                                child: controller.selectedBadge.value.imageUrl!
+                                        .contains('.svg')
                                     ? SvgPicture.network(
                                         fit: BoxFit.fitHeight,
-                                        controller.selectedBadge.value.imageUrl!,
-                                        placeholderBuilder: (BuildContext context) => Container(padding: const EdgeInsets.all(30.0), child: const CircularProgressIndicator(color:skyBlueColor)),
+                                        controller
+                                            .selectedBadge.value.imageUrl!,
+                                        placeholderBuilder:
+                                            (BuildContext context) => Container(
+                                                padding:
+                                                    const EdgeInsets.all(30.0),
+                                                child:
+                                                    const CircularProgressIndicator(
+                                                        color: skyBlueColor)),
                                         headers: imageNetworkHeader,
                                       )
                                     : CachedNetworkImage(
-                                        imageUrl: controller.selectedBadge.value.imageUrl!,
+                                        imageUrl: controller
+                                            .selectedBadge.value.imageUrl!,
                                         fit: BoxFit.fill,
-                                        placeholder: (context, url) => const CircularProgressIndicator(color:skyBlueColor),
+                                        placeholder: (context, url) =>
+                                            const CircularProgressIndicator(
+                                                color: skyBlueColor),
                                         httpHeaders: imageNetworkHeader,
                                       ),
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: 25.0.sp, left: 20.sp, right: 20.sp),
+                              padding: EdgeInsets.only(
+                                  top: 25.0.sp, left: 20.sp, right: 20.sp),
                               child: Container(
                                 decoration: const BoxDecoration(
                                   color: subBg01Color,
@@ -154,16 +170,23 @@ class InventoryBadgeDetail extends StatelessWidget {
                                   ),
                                 ),
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 24.0.sp),
+                                  padding:
+                                      EdgeInsets.symmetric(vertical: 24.0.sp),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
-                                      if (controller.selectedBadge.value.rewardRate > 0)
+                                      if (controller
+                                              .selectedBadge.value.rewardRate >
+                                          0)
                                         Expanded(
                                           child: Column(
                                             children: [
                                               StyledText(
-                                                formatDecimalPlaces(controller.selectedBadge.value.rewardRate, 0),
+                                                formatDecimalPlaces(
+                                                    controller.selectedBadge
+                                                        .value.rewardRate,
+                                                    0),
                                                 fontSize: 26,
                                                 lineHeight: 26,
                                                 color: skyBlueColor,
@@ -171,15 +194,18 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                 letterSpacing: -.1,
                                               ),
                                               Padding(
-                                                padding: EdgeInsets.only(top: 8.0.sp),
+                                                padding: EdgeInsets.only(
+                                                    top: 8.0.sp),
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     iconShopRewardPng,
                                                     Padding(
-                                                      padding: EdgeInsets.only(left: 4.0.sp),
+                                                      padding: EdgeInsets.only(
+                                                          left: 4.0.sp),
                                                       child: StyledText(
-                                                        'GO 적립량',
+                                                        'go_accumulation'.tr(),
                                                         color: skyBlueColor,
                                                         fontSize: 12,
                                                         lineHeight: 14,
@@ -193,7 +219,12 @@ class InventoryBadgeDetail extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                      if (controller.selectedBadge.value.rewardRate > 0 && controller.selectedBadge.value.luckRate > 0)
+                                      if (controller.selectedBadge.value
+                                                  .rewardRate >
+                                              0 &&
+                                          controller.selectedBadge.value
+                                                  .luckRate >
+                                              0)
                                         SizedBox(
                                           height: 35.sp,
                                           child: const VerticalDivider(
@@ -202,12 +233,17 @@ class InventoryBadgeDetail extends StatelessWidget {
                                             thickness: 1,
                                           ),
                                         ),
-                                      if (controller.selectedBadge.value.luckRate > 0)
+                                      if (controller
+                                              .selectedBadge.value.luckRate >
+                                          0)
                                         Expanded(
                                           child: Column(
                                             children: [
                                               StyledText(
-                                                formatDecimalPlaces(controller.selectedBadge.value.luckRate, 0),
+                                                formatDecimalPlaces(
+                                                    controller.selectedBadge
+                                                        .value.luckRate,
+                                                    0),
                                                 fontSize: 26,
                                                 lineHeight: 26,
                                                 fontWeight: 500,
@@ -215,16 +251,19 @@ class InventoryBadgeDetail extends StatelessWidget {
                                                 letterSpacing: -.1,
                                               ),
                                               Padding(
-                                                padding: EdgeInsets.only(top: 8.0.sp),
+                                                padding: EdgeInsets.only(
+                                                    top: 8.0.sp),
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     Padding(
-                                                      padding: EdgeInsets.only(right: 4.0.sp),
+                                                      padding: EdgeInsets.only(
+                                                          right: 4.0.sp),
                                                       child: iconShopLuckPng,
                                                     ),
-                                                    const StyledText(
-                                                      '행운',
+                                                    StyledText(
+                                                      'luck'.tr(),
                                                       color: pinkColor,
                                                       fontSize: 12,
                                                       lineHeight: 12,
@@ -243,22 +282,25 @@ class InventoryBadgeDetail extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: 40.0.sp, left: 20.sp, right: 20.sp),
+                              padding: EdgeInsets.only(
+                                  top: 40.0.sp, left: 20.sp, right: 20.sp),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const StyledText(
-                                    '획득 정보',
+                                  StyledText(
+                                    'acquisition_info'.tr(),
                                     fontSize: 18,
                                     lineHeight: 18,
                                     fontWeight: 500,
                                   ),
                                   Obx(() {
                                     return Padding(
-                                      padding: EdgeInsets.only(top: 12.sp, bottom: 15.sp),
+                                      padding: EdgeInsets.only(
+                                          top: 12.sp, bottom: 15.sp),
                                       child: Row(children: [
                                         StyledText(
-                                          syntheticBadgeController.badgeType.value,
+                                          syntheticBadgeController
+                                              .badgeType.value,
                                           color: lightGrayColor,
                                           fontSize: 14,
                                           fontWeight: 500,
@@ -275,7 +317,8 @@ class InventoryBadgeDetail extends StatelessWidget {
                                         Container(
                                           padding: EdgeInsets.only(left: 5.sp),
                                           child: StyledText(
-                                            formatDate(controller.getBadgeDate.value),
+                                            formatDate(
+                                                controller.getBadgeDate.value),
                                             fontSize: 14,
                                             fontWeight: 500,
                                             color: lightGrayColor,
@@ -289,10 +332,12 @@ class InventoryBadgeDetail extends StatelessWidget {
                             ),
                             Obx(() {
                               return Padding(
-                                padding: EdgeInsets.only(top: 20.0.sp, bottom: 20.sp),
+                                padding: EdgeInsets.only(
+                                    top: 20.0.sp, bottom: 20.sp),
                                 child: Column(
                                   children: [
-                                    controller.selectedBadge.value.state == 'EQUIPPED'
+                                    controller.selectedBadge.value.state ==
+                                            'EQUIPPED'
                                         ? Container(
                                             decoration: BoxDecoration(
                                               color: popupBgColor,
@@ -316,12 +361,15 @@ class InventoryBadgeDetail extends StatelessWidget {
                                             child: InkWell(
                                               onTap: () => null,
                                               child: Padding(
-                                                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 20.sp),
-                                                child: const Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 13.0.sp,
+                                                    horizontal: 20.sp),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     StyledText(
-                                                      '장착 중',
+                                                      'equipped'.tr(),
                                                       fontSize: 18,
                                                       lineHeight: 18,
                                                       fontWeight: 500,
@@ -353,14 +401,21 @@ class InventoryBadgeDetail extends StatelessWidget {
                                               ],
                                             ),
                                             child: InkWell(
-                                              onTap: () => controller.fetchEquipBadge(controller.selectedBadge.value.badgeId),
+                                              onTap: () => controller
+                                                  .fetchEquipBadge(controller
+                                                      .selectedBadge
+                                                      .value
+                                                      .badgeId),
                                               child: Padding(
-                                                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 20.sp),
-                                                child: const Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 13.0.sp,
+                                                    horizontal: 20.sp),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     StyledText(
-                                                      '장착하기',
+                                                      'equip_item'.tr(),
                                                       fontSize: 18,
                                                       lineHeight: 18,
                                                       fontWeight: 500,
@@ -385,7 +440,7 @@ class InventoryBadgeDetail extends StatelessWidget {
             // Padding(
             //   padding: EdgeInsets.only(top: 25.0.sp),
             //   child: StyledText(
-            //     '능력치',
+            //     'stats'.tr(),
             //     fontWeight: 600,
             //     fontSize: 18,
             //     lineHeight: 18,
@@ -407,7 +462,7 @@ class InventoryBadgeDetail extends StatelessWidget {
             //                 Padding(
             //                   padding: EdgeInsets.only(left: 3.0),
             //                   child: StyledText(
-            //                     'GO 보상',
+            //                     'go_reward'.tr(),
             //                     fontWeight: 500,
             //                     fontSize: 14,
             //                     lineHeight: 15,
@@ -473,7 +528,7 @@ class InventoryBadgeDetail extends StatelessWidget {
             //                 Padding(
             //                   padding: EdgeInsets.only(left: 3.0),
             //                   child: StyledText(
-            //                     '행운',
+            //                     'luck'.tr(),
             //                     fontWeight: 500,
             //                     fontSize: 14,
             //                     lineHeight: 15,

@@ -121,8 +121,8 @@ void handleNotification(RemoteMessage message) {
     PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(message.data);
     // showLocalNotification(
     //   notificationType: NotificationType.badge,
-    //   title: '챌린지 뱃지 발급!',
-    //   message: '${data.challengeTitle} 달성. 새로운 뱃지 확인하러 가자GO~~',
+    //   title: 'challenge_badge_awarded'.tr(),
+    //   message: 'challenge_achievement'.tr('${data.challengeTitle}'),
     //   payload: 'NAV-INVENTORY_BADGE',
     // );
     showChallengeBadgeAcquisitionAlert(data);

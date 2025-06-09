@@ -1,43 +1,50 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
+import 'package:gaza_go/platform/helpers/map_mixin.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:throttling/throttling.dart';
 
 import '../models/checkpoint_model.dart';
 
-mixin ChallengeMixin {
+mixin ChallengeMixin on MapMixin {
   GlobalController globalController = Get.find();
   GlobalKey listKey = GlobalKey();
 
   final RxList<ChallengeCourseModel> nearByCourses = RxList.empty();
   final RxDouble listHeight = RxDouble(0);
   final RxList<ChallengeCourseModel> allCoursesList = RxList.empty();
-  final RxList<ChallengeHierarchyModel> hierarchyChallengesList = RxList.empty();
+  final RxList<ChallengeHierarchyModel> hierarchyChallengesList =
+      RxList.empty();
   final RxList<ChallengeCourseModel> doableCourses = RxList.empty();
   final Rxn<ChallengeCourseModel> selectedCourse = Rxn();
   final Rxn<ChallengeModel> selectedChallenge = Rxn();
 
   final RxList challengeMarkers = RxList.empty();
-  final RxList<NMarker> selectedChallengeMarkers = RxList.empty();
-  final Throttling challengeThr = Throttling(duration: const Duration(milliseconds: 500));
-  late NaverMapController challengeMapController;
+  final RxList<Marker> selectedChallengeMarkers = RxList.empty();
+  final Throttling challengeThr =
+      Throttling(duration: const Duration(milliseconds: 500));
+  late GoogleMapController challengeMapController;
   RxList<ChallengeCourseModel> get doableCoursesByChallenge {
     if (selectedChallenge.value != null) {
-      return RxList(doableCourses.where((course) => course.challengeId == selectedChallenge.value!.id).toList());
+      return RxList(doableCourses
+          .where((course) => course.challengeId == selectedChallenge.value!.id)
+          .toList());
     } else {
       return RxList.empty();
     }
@@ -46,28 +53,28 @@ mixin ChallengeMixin {
   String getChallengeActivationTypeString(String activationType) {
     switch (activationType) {
       case 'ITEM':
-        return '아이템 장착';
+        return 'item_equipped_1'.tr();
       case 'COURSE':
-        return '코스';
+        return 'course'.tr();
       case 'CODE':
-        return '참가코드';
+        return 'participation_code'.tr();
       case 'CREW':
-        return '크루릴레이';
+        return 'crew_relay'.tr();
       case 'CREW_COMPANY':
-        return '기업전용';
+        return 'corporate_only'.tr();
       default:
-        return '참가비 납부';
+        return 'participation_fee_payment'.tr();
     }
   }
 
   String getChallengeExerciseType(String type) {
     switch (type) {
       case 'WALKING':
-        return '걷기';
+        return 'walking'.tr();
       case 'CLIMBING':
-        return '오르기';
+        return 'climbing'.tr();
       case 'HIKING':
-        return '등산';
+        return 'hiking'.tr();
       default:
         return '';
     }
@@ -76,11 +83,11 @@ mixin ChallengeMixin {
   String getChallengeStatus(String status) {
     switch (status) {
       case 'READY':
-        return '챌린지 전';
+        return 'before_challenge'.tr();
       case 'IN_PROGRESS':
-        return '진행 중';
+        return 'in_progress'.tr();
       case 'CLOSED':
-        return '종료';
+        return 'finished'.tr();
       default:
         return '';
     }
@@ -89,11 +96,11 @@ mixin ChallengeMixin {
   String getUnlimitedParticipationStatus(String status) {
     switch (status) {
       case 'READY':
-        return ' 제한없음';
+        return 'unlimited'.tr();
       case 'IN_PROGRESS':
-        return ' 참여중';
+        return 'participating'.tr();
       case 'CLOSED':
-        return ' 참여';
+        return 'participate'.tr();
       default:
         return '';
     }
@@ -104,19 +111,19 @@ mixin ChallengeMixin {
     if (challengeState == 'READY') {
       switch (userStatus) {
         case 'REGISTER_AVAILABLE':
-          text = '접수 중';
+          text = 'registration_in_progress'.tr();
           break;
         case 'REGISTER_READY':
-          text = '접수 전';
+          text = 'before_registration'.tr();
           break;
         case 'JOINED':
-          text = '참가 중';
+          text = 'participating_challenge'.tr();
           break;
         case 'JOIN_AVAILABLE':
-          text = '접수 중';
+          text = 'registration_in_progress'.tr();
           break;
         case 'JOIN_CLOSED':
-          text = '참가 마감';
+          text = 'participation_closed'.tr();
           break;
         default:
           text = '';
@@ -124,19 +131,19 @@ mixin ChallengeMixin {
     } else {
       switch (userStatus) {
         case 'REGISTER_AVAILABLE':
-          text = '접수 중';
+          text = 'registration_in_progress'.tr();
           break;
         case 'REGISTER_READY':
-          text = '접수 전';
+          text = 'before_registration'.tr();
           break;
         case 'JOINED':
-          text = '참가 중';
+          text = 'participating_challenge'.tr();
           break;
         case 'JOIN_AVAILABLE':
-          text = '참가 가능';
+          text = 'participation_available'.tr();
           break;
         case 'JOIN_CLOSED':
-          text = '참가 마감';
+          text = 'participation_closed'.tr();
           break;
         default:
           text = '';
@@ -166,11 +173,11 @@ mixin ChallengeMixin {
     return challengeItem;
   }
 
-  Future<void> getNearByCourses(Position currentLocation, ExerciseState exerciseState) async {
-
-
+  Future<void> getNearByCourses(
+      Position currentLocation, ExerciseState exerciseState) async {
     // Future.delayed(Duration(milliseconds: 500));
-    await ActivityService.getNearByCourses(currentLocation, successCallback: (List<ChallengeCourseModel> result) {
+    await ActivityService.getNearByCourses(currentLocation,
+        successCallback: (List<ChallengeCourseModel> result) {
       // nearByCourses.clear();
       nearByCourses.value = RxList.empty();
       if (result.isNotEmpty) {
@@ -181,12 +188,10 @@ mixin ChallengeMixin {
     }, errorCallback: () {
       nearByCourses.clear();
     });
-
   }
 
-
-
-  Future<void> getChallengesHierarchy(Position currentLocation, int challengeId) async {
+  Future<void> getChallengesHierarchy(
+      Position currentLocation, int challengeId) async {
     hierarchyChallengesList.clear();
 
     await ActivityService.getChallengesHierarchy(
@@ -198,9 +203,12 @@ mixin ChallengeMixin {
     );
   }
 
-  void notificationOnCourse(List<ChallengeCourseModel> courses, ExerciseState exerciseState) {
+  void notificationOnCourse(
+      List<ChallengeCourseModel> courses, ExerciseState exerciseState) {
     bool notification = false;
-    if (courses.isNotEmpty && !([ExerciseState.ongoing, ExerciseState.paused].any((state) => state == exerciseState))) {
+    if (courses.isNotEmpty &&
+        !([ExerciseState.ongoing, ExerciseState.paused]
+            .any((state) => state == exerciseState))) {
       notification = true;
     }
 
@@ -208,38 +216,52 @@ mixin ChallengeMixin {
       for (ChallengeCourseModel course in courses) {
         if (validateChallengeNotification(course)) {
           DateTime notifiedTime = DateTime.now();
-          List<dynamic> notifiedChallengeList = HiveStore.load(key: HiveKey.courseNotificationList.name) ?? [];
+          List<dynamic> notifiedChallengeList =
+              HiveStore.load(key: HiveKey.courseNotificationList.name) ?? [];
           notifiedChallengeList.add({
             'courseId': course.id!,
             'challengeId': course.challengeId!,
-            'notifiedTime': DateTime(notifiedTime.year, notifiedTime.month, notifiedTime.day).toString(),
+            'notifiedTime': DateTime(
+                    notifiedTime.year, notifiedTime.month, notifiedTime.day)
+                .toString(),
           });
-          HiveStore.save(key: HiveKey.courseNotificationList.name, value: notifiedChallengeList);
-          HiveStore.save(key: HiveKey.courseNotificationTime.name, value: DateTime(notifiedTime.year, notifiedTime.month, notifiedTime.day));
+          HiveStore.save(
+              key: HiveKey.courseNotificationList.name,
+              value: notifiedChallengeList);
+          HiveStore.save(
+              key: HiveKey.courseNotificationTime.name,
+              value: DateTime(
+                  notifiedTime.year, notifiedTime.month, notifiedTime.day));
           showLocalNotification(
             allowSeparatePush: true,
             separatePushId: course.challengeId!,
             notificationType: NotificationType.challenge,
-            title: '챌린지 시작 포인트 발견',
-            message: '주변에 시작 할 수 있는 ${course.title}가 있어요. 뱃지 받으러 가자GO~~',
+            title: 'challenge_start_point_found'.tr(),
+            message: 'nearby_challenge_found'.tr(args: [course.title!]),
           );
-          showToastPopup('챌린지 시작 포인트 발견');
+          showToastPopup('challenge_start_point_found'.tr());
         }
       }
     }
   }
 
   bool validateChallengeNotification(ChallengeCourseModel course) {
-    DateTime? notifiedTime = HiveStore.load(key: HiveKey.courseNotificationTime.name);
-    bool isNextDay = notifiedTime != null ? DateTime.now().isAfter(notifiedTime.add(const Duration(hours: 24))) : true;
-    List<dynamic>? notifiedChallengeList = HiveStore.load(key: HiveKey.courseNotificationList.name);
+    DateTime? notifiedTime =
+        HiveStore.load(key: HiveKey.courseNotificationTime.name);
+    bool isNextDay = notifiedTime != null
+        ? DateTime.now().isAfter(notifiedTime.add(const Duration(hours: 24)))
+        : true;
+    List<dynamic>? notifiedChallengeList =
+        HiveStore.load(key: HiveKey.courseNotificationList.name);
 
     if (isNextDay) {
       HiveStore.save(key: HiveKey.courseNotificationList.name, value: null);
       return true;
     } else {
       if (notifiedChallengeList != null && notifiedChallengeList.isNotEmpty) {
-        bool challengeAlreadyNotified = notifiedChallengeList.any((notifiedCourse) => notifiedCourse['challengeId'] == course.challengeId);
+        bool challengeAlreadyNotified = notifiedChallengeList.any(
+            (notifiedCourse) =>
+                notifiedCourse['challengeId'] == course.challengeId);
         if (challengeAlreadyNotified) {
           return false;
         }
@@ -251,59 +273,77 @@ mixin ChallengeMixin {
     }
   }
 
+  LatLngBounds _createBoundsFromLatLngList(List<LatLng> list) {
+    double minLat = list.first.latitude;
+    double maxLat = list.first.latitude;
+    double minLng = list.first.longitude;
+    double maxLng = list.first.longitude;
+
+    for (final latLng in list) {
+      if (latLng.latitude < minLat) minLat = latLng.latitude;
+      if (latLng.latitude > maxLat) maxLat = latLng.latitude;
+      if (latLng.longitude < minLng) minLng = latLng.longitude;
+      if (latLng.longitude > maxLng) maxLng = latLng.longitude;
+    }
+
+    return LatLngBounds(
+      southwest: LatLng(minLat, minLng),
+      northeast: LatLng(maxLat, maxLng),
+    );
+  }
+
   void onChallengeMapCreated() {
     if (listKey.currentContext != null) {
       listHeight.value = listKey.currentContext!.size!.height;
     }
-    if (selectedCourse.value?.checkpoints != null && selectedCourse.value!.checkpoints!.isNotEmpty) {
-      List<NLatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!,  selectedCourse.value!);
+    if (selectedCourse.value?.checkpoints != null &&
+        selectedCourse.value!.checkpoints!.isNotEmpty) {
+      List<LatLng> markers = getCheckPointsCourse(
+          selectedCourse.value!.checkpoints!, selectedCourse.value!);
 
-      challengeMapController.updateCamera(
-        NCameraUpdate.fitBounds(
-          NLatLngBounds.from(markers),
-          padding: EdgeInsets.all(150),
-        ),
+      LatLngBounds bounds = _createBoundsFromLatLngList(markers);
+
+// 3. 카메라 이동
+      challengeMapController.animateCamera(
+        CameraUpdate.newLatLngBounds(bounds, 150), // padding은 px 단위
       );
     }
   }
 
   void selectCourse(ChallengeCourseModel course) {
     selectedCourse.value = ChallengeCourseModel.fromJson(course.toJson());
-    challengeMapController.clearOverlays();
-    challengeMapController.addOverlayAll(
+    clearOverlays();
+    addOverlayAll(
       {
         ...renderCircleOverlays(selectedCourse.value),
         ...renderMarkers(selectedCourse.value),
-
       },
     );
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
-
-      List<NLatLng> markers = getCheckPointsCourse(selectedCourse.value!.checkpoints!,  selectedCourse.value!);
-      challengeMapController.updateCamera(
-        NCameraUpdate.fitBounds(
-          NLatLngBounds.from(markers),
-          padding: EdgeInsets.all(150),
+      List<LatLng> markers = getCheckPointsCourse(
+          selectedCourse.value!.checkpoints!, selectedCourse.value!);
+      challengeMapController.animateCamera(
+        CameraUpdate.newLatLngBounds(
+          _createBoundsFromLatLngList(markers),
+          150,
         ),
       );
     } else {
-      challengeMapController.updateCamera(
-        NCameraUpdate.fitBounds(
-          NLatLngBounds.from(
+      challengeMapController.animateCamera(
+        CameraUpdate.newLatLngBounds(
+          _createBoundsFromLatLngList(
             [
-              NLatLng(course.startLat!, course.startLon!),
-              NLatLng(course.endLat!, course.endLon!),
+              LatLng(course.startLat!, course.startLon!),
+              LatLng(course.endLat!, course.endLon!),
             ],
           ),
-          padding: EdgeInsets.all(80),
+          80,
         ),
       );
     }
-
-
   }
 
-  List<NLatLng> getCheckPointsCourse(markers, selectCourse) {
+  List<LatLng> getCheckPointsCourse(markers, selectCourse) {
     List<dynamic> allPoints = [
       CheckpointModel(
         lat: selectCourse.startLat,
@@ -315,10 +355,14 @@ mixin ChallengeMixin {
       ),
       ...markers
     ];
-    double minLat = allPoints.map((point) => point.lat).reduce((a, b) => a < b ? a : b);
-    double maxLat = allPoints.map((point) => point.lat).reduce((a, b) => a > b ? a : b);
-    double minLng = allPoints.map((point) => point.lon).reduce((a, b) => a < b ? a : b);
-    double maxLng = allPoints.map((point) => point.lon).reduce((a, b) => a > b ? a : b);
+    double minLat =
+        allPoints.map((point) => point.lat).reduce((a, b) => a < b ? a : b);
+    double maxLat =
+        allPoints.map((point) => point.lat).reduce((a, b) => a > b ? a : b);
+    double minLng =
+        allPoints.map((point) => point.lon).reduce((a, b) => a < b ? a : b);
+    double maxLng =
+        allPoints.map((point) => point.lon).reduce((a, b) => a > b ? a : b);
     //
     // double minLat = markers.map((marker) => marker.lat).reduce((a, b) => a < b ? a : b);
     // double maxLat = markers.map((marker) => marker.lat).reduce((a, b) => a > b ? a : b);
@@ -327,11 +371,11 @@ mixin ChallengeMixin {
 
     // double aspectRatio = (maxLng - minLng) / (maxLat - minLat);
 
-    List<NLatLng> outermostCoords = [];
+    List<LatLng> outermostCoords = [];
 
     outermostCoords = [
-      NLatLng(minLat, minLng),
-      NLatLng(maxLat, maxLng),
+      LatLng(minLat, minLng),
+      LatLng(maxLat, maxLng),
     ];
 
     return outermostCoords;
@@ -341,7 +385,8 @@ mixin ChallengeMixin {
     if (nearByCourses.isNotEmpty) {
       doableCourses.clear();
       for (ChallengeCourseModel challenge in nearByCourses) {
-        double distance = calculateDistance(location.latitude, location.longitude, challenge.startLat, challenge.startLon);
+        double distance = calculateDistance(location.latitude,
+            location.longitude, challenge.startLat, challenge.startLon);
         if (distance <= convertMetersToKm(challenge.startRadius!)) {
           doableCourses.add(challenge);
         }
@@ -351,7 +396,8 @@ mixin ChallengeMixin {
     }
   }
 
-  Future<void> getChallenges({required Function successCallback, Function? errorCallback}) async {
+  Future<void> getChallenges(
+      {required Function successCallback, Function? errorCallback}) async {
     await ActivityService.getChallenges(
       successCallback: successCallback,
       errorCallback: errorCallback,
@@ -359,8 +405,15 @@ mixin ChallengeMixin {
   }
 
   String getCourseRouteString(ChallengeCourseModel course) {
-    List<String> checkpointNames = course.checkpoints != null && course.checkpoints!.isNotEmpty ? course.checkpoints!.map((checkpoint) => checkpoint.name!).toList() : [];
-    List<String> fullCourseRoute = [course.startPointName ?? '', ...checkpointNames, course.endPointName ?? ''];
+    List<String> checkpointNames =
+        course.checkpoints != null && course.checkpoints!.isNotEmpty
+            ? course.checkpoints!.map((checkpoint) => checkpoint.name!).toList()
+            : [];
+    List<String> fullCourseRoute = [
+      course.startPointName ?? '',
+      ...checkpointNames,
+      course.endPointName ?? ''
+    ];
     return fullCourseRoute.join(' - ');
   }
 }

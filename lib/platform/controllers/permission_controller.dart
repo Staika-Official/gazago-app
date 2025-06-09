@@ -10,14 +10,17 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
+import 'package:easy_localization/easy_localization.dart';
 
 class PermissionController extends GetxController {
   final Health health = Health();
-  final Rx<LocationPermission> _locationPermission = Rx(LocationPermission.unableToDetermine);
-  final Rx<LocationAccuracyStatus> _locationAccuracyStatus = Rx(LocationAccuracyStatus.unknown);
+  final Rx<LocationPermission> _locationPermission =
+      Rx(LocationPermission.unableToDetermine);
+  final Rx<LocationAccuracyStatus> _locationAccuracyStatus =
+      Rx(LocationAccuracyStatus.unknown);
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
 
   @override
@@ -34,7 +37,8 @@ class PermissionController extends GetxController {
     await checkPhotoPermission();
     await checkCameraPermission();
     await checkTrackingPermission();
-    HiveStore.save(key: HiveKey.permissionRequestOnFirstLaunch.name, value: true);
+    HiveStore.save(
+        key: HiveKey.permissionRequestOnFirstLaunch.name, value: true);
 
     bool? isNewUser = HiveStore.load(key: HiveKey.isNewUser.name);
 
@@ -50,7 +54,7 @@ class PermissionController extends GetxController {
   Future<bool> checkGpsSensor() async {
     bool isGpsAvailable = await Geolocator.isLocationServiceEnabled();
     if (!isGpsAvailable) {
-      showToastPopup('운동을 시작하기 위해서 GPS를 켜주세요.');
+      showToastPopup('turn_on_gps'.tr());
     }
 
     return isGpsAvailable;
@@ -60,11 +64,14 @@ class PermissionController extends GetxController {
     LocationPermission locationPermission = await Geolocator.checkPermission();
     _locationPermission.value = locationPermission;
 
-    return [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission);
+    return [LocationPermission.always, LocationPermission.whileInUse]
+        .any((permission) => permission == locationPermission);
   }
 
   Future<bool> checkLocationAccuracy() async {
-    LocationAccuracyStatus accuracyStatus = await Geolocator.getLocationAccuracy().onError((error, stackTrace) async {
+    LocationAccuracyStatus accuracyStatus =
+        await Geolocator.getLocationAccuracy()
+            .onError((error, stackTrace) async {
       await FirebaseCrashlytics.instance.recordError(error, stackTrace);
       return LocationAccuracyStatus.unknown;
     });
@@ -94,9 +101,11 @@ class PermissionController extends GetxController {
   Future<bool> checkActivityPermission() async {
     bool hasActivityPermission = false;
     if (Platform.isAndroid) {
-      hasActivityPermission = ph.PermissionStatus.granted == await ph.Permission.activityRecognition.status;
+      hasActivityPermission = ph.PermissionStatus.granted ==
+          await ph.Permission.activityRecognition.status;
     } else if (Platform.isIOS) {
-      hasActivityPermission = ph.PermissionStatus.granted == await ph.Permission.sensors.status;
+      hasActivityPermission =
+          ph.PermissionStatus.granted == await ph.Permission.sensors.status;
     }
     if (!hasActivityPermission) {
       hasActivityPermission = await requestActivityPermission();
@@ -108,7 +117,8 @@ class PermissionController extends GetxController {
     bool hasTrackingPermission = false;
 
     if (Platform.isIOS) {
-      hasTrackingPermission = ph.PermissionStatus.permanentlyDenied == await ph.Permission.appTrackingTransparency.status;
+      hasTrackingPermission = ph.PermissionStatus.permanentlyDenied ==
+          await ph.Permission.appTrackingTransparency.status;
     }
     if (hasTrackingPermission) {
       hasTrackingPermission = await requestTrakingPermission();
@@ -122,9 +132,11 @@ class PermissionController extends GetxController {
     bool sensorGranted = false;
     bool healthGranted = false;
     if (Platform.isAndroid) {
-      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.activityRecognition.request();
+      permissionGranted = ph.PermissionStatus.granted ==
+          await ph.Permission.activityRecognition.request();
     } else if (Platform.isIOS) {
-      sensorGranted = ph.PermissionStatus.granted == await ph.Permission.sensors.request();
+      sensorGranted =
+          ph.PermissionStatus.granted == await ph.Permission.sensors.request();
       healthGranted = await health.requestAuthorization([HealthDataType.STEPS]);
 
       permissionGranted = sensorGranted && healthGranted;
@@ -137,8 +149,12 @@ class PermissionController extends GetxController {
 
   Future<bool> requestLocationPermission() async {
     Completer<bool> locationPermissionCompleter = Completer();
-    LocationPermission locationPermission = await Geolocator.requestPermission();
-    bool gotPermission = [LocationPermission.always, LocationPermission.whileInUse].any((permission) => permission == locationPermission);
+    LocationPermission locationPermission =
+        await Geolocator.requestPermission();
+    bool gotPermission = [
+      LocationPermission.always,
+      LocationPermission.whileInUse
+    ].any((permission) => permission == locationPermission);
 
     locationPermissionCompleter.complete(gotPermission);
 
@@ -148,13 +164,20 @@ class PermissionController extends GetxController {
   Future<bool> checkPhotoPermission() async {
     bool hasPhotoPermission = false;
     ph.PermissionStatus permissionStatus;
-    final AndroidDeviceInfo? androidInfo = Platform.isAndroid ? await DeviceInfoPlugin().androidInfo : null;
-    if (Platform.isAndroid && androidInfo != null && androidInfo.version.sdkInt <= 32) {
+    final AndroidDeviceInfo? androidInfo =
+        Platform.isAndroid ? await DeviceInfoPlugin().androidInfo : null;
+    if (Platform.isAndroid &&
+        androidInfo != null &&
+        androidInfo.version.sdkInt <= 32) {
       permissionStatus = await ph.Permission.storage.status;
     } else {
       permissionStatus = await ph.Permission.photos.status;
     }
-    hasPhotoPermission = [ph.PermissionStatus.granted, ph.PermissionStatus.restricted, ph.PermissionStatus.limited].any((permission) => permission == permissionStatus);
+    hasPhotoPermission = [
+      ph.PermissionStatus.granted,
+      ph.PermissionStatus.restricted,
+      ph.PermissionStatus.limited
+    ].any((permission) => permission == permissionStatus);
     if (!hasPhotoPermission) {
       hasPhotoPermission = await requestPhotoPermission();
     }
@@ -163,7 +186,8 @@ class PermissionController extends GetxController {
 
   Future<bool> checkCameraPermission() async {
     bool hasCameraPermission = false;
-    hasCameraPermission = ph.PermissionStatus.granted == await ph.Permission.camera.status;
+    hasCameraPermission =
+        ph.PermissionStatus.granted == await ph.Permission.camera.status;
     if (!hasCameraPermission) {
       hasCameraPermission = await requestCameraPermission();
     }
@@ -173,11 +197,16 @@ class PermissionController extends GetxController {
   Future<bool> requestPhotoPermission() async {
     Completer<bool> photoPermissionCompleter = Completer();
     bool permissionGranted = false;
-    final AndroidDeviceInfo? androidInfo = Platform.isAndroid ? await DeviceInfoPlugin().androidInfo : null;
-    if (Platform.isAndroid && androidInfo != null && androidInfo.version.sdkInt <= 32) {
-      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.storage.request();
+    final AndroidDeviceInfo? androidInfo =
+        Platform.isAndroid ? await DeviceInfoPlugin().androidInfo : null;
+    if (Platform.isAndroid &&
+        androidInfo != null &&
+        androidInfo.version.sdkInt <= 32) {
+      permissionGranted =
+          ph.PermissionStatus.granted == await ph.Permission.storage.request();
     } else {
-      permissionGranted = ph.PermissionStatus.granted == await ph.Permission.photos.request();
+      permissionGranted =
+          ph.PermissionStatus.granted == await ph.Permission.photos.request();
     }
     photoPermissionCompleter.complete(permissionGranted);
 
@@ -187,7 +216,8 @@ class PermissionController extends GetxController {
   Future<bool> requestCameraPermission() async {
     Completer<bool> mediaPermissionCompleter = Completer();
     bool permissionGranted = false;
-    permissionGranted = ph.PermissionStatus.granted == await ph.Permission.camera.request();
+    permissionGranted =
+        ph.PermissionStatus.granted == await ph.Permission.camera.request();
     mediaPermissionCompleter.complete(permissionGranted);
 
     return mediaPermissionCompleter.future;
@@ -196,7 +226,8 @@ class PermissionController extends GetxController {
   Future<bool> requestTrakingPermission() async {
     Completer<bool> trackingPermissionCompleter = Completer();
     bool permissionGranted = false;
-    permissionGranted = ph.PermissionStatus.granted == await ph.Permission.appTrackingTransparency.request();
+    permissionGranted = ph.PermissionStatus.granted ==
+        await ph.Permission.appTrackingTransparency.request();
     trackingPermissionCompleter.complete(permissionGranted);
 
     return trackingPermissionCompleter.future;

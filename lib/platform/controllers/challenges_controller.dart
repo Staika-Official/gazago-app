@@ -7,28 +7,31 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/home_menu_controller.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/helpers/map_mixin.dart';
 import 'package:gaza_go/platform/models/new_challenge_detail_model.dart';
 import 'package:gaza_go/platform/models/new_challenge_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/mirae/alert_ui_list.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
-class ChallengesController extends GetxController with GetTickerProviderStateMixin, ChallengeMixin {
+class ChallengesController extends GetxController
+    with GetTickerProviderStateMixin, MapMixin, ChallengeMixin {
   ScrollController challengesScrollController = ScrollController();
 
   final RxList<NewChallengeModel> challengeList = RxList.empty();
   final List<Map<String, String>> sortingList = [
-    {'title': '전체', 'value': 'id,DESC'},
-    {'title': '참여가능', 'value': 'price,DESC'},
-    {'title': '참여 중', 'value': 'price,ASC'},
-    {'title': '종료', 'value': 'price,ASC'}
+    {'title': 'all'.tr(), 'value': 'id,DESC'},
+    {'title': 'joinable'.tr(), 'value': 'price,DESC'},
+    {'title': 'joining'.tr(), 'value': 'price,ASC'},
+    {'title': 'finished'.tr(), 'value': 'price,ASC'}
   ];
   Rx<DateTime?> today = Rx(DateTime.now());
   final List<Map<String, String>> exerciseTypeFilterList = [
-    {'title': '걷기', 'value': 'WALKING'},
-    {'title': '오르기', 'value': 'HIKING'},
+    {'title': 'walking'.tr(), 'value': 'WALKING'},
+    {'title': 'climbing'.tr(), 'value': 'HIKING'},
   ];
   RxList selectedStatus = RxList.empty(growable: true);
   RxList filteredStatus = RxList.empty(growable: true);
@@ -37,9 +40,10 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
   RxBool isFilteredItems = RxBool(false);
   RxBool dataGetLoading = RxBool(false);
   late StreamSubscription subscription;
-  Rx isSelectedSortValue = Rx({'title': '전체', 'value': 'id,DESC'});
-  RxString isSelectedSortString = RxString('전체');
-  final TextEditingController codeTextController = TextEditingController(text: '');
+  Rx isSelectedSortValue = Rx({'title': 'all'.tr(), 'value': 'id,DESC'});
+  RxString isSelectedSortString = RxString('all'.tr());
+  final TextEditingController codeTextController =
+      TextEditingController(text: '');
   final RxString participationCode = RxString('');
   final FocusNode focusNode = FocusNode();
   final RxString errorMessage = RxString('');
@@ -54,7 +58,8 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
     await getChallengesList();
   }
 
-  bool listsAreEqual(List<NewChallengeModel> list1, List<NewChallengeModel> list2) {
+  bool listsAreEqual(
+      List<NewChallengeModel> list1, List<NewChallengeModel> list2) {
     if (list1.length != list2.length) {
       return false;
     }
@@ -70,12 +75,15 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
 
   Future<void> getChallengesList() async {
     dataGetLoading.value = true;
-    await ActivityService.getNewChallenges(successCallback: (List<NewChallengeModel> data) {
-      List<int> newChallengeListIds = data.map((element) => element.id).toSet().toList();
+    await ActivityService.getNewChallenges(
+        successCallback: (List<NewChallengeModel> data) {
+      List<int> newChallengeListIds =
+          data.map((element) => element.id).toSet().toList();
       if (!listsAreEqual(challengeList, data)) {
         challengeList.clear();
         challengeList.addAll(data);
-        HiveStore.save(key: HiveKey.challengeListIds.name, value: newChallengeListIds);
+        HiveStore.save(
+            key: HiveKey.challengeListIds.name, value: newChallengeListIds);
       }
       dataGetLoading.value = false;
     }, errorCallback: () {
@@ -83,17 +91,20 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
     });
   }
 
-  void moveToDetail(id, challengeType, challengeUserState, challengeState) async {
+  void moveToDetail(
+      id, challengeType, challengeUserState, challengeState) async {
     if (challengeType == 'CREW_COMPANY') {
       String? userId = HiveStore.loadString(key: HiveKey.userId.name);
 
       // DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$id/$userId');
-      DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$id');
+      DatabaseReference userDiInfoRef =
+          FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$id');
       Query query = userDiInfoRef.child(userId!);
 
       await query.get().then((DataSnapshot snapshot) async {
         if (snapshot.value != null) {
-          Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', id.toString()));
+          Get.toNamed(
+              Routes.companyChallengeDetail.replaceAll(':id', id.toString()));
         } else {
           showMiraeAssetPopup(id);
         }
@@ -112,9 +123,11 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
   void onJoinCompanyChallenge(challengeId) {}
 
   Future<void> getChallengeDetail(challengeId) async {
-    await ActivityService.getChallengeDetails(challengeId, successCallback: (NewChallengeDetailModel data) async {
+    await ActivityService.getChallengeDetails(challengeId,
+        successCallback: (NewChallengeDetailModel data) async {
       String? userId = HiveStore.loadString(key: HiveKey.userId.name);
-      DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$challengeId');
+      DatabaseReference userDiInfoRef = FirebaseDatabase.instance
+          .ref('crewChallengeLeaderboard/$challengeId');
       Query query = userDiInfoRef.child(userId!);
       query.get().then((DataSnapshot snapshot) {
         if (snapshot.value != null) {
@@ -122,7 +135,8 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
           //   Get.back();
           // }
           Get.find<HomeMenuController>().selectMenu(0);
-          Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', challengeId.toString()));
+          Get.toNamed(Routes.companyChallengeDetail
+              .replaceAll(':id', challengeId.toString()));
         } else {
           if (data.challengeState == 'READY') {
             if (data.challengeUserState == 'REGISTER_READY') {
@@ -147,7 +161,8 @@ class ChallengesController extends GetxController with GetTickerProviderStateMix
   }
 
   void showMiraeAssetPopup(id) async {
-    await ActivityService.getChallengeDetails(id, successCallback: (NewChallengeDetailModel data) async {
+    await ActivityService.getChallengeDetails(id,
+        successCallback: (NewChallengeDetailModel data) async {
       if (data.challengeUserState == null) {
         miraeAssetAlert(id, null);
       } else {

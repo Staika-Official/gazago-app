@@ -33,10 +33,11 @@ import 'package:gaza_go/presentations/views/challenges/index.dart';
 import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/leaderboard/index.dart';
 import 'package:gaza_go/presentations/views/shop/index.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:in_app_update/in_app_update.dart';
 import 'package:new_version_plus/new_version_plus.dart';
 import 'package:simple_animations/simple_animations.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class HomeMenuController extends SuperController {
   final RxInt selectedIndex = RxInt(2);
@@ -74,11 +75,19 @@ class HomeMenuController extends SuperController {
 
   @override
   void onReady() async {
-    Get.isRegistered<ActivityController>() ? Get.find<ActivityController>().initializeExercise() : Get.put(ActivityController()).initializeExercise();
-    Get.isRegistered<ActivityController>() ? Get.find<ActivityController>().loadChallenges()  : Get.put(ActivityController()).loadChallenges();
-    Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().initializeController()  : Get.put(WalletMasterController()).initializeController();
+    Get.isRegistered<ActivityController>()
+        ? Get.find<ActivityController>().initializeExercise()
+        : Get.put(ActivityController()).initializeExercise();
+    Get.isRegistered<ActivityController>()
+        ? Get.find<ActivityController>().loadChallenges()
+        : Get.put(ActivityController()).loadChallenges();
+    Get.isRegistered<WalletMasterController>()
+        ? Get.find<WalletMasterController>().initializeController()
+        : Get.put(WalletMasterController()).initializeController();
     await checkUpdates();
-    bottomNavHeight.value = bottomNavKey.currentContext != null ? bottomNavKey.currentContext!.size!.height : 0;
+    bottomNavHeight.value = bottomNavKey.currentContext != null
+        ? bottomNavKey.currentContext!.size!.height
+        : 0;
     checkItemsDb();
     handlePendingDynamicLink();
     checkForNewChallenges();
@@ -89,7 +98,9 @@ class HomeMenuController extends SuperController {
   }
 
   Future<void> handleCheckGetSpendingWallet() async {
-    bool isNotLoadWallet = await HiveStore.load(key: HiveKey.isFailureGetSpendingWallet.name) ?? false;
+    bool isNotLoadWallet =
+        await HiveStore.load(key: HiveKey.isFailureGetSpendingWallet.name) ??
+            false;
     if (isNotLoadWallet && !isGetFailSpendingWallet.value) {
       showRefetchGetSpendingWalletAlert();
       isGetFailSpendingWallet.value = true;
@@ -97,22 +108,29 @@ class HomeMenuController extends SuperController {
   }
 
   void handleAppNotification() async {
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       if (initialMessage.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
         // Get.find<WalletMasterController>().moveToWallet();
-        Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
+        Get.isRegistered<WalletMasterController>()
+            ? Get.find<WalletMasterController>().moveToWallet()
+            : Get.put(WalletMasterController()).moveToWallet();
       }
       if (initialMessage.data['notificationKey'] == 'MY_ITEM') {
-        Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>().selectMenu(1) : Get.put(HomeMenuController()).selectMenu(1);
+        Get.isRegistered<HomeMenuController>()
+            ? Get.find<HomeMenuController>().selectMenu(1)
+            : Get.put(HomeMenuController()).selectMenu(1);
       }
       // 챌린지 보상 푸쉬 알림
-      if (initialMessage.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
-        PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(initialMessage.data);
+      if (initialMessage.data['notificationKey'] ==
+          'CHALLENGE_REWARD_BADGE_ISSUED') {
+        PushMessageChallengeSuccessModel data =
+            PushMessageChallengeSuccessModel.fromJson(initialMessage.data);
         // showLocalNotification(
         //   notificationType: NotificationType.badge,
-        //   title: '챌린지 뱃지 발급!',
-        //   message: '${data.challengeTitle} 달성. 새로운 뱃지 확인하러 가자GO~~',
+        //   title: 'challenge_badge_awarded'.tr(),
+        //   message: 'challenge_achievement'.tr('${data.challengeTitle}'),
         //   payload: 'NAV-INVENTORY_BADGE',
         // );
         showChallengeBadgeAcquisitionAlert(data);
@@ -139,36 +157,51 @@ class HomeMenuController extends SuperController {
     if (index != 1 && Get.isRegistered<InventoryHomeController>()) {
       Get.find<InventoryHomeController>().tabController.animateTo(0);
     }
-    if (visitedTabs.any((tabIndex) => tabIndex == index) && prevIndex.value != index) {
+    if (visitedTabs.any((tabIndex) => tabIndex == index) &&
+        prevIndex.value != index) {
       switch (index) {
         case 0:
-          if (Get.isRegistered<ChallengesController>()) Get.find<ChallengesController>().refreshController();
-          bool adjustFirstClickChallengeTabEvent = HiveStore.load(key: HiveKey.adjustFirstClickChallengeTabEvent.name) ?? false;
+          if (Get.isRegistered<ChallengesController>())
+            Get.find<ChallengesController>().refreshController();
+          bool adjustFirstClickChallengeTabEvent = HiveStore.load(
+                  key: HiveKey.adjustFirstClickChallengeTabEvent.name) ??
+              false;
           if (!adjustFirstClickChallengeTabEvent) {
             Adjust.trackEvent(AdjustEvent('7uolhz'));
-            HiveStore.save(key: HiveKey.adjustFirstClickChallengeTabEvent.name, value: true);
+            HiveStore.save(
+                key: HiveKey.adjustFirstClickChallengeTabEvent.name,
+                value: true);
           }
           Adjust.trackEvent(AdjustEvent('kq18ho'));
           break;
         case 1:
-          if (Get.isRegistered<InventoryController>()) Get.find<InventoryController>().refreshController();
+          if (Get.isRegistered<InventoryController>())
+            Get.find<InventoryController>().refreshController();
           Adjust.trackEvent(AdjustEvent('tlnz8m'));
           break;
         case 2:
-          if (Get.isRegistered<ActivityController>()) Get.find<ActivityController>().refreshController();
-          if (Get.isRegistered<CollectionController>()) Get.find<CollectionController>().initController();
+          if (Get.isRegistered<ActivityController>())
+            Get.find<ActivityController>().refreshController();
+          if (Get.isRegistered<CollectionController>())
+            Get.find<CollectionController>().initController();
           break;
         case 3:
-          if (Get.isRegistered<ShopController>()) Get.find<ShopController>().refreshController();
+          if (Get.isRegistered<ShopController>())
+            Get.find<ShopController>().refreshController();
           Adjust.trackEvent(AdjustEvent('9z4t0n'));
           break;
         case 4:
-          if (Get.isRegistered<ArchiveController>()) Get.find<ArchiveController>().refreshController();
-          if (Get.isRegistered<LeaderboardController>()) Get.find<LeaderboardController>().refreshController();
-          bool adjustFirstClickRankTabEvent = HiveStore.load(key: HiveKey.adjustFirstClickRankTabEvent.name) ?? false;
+          if (Get.isRegistered<ArchiveController>())
+            Get.find<ArchiveController>().refreshController();
+          if (Get.isRegistered<LeaderboardController>())
+            Get.find<LeaderboardController>().refreshController();
+          bool adjustFirstClickRankTabEvent =
+              HiveStore.load(key: HiveKey.adjustFirstClickRankTabEvent.name) ??
+                  false;
           if (!adjustFirstClickRankTabEvent) {
             Adjust.trackEvent(AdjustEvent('var9av'));
-            HiveStore.save(key: HiveKey.adjustFirstClickRankTabEvent.name, value: true);
+            HiveStore.save(
+                key: HiveKey.adjustFirstClickRankTabEvent.name, value: true);
           }
           Adjust.trackEvent(AdjustEvent('f206px'));
           break;
@@ -181,15 +214,15 @@ class HomeMenuController extends SuperController {
   String selectedMenuTitle() {
     switch (selectedIndex.value) {
       case 0:
-        return '챌린지';
+        return 'challenge'.tr();
       case 1:
-        return '내 장비';
+        return 'my_equipment'.tr();
       case 3:
-        return '상점';
+        return 'shop'.tr();
       case 4:
-        return '랭킹';
+        return 'ranking'.tr();
     }
-    return '홈';
+    return 'home'.tr();
   }
 
   Future<void> checkUpdates() async {
@@ -198,12 +231,14 @@ class HomeMenuController extends SuperController {
 
     Future<void> checkAppStores() async {
       if (Platform.isAndroid) {
-        appAndroidUpdateInfo = await InAppUpdate.checkForUpdate().catchError((e) {
+        appAndroidUpdateInfo =
+            await InAppUpdate.checkForUpdate().catchError((e) {
           showToastPopup(e.toString());
         });
       } else {
         appIOSUpdateInfo = await NewVersionPlus(
-          iOSId: F.isDev ? 'kr.co.eztechfin.gazaGo.dev' : 'kr.co.eztechfin.gazaGo',
+          iOSId:
+              F.isDev ? 'kr.co.eztechfin.gazaGo.dev' : 'kr.co.eztechfin.gazaGo',
         ).getVersionStatus().catchError((e) {
           showToastPopup(e.toString());
           return null;
@@ -216,9 +251,16 @@ class HomeMenuController extends SuperController {
       await checkAppStores();
       if (Platform.isAndroid &&
           appAndroidUpdateInfo != null &&
-          [UpdateAvailability.updateAvailable, UpdateAvailability.developerTriggeredUpdateInProgress].any((result) => result == appAndroidUpdateInfo?.updateAvailability)) {
+          [
+            UpdateAvailability.updateAvailable,
+            UpdateAvailability.developerTriggeredUpdateInProgress
+          ].any(
+              (result) => result == appAndroidUpdateInfo?.updateAvailability)) {
         await InAppUpdate.performImmediateUpdate().then((result) async {
-          if ([AppUpdateResult.userDeniedUpdate, AppUpdateResult.inAppUpdateFailed].any((resultStatus) => resultStatus == result)) {
+          if ([
+            AppUpdateResult.userDeniedUpdate,
+            AppUpdateResult.inAppUpdateFailed
+          ].any((resultStatus) => resultStatus == result)) {
             showForceUpdateApp();
           }
         }).catchError((e) {
@@ -233,7 +275,11 @@ class HomeMenuController extends SuperController {
         await checkAppStores();
         if (Platform.isAndroid &&
             appAndroidUpdateInfo != null &&
-            [UpdateAvailability.updateAvailable, UpdateAvailability.developerTriggeredUpdateInProgress].any((result) => result == appAndroidUpdateInfo?.updateAvailability)) {
+            [
+              UpdateAvailability.updateAvailable,
+              UpdateAvailability.developerTriggeredUpdateInProgress
+            ].any((result) =>
+                result == appAndroidUpdateInfo?.updateAvailability)) {
           if (appAndroidUpdateInfo!.flexibleUpdateAllowed) {
             await InAppUpdate.startFlexibleUpdate().then((value) {
               if (value == AppUpdateResult.success) {
@@ -242,7 +288,8 @@ class HomeMenuController extends SuperController {
             }).catchError((e) {
               showToastPopup(e.toString());
             });
-          } else if (appAndroidUpdateInfo!.installStatus == InstallStatus.downloaded) {
+          } else if (appAndroidUpdateInfo!.installStatus ==
+              InstallStatus.downloaded) {
             showUpdateSnackbar();
           }
         } else {
@@ -254,24 +301,35 @@ class HomeMenuController extends SuperController {
 
   void checkItemsDb() {
     String userId = HiveStore.loadString(key: HiveKey.userId.name) ?? '';
-    DatabaseReference expiredItemsRef = FirebaseDatabase.instance.ref('alert_expired_item/$userId');
+    DatabaseReference expiredItemsRef =
+        FirebaseDatabase.instance.ref('alert_expired_item/$userId');
 
     expiredItemsRef.get().then((DataSnapshot snapshot) {
       if (snapshot.value != null) {
         List<dynamic> expiringItems = jsonDecode(snapshot.value as String);
-        Map<dynamic, dynamic> expirationNotified = HiveStore.load(key: HiveKey.expirationNotificationState.name) ?? {};
+        Map<dynamic, dynamic> expirationNotified =
+            HiveStore.load(key: HiveKey.expirationNotificationState.name) ?? {};
 
         for (Map<dynamic, dynamic> item in expiringItems) {
-          DateTime expiryUTCDateTime = DateTime.parse(item['expiredDate']).toUtc();
+          DateTime expiryUTCDateTime =
+              DateTime.parse(item['expiredDate']).toUtc();
           DateTime now = DateTime.now().toUtc();
 
-          if (expirationNotified.isEmpty || expirationNotified.isNotEmpty && expirationNotified[item['userItemId'].toString()] == null) {
-            if (const Duration(hours: 48).compareTo(expiryUTCDateTime.difference(now)) == 1) {
-              expirationNotified[item['userItemId'].toString()] = {'notified': true, 'expireDate': expiryUTCDateTime.toString()};
+          if (expirationNotified.isEmpty ||
+              expirationNotified.isNotEmpty &&
+                  expirationNotified[item['userItemId'].toString()] == null) {
+            if (const Duration(hours: 48)
+                    .compareTo(expiryUTCDateTime.difference(now)) ==
+                1) {
+              expirationNotified[item['userItemId'].toString()] = {
+                'notified': true,
+                'expireDate': expiryUTCDateTime.toString()
+              };
               showLocalNotification(
                 notificationType: NotificationType.normal,
-                title: '아이템 만료 알림',
-                message: '${item['itemName']}가 48시간 이내에 회수될 예정입니다.',
+                title: 'item_expiry_notification'.tr(),
+                message:
+                    'item_expiry_warning'.tr(args: ['${item['itemName']}']),
                 allowSeparatePush: true,
                 separatePushId: item['userItemId'],
                 payload: 'NAV-INVENTORY_ITEM',
@@ -280,16 +338,21 @@ class HomeMenuController extends SuperController {
           }
         }
 
-        HiveStore.save(key: HiveKey.expirationNotificationState.name, value: expirationNotified);
+        HiveStore.save(
+            key: HiveKey.expirationNotificationState.name,
+            value: expirationNotified);
       } else {
-        HiveStore.save(key: HiveKey.expirationNotificationState.name, value: {});
+        HiveStore.save(
+            key: HiveKey.expirationNotificationState.name, value: {});
       }
     }).onError((error, stackTrace) {});
   }
 
   void checkForNewChallenges() async {
-    await ActivityService.getNewChallenges(successCallback: (List<NewChallengeModel> challengeList) {
-      List<int>? challengeListIds = HiveStore.load(key: HiveKey.challengeListIds.name);
+    await ActivityService.getNewChallenges(
+        successCallback: (List<NewChallengeModel> challengeList) {
+      List<int>? challengeListIds =
+          HiveStore.load(key: HiveKey.challengeListIds.name);
       if (challengeListIds != null && challengeListIds.isNotEmpty) {
         for (NewChallengeModel challenge in challengeList) {
           if (!challengeListIds.contains(challenge.id)) {
@@ -306,11 +369,14 @@ class HomeMenuController extends SuperController {
   Future<void> checkUserCI() async {
     String userId = HiveStore.load(key: HiveKey.userId.name);
     String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
-    DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('user_info/$userId/deviceId');
+    DatabaseReference userDiInfoRef =
+        FirebaseDatabase.instance.ref('user_info/$userId/deviceId');
 
     userDiInfoRef.onValue.listen((DatabaseEvent event) async {
       eventListener.value = ++eventListener.value;
-      if (event.snapshot.value != deviceId && event.snapshot.value != null && eventListener.value == 1) {
+      if (event.snapshot.value != deviceId &&
+          event.snapshot.value != null &&
+          eventListener.value == 1) {
         handleForceLogoutWithAlert();
       }
       eventListener.value = 0;
@@ -354,12 +420,18 @@ class HomeMenuController extends SuperController {
   void onResumed() async {
     handleAppNotification();
 
-    if (HiveStore.load(key: HiveKey.needRouteToGoWallet.name) != null && HiveStore.load(key: HiveKey.needRouteToGoWallet.name)) {
-      Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
+    if (HiveStore.load(key: HiveKey.needRouteToGoWallet.name) != null &&
+        HiveStore.load(key: HiveKey.needRouteToGoWallet.name)) {
+      Get.isRegistered<WalletMasterController>()
+          ? Get.find<WalletMasterController>().moveToWallet()
+          : Get.put(WalletMasterController()).moveToWallet();
       HiveStore.deleteKey(key: HiveKey.needRouteToGoWallet.name);
-    } else if (HiveStore.load(key: HiveKey.needToForceLogout.name) != null && HiveStore.load(key: HiveKey.needToForceLogout.name)) {
+    } else if (HiveStore.load(key: HiveKey.needToForceLogout.name) != null &&
+        HiveStore.load(key: HiveKey.needToForceLogout.name)) {
       handleForceLogoutWithAlert();
-    } else if (HiveStore.load(key: HiveKey.needToForceStopExercise.name) != null && HiveStore.load(key: HiveKey.needToForceStopExercise.name)) {
+    } else if (HiveStore.load(key: HiveKey.needToForceStopExercise.name) !=
+            null &&
+        HiveStore.load(key: HiveKey.needToForceStopExercise.name)) {
       Get.find<ActivityController>().handleAlreadyFinishedExercise();
       HiveStore.deleteKey(key: HiveKey.needToForceStopExercise.name);
     }

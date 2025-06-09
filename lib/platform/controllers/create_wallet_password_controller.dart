@@ -3,8 +3,9 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/password_mixin.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:rxdart/rxdart.dart' as rx;
+import 'package:easy_localization/easy_localization.dart';
 
 class CreateWalletPasswordController extends GetxController with PasswordMixin {
   final RxString _password = ''.obs;
@@ -23,11 +24,13 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
   RxBool isShowAlert = RxBool(false);
   RxBool isAgree = RxBool(false);
   void initSamePasswordStream() {
-    _isSamePassword = rx.CombineLatestStream.combine2<String, String, bool>(_password.stream, _confirmPassword.stream, (a, b) => a == b);
+    _isSamePassword = rx.CombineLatestStream.combine2<String, String, bool>(
+        _password.stream, _confirmPassword.stream, (a, b) => a == b);
   }
 
   Stream<bool> isEnableNextStep() {
-    return rx.CombineLatestStream.combine2<FormStatus, bool, bool>(passwordFormStatus.stream, _isSamePassword, (status, isSame) {
+    return rx.CombineLatestStream.combine2<FormStatus, bool, bool>(
+        passwordFormStatus.stream, _isSamePassword, (status, isSame) {
       setErrorState(status, _errorStatus.value, isSame: isSame);
       return status == FormStatus.sufficient && isSame;
     });
@@ -60,7 +63,8 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
 
   void updateConfirmPassword(String password) {
     _confirmPassword.value = password;
-    confirmPasswordFormStatus.value = verifyConfirmPassword(password, _password.value);
+    confirmPasswordFormStatus.value =
+        verifyConfirmPassword(password, _password.value);
   }
 
   void updateConfirmText(String text) {
@@ -70,9 +74,10 @@ class CreateWalletPasswordController extends GetxController with PasswordMixin {
 
   void nextStep() {
     if (isEnableNext.value) {
-      Get.offNamed(Routes.createWallet, arguments: {'password': _password.value});
+      Get.offNamed(Routes.createWallet,
+          arguments: {'password': _password.value});
     } else {
-      showToastPopup('비밀번호를 다시 확인해주세요.');
+      showToastPopup('reconfirm_password_2'.tr());
     }
   }
 

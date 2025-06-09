@@ -5,7 +5,8 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 Color getLoginButtonColor(String loginType) {
@@ -25,7 +26,7 @@ String getLoginButtonText(String loginType) {
     case 'google':
       return 'Google';
   }
-  return '이메일';
+  return 'email'.tr();
 }
 
 SvgPicture getLoginButtonIcon(String loginType) {
@@ -57,7 +58,6 @@ void handleKeysOnLogout() {
     HiveKey.nickname.name,
     HiveKey.email.name,
     HiveKey.userId.name,
-
   ]);
 }
 

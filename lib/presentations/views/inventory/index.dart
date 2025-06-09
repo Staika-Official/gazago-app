@@ -9,7 +9,8 @@ import 'package:gaza_go/presentations/views/inventory/equipped_items_grid.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_item.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class InventoryHome extends StatelessWidget {
   const InventoryHome({super.key});
@@ -17,7 +18,8 @@ class InventoryHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     InventoryController controller = Get.put(InventoryController());
-    InventoryHomeController inventoryMenuController = Get.put(InventoryHomeController());
+    InventoryHomeController inventoryMenuController =
+        Get.put(InventoryHomeController());
     controller.viewportWidth.value = MediaQuery.of(context).size.width;
 
     return SingleChildScrollView(
@@ -29,7 +31,11 @@ class InventoryHome extends StatelessWidget {
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxHeight: controller.isLoaded.value
-                  ? MediaQuery.of(context).viewInsets.top + -MediaQuery.of(context).viewInsets.bottom + 80 + controller.listHeight.value + controller.equippedInfoHeight.value
+                  ? MediaQuery.of(context).viewInsets.top +
+                      -MediaQuery.of(context).viewInsets.bottom +
+                      80 +
+                      controller.listHeight.value +
+                      controller.equippedInfoHeight.value
                   : MediaQuery.of(context).size.height,
             ),
             child: Column(
@@ -40,11 +46,16 @@ class InventoryHome extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 20.0.sp, right: 20.0.sp, bottom: 20.0.sp),
+                      padding: EdgeInsets.only(
+                          left: 20.0.sp, right: 20.0.sp, bottom: 20.0.sp),
                       child: EquippedItemsGrid(controller: controller),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 20.0.sp, bottom: 15.sp, left: 30.0.sp, right: 30.0.sp),
+                      padding: EdgeInsets.only(
+                          top: 20.0.sp,
+                          bottom: 15.sp,
+                          left: 30.0.sp,
+                          right: 30.0.sp),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,17 +65,24 @@ class InventoryHome extends StatelessWidget {
                             children: [
                               Text(
                                 '${controller.equippedRewardRate.toInt()}',
-                                style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
-                                      color: AppColorData.regular().colorPointCyan,
+                                style: AppTextStyleData.regular()
+                                    .enBodyMediumXl
+                                    .copyWith(
+                                      color:
+                                          AppColorData.regular().colorPointCyan,
                                     ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: AppDoubleData.regular().numberSpacing2),
+                                padding: EdgeInsets.only(
+                                    top:
+                                        AppDoubleData.regular().numberSpacing2),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(right: AppDoubleData.regular().numberSpacing2),
+                                      padding: EdgeInsets.only(
+                                          right: AppDoubleData.regular()
+                                              .numberSpacing2),
                                       child: SizedBox(
                                         width: 16.sp,
                                         height: 16.sp,
@@ -72,9 +90,12 @@ class InventoryHome extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      'GO 적립량',
-                                      style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
-                                            color: AppColorData.regular().colorPointCyan,
+                                      'go_accumulation'.tr(),
+                                      style: AppTextStyleData.regular()
+                                          .koCaptionMediumMd
+                                          .copyWith(
+                                            color: AppColorData.regular()
+                                                .colorPointCyan,
                                           ),
                                     ),
                                   ],
@@ -86,18 +107,25 @@ class InventoryHome extends StatelessWidget {
                             children: [
                               Text(
                                 '${controller.equippedAbrasionRate.toInt()}',
-                                style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
-                                      color: AppColorData.regular().colorPointPurple,
+                                style: AppTextStyleData.regular()
+                                    .enBodyMediumXl
+                                    .copyWith(
+                                      color: AppColorData.regular()
+                                          .colorPointPurple,
                                     ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: AppDoubleData.regular().numberSpacing2),
+                                padding: EdgeInsets.only(
+                                    top:
+                                        AppDoubleData.regular().numberSpacing2),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(right: AppDoubleData.regular().numberSpacing2),
+                                      padding: EdgeInsets.only(
+                                          right: AppDoubleData.regular()
+                                              .numberSpacing2),
                                       child: SizedBox(
                                         width: 16.sp,
                                         height: 16.sp,
@@ -105,9 +133,12 @@ class InventoryHome extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      '내구도 저항',
-                                      style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
-                                            color: AppColorData.regular().colorPointPurple,
+                                      'durability_resistance'.tr(),
+                                      style: AppTextStyleData.regular()
+                                          .koCaptionMediumMd
+                                          .copyWith(
+                                            color: AppColorData.regular()
+                                                .colorPointPurple,
                                           ),
                                     ),
                                   ],
@@ -119,17 +150,24 @@ class InventoryHome extends StatelessWidget {
                             children: [
                               Text(
                                 '${controller.equippedStaminaReduceRate.toInt()}',
-                                style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
-                                      color: AppColorData.regular().colorPointYellowgreen,
+                                style: AppTextStyleData.regular()
+                                    .enBodyMediumXl
+                                    .copyWith(
+                                      color: AppColorData.regular()
+                                          .colorPointYellowgreen,
                                     ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: AppDoubleData.regular().numberSpacing2),
+                                padding: EdgeInsets.only(
+                                    top:
+                                        AppDoubleData.regular().numberSpacing2),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(right: AppDoubleData.regular().numberSpacing2),
+                                      padding: EdgeInsets.only(
+                                          right: AppDoubleData.regular()
+                                              .numberSpacing2),
                                       child: SizedBox(
                                         width: 16.sp,
                                         height: 16.sp,
@@ -137,9 +175,12 @@ class InventoryHome extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      '체력 저항',
-                                      style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
-                                            color: AppColorData.regular().colorPointYellowgreen,
+                                      'stamina_resistance'.tr(),
+                                      style: AppTextStyleData.regular()
+                                          .koCaptionMediumMd
+                                          .copyWith(
+                                            color: AppColorData.regular()
+                                                .colorPointYellowgreen,
                                           ),
                                     ),
                                   ],
@@ -151,17 +192,24 @@ class InventoryHome extends StatelessWidget {
                             children: [
                               Text(
                                 '${controller.equippedLuckRate.toInt()}',
-                                style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
-                                      color: AppColorData.regular().colorPointPink,
+                                style: AppTextStyleData.regular()
+                                    .enBodyMediumXl
+                                    .copyWith(
+                                      color:
+                                          AppColorData.regular().colorPointPink,
                                     ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: AppDoubleData.regular().numberSpacing2),
+                                padding: EdgeInsets.only(
+                                    top:
+                                        AppDoubleData.regular().numberSpacing2),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(right: AppDoubleData.regular().numberSpacing2),
+                                      padding: EdgeInsets.only(
+                                          right: AppDoubleData.regular()
+                                              .numberSpacing2),
                                       child: SizedBox(
                                         width: 16.sp,
                                         height: 16.sp,
@@ -169,9 +217,12 @@ class InventoryHome extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      '행운',
-                                      style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
-                                            color: AppColorData.regular().colorPointPink,
+                                      'luck'.tr(),
+                                      style: AppTextStyleData.regular()
+                                          .koCaptionMediumMd
+                                          .copyWith(
+                                            color: AppColorData.regular()
+                                                .colorPointPink,
                                           ),
                                     ),
                                   ],
@@ -190,10 +241,13 @@ class InventoryHome extends StatelessWidget {
                         ),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 8.0.sp, horizontal: 15.sp),
                         child: Text(
-                          '수치가 높을수록 좋은 아이템이에요.',
-                          style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+                          'higher_value_better'.tr(),
+                          style: AppTextStyleData.regular()
+                              .koBodyMediumSm
+                              .copyWith(
                                 color: AppColorData.regular().colorTextPrimary,
                               ),
                         ),
@@ -204,7 +258,8 @@ class InventoryHome extends StatelessWidget {
                       child: TabBar(
                         controller: inventoryMenuController.tabController,
                         labelColor: Colors.white,
-                        labelStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+                        labelStyle: TextStyle(
+                            fontSize: 16.sp, fontWeight: FontWeight.w500),
                         unselectedLabelColor: deepGrayColor,
                         indicatorWeight: 0.1,
                         isScrollable: false,
@@ -228,19 +283,26 @@ class InventoryHome extends StatelessWidget {
                               height: double.infinity.sp,
                               decoration: ShapeDecoration(
                                 shape: CustomRoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10.sp), topRight: Radius.circular(10.sp)),
-                                  leftSide: BorderSide(color: Colors.black, width: 2.sp),
-                                  topLeftCornerSide: BorderSide(color: Colors.black, width: 2.sp),
-                                  rightSide: BorderSide(color: Colors.black, width: 1.sp),
-                                  topRightCornerSide: BorderSide(color: Colors.black, width: 2.sp),
-                                  topSide: BorderSide(color: Colors.black, width: 2.sp),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10.sp),
+                                      topRight: Radius.circular(10.sp)),
+                                  leftSide: BorderSide(
+                                      color: Colors.black, width: 2.sp),
+                                  topLeftCornerSide: BorderSide(
+                                      color: Colors.black, width: 2.sp),
+                                  rightSide: BorderSide(
+                                      color: Colors.black, width: 1.sp),
+                                  topRightCornerSide: BorderSide(
+                                      color: Colors.black, width: 2.sp),
+                                  topSide: BorderSide(
+                                      color: Colors.black, width: 2.sp),
                                 ),
                               ),
-                              child: const Row(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('아이템'),
+                                  Text('item'.tr()),
                                 ],
                               ),
                             ),
@@ -251,19 +313,26 @@ class InventoryHome extends StatelessWidget {
                               height: double.infinity.sp,
                               decoration: ShapeDecoration(
                                 shape: CustomRoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10.sp), topRight: Radius.circular(10.sp)),
-                                  leftSide: BorderSide(color: Colors.black, width: 1.sp),
-                                  topLeftCornerSide: BorderSide(color: Colors.black, width: 2.sp),
-                                  rightSide: BorderSide(color: Colors.black, width: 2.sp),
-                                  topRightCornerSide: BorderSide(color: Colors.black, width: 2.sp),
-                                  topSide: BorderSide(color: Colors.black, width: 2.sp),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10.sp),
+                                      topRight: Radius.circular(10.sp)),
+                                  leftSide: BorderSide(
+                                      color: Colors.black, width: 1.sp),
+                                  topLeftCornerSide: BorderSide(
+                                      color: Colors.black, width: 2.sp),
+                                  rightSide: BorderSide(
+                                      color: Colors.black, width: 2.sp),
+                                  topRightCornerSide: BorderSide(
+                                      color: Colors.black, width: 2.sp),
+                                  topSide: BorderSide(
+                                      color: Colors.black, width: 2.sp),
                                 ),
                               ),
-                              child: const Row(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('뱃지'),
+                                  Text('badge'.tr()),
                                 ],
                               ),
                             ),

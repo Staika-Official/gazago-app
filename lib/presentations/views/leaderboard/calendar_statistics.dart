@@ -6,8 +6,9 @@ import 'package:gaza_go/platform/models/user_reward_statistics_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:table_calendar/table_calendar.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 //TODO. 삭제 예정
 class CalendarStatistics extends StatelessWidget {
@@ -15,12 +16,13 @@ class CalendarStatistics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CalendarStatisticsController controller = Get.put(CalendarStatisticsController());
+    CalendarStatisticsController controller =
+        Get.put(CalendarStatisticsController());
 
     return Scaffold(
       appBar: AppBar(
-        title: const StyledText(
-          "TIK 획득 내역",
+        title: StyledText(
+          'tik_acquisition_history'.tr(),
           fontSize: 18,
         ),
         centerTitle: true,
@@ -50,10 +52,14 @@ class CalendarStatistics extends StatelessWidget {
                       lastDay: controller.lastDay.value!,
                       focusedDay: controller.today.value!,
                       headerStyle: HeaderStyle(
-                        titleTextStyle: TextStyle(fontSize: 18.sp, color: Colors.white, fontWeight: FontWeight.w500),
+                        titleTextStyle: TextStyle(
+                            fontSize: 18.sp,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500),
                         titleCentered: true,
                         formatButtonVisible: false,
-                        leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.white),
+                        leftChevronIcon:
+                            const Icon(Icons.chevron_left, color: Colors.white),
                         rightChevronIcon: const Icon(
                           Icons.chevron_right,
                           color: Colors.white,
@@ -65,7 +71,8 @@ class CalendarStatistics extends StatelessWidget {
                       calendarBuilders: CalendarBuilders(
                         markerBuilder: (context, date, events) {
                           if (events.isNotEmpty) {
-                            UserRewardStatisticsModel reward = events.first as UserRewardStatisticsModel;
+                            UserRewardStatisticsModel reward =
+                                events.first as UserRewardStatisticsModel;
                             return StyledText(
                               '+${formatDecimalPlaces(reward.tik!.toDouble(), 1)}',
                               color: tikColor,
@@ -79,7 +86,13 @@ class CalendarStatistics extends StatelessWidget {
                       },
                       calendarStyle: CalendarStyle(
                         todayDecoration: BoxDecoration(
-                            color: skyBlueColor, shape: BoxShape.circle, border: Border.all(width: 14.sp, style: BorderStyle.solid, color: subBg01Color, strokeAlign: BorderSide.strokeAlignCenter)),
+                            color: skyBlueColor,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                width: 14.sp,
+                                style: BorderStyle.solid,
+                                color: subBg01Color,
+                                strokeAlign: BorderSide.strokeAlignCenter)),
                         todayTextStyle: TextStyle(
                           color: Colors.black,
                           fontSize: 16.0.sp,
@@ -96,7 +109,8 @@ class CalendarStatistics extends StatelessWidget {
             Obx(() {
               return Container(
                 height: 49.0.sp,
-                margin: EdgeInsets.only(top: 0.sp, left: 30.sp, right: 31.sp, bottom: 20.sp),
+                margin: EdgeInsets.only(
+                    top: 0.sp, left: 30.sp, right: 31.sp, bottom: 20.sp),
                 decoration: BoxDecoration(
                   color: const Color(0xFF2E3038),
                   border: Border.all(

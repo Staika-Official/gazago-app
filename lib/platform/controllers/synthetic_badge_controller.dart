@@ -9,13 +9,15 @@ import 'package:gaza_go/platform/models/inventory_badge_list_model.dart';
 import 'package:gaza_go/platform/models/inventory_badge_model.dart';
 import 'package:gaza_go/platform/services/badge_service.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class SyntheticBadgeController extends GetxController with InventoryMixin {
   Rx<InventoryBadgeListModel> selectedBadgePrev;
   SyntheticBadgeController(this.selectedBadgePrev);
 
-  late RxList<InventoryBadgeListModel?> selectedBadgeList = RxList<InventoryBadgeListModel?>.filled(selectedBadgeLevel.value, null);
+  late RxList<InventoryBadgeListModel?> selectedBadgeList =
+      RxList<InventoryBadgeListModel?>.filled(selectedBadgeLevel.value, null);
   RxList selectedBadgeIdList = RxList.empty();
   RxList<InventoryBadgeModel> myBadgeList = RxList.empty();
   // RxList<InventoryBadgeModel> selectedBadgeList = RxList.empty();
@@ -39,13 +41,13 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
   RxString get badgeType {
     switch (selectedBadgePrev.value.issueType) {
       case 'HIKING':
-        return RxString('등산');
+        return RxString('hiking'.tr());
       case 'MISSION':
-        return RxString('미션');
+        return RxString('mission'.tr());
       case 'CHALLENGE':
-        return RxString('도전');
+        return RxString('challenge_2'.tr());
       case 'COMPOSE':
-        return RxString('합성');
+        return RxString('synthesis'.tr());
     }
     return RxString('');
   }
@@ -70,7 +72,8 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
   RxInt feeTik = RxInt(0);
 
   RxInt get syntheticBadgeFee {
-    return RxInt(selectedBadgeList.fold(0, (prevValue, element) => prevValue + element!.level));
+    return RxInt(selectedBadgeList.fold(
+        0, (prevValue, element) => prevValue + element!.level));
   }
 
   @override
@@ -112,9 +115,11 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
         .toList();
   }
 
-  void showSelectBadgePopup(List<InventoryBadgeListModel> badgeItems, selectedBadgeItem, index) {
+  void showSelectBadgePopup(
+      List<InventoryBadgeListModel> badgeItems, selectedBadgeItem, index) {
     // selectedBadgeList[index] =
-    userBadgesList.removeWhere((element) => element.badgeId == selectedBadgePrev.value.badgeId);
+    userBadgesList.removeWhere(
+        (element) => element.badgeId == selectedBadgePrev.value.badgeId);
     if (selectedBadgePrev.value.level >= 5) {
       userBadgesList.removeWhere((element) => element.level < 5);
     } else {
@@ -126,10 +131,10 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
 
     Get.dialog(
       AlertDialog(
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('뱃지 선택'),
+            Text('badge_selection'.tr()),
           ],
         ),
         content: Obx(() {
@@ -140,8 +145,11 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
                     ? CachedNetworkImage(
                         imageUrl: selectBadge.value.imageUrl!,
                         fit: BoxFit.fill,
-                        placeholder: (context, url) => const CircularProgressIndicator(color:skyBlueColor),
-                        errorWidget: (context, url, error) => Image.asset("assets/images/@temp_badge.png"),
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(
+                                color: skyBlueColor),
+                        errorWidget: (context, url, error) =>
+                            Image.asset("assets/images/@temp_badge.png"),
                         httpHeaders: imageNetworkHeader,
                       )
                     : Image.asset(
@@ -167,8 +175,11 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
           );
         }),
         actions: [
-          ElevatedButton(onPressed: () => closeSelectBadge(), child: const Text('취소')),
-          ElevatedButton(onPressed: () => selectedItemAddedList(index), child: const Text('확인')),
+          ElevatedButton(
+              onPressed: () => closeSelectBadge(), child: Text('cancel'.tr())),
+          ElevatedButton(
+              onPressed: () => selectedItemAddedList(index),
+              child: Text('confirm'.tr())),
         ],
       ),
     );
@@ -185,7 +196,8 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
       selectedBadgeList[index] = null;
     }
     selectedBadgeList[index] = selectBadge.value;
-    userBadgesList.removeWhere((element) => element.badgeId == selectBadgeId.value);
+    userBadgesList
+        .removeWhere((element) => element.badgeId == selectBadgeId.value);
     selectedBadgeIdList.add(selectBadge.value.badgeId);
 
     Get.back();
@@ -200,7 +212,8 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
       },
       successCallback: (InventoryBadgeModel synthesizedBadge) {
         inspect(synthesizedBadge);
-        Get.offNamedUntil(Routes.home, (route) => route.settings.name == Routes.home);
+        Get.offNamedUntil(
+            Routes.home, (route) => route.settings.name == Routes.home);
       },
     );
   }
@@ -208,21 +221,25 @@ class SyntheticBadgeController extends GetxController with InventoryMixin {
   void handleOpenSyntheticBadgeConfirmPopup() {
     Get.dialog(
       AlertDialog(
-        title: const Text(
-          '합성을 진행 하시겠습니까?',
+        title: Text(
+          'confirm_synthesis'.tr(),
           textAlign: TextAlign.center,
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Obx(() {
-              return Text('토큰 소모량: $syntheticBadgeFee TIK');
+              return Text(
+                  'token_consumption'.tr(args: [syntheticBadgeFee.toString()]));
             }),
           ],
         ),
         actions: [
-          ElevatedButton(onPressed: () => Get.back(), child: const Text('취소')),
-          ElevatedButton(onPressed: () => syntheticBadgeConfirm(), child: const Text('확인')),
+          ElevatedButton(
+              onPressed: () => Get.back(), child: Text('cancel'.tr())),
+          ElevatedButton(
+              onPressed: () => syntheticBadgeConfirm(),
+              child: Text('confirm'.tr())),
         ],
       ),
     );

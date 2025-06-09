@@ -9,7 +9,8 @@ import 'package:gaza_go/platform/models/challenge_ranker_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class ChallengeLeaderboard extends StatelessWidget {
   const ChallengeLeaderboard({super.key});
@@ -20,7 +21,8 @@ class ChallengeLeaderboard extends StatelessWidget {
       width: double.maxFinite,
       height: 90.sp,
       color: deepBlackColor,
-      padding: EdgeInsets.only(top: 8.sp, left: 11.sp, right: 17.sp, bottom: 8.sp),
+      padding:
+          EdgeInsets.only(top: 8.sp, left: 11.sp, right: 17.sp, bottom: 8.sp),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -33,7 +35,10 @@ class ChallengeLeaderboard extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 5),
                 child: Text(
                   myRank.rank!.toString(),
-                  style: TextStyle(color: skyBlueColor, fontSize: 14.sp, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                      color: skyBlueColor,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -48,7 +53,8 @@ class ChallengeLeaderboard extends StatelessWidget {
                         width: 44.0.sp,
                         height: 44.0.sp,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(50.0.sp)),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(50.0.sp)),
                           border: Border.all(
                             color: skyBlueColor,
                             width: 1.5.sp,
@@ -58,7 +64,8 @@ class ChallengeLeaderboard extends StatelessWidget {
                           backgroundColor: Colors.black,
                           child: CircleAvatar(
                             radius: 15.sp,
-                            foregroundImage: (myRank.profileImageUrl == null || myRank.profileImageUrl == '')
+                            foregroundImage: (myRank.profileImageUrl == null ||
+                                    myRank.profileImageUrl == '')
                                 ? Image.asset(
                                     'assets/images/ic_launcher.png',
                                     width: 30.sp,
@@ -83,9 +90,15 @@ class ChallengeLeaderboard extends StatelessWidget {
                       children: [
                         if (myRank.nickname != null)
                           Text(
-                            myRank.nickname!.contains('@') ? myRank.nickname!.substring(0, myRank.nickname!.indexOf('@')) : myRank.nickname!,
+                            myRank.nickname!.contains('@')
+                                ? myRank.nickname!
+                                    .substring(0, myRank.nickname!.indexOf('@'))
+                                : myRank.nickname!,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600),
                             textAlign: TextAlign.left,
                           ),
                         // if (myRank.additionStik != null || myRank.additionTik != null)
@@ -217,15 +230,17 @@ class ChallengeLeaderboard extends StatelessWidget {
                                     padding: const EdgeInsets.only(top: 7.0),
                                     child: CircleAvatar(
                                       radius: 16.sp,
-                                      foregroundImage: (item.profileImageUrl == null || item.profileImageUrl == '')
-                                          ? Image.asset(
-                                              'assets/images/ic_launcher.png',
-                                              width: 30.sp,
-                                            ).image
-                                          : NetworkImage(
-                                              item.profileImageUrl!,
-                                              headers: imageNetworkHeader,
-                                            ),
+                                      foregroundImage:
+                                          (item.profileImageUrl == null ||
+                                                  item.profileImageUrl == '')
+                                              ? Image.asset(
+                                                  'assets/images/ic_launcher.png',
+                                                  width: 30.sp,
+                                                ).image
+                                              : NetworkImage(
+                                                  item.profileImageUrl!,
+                                                  headers: imageNetworkHeader,
+                                                ),
                                       backgroundColor: Colors.black,
                                     ),
                                   ),
@@ -262,7 +277,11 @@ class ChallengeLeaderboard extends StatelessWidget {
                                     )
                                   : item.nickname!),
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: Colors.white, fontSize: 16.sp, height: 18.sp / 16.sp, fontWeight: FontWeight.w500),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  height: 18.sp / 16.sp,
+                                  fontWeight: FontWeight.w500),
                               textAlign: TextAlign.left,
                             ),
                             // if (item.additionStik != null || item.additionTik != null)
@@ -360,7 +379,10 @@ class ChallengeLeaderboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ChallengesDetailController controller = Get.isRegistered<ChallengesDetailController>() ? Get.find() : Get.put(ChallengesDetailController());
+    ChallengesDetailController controller =
+        Get.isRegistered<ChallengesDetailController>()
+            ? Get.find()
+            : Get.put(ChallengesDetailController());
 
     return SingleChildScrollView(
       child: Obx(() {
@@ -368,21 +390,24 @@ class ChallengeLeaderboard extends StatelessWidget {
             color: subBg01Color,
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height - kBottomNavigationBarHeight,
+                minHeight: MediaQuery.of(context).size.height -
+                    kBottomNavigationBarHeight,
               ),
               child: Padding(
                 padding: EdgeInsets.only(bottom: 20.0.sp),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (controller.challengeDetails.value.rewardAmount! > 0) ...[
+                    if (controller.challengeDetails.value.rewardAmount! >
+                        0) ...[
                       Padding(
-                        padding: EdgeInsets.only(top: 25.0.sp, left: 20.sp, right: 20.sp),
+                        padding: EdgeInsets.only(
+                            top: 25.0.sp, left: 20.sp, right: 20.sp),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const StyledText(
-                              '챌린지 보상',
+                            StyledText(
+                              'challenge_rewards'.tr(),
                               color: Colors.white,
                               fontWeight: 600,
                               fontSize: 20,
@@ -390,8 +415,8 @@ class ChallengeLeaderboard extends StatelessWidget {
                             ),
                             Padding(
                               padding: EdgeInsets.only(left: 4.0.sp),
-                              child: const StyledText(
-                                '분배할 전체 리워드',
+                              child: StyledText(
+                                'total_reward'.tr(),
                                 color: deepGrayColor,
                                 fontWeight: 600,
                                 fontSize: 12,
@@ -402,7 +427,8 @@ class ChallengeLeaderboard extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.only(top: 8.sp, left: 20.sp, right: 20.sp),
+                        margin: EdgeInsets.only(
+                            top: 8.sp, left: 20.sp, right: 20.sp),
                         decoration: BoxDecoration(
                           color: const Color(0xFF2E3038),
                           border: Border.all(
@@ -420,14 +446,23 @@ class ChallengeLeaderboard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               iconTodayTik,
-                              if (controller.challengeDetails.value.rewardAmount != null)
+                              if (controller
+                                      .challengeDetails.value.rewardAmount !=
+                                  null)
                                 Padding(
                                   padding: EdgeInsets.only(left: 10.0.sp),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       StyledText(
-                                        formatDecimalPlaces(double.parse(controller.challengeDetails.value.rewardAmount!.toString()), 0),
+                                        formatDecimalPlaces(
+                                            double.parse(controller
+                                                .challengeDetails
+                                                .value
+                                                .rewardAmount!
+                                                .toString()),
+                                            0),
                                         color: Colors.white,
                                         fontWeight: 600,
                                         fontSize: 30,
@@ -442,12 +477,13 @@ class ChallengeLeaderboard extends StatelessWidget {
                       ),
                     ],
                     Container(
-                      padding: EdgeInsets.only(top: 30.sp, left: 20.sp, right: 20.sp, bottom: 12.sp),
+                      padding: EdgeInsets.only(
+                          top: 30.sp, left: 20.sp, right: 20.sp, bottom: 12.sp),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const StyledText(
-                            '실시간 TOP100',
+                          StyledText(
+                            'realtime_top_100'.tr(),
                             color: Colors.white,
                             fontSize: 16,
                             lineHeight: 16,
@@ -456,11 +492,15 @@ class ChallengeLeaderboard extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(left: 10.0.sp),
                             child: InkWell(
-                              onTap: () => Get.toNamed(Routes.webView, arguments: {'linkUrl': '${F.leaderboardUrl}/challenge/${controller.challengeDetails.value.id}'}),
+                              onTap: () =>
+                                  Get.toNamed(Routes.webView, arguments: {
+                                'linkUrl':
+                                    '${F.leaderboardUrl}/challenge/${controller.challengeDetails.value.id}'
+                              }),
                               child: Row(
                                 children: [
-                                  const StyledText(
-                                    '더보기',
+                                  StyledText(
+                                    'show_more'.tr(),
                                     color: lightGrayColor,
                                     fontSize: 14,
                                     lineHeight: 16,
@@ -478,7 +518,9 @@ class ChallengeLeaderboard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    (controller.myRank.value != null) ? renderMyRank(controller) : Container(),
+                    (controller.myRank.value != null)
+                        ? renderMyRank(controller)
+                        : Container(),
                     // Column(
                     //   mainAxisSize: MainAxisSize.min,
                     //   children: [...renderRanker(controller)],
@@ -487,7 +529,9 @@ class ChallengeLeaderboard extends StatelessWidget {
                       child: controller.dataGetLoading.value
                           ? Padding(
                               padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                              child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
+                              child: const Center(
+                                  child: CircularProgressIndicator(
+                                      color: skyBlueColor)),
                             )
                           : controller.challengeRankingList.isEmpty
                               ? SizedBox(
@@ -499,9 +543,9 @@ class ChallengeLeaderboard extends StatelessWidget {
                                         iconEmpty,
                                         Padding(
                                           padding: EdgeInsets.only(top: 20.sp),
-                                          child: const StyledText(
-                                            '랭킹 기록이 없어요.',
-                                            color: Color(0xff7b7b7b),
+                                          child: StyledText(
+                                            'no_ranking_record'.tr(),
+                                            color: const Color(0xff7b7b7b),
                                             fontSize: 16,
                                             lineHeight: 10,
                                             fontWeight: 500,

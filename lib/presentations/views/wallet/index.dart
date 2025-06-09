@@ -5,22 +5,27 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/views/wallet/go_wallet.dart';
 import 'package:gaza_go/presentations/views/wallet/staika_wallet.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class WalletHome extends StatelessWidget {
   const WalletHome({super.key});
 
   @override
   Widget build(BuildContext context) {
-    WalletMasterController walletMasterController = Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>() : Get.put(WalletMasterController());
+    WalletMasterController walletMasterController =
+        Get.isRegistered<WalletMasterController>()
+            ? Get.find<WalletMasterController>()
+            : Get.put(WalletMasterController());
 
     return DefaultContainer(
       backgroundColor: subBg01Color,
-      titleText: '지갑',
+      titleText: 'wallet'.tr(),
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(bottom: 20.0.sp, left: 20.sp, right: 20.sp),
+            padding:
+                EdgeInsets.only(bottom: 20.0.sp, left: 20.sp, right: 20.sp),
             child: Container(
               height: 54,
               decoration: BoxDecoration(
@@ -57,12 +62,12 @@ class WalletHome extends StatelessWidget {
                 ),
                 dividerColor: Colors.transparent,
                 indicatorSize: TabBarIndicatorSize.tab,
-                tabs: const [
+                tabs: [
                   Tab(
-                    text: 'GO 지갑',
+                    text: 'go_wallet'.tr(),
                   ),
                   Tab(
-                    text: 'Staika 지갑',
+                    text: 'staika_wallet'.tr(),
                   ),
                 ],
               ),

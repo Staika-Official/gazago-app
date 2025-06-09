@@ -10,43 +10,51 @@ import 'package:gaza_go/presentations/components/wallet/nft_asset_item.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class GoWallet extends StatelessWidget {
   const GoWallet({Key? key}) : super(key: key);
 
-  List<Widget> renderAssetsList(WalletMasterController walletMasterController, GoWalletController goWalletController) {
+  List<Widget> renderAssetsList(WalletMasterController walletMasterController,
+      GoWalletController goWalletController) {
     return walletMasterController.spendingTokenUiList
         .map(
           (asset) => Padding(
             padding: EdgeInsets.only(top: 14.sp, left: 21.sp, right: 21.sp),
             child: GoAssetItemCoin(
-              onTap: () =>
-                  walletMasterController.moveToWalletDetail(asset: asset, walletType: WalletType.inventory, assetType: asset.name!.toUpperCase() == 'TAIKA' ? AssetType.token : AssetType.coin),
+              onTap: () => walletMasterController.moveToWalletDetail(
+                  asset: asset,
+                  walletType: WalletType.inventory,
+                  assetType: asset.name!.toUpperCase() == 'TAIKA'
+                      ? AssetType.token
+                      : AssetType.coin),
               asset: asset,
               actions: asset.name!.toUpperCase() == 'TAIKA'
                   ? [
                       // WalletAssetsButtonModel(
-                      //   buttonText: 'TIK 충전하기',
+                      //   buttonText: 'charge_tik'.tr(),
                       //   onTapButton: () => goWalletController.showProductDialog(),
                       // ),
                       WalletAssetsButtonModel(
-                        buttonText: 'STIK 구매하기',
-                        onTapButton: () => goWalletController.showProductStikDialog(asset.name!.toUpperCase()),
+                        buttonText: 'buy_stik'.tr(),
+                        onTapButton: () => goWalletController
+                            .showProductStikDialog(asset.name!.toUpperCase()),
                       ),
                       // WalletAssetsButtonModel(
-                      //   buttonText: '기프티콘 교환하기',
+                      //   buttonText: 'exchange_gift_icon'.tr(),
                       //   onTapButton: () => walletMasterController.onClickMoveToTaikaPay(),
                       // ),
                     ]
                   : [
                       // WalletAssetsButtonModel(
-                      //   buttonText: 'TIK으로 교환하기',
+                      //   buttonText: 'exchange_to_tik_1'.tr(),
                       //   onTapButton: () => goWalletController.showProductStikDialog(asset.name!.toUpperCase()),
                       // ),
                       WalletAssetsButtonModel(
-                        buttonText: 'Staika 지갑으로 보내기',
-                        onTapButton: () => goWalletController.checkUserVerified(goWalletController.stikSwapWallet),
+                        buttonText: 'send_to_staika_wallet'.tr(),
+                        onTapButton: () => goWalletController.checkUserVerified(
+                            goWalletController.stikSwapWallet),
                       ),
                     ],
               showPrice: false,
@@ -76,7 +84,7 @@ class GoWallet extends StatelessWidget {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // GazagoButton(buttonText: '광고로드', onTap: ()=> controller.loadRewardedAd()),
+                    // GazagoButton(buttonText: 'ad_load'.tr(), onTap: ()=> controller.loadRewardedAd()),
                     SizedBox(
                       width: double.infinity,
                       child: Padding(
@@ -85,7 +93,7 @@ class GoWallet extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             StyledText(
-                              '디지털 자산',
+                              'digital_assets'.tr(),
                               fontSize: 16,
                               fontWeight: 600,
                               lineHeight: 20,
@@ -97,18 +105,26 @@ class GoWallet extends StatelessWidget {
                     ),
                     ...renderAssetsList(controller, goWalletController),
                     NftAssetItem(
-                      onTap: () => Get.toNamed(Routes.walletNftList, arguments: {'prevRoute': 'GO_WALLET'}),
+                      onTap: () => Get.toNamed(Routes.walletNftList,
+                          arguments: {'prevRoute': 'GO_WALLET'}),
                     ),
 
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.only(top: 20.sp, bottom: 52.0.sp, left: 20.sp, right: 20.sp),
+                        padding: EdgeInsets.only(
+                            top: 20.sp,
+                            bottom: 52.0.sp,
+                            left: 20.sp,
+                            right: 20.sp),
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Text(
-                            'GO 지갑은 gazaGO에서 TIK과 STIK을 관리하는 지갑이에요.',
-                            style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
-                                  color: AppColorData.regular().colorTextTertiary,
+                            'go_wallet_description'.tr(),
+                            style: AppTextStyleData.regular()
+                                .koCaptionMediumMd
+                                .copyWith(
+                                  color:
+                                      AppColorData.regular().colorTextTertiary,
                                 ),
                             textAlign: TextAlign.center,
                           ),

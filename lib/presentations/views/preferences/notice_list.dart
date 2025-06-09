@@ -5,7 +5,8 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class NoticeList extends StatelessWidget {
   const NoticeList({super.key});
@@ -54,7 +55,8 @@ class NoticeList extends StatelessWidget {
                     Positioned(
                       right: 0,
                       top: 10.sp,
-                      child: Icon(Icons.chevron_right, color: const Color(0xFFBDC0C7), size: 24.sp),
+                      child: Icon(Icons.chevron_right,
+                          color: const Color(0xFFBDC0C7), size: 24.sp),
                     ),
                   ],
                 ),
@@ -69,7 +71,7 @@ class NoticeList extends StatelessWidget {
   Widget build(BuildContext context) {
     PreferenceBoardController controller = Get.put(PreferenceBoardController());
     return DefaultContainer(
-      titleText: '공지사항',
+      titleText: 'notice'.tr(),
       backgroundColor: subBg01Color,
       headerBackgroundColor: subBg01Color,
       child: SingleChildScrollView(

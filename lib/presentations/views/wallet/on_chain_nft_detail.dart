@@ -9,7 +9,8 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 
 class OnChainNftDetail extends StatelessWidget {
@@ -116,7 +117,7 @@ class OnChainNftDetail extends StatelessWidget {
                       bottom: 36,
                     ),
                     child: GazagoButton(
-                      buttonText: 'GO지갑으로 보내기',
+                      buttonText: 'send_to_go_wallet'.tr(),
                       onTap: () async {
                         controller.showRequestSendNftDialog();
                       },

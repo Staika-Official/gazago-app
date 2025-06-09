@@ -10,7 +10,8 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:lottie/lottie.dart';
 
 class CreateWallet extends StatelessWidget {
@@ -37,16 +38,16 @@ class CreateWallet extends StatelessWidget {
                         height: 120,
                         repeat: true,
                       ),
-                      const StyledText(
-                        '지갑을 만들고 있습니다.',
+                      StyledText(
+                        'creating_wallet'.tr(),
                         fontSize: 22,
                         fontWeight: 600,
                         lineHeight: 26,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 16, bottom: 200),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16, bottom: 200),
                         child: StyledText(
-                          '잠시만 기다려주세요!',
+                          'please_wait'.tr(),
                           fontSize: 16,
                           lineHeight: 22,
                           fontWeight: 500,
@@ -80,25 +81,35 @@ class CreateWallet extends StatelessWidget {
                                           repeat: true,
                                         ),
                                       ),
-                                      Image.asset('assets/images/wallet/staika_logo.png', width: 122.sp, height: 122.sp),
+                                      Image.asset(
+                                          'assets/images/wallet/staika_logo.png',
+                                          width: 122.sp,
+                                          height: 122.sp),
                                     ],
                                   ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(top: 34),
                                   child: Text(
-                                    'Staika 지갑을 만들었어요.',
-                                    style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
-                                          color: AppColorData.regular().colorTextPrimary,
+                                    'wallet_created'.tr(),
+                                    style: AppTextStyleData.regular()
+                                        .koHeadingMediumSm
+                                        .copyWith(
+                                          color: AppColorData.regular()
+                                              .colorTextPrimary,
                                         ),
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 16, bottom: 200),
+                                  padding: const EdgeInsets.only(
+                                      top: 16, bottom: 200),
                                   child: Text(
-                                    '이제 Staika wallet과 함께 편안한\n디지털 자산관리를 시작해보세요.',
-                                    style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                                          color: AppColorData.regular().colorTextPrimary,
+                                    'start_asset_management'.tr(),
+                                    style: AppTextStyleData.regular()
+                                        .koBodyMediumLg
+                                        .copyWith(
+                                          color: AppColorData.regular()
+                                              .colorTextPrimary,
                                         ),
                                     textAlign: TextAlign.center,
                                   ),
@@ -112,11 +123,14 @@ class CreateWallet extends StatelessWidget {
                           child: GazagoButton(
                             onTap: () async {
                               if (Get.isRegistered<StaikaWalletController>()) {
-                                await Get.find<StaikaWalletController>().getStaikaWalletInfo();
+                                await Get.find<StaikaWalletController>()
+                                    .getStaikaWalletInfo();
                               }
-                              Get.until((route) => Get.currentRoute == Routes.wallet || Get.currentRoute == Routes.itemDetail);
+                              Get.until((route) =>
+                                  Get.currentRoute == Routes.wallet ||
+                                  Get.currentRoute == Routes.itemDetail);
                             },
-                            buttonText: '시작',
+                            buttonText: 'start'.tr(),
                             buttonColor: skyBlueColor,
                           ),
                         ),
@@ -130,19 +144,20 @@ class CreateWallet extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 iconAlert,
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 37),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 37),
                                   child: StyledText(
-                                    '잠시 후 다시 시도해 주세요.',
+                                    'retry_later_1'.tr(),
                                     fontSize: 22,
                                     fontWeight: 600,
                                     lineHeight: 26,
                                   ),
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 16, bottom: 200),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 16, bottom: 200),
                                   child: StyledText(
-                                    '블록체인 네트워크의 불안정 혹은 일시적인\n오류로 지갑 생성을 완료할 수 없었습니다.\n죄송하지만 잠시 후 다시 시도해 주세요.',
+                                    'wallet_creation_failed'.tr(),
                                     fontSize: 16,
                                     lineHeight: 22,
                                     fontWeight: 500,
@@ -158,10 +173,12 @@ class CreateWallet extends StatelessWidget {
                           padding: const EdgeInsets.all(20),
                           child: GazagoButton(
                             onTap: () {
-                              Get.find<WalletMasterController>().tabController.index = 0;
+                              Get.find<WalletMasterController>()
+                                  .tabController
+                                  .index = 0;
                               Get.back();
                             },
-                            buttonText: '돌아가기',
+                            buttonText: 'go_back'.tr(),
                             buttonColor: skyBlueColor,
                           ),
                         ),

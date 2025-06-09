@@ -7,7 +7,8 @@ import 'package:gaza_go/platform/models/term_item_model.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class WithdrawConfirmController extends GetxController {
   final RxList<TermItemModel> withdrawCheckList = RxList.empty();
@@ -22,19 +23,19 @@ class WithdrawConfirmController extends GetxController {
   void getWithdrawCheckList() {
     withdrawCheckList.value = [
       TermItemModel(
-        title: '정산되지 않은 GO는 소멸됩니다.',
+        title: 'unsettled_go_expire'.tr(),
         isChecked: false,
       ),
       TermItemModel(
-        title: '모든 운동 기록과 개인 정보는 삭제됩니다.',
+        title: 'all_data_deleted'.tr(),
         isChecked: false,
       ),
       TermItemModel(
-        title: '코인, 지갑, 거래 내역 등을 복구할 수 없습니다.',
+        title: 'data_irrecoverable'.tr(),
         isChecked: false,
       ),
       TermItemModel(
-        title: '외부 지갑으로 전송하지 않은 뱃지 NFT와 신발, 모자, 옷 등의 아이템은 소멸됩니다.',
+        title: 'unused_items_expire'.tr(),
         isChecked: false,
       ),
     ];

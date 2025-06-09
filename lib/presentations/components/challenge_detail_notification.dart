@@ -8,18 +8,24 @@ import 'package:gaza_go/platform/models/challenge_notification_group_model.dart'
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
-void showChallengeNotification(ChallengesDetailController controller, ChallengeNotificationGroupModel challengeNotificationGroup) {
-  List<dynamic> notifiedChallengeList = HiveStore.load(key: HiveKey.notifiedChallengeList.name) ?? [];
-  bool hasNotified = notifiedChallengeList.any((id) => id == controller.challengeId.value);
+void showChallengeNotification(ChallengesDetailController controller,
+    ChallengeNotificationGroupModel challengeNotificationGroup) {
+  List<dynamic> notifiedChallengeList =
+      HiveStore.load(key: HiveKey.notifiedChallengeList.name) ?? [];
+  bool hasNotified =
+      notifiedChallengeList.any((id) => id == controller.challengeId.value);
 
   if (hasNotified) return;
 
   notifiedChallengeList.add(controller.challengeId.value);
-  HiveStore.save(key: HiveKey.notifiedChallengeList.name, value: notifiedChallengeList);
+  HiveStore.save(
+      key: HiveKey.notifiedChallengeList.name, value: notifiedChallengeList);
 
-  int notificationLength = challengeNotificationGroup.challengeNotifications.length;
+  int notificationLength =
+      challengeNotificationGroup.challengeNotifications.length;
   int selectedIndex = 0;
   PageController pageController = PageController(
     initialPage: selectedIndex,
@@ -96,7 +102,8 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                         child: Image.network(
                           width: double.infinity,
                           fit: BoxFit.fill,
-                          challengeNotificationGroup.challengeNotifications[pagePosition].imageUrl,
+                          challengeNotificationGroup
+                              .challengeNotifications[pagePosition].imageUrl,
                         ),
                       ),
                       Container(
@@ -114,7 +121,9 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                             child: Center(
                               child: Html(
                                 shrinkWrap: true,
-                                data: challengeNotificationGroup.challengeNotifications[pagePosition].message,
+                                data: challengeNotificationGroup
+                                    .challengeNotifications[pagePosition]
+                                    .message,
                                 style: {
                                   "*": Style(
                                     lineHeight: LineHeight.percent(130),
@@ -160,7 +169,8 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 8.sp, left: 6.sp, bottom: 6.sp),
+                        padding: EdgeInsets.only(
+                            top: 8.sp, left: 6.sp, bottom: 6.sp),
                         child: TextButton(
                           onPressed: () => Get.back(),
                           style: TextButton.styleFrom(
@@ -170,7 +180,7 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                             foregroundColor: Colors.transparent,
                           ),
                           child: StyledText(
-                            '건너뛰기',
+                            'skip_action'.tr(),
                             color: Colors.white.withOpacity(0.4),
                             fontSize: 14,
                             fontWeight: 500,
@@ -181,13 +191,17 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                         right: 0,
                         bottom: 0,
                         child: Padding(
-                          padding: EdgeInsets.only(top: 8.sp, right: 6.sp, bottom: 6.sp),
+                          padding: EdgeInsets.only(
+                              top: 8.sp, right: 6.sp, bottom: 6.sp),
                           child: TextButton(
                             onPressed: () {
                               setState(() {
                                 if (selectedIndex < notificationLength - 1) {
                                   selectedIndex++;
-                                  pageController.animateToPage(selectedIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                  pageController.animateToPage(selectedIndex,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      curve: Curves.easeInOut);
                                 } else {
                                   Get.back();
                                 }
@@ -200,7 +214,9 @@ void showChallengeNotification(ChallengesDetailController controller, ChallengeN
                               foregroundColor: Colors.transparent,
                             ),
                             child: StyledText(
-                              selectedIndex < notificationLength - 1 ? '다음' : '시작하기',
+                              selectedIndex < notificationLength - 1
+                                  ? 'next_action'.tr()
+                                  : 'start_action'.tr(),
                               fontSize: 14,
                               fontWeight: 500,
                             ),

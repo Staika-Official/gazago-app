@@ -96,39 +96,51 @@ class F {
   static Ed25519HDPublicKey get solanaFeePayer {
     switch (appFlavor) {
       case Flavor.dev:
-        return Ed25519HDPublicKey.fromBase58("E3hFsYympX61jvzMuJjrQ7bJkqpUXqc1F7q3QCGsF9ui");
+        return Ed25519HDPublicKey.fromBase58(
+            "E3hFsYympX61jvzMuJjrQ7bJkqpUXqc1F7q3QCGsF9ui");
       case Flavor.stage:
-        return Ed25519HDPublicKey.fromBase58("E3hFsYympX61jvzMuJjrQ7bJkqpUXqc1F7q3QCGsF9ui");
+        return Ed25519HDPublicKey.fromBase58(
+            "E3hFsYympX61jvzMuJjrQ7bJkqpUXqc1F7q3QCGsF9ui");
       case Flavor.prod:
-        return Ed25519HDPublicKey.fromBase58("jfMvdqtgQ4VnnhYgHEa1KEQSobiqy7dAFepr1CZRZ4A");
+        return Ed25519HDPublicKey.fromBase58(
+            "jfMvdqtgQ4VnnhYgHEa1KEQSobiqy7dAFepr1CZRZ4A");
       default:
-        return Ed25519HDPublicKey.fromBase58("E3hFsYympX61jvzMuJjrQ7bJkqpUXqc1F7q3QCGsF9ui");
+        return Ed25519HDPublicKey.fromBase58(
+            "E3hFsYympX61jvzMuJjrQ7bJkqpUXqc1F7q3QCGsF9ui");
     }
   }
 
   static Ed25519HDPublicKey get solanaTokenMint {
     switch (appFlavor) {
       case Flavor.dev:
-        return Ed25519HDPublicKey.fromBase58("7sc5sRrmPC3oz8rq1cJn28GGr2ezqeBLNEjy8LXkHY9U");
+        return Ed25519HDPublicKey.fromBase58(
+            "7sc5sRrmPC3oz8rq1cJn28GGr2ezqeBLNEjy8LXkHY9U");
       case Flavor.stage:
-        return Ed25519HDPublicKey.fromBase58("7sc5sRrmPC3oz8rq1cJn28GGr2ezqeBLNEjy8LXkHY9U");
+        return Ed25519HDPublicKey.fromBase58(
+            "7sc5sRrmPC3oz8rq1cJn28GGr2ezqeBLNEjy8LXkHY9U");
       case Flavor.prod:
-        return Ed25519HDPublicKey.fromBase58("8BMzMi2XxZn9afRaMx5Z6fauk9foHXqV5cLTCYWRcVje");
+        return Ed25519HDPublicKey.fromBase58(
+            "8BMzMi2XxZn9afRaMx5Z6fauk9foHXqV5cLTCYWRcVje");
       default:
-        return Ed25519HDPublicKey.fromBase58("7sc5sRrmPC3oz8rq1cJn28GGr2ezqeBLNEjy8LXkHY9U");
+        return Ed25519HDPublicKey.fromBase58(
+            "7sc5sRrmPC3oz8rq1cJn28GGr2ezqeBLNEjy8LXkHY9U");
     }
   }
 
   static Ed25519HDPublicKey get solanaTokenMasterWallet {
     switch (appFlavor) {
       case Flavor.dev:
-        return Ed25519HDPublicKey.fromBase58("6ShEHhBuv6VNNQy4Tw4jYBS6Rq99gNBRHpQ5HDkTfvdy");
+        return Ed25519HDPublicKey.fromBase58(
+            "6ShEHhBuv6VNNQy4Tw4jYBS6Rq99gNBRHpQ5HDkTfvdy");
       case Flavor.stage:
-        return Ed25519HDPublicKey.fromBase58("6ShEHhBuv6VNNQy4Tw4jYBS6Rq99gNBRHpQ5HDkTfvdy");
+        return Ed25519HDPublicKey.fromBase58(
+            "6ShEHhBuv6VNNQy4Tw4jYBS6Rq99gNBRHpQ5HDkTfvdy");
       case Flavor.prod:
-        return Ed25519HDPublicKey.fromBase58("Stik9LuN3nE7wB7tiKZMMNX7JuhY9fRrSWS8EU6RBMu");
+        return Ed25519HDPublicKey.fromBase58(
+            "Stik9LuN3nE7wB7tiKZMMNX7JuhY9fRrSWS8EU6RBMu");
       default:
-        return Ed25519HDPublicKey.fromBase58("6ShEHhBuv6VNNQy4Tw4jYBS6Rq99gNBRHpQ5HDkTfvdy");
+        return Ed25519HDPublicKey.fromBase58(
+            "6ShEHhBuv6VNNQy4Tw4jYBS6Rq99gNBRHpQ5HDkTfvdy");
     }
   }
 

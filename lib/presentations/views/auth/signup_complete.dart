@@ -7,7 +7,8 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class SignupComplete extends StatelessWidget {
   const SignupComplete({super.key});
@@ -41,7 +42,7 @@ class SignupComplete extends StatelessWidget {
                               child:iconSkyBlueCheck,
                             ),
                             Text(
-                              '회원가입이 완료되었습니다.',
+                              'registration_complete'.tr(),
                               style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
                                 color: AppColorData.regular().colorTextPrimary,
                               ),
@@ -49,7 +50,7 @@ class SignupComplete extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(top: 12.0.sp),
                               child: Text(
-                                '이제 gazaGO와 함께\n즐겁게 운동해 보세요.',
+                                'enjoy_gazago'.tr(),
                                 style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                                   color: AppColorData.regular().colorTextSecondary,
                                 ),
@@ -77,7 +78,7 @@ class SignupComplete extends StatelessWidget {
                 //           alignment: WrapAlignment.center,
                 //           children: [
                 //             Text(
-                //               '기존에 가입된 회원정보가 있어\n계정 연동을 완료했습니다. 연결된 계정은\n‘설정 > 계정정보 > SNS로그인’에서\n확인할 수 있어요.',
+                //               'account_linked'.tr(),
                 //               style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                 //                 color: AppColorData.regular().colorTextPrimary,
                 //               ),
@@ -111,7 +112,7 @@ class SignupComplete extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 12.0.sp),
                     child:  Center(
                         child: Text(
-                      '시작하기',
+                      'start_action'.tr(),
                           style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
                             color: AppColorData.regular().colorBaseBalck,
                           ),

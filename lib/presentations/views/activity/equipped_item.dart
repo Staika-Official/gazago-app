@@ -6,18 +6,21 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/views/inventory/equipped_items_grid.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class EquippedItems extends StatelessWidget {
   const EquippedItems({super.key});
 
   @override
   Widget build(BuildContext context) {
-    InventoryController controller = Get.isRegistered<InventoryController>() ? Get.find<InventoryController>() : Get.put(InventoryController());
+    InventoryController controller = Get.isRegistered<InventoryController>()
+        ? Get.find<InventoryController>()
+        : Get.put(InventoryController());
 
     return DefaultContainer(
       backgroundColor: subBg01Color,
-      titleText: '장착 아이템',
+      titleText: 'equipped_items'.tr(),
       child: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -26,17 +29,20 @@ class EquippedItems extends StatelessWidget {
           ),
         ),
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+          constraints:
+              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0.sp, vertical: 20.0.sp),
+                padding: EdgeInsets.symmetric(
+                    horizontal: 20.0.sp, vertical: 20.0.sp),
                 // child: EquippedItemsGrid(controller: controller),
                 child: EquippedItemsGrid(controller: controller),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 20.0.sp, bottom: 15.sp, left: 30.0.sp, right: 30.0.sp),
+                padding: EdgeInsets.only(
+                    top: 20.0.sp, bottom: 15.sp, left: 30.0.sp, right: 30.0.sp),
                 child: Obx(() {
                   return Row(
                     mainAxisSize: MainAxisSize.max,
@@ -47,7 +53,9 @@ class EquippedItems extends StatelessWidget {
                         children: [
                           Text(
                             '${controller.equippedRewardRate.toInt()}',
-                            style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
+                            style: AppTextStyleData.regular()
+                                .enBodyMediumXl
+                                .copyWith(
                                   color: AppColorData.regular().colorPointCyan,
                                 ),
                           ),
@@ -60,9 +68,12 @@ class EquippedItems extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(left: 4.0.sp),
                                   child: Text(
-                                    'GO 적립량',
-                                    style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
-                                          color: AppColorData.regular().colorPointCyan,
+                                    'go_accumulation'.tr(),
+                                    style: AppTextStyleData.regular()
+                                        .koCaptionMediumMd
+                                        .copyWith(
+                                          color: AppColorData.regular()
+                                              .colorPointCyan,
                                         ),
                                   ),
                                 ),
@@ -75,8 +86,11 @@ class EquippedItems extends StatelessWidget {
                         children: [
                           Text(
                             '${controller.equippedAbrasionRate.toInt()}',
-                            style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
-                                  color: AppColorData.regular().colorPointPurple,
+                            style: AppTextStyleData.regular()
+                                .enBodyMediumXl
+                                .copyWith(
+                                  color:
+                                      AppColorData.regular().colorPointPurple,
                                 ),
                           ),
                           Padding(
@@ -89,9 +103,12 @@ class EquippedItems extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(left: 4.0.sp),
                                   child: Text(
-                                    '내구도 저항',
-                                    style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
-                                          color: AppColorData.regular().colorPointPurple,
+                                    'durability_resistance'.tr(),
+                                    style: AppTextStyleData.regular()
+                                        .koCaptionMediumMd
+                                        .copyWith(
+                                          color: AppColorData.regular()
+                                              .colorPointPurple,
                                         ),
                                   ),
                                 ),
@@ -104,8 +121,11 @@ class EquippedItems extends StatelessWidget {
                         children: [
                           Text(
                             '${controller.equippedStaminaReduceRate.toInt()}',
-                            style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
-                                  color: AppColorData.regular().colorPointYellowgreen,
+                            style: AppTextStyleData.regular()
+                                .enBodyMediumXl
+                                .copyWith(
+                                  color: AppColorData.regular()
+                                      .colorPointYellowgreen,
                                 ),
                           ),
                           Padding(
@@ -117,9 +137,12 @@ class EquippedItems extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(left: 4.0.sp),
                                   child: Text(
-                                    '체력 저항',
-                                    style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
-                                          color: AppColorData.regular().colorPointYellowgreen,
+                                    'stamina_resistance'.tr(),
+                                    style: AppTextStyleData.regular()
+                                        .koCaptionMediumMd
+                                        .copyWith(
+                                          color: AppColorData.regular()
+                                              .colorPointYellowgreen,
                                         ),
                                   ),
                                 ),
@@ -132,7 +155,9 @@ class EquippedItems extends StatelessWidget {
                         children: [
                           Text(
                             '${controller.equippedLuckRate.toInt()}',
-                            style: AppTextStyleData.regular().enBodyMediumXl.copyWith(
+                            style: AppTextStyleData.regular()
+                                .enBodyMediumXl
+                                .copyWith(
                                   color: AppColorData.regular().colorPointPink,
                                 ),
                           ),
@@ -146,9 +171,12 @@ class EquippedItems extends StatelessWidget {
                                   child: iconShopLuckPng,
                                 ),
                                 Text(
-                                  '행운',
-                                  style: AppTextStyleData.regular().koCaptionMediumMd.copyWith(
-                                        color: AppColorData.regular().colorPointPink,
+                                  'luck'.tr(),
+                                  style: AppTextStyleData.regular()
+                                      .koCaptionMediumMd
+                                      .copyWith(
+                                        color: AppColorData.regular()
+                                            .colorPointPink,
                                       ),
                                 ),
                               ],
@@ -168,9 +196,10 @@ class EquippedItems extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0.sp, horizontal: 15.sp),
                   child: Text(
-                    '수치가 높을수록 좋은 아이템이에요.',
+                    'higher_value_better'.tr(),
                     style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
                           color: AppColorData.regular().colorTextPrimary,
                         ),

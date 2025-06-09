@@ -8,7 +8,8 @@ import 'package:gaza_go/platform/models/recovery_stamina_model.dart';
 import 'package:gaza_go/platform/models/repair_shoes_model.dart';
 import 'package:gaza_go/platform/models/repair_use_item_model.dart';
 import 'package:gaza_go/platform/services/item_service.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:uuid/uuid.dart';
 
 mixin ConsumerItemMixin {
@@ -19,7 +20,8 @@ mixin ConsumerItemMixin {
   RxDouble currentStat = RxDouble(0.0);
   RxList consumerItemList = RxList.empty(growable: true);
   RxBool isDisableButton = RxBool(false);
-  RxList<RepairUseItemModel> selectedConsumerItemList = RxList.empty(growable: true);
+  RxList<RepairUseItemModel> selectedConsumerItemList =
+      RxList.empty(growable: true);
 
   RxDouble get resultStat {
     return RxDouble(currentStat.value + totalStat);
@@ -35,7 +37,9 @@ mixin ConsumerItemMixin {
         // 해당 itemId로 recoveryList에서 회복량 찾기
         for (int j = 0; j < consumerItemList.length; j++) {
           if (consumerItemList[j].id == itemId) {
-            int repair = selectedType.value == 'STAMINA' ? consumerItemList[j].itemStat.recoveryStamina!.toInt() : consumerItemList[j].itemStat.repairDurability!.toInt();
+            int repair = selectedType.value == 'STAMINA'
+                ? consumerItemList[j].itemStat.recoveryStamina!.toInt()
+                : consumerItemList[j].itemStat.repairDurability!.toInt();
             totalRepair += repair * amount;
           }
         }
@@ -59,7 +63,9 @@ mixin ConsumerItemMixin {
 
   RepairUseItemModel getRepairUseItem(int itemId) {
     if (selectedConsumerItemList.isNotEmpty && itemId != 0) {
-      return selectedConsumerItemList.firstWhere((item) => item.userItemId == itemId, orElse: () => RepairUseItemModel());
+      return selectedConsumerItemList.firstWhere(
+          (item) => item.userItemId == itemId,
+          orElse: () => RepairUseItemModel());
     }
     return RepairUseItemModel();
   }
@@ -77,7 +83,8 @@ mixin ConsumerItemMixin {
         recoveryItems: selectedConsumerItemList,
       ),
       successCallback: (repairModel) async {
-        showToastPopup('+${formatDecimalPlaces(totalStat.toDouble(), 0)} 체력 회복이 되었습니다.');
+        showToastPopup('stamina_recovered'
+            .tr(args: ['${formatDecimalPlaces(totalStat.toDouble(), 0)}']));
       },
       errorCallback: (ErrorResponseDataModel data) {
         showToastPopup(data.errorMessage!);
@@ -98,7 +105,9 @@ mixin ConsumerItemMixin {
         ],
       ),
       successCallback: (repairModel) async {
-        showToastPopup('+${formatDecimalPlaces(useItem.itemStat!.recoveryStamina!, 0)} 체력 회복이 되었습니다.');
+        showToastPopup('stamina_item_recovered'.tr(args: [
+          '${formatDecimalPlaces(useItem.itemStat!.recoveryStamina!, 0)}'
+        ]));
       },
       errorCallback: (ErrorResponseDataModel data) {
         showToastPopup(data.errorMessage!);
@@ -108,7 +117,9 @@ mixin ConsumerItemMixin {
 
   Future<void> fetchRepairShoes() async {
     String uuid = const Uuid().v4();
-    List<RepairUseItemModel> filteredList = selectedConsumerItemList.where((item) => item.spendItemAmount != 0).toList();
+    List<RepairUseItemModel> filteredList = selectedConsumerItemList
+        .where((item) => item.spendItemAmount != 0)
+        .toList();
     await ItemService.fetchRepairItemShoes(
       targetShoeId.value,
       RepairShoesModel(
@@ -116,7 +127,8 @@ mixin ConsumerItemMixin {
         repairItems: filteredList,
       ),
       successCallback: (repairModel) {
-        showToastPopup('+${formatDecimalPlaces(totalStat.toDouble(), 0)} 내구도 수리가 되었습니다.');
+        showToastPopup('durability_repaired'
+            .tr(args: ['${formatDecimalPlaces(totalStat.toDouble(), 0)}']));
       },
       errorCallback: (ErrorResponseDataModel data) {
         showToastPopup(data.errorMessage!);
@@ -124,7 +136,8 @@ mixin ConsumerItemMixin {
     );
   }
 
-  Future<void> fetchRepairShoesUseOneItem(InventoryItemModel useItem, int shoesId) async {
+  Future<void> fetchRepairShoesUseOneItem(
+      InventoryItemModel useItem, int shoesId) async {
     String uuid = const Uuid().v4();
     await ItemService.fetchRepairItemShoes(
       shoesId,
@@ -138,7 +151,9 @@ mixin ConsumerItemMixin {
         ],
       ),
       successCallback: (repairModel) async {
-        showToastPopup('+${formatDecimalPlaces(useItem.itemStat!.repairDurability!, 0)} 내구도 수리가 되었습니다.');
+        showToastPopup('durability_item_repaired'.tr(args: [
+          '${formatDecimalPlaces(useItem.itemStat!.repairDurability!, 0)}'
+        ]));
       },
       errorCallback: (ErrorResponseDataModel data) {
         showToastPopup(data.errorMessage!);
@@ -151,8 +166,11 @@ mixin ConsumerItemMixin {
     // recoveryStamina.value = 0;
   }
 
-  Future<void> getMyConsumerItemsByType(String itemType, {required Function isNotEmptyCallback, required Function isEmptyCallback}) async {
-    await ItemService.getUserConsumerItemByType(itemType, successCallback: (data) {
+  Future<void> getMyConsumerItemsByType(String itemType,
+      {required Function isNotEmptyCallback,
+      required Function isEmptyCallback}) async {
+    await ItemService.getUserConsumerItemByType(itemType,
+        successCallback: (data) {
       consumerItemList.value = data;
 
       if (consumerItemList.isNotEmpty) {

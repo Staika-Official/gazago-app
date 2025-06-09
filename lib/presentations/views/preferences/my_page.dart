@@ -11,7 +11,8 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class MyPage extends StatelessWidget {
   const MyPage({super.key});
@@ -21,7 +22,7 @@ class MyPage extends StatelessWidget {
     MyPageController controller = Get.put(MyPageController());
 
     return DefaultContainer(
-      titleText: '계정 정보',
+      titleText: 'account_info'.tr(),
       backgroundColor: subBg01Color,
       headerBackgroundColor: Colors.transparent,
       child: Column(
@@ -38,19 +39,27 @@ class MyPage extends StatelessWidget {
                     width: 70.sp,
                     height: 70.sp,
                     child: InkWell(
-                      onTap: controller.isEditMode.value ? () => controller.pickImage() : null,
+                      onTap: controller.isEditMode.value
+                          ? () => controller.pickImage()
+                          : null,
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
                           CircleAvatar(
                             radius: 35.sp,
-                            foregroundImage: controller.pickedImage.value != null
+                            foregroundImage: controller.pickedImage.value !=
+                                    null
                                 ? FileImage(
                                     File(controller.pickedImage.value!.path),
                                   )
-                                : controller.profile.value.profileImageUrl != null && controller.profile.value.profileImageUrl != ''
+                                : controller.profile.value.profileImageUrl !=
+                                            null &&
+                                        controller.profile.value
+                                                .profileImageUrl !=
+                                            ''
                                     ? CachedNetworkImageProvider(
-                                        controller.profile.value.profileImageUrl!,
+                                        controller
+                                            .profile.value.profileImageUrl!,
                                         headers: imageNetworkHeader,
                                       )
                                     : Image.asset(
@@ -83,7 +92,8 @@ class MyPage extends StatelessWidget {
                                 // readOnly: !controller.profile.value.availableChangeNickname!,
                                 scrollPadding: EdgeInsets.all(20.0.sp),
                                 controller: controller.nicknameTextController,
-                                onChanged: (nickName) => controller.updateNickName(nickName),
+                                onChanged: (nickName) =>
+                                    controller.updateNickName(nickName),
                                 cursorColor: skyBlueColor,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -92,9 +102,11 @@ class MyPage extends StatelessWidget {
                                   height: 1.0,
                                   fontWeight: FontWeight.w500,
                                 ),
-                                onTap: () => controller.checkAvailableNicknameChange(),
+                                onTap: () =>
+                                    controller.checkAvailableNicknameChange(),
                                 decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 15.0.sp, vertical: 4.0.sp),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 15.0.sp, vertical: 4.0.sp),
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                       color: popupBgColor,
@@ -127,16 +139,31 @@ class MyPage extends StatelessWidget {
                                           letterSpacing: -0.5,
                                         ),
                                         children: [
-                                          controller.profile.value.provider == 'APPLE'
+                                          controller.profile.value.provider ==
+                                                  'APPLE'
                                               ? TextSpan(
-                                                  text: controller.profile.value.nickname != null ? controller.profile.value.nickname!.split('@')[0].length.toString() : '0',
+                                                  text: controller.profile.value
+                                                              .nickname !=
+                                                          null
+                                                      ? controller.profile.value
+                                                          .nickname!
+                                                          .split('@')[0]
+                                                          .length
+                                                          .toString()
+                                                      : '0',
                                                   style: TextStyle(
                                                     color: deepGrayColor,
                                                     fontSize: 12.sp,
                                                   ),
                                                 )
                                               : TextSpan(
-                                                  text: controller.profile.value.nickname != null ? controller.profile.value.nickname!.length.toString() : '0',
+                                                  text: controller.profile.value
+                                                              .nickname !=
+                                                          null
+                                                      ? controller.profile.value
+                                                          .nickname!.length
+                                                          .toString()
+                                                      : '0',
                                                   style: TextStyle(
                                                     color: deepGrayColor,
                                                     fontSize: 12.sp,
@@ -149,7 +176,8 @@ class MyPage extends StatelessWidget {
                                             ),
                                           ),
                                           TextSpan(
-                                            text: controller.maxNickNameLength.toString(),
+                                            text: controller.maxNickNameLength
+                                                .toString(),
                                             style: TextStyle(
                                               color: deepGrayColor,
                                               fontSize: 12.sp,
@@ -177,7 +205,8 @@ class MyPage extends StatelessWidget {
                                 ),
                               ),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10.0.sp, vertical: 2.sp),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10.0.sp, vertical: 2.sp),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -185,17 +214,27 @@ class MyPage extends StatelessWidget {
                                   children: [
                                     controller.profile.value.provider == 'APPLE'
                                         ? StyledText(
-                                      controller.profile.value.nickname != null ? controller.profile.value.nickname!.split('@')[0] : '',
+                                            controller.profile.value.nickname !=
+                                                    null
+                                                ? controller
+                                                    .profile.value.nickname!
+                                                    .split('@')[0]
+                                                : '',
                                             fontSize: 18,
                                             fontWeight: 500,
                                           )
                                         : StyledText(
-                                      controller.profile.value.nickname != null ? controller.profile.value.nickname! : '',
+                                            controller.profile.value.nickname !=
+                                                    null
+                                                ? controller
+                                                    .profile.value.nickname!
+                                                : '',
                                             fontSize: 18,
                                             fontWeight: 500,
                                           ),
                                     Padding(
-                                      padding: EdgeInsets.only(left: 5.sp, bottom: 4.sp),
+                                      padding: EdgeInsets.only(
+                                          left: 5.sp, bottom: 4.sp),
                                       child: Icon(
                                         Icons.edit,
                                         color: const Color(0xFFA5A5A5),
@@ -235,22 +274,22 @@ class MyPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                          child: const Column(
+                          child: Column(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               StyledText(
-                                '닉네임 변경 안내',
+                                'nickname_change_guide'.tr(),
                                 fontSize: 18,
                                 fontWeight: 500,
                                 lineHeight: 20,
                                 textAlign: TextAlign.left,
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 10),
+                                padding: const EdgeInsets.only(top: 10),
                                 child: StyledText(
-                                  '- 닉네임은 앱 사용 시 1회만 변경이 가능합니다. 신중하게 선택해주세요.\n- 욕설, 비방 등의 용어가 포함된 닉네임은 설정이 불가합니다.\n- 금지어가 포함된 닉네임을 설정할 경우, 운영 정책에 따라 가입했던 이메일 주소로 임의로 초기화 될 수 있습니다.',
+                                  'nickname_change_rules'.tr(),
                                   fontSize: 12,
                                   fontWeight: 500,
                                   lineHeight: 18,
@@ -270,9 +309,9 @@ class MyPage extends StatelessWidget {
                         onTap: () => controller.validateProfileEdit(),
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 8.0.sp),
-                          child: const Center(
+                          child: Center(
                             child: StyledText(
-                              '확인',
+                              'confirm'.tr(),
                               color: Colors.black,
                               fontSize: 18,
                               fontWeight: 500,
@@ -296,7 +335,7 @@ class MyPage extends StatelessWidget {
                             //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //         children: [
                             //           const StyledText(
-                            //             '지갑주소',
+                            //             'wallet_address'.tr(),
                             //             fontSize: 18,
                             //             fontWeight: 500,
                             //             lineHeight: 20,
@@ -309,7 +348,7 @@ class MyPage extends StatelessWidget {
                             //                 const Padding(
                             //                   padding: const EdgeInsets.only(left: 8.0),
                             //                   child: StyledText(
-                            //                     '주소복사',
+                            //                     'copy_address'.tr(),
                             //                     fontSize: 14,
                             //                     fontWeight: 500,
                             //                     color: Color(0xFFA8A8A8),
@@ -336,10 +375,11 @@ class MyPage extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 21.0.sp),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const StyledText(
-                                    'SNS 로그인',
+                                  StyledText(
+                                    'sns_login'.tr(),
                                     fontSize: 18,
                                     fontWeight: 500,
                                     lineHeight: 20,
@@ -347,8 +387,10 @@ class MyPage extends StatelessWidget {
                                   Row(
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.only(right: 5.0.sp, bottom: 3.0.sp),
-                                        child: getMypageLoginedButtonIcon(controller.provider.value),
+                                        padding: EdgeInsets.only(
+                                            right: 5.0.sp, bottom: 3.0.sp),
+                                        child: getMypageLoginedButtonIcon(
+                                            controller.provider.value),
                                       ),
                                       StyledText(
                                         controller.provider.value,
@@ -364,26 +406,30 @@ class MyPage extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 21.0.sp),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const StyledText(
-                                    '이메일 주소',
+                                  StyledText(
+                                    'email_address'.tr(),
                                     fontSize: 18,
                                     fontWeight: 500,
                                     lineHeight: 20,
                                   ),
                                   controller.profile.value.provider == 'APPLE'
                                       ? Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
                                           children: [
                                             StyledText(
-                                              controller.profile.value.email.split('@')[0],
+                                              controller.profile.value.email
+                                                  .split('@')[0],
                                               fontSize: 14,
                                               fontWeight: 500,
                                               color: const Color(0xFFA8A8A8),
                                             ),
                                             Padding(
-                                              padding: EdgeInsets.only(top: 5.0.sp),
+                                              padding:
+                                                  EdgeInsets.only(top: 5.0.sp),
                                               child: StyledText(
                                                 '@${controller.profile.value.email.split('@')[1]}',
                                                 fontSize: 14,
@@ -409,7 +455,7 @@ class MyPage extends StatelessWidget {
                             //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //     children: [
                             //       StyledText(
-                            //         '생체정보',
+                            //         'biometric_info'.tr(),
                             //         fontSize: 18,
                             //         fontWeight: 500,
                             //         lineHeight: 20,
@@ -422,13 +468,13 @@ class MyPage extends StatelessWidget {
                             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //   children: [
                             //     StyledText(
-                            //       '성별',
+                            //       'gender'.tr(),
                             //       fontSize: 18,
                             //       fontWeight: 500,
                             //       lineHeight: 20,
                             //     ),
                             //     StyledText(
-                            //       controller.profile.value.gender == 'MALE' ? '남자' : '여자',
+                            //       controller.profile.value.gender == 'MALE' ? 'male'.tr() : 'female'.tr(),
                             //       fontSize: 18,
                             //       fontWeight: 500,
                             //     )
@@ -438,7 +484,7 @@ class MyPage extends StatelessWidget {
                             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //   children: [
                             //     StyledText(
-                            //       '나이',
+                            //       'age'.tr(),
                             //       fontSize: 18,
                             //       fontWeight: 500,
                             //       lineHeight: 20,
@@ -450,7 +496,7 @@ class MyPage extends StatelessWidget {
                             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //   children: [
                             //     StyledText(
-                            //       '몸무게',
+                            //       'weight'.tr(),
                             //       fontSize: 18,
                             //       fontWeight: 500,
                             //       lineHeight: 20,
@@ -462,7 +508,7 @@ class MyPage extends StatelessWidget {
                             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //   children: [
                             //     StyledText(
-                            //       '키',
+                            //       'height'.tr(),
                             //       fontSize: 18,
                             //       fontWeight: 500,
                             //       lineHeight: 20,
@@ -478,18 +524,22 @@ class MyPage extends StatelessWidget {
                     Column(
                       children: [
                         Divider(color: subBg01Color, height: 6.sp),
-                        if (controller.profile.value.authorities!.contains('ROLE_CERTIFIED_USER'))
+                        if (controller.profile.value.authorities!
+                            .contains('ROLE_CERTIFIED_USER'))
                           Container(
                             color: subBg02Color,
                             child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 21.0.sp, horizontal: 20.0.sp),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 21.0.sp, horizontal: 20.0.sp),
                               child: InkWell(
-                                onTap: () => Get.toNamed(Routes.verificationName),
+                                onTap: () =>
+                                    Get.toNamed(Routes.verificationName),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const StyledText(
-                                      '휴대폰 번호 변경하기',
+                                    StyledText(
+                                      'change_phone_number'.tr(),
                                       fontSize: 18,
                                       fontWeight: 500,
                                       lineHeight: 20,
@@ -507,14 +557,16 @@ class MyPage extends StatelessWidget {
                         Container(
                           color: subBg02Color,
                           child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 21.0.sp, horizontal: 20.0.sp),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 21.0.sp, horizontal: 20.0.sp),
                             child: InkWell(
                               onTap: () => Get.toNamed(Routes.withdrawConfirm),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const StyledText(
-                                    '탈퇴하기',
+                                  StyledText(
+                                    'withdraw'.tr(),
                                     fontSize: 18,
                                     fontWeight: 500,
                                     lineHeight: 20,

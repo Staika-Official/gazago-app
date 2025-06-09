@@ -2,7 +2,8 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class VerificationTermsController extends GetxController {
   final RxList<TermItemModel> termsList = RxList.empty();
@@ -12,7 +13,9 @@ class VerificationTermsController extends GetxController {
   }
 
   RxBool get allRequiredAgreed {
-    return RxBool(termsList.where((term) => term.isRequired == true).every((term) => term.isChecked == true));
+    return RxBool(termsList
+        .where((term) => term.isRequired == true)
+        .every((term) => term.isChecked == true));
   }
 
   @override
@@ -22,7 +25,9 @@ class VerificationTermsController extends GetxController {
   }
 
   void getTermsList() async {
-    await BoardService.getPostListByType('OVER_FOURTEEN,IDENTITY_A,IDENTITY_B,IDENTITY_C,IDENTITY_D,IDENTITY_E', successCallback: (List<TermItemModel> terms) {
+    await BoardService.getPostListByType(
+        'OVER_FOURTEEN,IDENTITY_A,IDENTITY_B,IDENTITY_C,IDENTITY_D,IDENTITY_E',
+        successCallback: (List<TermItemModel> terms) {
       termsList.value = terms;
     });
   }
@@ -50,7 +55,7 @@ class VerificationTermsController extends GetxController {
     if (allAgreed.value) {
       Get.toNamed(Routes.verificationName);
     } else {
-      showToastPopup('필수 약관에 동의해주세요');
+      showToastPopup('agree_to_terms'.tr());
     }
   }
 }

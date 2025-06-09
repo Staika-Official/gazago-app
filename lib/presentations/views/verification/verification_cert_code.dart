@@ -4,14 +4,16 @@ import 'package:gaza_go/platform/controllers/verification_cert_code_controller.d
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class VerificationCertCode extends StatelessWidget {
   const VerificationCertCode({super.key});
 
   @override
   Widget build(BuildContext context) {
-    VerificationCertCodeController controller = Get.put(VerificationCertCodeController());
+    VerificationCertCodeController controller =
+        Get.put(VerificationCertCodeController());
 
     return GestureDetector(
       onTap: () => FocusScope.of(Get.context!).requestFocus(FocusNode()),
@@ -22,17 +24,17 @@ class VerificationCertCode extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const StyledText(
-                '문자로 전달된',
+              StyledText(
+                'sent_via_sms'.tr(),
                 fontSize: 22,
                 fontWeight: 700,
                 lineHeight: 32,
                 fontFamily: 'Montserrat',
               ),
-              const Row(
+              Row(
                 children: [
                   StyledText(
-                    '인증 코드 6자리',
+                    'six_digit_auth_code'.tr(),
                     fontSize: 22,
                     fontWeight: 700,
                     lineHeight: 32,
@@ -40,7 +42,7 @@ class VerificationCertCode extends StatelessWidget {
                     color: skyBlueColor,
                   ),
                   StyledText(
-                    '를 입력해주세요.',
+                    'enter_code'.tr(),
                     fontSize: 22,
                     fontWeight: 700,
                     lineHeight: 32,
@@ -56,8 +58,8 @@ class VerificationCertCode extends StatelessWidget {
                     children: [
                       Padding(
                         padding: EdgeInsets.all(8.0.sp),
-                        child: const StyledText(
-                          '인증코드',
+                        child: StyledText(
+                          'auth_code'.tr(),
                           color: lightGrayColor,
                           fontSize: 16,
                           fontWeight: 500,
@@ -79,13 +81,13 @@ class VerificationCertCode extends StatelessWidget {
                               Expanded(
                                 child: TextField(
                                   focusNode: controller.focusNode,
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: '인증 코드 입력',
-                                    hintStyle: TextStyle(
+                                    hintText: 'auth_code_entry'.tr(),
+                                    hintStyle: const TextStyle(
                                       color: deepGrayColor,
                                     ),
-                                    contentPadding: EdgeInsets.symmetric(
+                                    contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 15,
                                       vertical: 0,
                                     ),
@@ -99,7 +101,8 @@ class VerificationCertCode extends StatelessWidget {
                                   ),
                                   maxLength: 6,
                                   cursorColor: skyBlueColor,
-                                  onChanged: (code) => controller.updateCertCode(code),
+                                  onChanged: (code) =>
+                                      controller.updateCertCode(code),
                                   keyboardType: TextInputType.number,
                                 ),
                               ),
@@ -116,30 +119,42 @@ class VerificationCertCode extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(10),
                                 child: Obx(() {
-                                  bool finished = controller.countdownTime.value.inSeconds == 0;
+                                  bool finished = controller
+                                          .countdownTime.value.inSeconds ==
+                                      0;
                                   return SizedBox(
                                     height: 35,
                                     width: 85,
                                     child: MaterialButton(
-                                      color: finished && !controller.isNotNext.value ? popupBgColor : Colors.transparent,
+                                      color: finished &&
+                                              !controller.isNotNext.value
+                                          ? popupBgColor
+                                          : Colors.transparent,
                                       elevation: 0,
                                       highlightElevation: 0,
                                       shape: RoundedRectangleBorder(
                                         side: BorderSide(
                                           color: popupBgColor,
-                                          width: finished && !controller.isNotNext.value ? 0 : 2,
+                                          width: finished &&
+                                                  !controller.isNotNext.value
+                                              ? 0
+                                              : 2,
                                         ),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       onPressed: () {
-                                        if (finished && !controller.isNotNext.value) {
+                                        if (finished &&
+                                            !controller.isNotNext.value) {
                                           // showConfirmationSnackbar();
                                           controller.resendIdentityCode();
                                         }
                                       },
                                       child: StyledText(
-                                        '재전송',
-                                        color: finished && !controller.isNotNext.value ? Colors.white : deepGrayColor,
+                                        'resend'.tr(),
+                                        color: finished &&
+                                                !controller.isNotNext.value
+                                            ? Colors.white
+                                            : deepGrayColor,
                                         fontSize: 14,
                                         fontWeight: 500,
                                       ),
@@ -172,7 +187,10 @@ class VerificationCertCode extends StatelessWidget {
                 return Container(
                   height: 55.sp,
                   decoration: BoxDecoration(
-                    color: controller.isFormValid.isTrue && !controller.isNotNext.value ? skyBlueColor : popupBgColor,
+                    color: controller.isFormValid.isTrue &&
+                            !controller.isNotNext.value
+                        ? skyBlueColor
+                        : popupBgColor,
                     border: Border.all(width: 2.sp, color: Colors.black),
                     borderRadius: BorderRadius.circular(8.sp),
                     boxShadow: [
@@ -183,16 +201,22 @@ class VerificationCertCode extends StatelessWidget {
                     ],
                   ),
                   child: InkWell(
-                    onTap: () => controller.isFormValid.isTrue && !controller.isNotNext.value ? controller.next() : null,
+                    onTap: () => controller.isFormValid.isTrue &&
+                            !controller.isNotNext.value
+                        ? controller.next()
+                        : null,
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 12.0.sp),
                       child: Center(
                           child: StyledText(
-                        '확인',
+                        'confirm'.tr(),
                         fontSize: 18,
                         lineHeight: 18,
                         fontWeight: 500,
-                        color: controller.isFormValid.isTrue && !controller.isNotNext.value ? Colors.black : deepGrayColor,
+                        color: controller.isFormValid.isTrue &&
+                                !controller.isNotNext.value
+                            ? Colors.black
+                            : deepGrayColor,
                       )),
                     ),
                   ),

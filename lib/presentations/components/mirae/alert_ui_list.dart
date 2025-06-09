@@ -11,7 +11,8 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 void showConfirmMiraeMemberChallenge(MiraeChallengeController controller, int challengeId) {
   Get.dialog(
@@ -42,8 +43,8 @@ void showConfirmMiraeMemberChallenge(MiraeChallengeController controller, int ch
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const StyledText(
-                              '회원 정보 확인',
+                            StyledText(
+                              'member_info_check'.tr(),
                               fontWeight: 600,
                               fontSize: 20,
                               lineHeight: 21,
@@ -79,7 +80,7 @@ void showConfirmMiraeMemberChallenge(MiraeChallengeController controller, int ch
                                 // Get.back();
                                 participateInMiraeChallengeByCodeAlert(challengeId);
                               },
-                              buttonText: '취소',
+                              buttonText: 'cancel'.tr(),
                               textColor: Colors.white,
                               buttonColor: popupBgColor,
                             ),
@@ -89,7 +90,7 @@ void showConfirmMiraeMemberChallenge(MiraeChallengeController controller, int ch
                           ),
                           Expanded(
                             child: GazagoButton(
-                              buttonText: '확인 후 참가',
+                              buttonText: 'confirm_and_join'.tr(),
                               onTap: () {
                                 controller.onFetchJoinChallenge(challengeId);
                               },
@@ -139,7 +140,7 @@ void miraeAssetAlert(int challengeId, String? challengeUserState) {
               child: challengeUserState == 'JOIN_CLOSED'
                   ? GazagoButton(
                       onTap: () => null,
-                      buttonText: '챌린지 참가 마감',
+                      buttonText: 'challenge_join_deadline'.tr(),
                       buttonColor: deepGrayColor,
                     )
                   : GazagoButton(
@@ -147,7 +148,7 @@ void miraeAssetAlert(int challengeId, String? challengeUserState) {
                         // participateInMiraeChallengeByCodeAlert(challengeId);
                         controller.getChallengeDetail(challengeId);
                       },
-                      buttonText: '챌린지 참가',
+                      buttonText: 'join_challenge_1'.tr(),
                       buttonColor: skyBlueColor,
                     ),
             ),
@@ -209,8 +210,8 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                         children: [
                           Padding(
                             padding: EdgeInsets.only(bottom: 14.0.sp),
-                            child: const StyledText(
-                              '회원 정보 입력',
+                            child: StyledText(
+                              'member_info_input'.tr(),
                               fontSize: 20,
                               lineHeight: 21,
                               fontWeight: 500,
@@ -218,8 +219,8 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                           ),
                           Padding(
                             padding: EdgeInsets.only(bottom: 28.0.sp),
-                            child: const StyledText(
-                              '기업전용 챌린지는 사번을 입력해야\n참가할 수 있어요.',
+                            child: StyledText(
+                              'corporate_challenge_requires_employee_id'.tr(),
                               fontSize: 16,
                               lineHeight: 22,
                               fontWeight: 500,
@@ -233,7 +234,7 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                                 Padding(
                                   padding: EdgeInsets.only(left: 5.0.sp, bottom: 8.sp),
                                   child: StyledText(
-                                    '이름',
+                                    'name'.tr(),
                                     fontWeight: 500,
                                     fontSize: 14,
                                     lineHeight: 20,
@@ -247,7 +248,7 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                                         decoration: InputDecoration(
                                           filled: true,
                                           fillColor: subBg01Color,
-                                          hintText: '이름을 입력해주세요.',
+                                          hintText: 'enter_name'.tr(),
                                           hintStyle: const TextStyle(
                                             color: deepGrayColor,
                                             fontSize: 18,
@@ -314,7 +315,7 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                                       Padding(
                                         padding: EdgeInsets.only(left: 5.0.sp, bottom: 8.sp),
                                         child: StyledText(
-                                          '사번',
+                                          'employee_id'.tr(),
                                           fontWeight: 500,
                                           fontSize: 14,
                                           lineHeight: 20,
@@ -329,7 +330,7 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                                                 decoration: InputDecoration(
                                                   filled: true,
                                                   fillColor: subBg01Color,
-                                                  hintText: '사번을 입력해주세요.',
+                                                  hintText: 'enter_employee_id'.tr(),
                                                   hintStyle: const TextStyle(
                                                     color: deepGrayColor,
                                                     fontSize: 18,
@@ -402,7 +403,7 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                                 Expanded(
                                   child: GazagoButton(
                                     onTap: () => controller.onCloseJoinPopup(),
-                                    buttonText: '취소',
+                                    buttonText: 'cancel'.tr(),
                                     textColor: Colors.white,
                                     buttonColor: popupBgColor,
                                   ),
@@ -416,7 +417,7 @@ void participateInMiraeChallengeByCodeAlert(int challengeId) {
                                       // Get.back();
                                       controller.checkOnAvailableChallenge(challengeId);
                                     },
-                                    buttonText: '확인',
+                                    buttonText: 'confirm'.tr(),
                                     buttonColor: skyBlueColor,
                                   ),
                                 ),
@@ -457,16 +458,16 @@ void alreadyVerifiedCompanyChallenge() {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const StyledText(
-                    '회원 정보 확인 요청',
+                  StyledText(
+                    'member_info_request'.tr(),
                     fontWeight: 600,
                     fontSize: 20,
                     lineHeight: 28,
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 20.0.sp, bottom: 30.sp),
-                    child: const StyledText(
-                      '이미 인증된 회원입니다.\n 회원 정보를 다시 입력해주세요.',
+                    child: StyledText(
+                      'already_verified_re_enter'.tr(),
                       fontWeight: 500,
                       fontSize: 18,
                       lineHeight: 26,
@@ -474,7 +475,7 @@ void alreadyVerifiedCompanyChallenge() {
                     ),
                   ),
                   GazagoButton(
-                    buttonText: '확인',
+                    buttonText: 'confirm'.tr(),
                     onTap: () async {
                       Get.back();
                     },
@@ -514,16 +515,16 @@ void notOpenCompanyChallenge() {
                       padding: EdgeInsets.only(top: 0.0.sp, bottom: 25.sp),
                       child: Column(
                         children: [
-                          const StyledText(
-                            '챌린지 접수 전',
+                          StyledText(
+                            'before_challenge_submission'.tr(),
                             fontWeight: 600,
                             fontSize: 20,
                             lineHeight: 28,
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: 15.0.sp),
-                            child: const StyledText(
-                              '챌린지 모집 기간에 다시\n참가해주세요.',
+                            child: StyledText(
+                              'rejoin_during_enrollment'.tr(),
                               fontWeight: 500,
                               fontSize: 18,
                               lineHeight: 26,
@@ -534,7 +535,7 @@ void notOpenCompanyChallenge() {
                       ),
                     ),
                     GazagoButton(
-                      buttonText: '홈화면으로 이동',
+                      buttonText: 'go_to_home'.tr(),
                       onTap: () async {
                         Get.offAllNamed(Routes.home);
                       },
@@ -574,10 +575,10 @@ void closedCompanyChallenge() {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(top: 10.0.sp, bottom: 30.sp),
-                        child: const Column(
+                        child: Column(
                           children: [
                             StyledText(
-                              '챌린지가 끝났어요.',
+                              'challenge_ended_2'.tr(),
                               fontWeight: 600,
                               fontSize: 20,
                               lineHeight: 28,
@@ -586,7 +587,7 @@ void closedCompanyChallenge() {
                         ),
                       ),
                       GazagoButton(
-                        buttonText: '홈화면으로 이동',
+                        buttonText: 'go_to_home'.tr(),
                         onTap: () async {
                           Get.offAllNamed(Routes.home);
                         },

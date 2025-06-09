@@ -6,7 +6,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/challenges_controller.dart';
@@ -20,19 +20,22 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/mirae/alert_ui_list.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:intl/intl.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 Future<bool> isForceUpdateTarget() async {
   await FirebaseRemoteConfig.instance.fetchAndActivate();
-  String remoteAppVersion = getConfig(dataType: ConfigType.string, configKey: 'minimum_app_version');
+  String remoteAppVersion =
+      getConfig(dataType: ConfigType.string, configKey: 'minimum_app_version');
   return await compareVersion(remoteAppVersion);
 }
 
 Future<bool> isRecommendUpdateTarget() async {
-  String remoteAppVersion = getConfig(dataType: ConfigType.string, configKey: 'recommended_app_version');
+  String remoteAppVersion = getConfig(
+      dataType: ConfigType.string, configKey: 'recommended_app_version');
   return await compareVersion(remoteAppVersion);
 }
 
@@ -40,7 +43,10 @@ Future<bool> compareVersion(String versionString) async {
   String remoteAppVersion = versionString;
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   List<int> splitVersionString(String versionString) {
-    return versionString.split('.').map((element) => int.parse(element)).toList();
+    return versionString
+        .split('.')
+        .map((element) => int.parse(element))
+        .toList();
   }
 
   List<int> targetAppVersion = splitVersionString(remoteAppVersion);
@@ -60,7 +66,8 @@ Future<bool> compareVersion(String versionString) async {
 
 String formatDate(String? isoDateString) {
   if (isoDateString != null) {
-    return DateFormat("yyyy.MM.dd HH:mm:ss").format(DateTime.parse(isoDateString).toLocal());
+    return DateFormat("yyyy.MM.dd HH:mm:ss")
+        .format(DateTime.parse(isoDateString).toLocal());
   } else {
     return '';
   }
@@ -68,7 +75,8 @@ String formatDate(String? isoDateString) {
 
 String formatHipenDate(String? isoDateString) {
   if (isoDateString != null) {
-    return DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.parse(isoDateString).toLocal());
+    return DateFormat("yyyy-MM-dd HH:mm:ss")
+        .format(DateTime.parse(isoDateString).toLocal());
   } else {
     return '';
   }
@@ -76,7 +84,8 @@ String formatHipenDate(String? isoDateString) {
 
 String formatDateUntilDay(String? isoDateString) {
   if (isoDateString != null) {
-    return DateFormat("yyyy-MM-dd").format(DateTime.parse(isoDateString).toLocal());
+    return DateFormat("yyyy-MM-dd")
+        .format(DateTime.parse(isoDateString).toLocal());
   } else {
     return '';
   }
@@ -84,7 +93,8 @@ String formatDateUntilDay(String? isoDateString) {
 
 String formatDateUntilTime(String? isoDateString) {
   if (isoDateString != null) {
-    return DateFormat("yyyy-MM-dd HH:mm").format(DateTime.parse(isoDateString).toLocal());
+    return DateFormat("yyyy-MM-dd HH:mm")
+        .format(DateTime.parse(isoDateString).toLocal());
   } else {
     return '';
   }
@@ -92,7 +102,8 @@ String formatDateUntilTime(String? isoDateString) {
 
 String formatDateMonthUntilTime(String? isoDateString) {
   if (isoDateString != null) {
-    return DateFormat("MM.dd (HH:mm)").format(DateTime.parse(isoDateString).toLocal());
+    return DateFormat("MM.dd (HH:mm)")
+        .format(DateTime.parse(isoDateString).toLocal());
   } else {
     return '';
   }
@@ -102,24 +113,25 @@ String calculateDuration(String? fromDateString, String? toDateString) {
   if (fromDateString == null || toDateString == null) return '0';
   DateTime fromDate = DateTime.parse(fromDateString).toLocal();
   DateTime toDate = DateTime.parse(toDateString).toLocal();
-  DateTime formattedFromDate = DateTime(fromDate.year, fromDate.month, fromDate.day);
+  DateTime formattedFromDate =
+      DateTime(fromDate.year, fromDate.month, fromDate.day);
   DateTime formattedToDate = DateTime(toDate.year, toDate.month, toDate.day);
 
   return (formattedToDate.difference(formattedFromDate).inDays + 1).toString();
 }
 
-String coordinatesToString(List<NLatLng> coordinates) {
+String coordinatesToString(List<LatLng> coordinates) {
   List<List<double>> coordinateStringList = List.empty(growable: true);
-  for (NLatLng coordinate in coordinates) {
+  for (LatLng coordinate in coordinates) {
     coordinateStringList.add([coordinate.latitude, coordinate.longitude]);
   }
   return coordinateStringList.toString();
 }
 
-List<NLatLng> locationListToLatLng(List<dynamic> locationList) {
-  List<NLatLng> coordinates = List.empty(growable: true);
+List<LatLng> locationListToLatLng(List<dynamic> locationList) {
+  List<LatLng> coordinates = List.empty(growable: true);
   for (List location in locationList) {
-    NLatLng coordination = NLatLng(location[0], location[1]);
+    LatLng coordination = LatLng(location[0], location[1]);
     coordinates.add(coordination);
   }
   return coordinates;
@@ -132,7 +144,8 @@ String getUiAmountString(int val, int decimalPlaces) {
   return formattedNumber.toString();
 }
 
-String formatDecimalPlaces(double val, int decimalPlaces, {RoundType roundType = RoundType.floor, bool isAutoDecimal = false}) {
+String formatDecimalPlaces(double val, int decimalPlaces,
+    {RoundType roundType = RoundType.floor, bool isAutoDecimal = false}) {
   num mod = pow(10.0, decimalPlaces);
 
   double? formattedNumber;
@@ -191,8 +204,10 @@ String formatSeconds(int time) {
 
 String generateRandomString(int length) {
   final random = Random();
-  const availableChars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-  final randomString = List.generate(length, (index) => availableChars[random.nextInt(availableChars.length)]).join();
+  const availableChars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  final randomString = List.generate(length,
+      (index) => availableChars[random.nextInt(availableChars.length)]).join();
 
   return randomString;
 }
@@ -232,7 +247,9 @@ String formatMeterToKilometer(int meter) {
 }
 
 void handleRoute(String route) async {
-  if ((Get.currentRoute != Routes.login || Get.currentRoute != Routes.loading) && Get.isRegistered<HomeMenuController>()) {
+  if ((Get.currentRoute != Routes.login ||
+          Get.currentRoute != Routes.loading) &&
+      Get.isRegistered<HomeMenuController>()) {
     if (route.contains('challenge')) {
       Get.find<HomeMenuController>().selectMenu(0);
     } else if (route.contains('inventory')) {
@@ -256,7 +273,8 @@ void handleRoute(String route) async {
 
       String? challengeId = route.split('company_challenge_detail/')[1];
 
-      await ActivityService.getChallengeDetails(int.parse(challengeId), successCallback: (NewChallengeDetailModel data) {
+      await ActivityService.getChallengeDetails(int.parse(challengeId),
+          successCallback: (NewChallengeDetailModel data) {
         // if(Get.isDialogOpen == true){
         //   Get.back();
         // }
@@ -266,7 +284,6 @@ void handleRoute(String route) async {
           miraeAssetAlert(int.parse(challengeId), data.challengeUserState!);
         }
       });
-
     }
   } else {
     HiveStore.save(key: HiveKey.dynamicLinkRoute.name, value: route);
@@ -275,13 +292,19 @@ void handleRoute(String route) async {
 
 Future<void> getChallengeDetail(challengeId) async {
   String? userId = HiveStore.loadString(key: HiveKey.userId.name);
-  ChallengesController challengesController = Get.isRegistered<ChallengesController>() ? Get.find<ChallengesController>() : Get.put(ChallengesController());
-  await ActivityService.getChallengeDetails(int.parse(challengeId), successCallback: (NewChallengeDetailModel data) async {
-    DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/$challengeId/$userId');
+  ChallengesController challengesController =
+      Get.isRegistered<ChallengesController>()
+          ? Get.find<ChallengesController>()
+          : Get.put(ChallengesController());
+  await ActivityService.getChallengeDetails(int.parse(challengeId),
+      successCallback: (NewChallengeDetailModel data) async {
+    DatabaseReference userDiInfoRef = FirebaseDatabase.instance
+        .ref('crewChallengeLeaderboard/$challengeId/$userId');
     await userDiInfoRef.get().then((DataSnapshot snapshot) async {
       if (snapshot.exists) {
         Get.find<HomeMenuController>().selectMenu(0);
-        Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', challengeId.toString()));
+        Get.toNamed(Routes.companyChallengeDetail
+            .replaceAll(':id', challengeId.toString()));
       } else {
         if (data.challengeState == 'READY') {
           if (data.challengeUserState == 'REGISTER_READY') {
@@ -304,7 +327,8 @@ Future<void> getChallengeDetail(challengeId) async {
 }
 
 void handlePendingDynamicLink() {
-  String? pendingRoute = HiveStore.loadString(key: HiveKey.dynamicLinkRoute.name);
+  String? pendingRoute =
+      HiveStore.loadString(key: HiveKey.dynamicLinkRoute.name);
 
   if (pendingRoute != null) {
     handleRoute(pendingRoute);
@@ -337,7 +361,10 @@ void moveToVerification() {
   Get.toNamed(Routes.verificationTerms);
 }
 
-FeedTemplate? generateFeedTemplate(Uri shareUrl, {required ChallengeType challengeType, required ShareSource shareSource, String? crewName}) {
+FeedTemplate? generateFeedTemplate(Uri shareUrl,
+    {required ChallengeType challengeType,
+    required ShareSource shareSource,
+    String? crewName}) {
   FeedTemplate? template;
   switch (challengeType) {
     case ChallengeType.crew:
@@ -346,49 +373,52 @@ FeedTemplate? generateFeedTemplate(Uri shareUrl, {required ChallengeType challen
         case ShareSource.shareAppbar:
           template = FeedTemplate(
             content: Content(
-              imageUrl: Uri.parse('https://s3.ap-northeast-2.amazonaws.com/image.staika.io/social/share_crew_relay.png'),
+              imageUrl: Uri.parse(
+                  'https://s3.ap-northeast-2.amazonaws.com/image.staika.io/social/share_crew_relay.png'),
               imageHeight: 400,
               imageWidth: 400,
-              title: '세상에 없던 가자고 단체전 챌린지⚡',
-              description: '친구와 같이 걸음블럭을 쌓으며 즐기는 단체전 챌린지! 지금 확인 해 보세요!',
+              title: 'gajago_team_challenge'.tr(),
+              description: 'team_challenge_description'.tr(),
               link: Link(
                 webUrl: shareUrl,
                 mobileWebUrl: shareUrl,
               ),
             ),
-            buttonTitle: '크루릴레이 구경하기',
+            buttonTitle: 'view_crew_relay'.tr(),
           );
           break;
         case ShareSource.createCrew:
           template = FeedTemplate(
             content: Content(
-              imageUrl: Uri.parse('https://s3.ap-northeast-2.amazonaws.com/image.staika.io/social/share_crew_relay.png'),
+              imageUrl: Uri.parse(
+                  'https://s3.ap-northeast-2.amazonaws.com/image.staika.io/social/share_crew_relay.png'),
               imageHeight: 400,
               imageWidth: 400,
-              title: '너를 초대하면 3000TIK을 아낄 수 있더라구…🙄',
-              description: '꼭.. 와달라는건 아니구...구경해보고 맘에 들면 말해줘.. 블럭 받게 해줄게!',
+              title: 'invite_friend_save_tik'.tr(),
+              description: 'crew_invite_optional'.tr(),
               link: Link(
                 webUrl: shareUrl,
                 mobileWebUrl: shareUrl,
               ),
             ),
-            buttonTitle: '크루릴레이 구경하기',
+            buttonTitle: 'view_crew_relay'.tr(),
           );
           break;
         case ShareSource.crewDetail:
           template = FeedTemplate(
             content: Content(
-              imageUrl: Uri.parse('https://s3.ap-northeast-2.amazonaws.com/image.staika.io/social/share_crew.png'),
+              imageUrl: Uri.parse(
+                  'https://s3.ap-northeast-2.amazonaws.com/image.staika.io/social/share_crew.png'),
               imageHeight: 400,
               imageWidth: 400,
-              title: '너, ${crewName!} 크루가 돼라!🎯\n$crewName 크루에서 당신을 초대했어요.',
-              description: '지금 참여하면 걸음블럭 2개를 쌓을 수 있어요!',
+              title: 'crew_invite'.tr(args: [crewName!, crewName]),
+              description: 'join_now_get_blocks'.tr(),
               link: Link(
                 webUrl: shareUrl,
                 mobileWebUrl: shareUrl,
               ),
             ),
-            buttonTitle: '크루릴레이 참여하기',
+            buttonTitle: 'join_crew_relay'.tr(),
           );
           break;
       }

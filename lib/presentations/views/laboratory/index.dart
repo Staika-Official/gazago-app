@@ -3,7 +3,8 @@ import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../../constants/routes.dart';
 
@@ -28,7 +29,8 @@ class Laboratory extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextField(
-                        onSubmitted: (String text) => debuggingController.verifyLabPassword(),
+                        onSubmitted: (String text) =>
+                            debuggingController.verifyLabPassword(),
                         decoration: const InputDecoration(
                           focusColor: skyBlueColor,
                           enabledBorder: OutlineInputBorder(
@@ -51,7 +53,10 @@ class Laboratory extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
-                        child: GazagoButton(buttonText: '확인', onTap: () => debuggingController.verifyLabPassword()),
+                        child: GazagoButton(
+                            buttonText: 'confirm'.tr(),
+                            onTap: () =>
+                                debuggingController.verifyLabPassword()),
                       )
                     ],
                   ),
@@ -62,38 +67,40 @@ class Laboratory extends StatelessWidget {
                 child: Column(
                   children: [
                     GazagoButton(
-                      onTap: () => Get.toNamed(Routes.laboratorySolanaCreateWallet),
-                      buttonText: '솔라나 지갑 생성',
+                      onTap: () =>
+                          Get.toNamed(Routes.laboratorySolanaCreateWallet),
+                      buttonText: 'create_solana_wallet'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                     GazagoButton(
                       onTap: () => Get.toNamed(Routes.laboratorySolanaTransfer),
-                      buttonText: '솔라나(토큰) 전송',
+                      buttonText: 'send_solana_tokens'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                     GazagoButton(
                       onTap: () => Get.toNamed(Routes.laboratoryEndPoint),
-                      buttonText: '엔드포인트 변경',
+                      buttonText: 'change_endpoint'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                     GazagoButton(
                       onTap: () => Get.toNamed(Routes.laboratoryFakeGps),
-                      buttonText: 'FAKE GPS 사용하기',
+                      buttonText: 'use_fake_gps'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                     GazagoButton(
                       onTap: () => Get.toNamed(Routes.laboratoryKakaoShare),
-                      buttonText: '카톡 공유하기',
+                      buttonText: 'share_on_kakao'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                     GazagoButton(
-                      onTap: () => Get.toNamed(Routes.laboratoryDetectChallengeCourse),
-                      buttonText: '챌린지 코스 확인하기',
+                      onTap: () =>
+                          Get.toNamed(Routes.laboratoryDetectChallengeCourse),
+                      buttonText: 'check_challenge_course'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                     GazagoButton(
                       onTap: () => Get.toNamed(Routes.laboratoryChangeLanguage),
-                      buttonText: '국가/지역 변경하기',
+                      buttonText: 'change_country_region'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                   ],

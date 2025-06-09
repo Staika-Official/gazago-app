@@ -9,7 +9,8 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class SendStikGoWallet extends StatelessWidget {
   const SendStikGoWallet({super.key});
@@ -23,7 +24,7 @@ class SendStikGoWallet extends StatelessWidget {
       },
       child: DefaultContainer(
         resizeToAvoidBottomInset: true,
-        titleText: 'GO 지갑으로 송금하기',
+        titleText: 'send_to_go_wallet_alt'.tr(),
         backgroundColor: subBg01Color,
         headerBackgroundColor: Colors.transparent,
         child: Obx(() {
@@ -31,7 +32,8 @@ class SendStikGoWallet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 28.0.sp, left: 22.sp, right: 22.sp),
+                padding:
+                    EdgeInsets.only(top: 28.0.sp, left: 22.sp, right: 22.sp),
                 child: Row(
                   children: [
                     CircleAvatar(
@@ -51,8 +53,8 @@ class SendStikGoWallet extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const StyledText(
-                            '보유 중',
+                          StyledText(
+                            'holding'.tr(),
                             color: lightGrayColor,
                             fontSize: 12,
                             lineHeight: 13,
@@ -74,16 +76,18 @@ class SendStikGoWallet extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 50.0.sp, left: 28.sp, right: 28.sp),
-                child: const StyledText(
-                  '보내는 STIK',
+                padding:
+                    EdgeInsets.only(top: 50.0.sp, left: 28.sp, right: 28.sp),
+                child: StyledText(
+                  'sending_stik'.tr(),
                   fontWeight: 500,
                   fontSize: 18,
                   lineHeight: 20,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 12.0.sp, left: 28.sp, right: 28.sp),
+                padding:
+                    EdgeInsets.only(top: 12.0.sp, left: 28.sp, right: 28.sp),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -105,26 +109,32 @@ class SendStikGoWallet extends StatelessWidget {
                         ),
                         focusedBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(width: 2, color: Color(0xFF363841)),
+                          borderSide:
+                              BorderSide(width: 2, color: Color(0xFF363841)),
                         ),
                         enabledBorder: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide: BorderSide(width: 2, color: Color(0xFF363841)),
+                          borderSide:
+                              BorderSide(width: 2, color: Color(0xFF363841)),
                         ),
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
                       ),
                       controller: controller.stikAmountTextController,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: false),
+                      keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true, signed: false),
                       textInputAction: TextInputAction.go,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'(\d*\.?\d*)')),
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'(\d*\.?\d*)')),
                         TextInputFormatter.withFunction((oldValue, newValue) {
                           if (newValue.text.isEmpty) {
                             return newValue.copyWith(text: '');
-                          } else if (newValue.text.compareTo(oldValue.text) != 0) {
-                            RegExp exp = RegExp("^(([1-9]\\d{0,8})|0)(\\.\\d{0,4}?)?\$");
+                          } else if (newValue.text.compareTo(oldValue.text) !=
+                              0) {
+                            RegExp exp =
+                                RegExp("^(([1-9]\\d{0,8})|0)(\\.\\d{0,4}?)?\$");
                             if (exp.hasMatch(newValue.text)) {
                               return newValue;
                             } else {
@@ -147,7 +157,8 @@ class SendStikGoWallet extends StatelessWidget {
                       onChanged: (value) {
                         controller.setAmount(value);
                       },
-                      onSubmitted: (val) => controller.openSendStikGoWalletAlert(),
+                      onSubmitted: (val) =>
+                          controller.openSendStikGoWalletAlert(),
                     ),
                   ],
                 ),
@@ -166,9 +177,9 @@ class SendStikGoWallet extends StatelessWidget {
                               onTap: null,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.0.sp),
-                                child: const Center(
+                                child: Center(
                                   child: StyledText(
-                                    '보내기',
+                                    'send_item'.tr(),
                                     color: deepGrayColor,
                                     fontSize: 18,
                                     fontWeight: 500,
@@ -184,17 +195,23 @@ class SendStikGoWallet extends StatelessWidget {
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
-                            color: controller.isValid.value ? skyBlueColor : popupBgColor,
+                            color: controller.isValid.value
+                                ? skyBlueColor
+                                : popupBgColor,
                             height: 60.sp,
                             alignment: Alignment.center,
                             child: InkWell(
-                              onTap: controller.isValid.value ? () => controller.openSendStikGoWalletAlert() : null,
+                              onTap: controller.isValid.value
+                                  ? () => controller.openSendStikGoWalletAlert()
+                                  : null,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 8.0.sp),
                                 child: Center(
                                   child: StyledText(
-                                    '보내기',
-                                    color: controller.isValid.value ? Colors.black : deepGrayColor,
+                                    'send_item'.tr(),
+                                    color: controller.isValid.value
+                                        ? Colors.black
+                                        : deepGrayColor,
                                     fontSize: 18,
                                     fontWeight: 500,
                                   ),

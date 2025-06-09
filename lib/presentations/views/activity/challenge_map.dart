@@ -1,6 +1,8 @@
 import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
@@ -8,19 +10,21 @@ import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 
 class ChallengeMap extends StatelessWidget {
   const ChallengeMap({super.key});
 
-  List<NCircleOverlay> renderStartPoint(ActivityController controller) {
-    List<NCircleOverlay> centerCircles = controller.allCoursesList
+  List<Circle> renderStartPoint(ActivityController controller) {
+    List<Circle> centerCircles = controller.allCoursesList
         .map(
-          (challenge) => NCircleOverlay(
-            id: 'ChallengeStartCenter${challenge.id!}',
-            center: NLatLng(challenge.startLat!, challenge.startLon!),
+          (challenge) => Circle(
+            circleId: CircleId('ChallengeStartCenter${challenge.id!}'),
+            center: LatLng(challenge.startLat!, challenge.startLon!),
             radius: 30,
-            color: skyBlueColor,
+            fillColor: skyBlueColor,
           ),
         )
         .toList();
@@ -28,14 +32,14 @@ class ChallengeMap extends StatelessWidget {
     return [...centerCircles];
   }
 
-  List<NCircleOverlay> renderEndPoint(ActivityController controller) {
-    List<NCircleOverlay> centerCircles = controller.allCoursesList
+  List<Circle> renderEndPoint(ActivityController controller) {
+    List<Circle> centerCircles = controller.allCoursesList
         .map(
-          (challenge) => NCircleOverlay(
-            id: 'ChallengeEndCenter${challenge.id!}',
-            center: NLatLng(challenge.endLat!, challenge.endLon!),
+          (challenge) => Circle(
+            circleId: CircleId('ChallengeEndCenter${challenge.id!}'),
+            center: LatLng(challenge.endLat!, challenge.endLon!),
             radius: 30.sp,
-            color: Colors.red,
+            fillColor: Colors.red,
           ),
         )
         .toList();
@@ -43,7 +47,8 @@ class ChallengeMap extends StatelessWidget {
     return [...centerCircles];
   }
 
-  Widget _renderChallengePoint(ActivityController controller, ChallengeHierarchyModel challenge) {
+  Widget _renderChallengePoint(
+      ActivityController controller, ChallengeHierarchyModel challenge) {
     return ListTileTheme(
       // dense: true,
       contentPadding: const EdgeInsets.all(0),
@@ -52,11 +57,15 @@ class ChallengeMap extends StatelessWidget {
         childrenPadding: const EdgeInsets.all(0),
         title: Text(
           challenge.name,
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500, color: Colors.white),
+          style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w500,
+              color: Colors.white),
         ),
         collapsedIconColor: lightGrayColor,
         iconColor: skyBlueColor,
-        tilePadding: EdgeInsets.only(left: 20.sp, right: 20.sp, top: 0, bottom: 0),
+        tilePadding:
+            EdgeInsets.only(left: 20.sp, right: 20.sp, top: 0, bottom: 0),
         //children: challenge.course.map(course => _renderCourse(controller, course)).toList(),
         children: challenge.course.map((course) {
           return _renderCourseList(controller, course);
@@ -65,7 +74,8 @@ class ChallengeMap extends StatelessWidget {
     );
   }
 
-  Widget _renderCourseList(ActivityController controller, ChallengeCourseModel course) {
+  Widget _renderCourseList(
+      ActivityController controller, ChallengeCourseModel course) {
     return Builder(builder: (context) {
       return Obx(() {
         return ListTile(
@@ -73,11 +83,14 @@ class ChallengeMap extends StatelessWidget {
               controller.showPathPointMarkers(course);
             },
             dense: MediaQuery.of(context).size.width < 320,
-            visualDensity: VisualDensity(vertical: MediaQuery.of(context).size.width < 320 ? -3 : 0),
+            visualDensity: VisualDensity(
+                vertical: MediaQuery.of(context).size.width < 320 ? -3 : 0),
             subtitle: StyledText(
               controller.getCourseRouteString(course),
-              // '시작: ${course.startPointName} - 도착: ${course.endPointName}',
-              color: (controller.challengeSelectedIndex.value == course.id) ? skyBlueColor : deepGrayColor,
+              // 'start_end_points_2'.tr('${course.startPointName}', '${course.endPointName}'),
+              color: (controller.challengeSelectedIndex.value == course.id)
+                  ? skyBlueColor
+                  : deepGrayColor,
               fontSize: 14,
               lineHeight: 14,
               fontWeight: 500,
@@ -85,7 +98,9 @@ class ChallengeMap extends StatelessWidget {
             minLeadingWidth: 10,
             leading: Padding(
               padding: EdgeInsets.only(left: 30.sp, top: 5),
-              child: (controller.challengeSelectedIndex.value == course.id) ? iconChallengeCheckOn : iconChallengeCheckOff,
+              child: (controller.challengeSelectedIndex.value == course.id)
+                  ? iconChallengeCheckOn
+                  : iconChallengeCheckOff,
             ),
             contentPadding: EdgeInsets.only(right: 20.sp),
             // title: Text(
@@ -93,20 +108,26 @@ class ChallengeMap extends StatelessWidget {
             //   style: TextStyle(color: (controller.challengeSelectedIndex == course.id) ? skyBlueColor : Colors.white),
             // ),
 
-            title: StyledText(course.secondName!, fontSize: 17, color: (controller.challengeSelectedIndex.value == course.id) ? skyBlueColor : Colors.white));
+            title: StyledText(course.secondName!,
+                fontSize: 17,
+                color: (controller.challengeSelectedIndex.value == course.id)
+                    ? skyBlueColor
+                    : Colors.white));
       });
     });
   }
 
   Widget _renderChallenges(ActivityController controller) {
-    List<ChallengeHierarchyModel> challenges = controller.hierarchyChallengesList;
+    List<ChallengeHierarchyModel> challenges =
+        controller.hierarchyChallengesList;
 
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.all(0.0),
       itemCount: challenges.length,
-      itemBuilder: (BuildContext context, int index) => _renderChallengePoint(controller, challenges[index]),
+      itemBuilder: (BuildContext context, int index) =>
+          _renderChallengePoint(controller, challenges[index]),
     );
   }
 
@@ -142,32 +163,51 @@ class ChallengeMap extends StatelessWidget {
           return Stack(
             alignment: Alignment.topCenter,
             children: [
-              NaverMap(
-                options:  NaverMapViewOptions(
-                  nightModeEnable: true,
-                  tiltGesturesEnable: false,
-                  contentPadding: const EdgeInsets.only(bottom: 100),
-                  initialCameraPosition: controller.currentLocation.value.latitude > 0 ? NCameraPosition(
-                    target: NLatLng(controller.currentLocation.value.latitude, controller.currentLocation.value.longitude),
-                    zoom: 14,
-                  ) : NaverMapViewOptions.seoulCityHall,
-                  mapType: NMapType.basic,
-                  activeLayerGroups: const [NLayerGroup.mountain],
+              Obx(
+                () => GoogleMap(
+                  markers: Set.of(controller.drawingMarkers),
+                  polylines: Set.of(controller.drawingPolylines),
+                  polygons: Set.of(controller.drawingPolygons),
+                  circles: Set.of(controller.drawingCircles),
+                  tiltGesturesEnabled: true,
+                  padding: const EdgeInsets.only(bottom: 100),
+                  mapType: MapType.normal,
+                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                    Factory<OneSequenceGestureRecognizer>(
+                      () => EagerGestureRecognizer(),
+                    ),
+                  },
+                  initialCameraPosition:
+                      controller.currentLocation.value.latitude > 0
+                          ? CameraPosition(
+                              target: LatLng(
+                                  controller.currentLocation.value.latitude,
+                                  controller.currentLocation.value.longitude),
+                              zoom: 14,
+                            )
+                          : const CameraPosition(
+                              target: LatLng(37.5665, 126.978),
+                              zoom: 14,
+                            ),
+                  onMapCreated: (mapController) {
+                    controller.challengeMapController = mapController;
+                    controller.onChallengeMapCreated();
+                    Future.delayed(const Duration(milliseconds: 100), () {
+                      controller.addOverlayAll(
+                        {
+                          ...controller.challengeMarkers,
+                          ...controller.selectedChallengeMarkers
+                        },
+                      );
+                    });
+                  },
                 ),
-                onMapReady:(mapController){
-                  controller.challengeMapController = mapController;
-                  controller.onChallengeMapCreated();
-                  mapController.addOverlayAll(
-                    {...controller.challengeMarkers, ...controller.selectedChallengeMarkers},
-                  );
-                } ,
-
-
               ),
               Padding(
                 padding: EdgeInsets.only(top: 68.sp),
                 child: Container(
-                  padding: EdgeInsets.only(top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
+                  padding: EdgeInsets.only(
+                      top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
                   decoration: BoxDecoration(
                     color: popupBgColor,
                     borderRadius: BorderRadius.circular(14.sp),
@@ -181,8 +221,8 @@ class ChallengeMap extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: const StyledText(
-                    '챌린지 코스',
+                  child: StyledText(
+                    'challenge_course'.tr(),
                     fontSize: 16,
                     fontWeight: 500,
                     lineHeight: 22,
@@ -210,7 +250,11 @@ class ChallengeMap extends StatelessWidget {
         persistentHeader: Container(
           padding: EdgeInsets.only(bottom: 5.sp),
           height: 30,
-          decoration: BoxDecoration(color: const Color(0xFF4A4D57), borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp))),
+          decoration: BoxDecoration(
+              color: const Color(0xFF4A4D57),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15.sp),
+                  topRight: Radius.circular(15.sp))),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

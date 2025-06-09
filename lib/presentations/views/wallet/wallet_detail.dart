@@ -11,7 +11,8 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class WalletDetail extends StatelessWidget {
   const WalletDetail({super.key});
@@ -19,25 +20,25 @@ class WalletDetail extends StatelessWidget {
   // Widget renderButtons(WalletDetailController controller) {
   //   Widget child;
   //   if (controller.isInternalTransfer.value) {
-  //     child = ElevatedButton(onPressed: () => controller.toWalletAction(WalletActionType.sendToAsset), child: Text('내 지갑으로 보내기'));
+  //     child = ElevatedButton(onPressed: () => controller.toWalletAction(WalletActionType.sendToAsset), child: Text('send_to_my_wallet'.tr()));
   //   } else if (controller.isRechargeable.value) {
-  //     child = ElevatedButton(onPressed: () => controller.toWalletAction(WalletActionType.recharge), child: Text('충전'));
+  //     child = ElevatedButton(onPressed: () => controller.toWalletAction(WalletActionType.recharge), child: Text('recharge'.tr()));
   //   } else {
   //     child = Row(
   //       children: [
-  //         Expanded(child: ElevatedButton(onPressed: () => controller.toWalletAction(WalletActionType.receive), child: Text('받기'))),
+  //         Expanded(child: ElevatedButton(onPressed: () => controller.toWalletAction(WalletActionType.receive), child: Text('receive'.tr()))),
   //         Expanded(
   //             child: ElevatedButton(
   //                 onPressed: () => controller.toWalletAction(WalletActionType.sendToInventory),
   //                 child: Text(
-  //                   '인벤토리로\n보내기',
+  //                   'send_to_inventory_1'.tr(),
   //                   textAlign: TextAlign.center,
   //                 ))),
   //         Expanded(
   //             child: ElevatedButton(
   //                 onPressed: () => controller.toWalletAction(WalletActionType.sendOutside),
   //                 child: Text(
-  //                   '회부 지갑으로\n보내기',
+  //                   'send_to_referral_wallet'.tr(),
   //                   textAlign: TextAlign.center,
   //                 ))),
   //       ],
@@ -50,7 +51,8 @@ class WalletDetail extends StatelessWidget {
     return controller.transactionsList
         .map(
           (transaction) => Container(
-            padding: EdgeInsets.only(left: 16.sp, right: 16.sp, top: 12.sp, bottom: 13.sp),
+            padding: EdgeInsets.only(
+                left: 16.sp, right: 16.sp, top: 12.sp, bottom: 13.sp),
             decoration: BoxDecoration(
               border: BorderDirectional(
                 bottom: BorderSide(
@@ -74,55 +76,56 @@ class WalletDetail extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            transaction.title != null
-                                ? transaction.type == 'FEE'
-                                    ? '${transaction.title!} 수수료'
-                                    : transaction.title!
-                                : '',
-                              style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
-                                  color: AppColorData.regular().colorTextPrimary
-                              )
-                          ),
+                              transaction.title != null
+                                  ? transaction.type == 'FEE'
+                                      ? 'transaction_fee'
+                                          .tr(args: [transaction.title!])
+                                      : transaction.title!
+                                  : '',
+                              style: AppTextStyleData.regular()
+                                  .koBodyMediumXl
+                                  .copyWith(
+                                      color: AppColorData.regular()
+                                          .colorTextPrimary)),
                           Text(
-                            '${transaction.type == 'IN' ? '+' : '-'}${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.symbol == 'STIK' ? 4 : transaction.decimals!, isAutoDecimal: true, roundType: RoundType.floor)} ${transaction.symbol! == 'PTIK' ? 'TIK' : transaction.symbol!}',
-                            style: AppTextStyleData.regular().koBodySemiboldXl.copyWith(
-                              color: AppColorData.regular().colorTextPrimary
-                            )
-                          ),
+                              '${transaction.type == 'IN' ? '+' : '-'}${formatDecimalPlaces(double.parse(transaction.uiAmountString!), transaction.symbol == 'STIK' ? 4 : transaction.decimals!, isAutoDecimal: true, roundType: RoundType.floor)} ${transaction.symbol! == 'PTIK' ? 'TIK' : transaction.symbol!}',
+                              style: AppTextStyleData.regular()
+                                  .koBodySemiboldXl
+                                  .copyWith(
+                                      color: AppColorData.regular()
+                                          .colorTextPrimary)),
                         ],
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 4.sp),
                         child: Row(
-
                           children: [
-                            Text(
-                              transaction.content ?? '',
-                                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                    color: AppColorData.regular().colorTextPrimary
-                                )
-                            ),
-
+                            Text(transaction.content ?? '',
+                                style: AppTextStyleData.regular()
+                                    .koBodyMediumMd
+                                    .copyWith(
+                                        color: AppColorData.regular()
+                                            .colorTextPrimary)),
                           ],
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 8.sp),
-                        child:    Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                                formatHipenDate(transaction.createdDate!),
-                                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                    color: AppColorData.regular().colorTextTertiary
-                                )
-                            ),
-                            Text(
-                              '완료',
-                                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                                    color: AppColorData.regular().colorTextTertiary
-                                )
-                            ),
+                            Text(formatHipenDate(transaction.createdDate!),
+                                style: AppTextStyleData.regular()
+                                    .koBodyMediumMd
+                                    .copyWith(
+                                        color: AppColorData.regular()
+                                            .colorTextTertiary)),
+                            Text('complete_action'.tr(),
+                                style: AppTextStyleData.regular()
+                                    .koBodyMediumMd
+                                    .copyWith(
+                                        color: AppColorData.regular()
+                                            .colorTextTertiary)),
                           ],
                         ),
                       ),
@@ -155,12 +158,14 @@ class WalletDetail extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 16.5.sp),
               child: CircleAvatar(
-                foregroundImage: controller.selectedAsset.value.logoUrl != '' && controller.selectedAsset.value.logoUrl != null
+                foregroundImage: controller.selectedAsset.value.logoUrl != '' &&
+                        controller.selectedAsset.value.logoUrl != null
                     ? CachedNetworkImageProvider(
                         controller.selectedAsset.value.logoUrl!,
                         headers: imageNetworkHeader,
                       )
-                    : const sp.Svg('assets/images/common/ico_token_tik.svg') as ImageProvider,
+                    : const sp.Svg('assets/images/common/ico_token_tik.svg')
+                        as ImageProvider,
               ),
             ),
             Padding(
@@ -170,20 +175,32 @@ class WalletDetail extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      formatDecimalPlaces(double.parse(controller.assetDetail.value.balance.uiAmountString ?? '0'),
-                          controller.assetDetail.value.balance.symbol == 'STIK' ? 4 : controller.assetDetail.value.balance.decimals!,
-                          isAutoDecimal: true, roundType: RoundType.floor),
-                      style: AppTextStyleData.regular().koHeadingSemiboldLg.copyWith(
-                        color: AppColorData.regular().colorTextPrimary,
-                      ),
+                      formatDecimalPlaces(
+                          double.parse(controller
+                                  .assetDetail.value.balance.uiAmountString ??
+                              '0'),
+                          controller.assetDetail.value.balance.symbol == 'STIK'
+                              ? 4
+                              : controller.assetDetail.value.balance.decimals!,
+                          isAutoDecimal: true,
+                          roundType: RoundType.floor),
+                      style: AppTextStyleData.regular()
+                          .koHeadingSemiboldLg
+                          .copyWith(
+                            color: AppColorData.regular().colorTextPrimary,
+                          ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 5.sp),
                       child: Text(
-                        controller.selectedAsset.value.symbol! == 'TOTAL_TIK' ? 'TIK' : controller.selectedAsset.value.symbol!,
-                        style: AppTextStyleData.regular().koHeadingSemiboldLg.copyWith(
-                          color: AppColorData.regular().colorTextPrimary,
-                        ),
+                        controller.selectedAsset.value.symbol! == 'TOTAL_TIK'
+                            ? 'TIK'
+                            : controller.selectedAsset.value.symbol!,
+                        style: AppTextStyleData.regular()
+                            .koHeadingSemiboldLg
+                            .copyWith(
+                              color: AppColorData.regular().colorTextPrimary,
+                            ),
                       ),
                     ),
                   ],
@@ -204,7 +221,8 @@ class WalletDetail extends StatelessWidget {
               child: controller.transactionsList.isEmpty
                   ? LayoutBuilder(builder: (context, constraints) {
                       return Padding(
-                        padding: EdgeInsets.only(bottom: constraints.maxHeight / 3 * 1),
+                        padding: EdgeInsets.only(
+                            bottom: constraints.maxHeight / 3 * 1),
                         child: Center(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -212,9 +230,9 @@ class WalletDetail extends StatelessWidget {
                               iconEmpty,
                               Padding(
                                 padding: EdgeInsets.only(top: 20.sp),
-                                child: const StyledText(
-                                  '거래내역이 없습니다.',
-                                  color: Color(0xff7b7b7b),
+                                child: StyledText(
+                                  'no_transaction_history'.tr(),
+                                  color: const Color(0xff7b7b7b),
                                   fontSize: 16,
                                   lineHeight: 10,
                                   fontWeight: 500,
@@ -235,8 +253,11 @@ class WalletDetail extends StatelessWidget {
                               ...renderTransactionList(controller),
                               if (controller.dataGetLoading.value)
                                 Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 20.0.sp),
-                                  child: const Center(child: CircularProgressIndicator(color:skyBlueColor)),
+                                  padding:
+                                      EdgeInsets.symmetric(vertical: 20.0.sp),
+                                  child: const Center(
+                                      child: CircularProgressIndicator(
+                                          color: skyBlueColor)),
                                 )
                             ],
                           ),
@@ -250,16 +271,22 @@ class WalletDetail extends StatelessWidget {
                               child: Ink(
                                 width: 50,
                                 height: 50,
-                                decoration: BoxDecoration(color: skyBlueColor, borderRadius: BorderRadius.circular(50), border: Border.all(color: Colors.black), boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black,
-                                    offset: Offset(0, 2),
-                                    blurRadius: 0.0,
-                                    spreadRadius: 0.0,
-                                  ),
-                                ]),
+                                decoration: BoxDecoration(
+                                    color: skyBlueColor,
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(color: Colors.black),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black,
+                                        offset: Offset(0, 2),
+                                        blurRadius: 0.0,
+                                        spreadRadius: 0.0,
+                                      ),
+                                    ]),
                                 child: InkWell(
-                                  onTap: () => controller.transactionScrollController.animateTo(
+                                  onTap: () => controller
+                                      .transactionScrollController
+                                      .animateTo(
                                     0,
                                     duration: const Duration(
                                       milliseconds: 100,

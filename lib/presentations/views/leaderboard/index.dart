@@ -5,7 +5,8 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/views/archive/index.dart';
 import 'package:gaza_go/presentations/views/leaderboard/leaderboard.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class RankingHome extends StatelessWidget {
   const RankingHome({super.key});
@@ -44,11 +45,11 @@ class RankingHome extends StatelessWidget {
               tabs: [
                 Tab(
                   height: 50.sp,
-                  text: '통합 리더보드',
+                  text: 'integrated_leaderboard'.tr(),
                 ),
                 Tab(
                   height: 50.sp,
-                  text: '운동기록',
+                  text: 'exercise_record'.tr(),
                 ),
               ],
             ),

@@ -4,7 +4,8 @@ import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../constants/enums.dart';
@@ -44,29 +45,30 @@ class ResponseErrorLogs extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GazagoButton(
-                      onTap: () => debuggingController.handleInitLogs('responseErrorLogs'),
-                      buttonText: '초기화',
+                      onTap: () => debuggingController
+                          .handleInitLogs('responseErrorLogs'),
+                      buttonText: 'reset'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                   ),
                   Expanded(
                     child: GazagoButton(
                       onTap: () => debuggingController.onDisableDebuggingMode(),
-                      buttonText: '멈춤',
+                      buttonText: 'pause'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                   ),
                   Expanded(
                     child: GazagoButton(
                       onTap: () => debuggingController.onEnableDebuggingMode(),
-                      buttonText: '시작',
+                      buttonText: 'start'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                   ),
                   // Expanded(
                   //   child: GazagoButton(
                   //     onTap: () => null,
-                  //     buttonText: '전송',
+                  //     buttonText: 'send'.tr(),
                   //     buttonColor: skyBlueColor,
                   //   ),
                   // )
@@ -77,7 +79,8 @@ class ResponseErrorLogs extends StatelessWidget {
                 builder: (context, box, widget) {
                   return Column(
                     children: [
-                      ...renderErrorLogList(box.get(HiveKey.responseErrorLogs.name) ?? []),
+                      ...renderErrorLogList(
+                          box.get(HiveKey.responseErrorLogs.name) ?? []),
                     ],
                   );
                 },

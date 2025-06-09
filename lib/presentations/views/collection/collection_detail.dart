@@ -16,32 +16,24 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
-
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 
 class CollectionDetail extends StatelessWidget {
   const CollectionDetail({super.key});
 
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
-
   Widget renderCollectionDateStatus(date) {
     DateTime targetTime = DateTime.parse(date);
     DateTime currentTime = DateTime.now();
     bool isExpired = currentTime.isAfter(targetTime);
-    return Text(isExpired ? '종료' : '진행중',
-        style: AppTextStyleData
-            .regular()
-            .koBodyMediumSm
-            .copyWith(
-          color: isExpired ? AppColorData
-              .regular()
-              .colorBgInteractivePrimaryDisabled : AppColorData
-              .regular()
-              .colorPointCyan,
-
-        )
-    );
+    return Text(isExpired ? 'finished'.tr() : 'in_progress_1'.tr(),
+        style: AppTextStyleData.regular().koBodyMediumSm.copyWith(
+              color: isExpired
+                  ? AppColorData.regular().colorBgInteractivePrimaryDisabled
+                  : AppColorData.regular().colorPointCyan,
+            ));
   }
 
   String renderGatheringRewardName(data) {
@@ -70,7 +62,8 @@ class CollectionDetail extends StatelessWidget {
             data.item.imageUrl,
             width: 60.sp,
             height: 60.sp,
-            placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(color:skyBlueColor),
+            placeholderBuilder: (BuildContext context) =>
+                const CircularProgressIndicator(color: skyBlueColor),
           );
         } else {
           return Image.network(
@@ -78,20 +71,21 @@ class CollectionDetail extends StatelessWidget {
             width: 60.sp,
             height: 60.sp,
             colorBlendMode: BlendMode.modulate,
-            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+            errorBuilder: (BuildContext context, Object exception,
+                StackTrace? stackTrace) {
               return const Icon(Icons.error);
             },
           );
         }
 
       case 'BADGE':
- 
         if (data.badgeComposeConfig.imageUrl.contains('.svg')) {
           return SvgPicture.network(
             data.badgeComposeConfig.imageUrl,
             width: 60.sp,
             height: 60.sp,
-            placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(color:skyBlueColor),
+            placeholderBuilder: (BuildContext context) =>
+                const CircularProgressIndicator(color: skyBlueColor),
           );
         } else {
           return Image.network(
@@ -99,7 +93,8 @@ class CollectionDetail extends StatelessWidget {
             width: 60.sp,
             height: 60.sp,
             colorBlendMode: BlendMode.modulate,
-            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+            errorBuilder: (BuildContext context, Object exception,
+                StackTrace? stackTrace) {
               return const Icon(Icons.error);
             },
           );
@@ -127,29 +122,23 @@ class CollectionDetail extends StatelessWidget {
     }
   }
 
-  List<dynamic> renderGatheringCollectionList(CollectionDetailController controller, data, context) {
+  List<dynamic> renderGatheringCollectionList(
+      CollectionDetailController controller, data, context) {
     return data.map((item) {
       return Padding(
         padding: EdgeInsets.all(0.0.sp),
         child: Container(
-          width: (MediaQuery
-              .of(context)
-              .size
-              .width / 3) - 17.sp,
+          width: (MediaQuery.of(context).size.width / 3) - 17.sp,
           height: 180.sp,
           decoration: BoxDecoration(
-            color: AppColorData
-                .regular()
-                .colorBgPrimary,
+            color: AppColorData.regular().colorBgPrimary,
             borderRadius: BorderRadius.all(
-              Radius.circular(AppDoubleData
-                  .regular()
-                  .numberRadius12),
+              Radius.circular(AppDoubleData.regular().numberRadius12),
             ),
-
           ),
           child: Padding(
-            padding: EdgeInsets.only(top: 8.0.sp, bottom: 16.sp, left: 12.sp, right: 12.sp),
+            padding: EdgeInsets.only(
+                top: 8.0.sp, bottom: 16.sp, left: 12.sp, right: 12.sp),
             child: Column(
               children: [
                 Column(
@@ -159,67 +148,61 @@ class CollectionDetail extends StatelessWidget {
                       child: Center(
                         child: Text(
                           renderGatheringRewardName(item),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          style: AppTextStyleData
-                              .regular()
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyleData.regular()
                               .koBodyMediumMd
                               .copyWith(
-                              color: AppColorData
-                                  .regular()
-                                  .colorTextPrimary,
-                              height: 1.2
-                          ),
+                                  color:
+                                      AppColorData.regular().colorTextPrimary,
+                                  height: 1.2),
                           textAlign: TextAlign.center,
                         ),
-
                       ),
                     ),
-                    controller.detailCollection.value.toDateTime != null && controller.checkCollectionExpired(controller.detailCollection.value.toDateTime) ?
-                    Text('완료', style: AppTextStyleData
-                        .regular()
-                        .koBodyMediumSm
-                        .copyWith(
-                      color: AppColorData
-                          .regular()
-                          .colorTextBrand,
-
-                    ),) :
-                    item.type == 'ITEM' || item.type == 'BADGE' ?
-                    Padding(
-                      padding: EdgeInsets.only(top: 2.0.sp),
-                      child: FittedBox(
-                        child: Text(
-                          '${controller.detailCollection.value.alreadyIssued ? formatDecimalPlaces(item.quantity, 0) : item.completeAmount != null ? item.completeAmount >= item.quantity ? formatDecimalPlaces(item.quantity, 0) : item.completeAmount : 0} / ${formatDecimalPlaces(item.quantity, 0)}',
-                          style: AppTextStyleData
-                              .regular()
-                              .koBodyMediumSm
-                              .copyWith(
-                            color: AppColorData
-                                .regular()
-                                .colorTextSecondary,
-                          ),
-                        ),
-                      ),
-                    ) : Padding(
-                      padding: EdgeInsets.only(top: 2.0.sp),
-                      child: FittedBox(
-                        child: Text(
-                          '${controller.detailCollection.value.alreadyIssued ? formatDecimalPlaces(item.quantity, 2, isAutoDecimal: true) : formatDecimalPlaces(controller.currentMyTokenCondition(item.type, item.quantity), 2, isAutoDecimal: true)} / ${formatDecimalPlaces(item.quantity, 2, isAutoDecimal: true)}',
-                          style: AppTextStyleData
-                              .regular()
-                              .koBodyMediumSm
-                              .copyWith(
-                            color: AppColorData
-                                .regular()
-                                .colorTextSecondary,
-                          ),
-                        ),
-                      ),
-                    ),
+                    controller.detailCollection.value.toDateTime != null &&
+                            controller.checkCollectionExpired(
+                                controller.detailCollection.value.toDateTime)
+                        ? Text(
+                            'complete_action'.tr(),
+                            style: AppTextStyleData.regular()
+                                .koBodyMediumSm
+                                .copyWith(
+                                  color: AppColorData.regular().colorTextBrand,
+                                ),
+                          )
+                        : item.type == 'ITEM' || item.type == 'BADGE'
+                            ? Padding(
+                                padding: EdgeInsets.only(top: 2.0.sp),
+                                child: FittedBox(
+                                  child: Text(
+                                    '${controller.detailCollection.value.alreadyIssued ? formatDecimalPlaces(item.quantity, 0) : item.completeAmount != null ? item.completeAmount >= item.quantity ? formatDecimalPlaces(item.quantity, 0) : item.completeAmount : 0} / ${formatDecimalPlaces(item.quantity, 0)}',
+                                    style: AppTextStyleData.regular()
+                                        .koBodyMediumSm
+                                        .copyWith(
+                                          color: AppColorData.regular()
+                                              .colorTextSecondary,
+                                        ),
+                                  ),
+                                ),
+                              )
+                            : Padding(
+                                padding: EdgeInsets.only(top: 2.0.sp),
+                                child: FittedBox(
+                                  child: Text(
+                                    '${controller.detailCollection.value.alreadyIssued ? formatDecimalPlaces(item.quantity, 2, isAutoDecimal: true) : formatDecimalPlaces(controller.currentMyTokenCondition(item.type, item.quantity), 2, isAutoDecimal: true)} / ${formatDecimalPlaces(item.quantity, 2, isAutoDecimal: true)}',
+                                    style: AppTextStyleData.regular()
+                                        .koBodyMediumSm
+                                        .copyWith(
+                                          color: AppColorData.regular()
+                                              .colorTextSecondary,
+                                        ),
+                                  ),
+                                ),
+                              ),
                     // StyledText(item.percentage.toString()),
 
-                    //         : Text('완료', style: AppTextStyleData
+                    //         : Text('complete_action'.tr(), style: AppTextStyleData
                     //     .regular()
                     //     .koBodyMediumSm
                     //     .copyWith(
@@ -233,49 +216,69 @@ class CollectionDetail extends StatelessWidget {
                 Expanded(
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: Stack(
-                        children: [
-                          if(item.completeAmount != null)
-                            SizedBox(
-                                width: 89.sp,
-                                height: 89.sp,
-                                child: Center(
-                                  child: item.type == 'ITEM' || item.type == 'BADGE' ? Opacity(
-                                      opacity: controller.detailCollection.value.alreadyIssued ? 1 : item.completeAmount / item.quantity >= 1 ? 1 : 0.5,
-                                      child: renderGatheringRewardImage(item)
-                                  ) : Opacity(
-                                      opacity: controller.detailCollection.value.alreadyIssued ? 1 : controller.imageConditions(item.type, item.quantity) ? 1 : 0.5,
-                                      child: renderGatheringRewardImage(item)
-                                  ),
-                                )
+                    child: Stack(children: [
+                      if (item.completeAmount != null)
+                        SizedBox(
+                            width: 89.sp,
+                            height: 89.sp,
+                            child: Center(
+                              child: item.type == 'ITEM' || item.type == 'BADGE'
+                                  ? Opacity(
+                                      opacity: controller.detailCollection.value
+                                              .alreadyIssued
+                                          ? 1
+                                          : item.completeAmount /
+                                                      item.quantity >=
+                                                  1
+                                              ? 1
+                                              : 0.5,
+                                      child: renderGatheringRewardImage(item))
+                                  : Opacity(
+                                      opacity: controller.detailCollection.value
+                                              .alreadyIssued
+                                          ? 1
+                                          : controller.imageConditions(
+                                                  item.type, item.quantity)
+                                              ? 1
+                                              : 0.5,
+                                      child: renderGatheringRewardImage(item)),
+                            )),
+                      item.type == 'ITEM' || item.type == 'BADGE'
+                          ? CustomPaint(
+                              size: Size(89.sp, 89.sp),
+                              painter: GaugePainter(
+                                percentage: controller
+                                        .detailCollection.value.alreadyIssued
+                                    ? 100
+                                    : item.completeAmount != null
+                                        ? (item.completeAmount /
+                                                item.quantity) *
+                                            100
+                                        : 0,
+                                fillColor:
+                                    AppColorData.regular().colorPointCyan,
+                                backgroundColor:
+                                    AppColorData.regular().colorBgTertiary,
+                                gaugeType: GaugeType.circular,
+                              ),
+                            )
+                          : CustomPaint(
+                              size: Size(89.sp, 89.sp),
+                              painter: GaugePainter(
+                                percentage: controller
+                                        .detailCollection.value.alreadyIssued
+                                    ? 100
+                                    : controller
+                                        .currentMyTokenConditionPercentage(
+                                            item.type, item.quantity),
+                                fillColor:
+                                    AppColorData.regular().colorPointCyan,
+                                backgroundColor:
+                                    AppColorData.regular().colorBgTertiary,
+                                gaugeType: GaugeType.circular,
+                              ),
                             ),
-                          item.type == 'ITEM' || item.type == 'BADGE' ? CustomPaint(
-                            size: Size(89.sp, 89.sp),
-                            painter: GaugePainter(
-                              percentage: controller.detailCollection.value.alreadyIssued ? 100 : item.completeAmount != null ? (item.completeAmount / item.quantity) * 100 : 0,
-                              fillColor: AppColorData
-                                  .regular()
-                                  .colorPointCyan,
-                              backgroundColor: AppColorData
-                                  .regular()
-                                  .colorBgTertiary,
-                              gaugeType: GaugeType.circular,
-                            ),
-                          ) : CustomPaint(
-                            size: Size(89.sp, 89.sp),
-                            painter: GaugePainter(
-                              percentage: controller.detailCollection.value.alreadyIssued ? 100 : controller.currentMyTokenConditionPercentage(item.type, item.quantity),
-                              fillColor: AppColorData
-                                  .regular()
-                                  .colorPointCyan,
-                              backgroundColor: AppColorData
-                                  .regular()
-                                  .colorBgTertiary,
-                              gaugeType: GaugeType.circular,
-                            ),
-                          ),
-                        ]
-                    ),
+                    ]),
                   ),
                 ),
               ],
@@ -286,12 +289,11 @@ class CollectionDetail extends StatelessWidget {
     }).toList();
   }
 
-
   @override
   Widget build(BuildContext context) {
     CollectionController collectionController = Get.find();
-    CollectionDetailController controller = Get.put(CollectionDetailController());
-
+    CollectionDetailController controller =
+        Get.put(CollectionDetailController());
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -301,277 +303,348 @@ class CollectionDetail extends StatelessWidget {
             isShowBackButton: true,
             isShowPreferencesButton: false,
           )),
-      backgroundColor: AppColorData
-          .regular()
-          .colorBgTertiary,
-      body:
-      SingleChildScrollView(
+      backgroundColor: AppColorData.regular().colorBgTertiary,
+      body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Obx(() {
           return Column(
             children: [
               Container(
-                color: AppColorData
-                    .regular()
-                    .colorBgPrimary,
+                color: AppColorData.regular().colorBgPrimary,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 37.0.sp, right: 37.0.sp, top: 16.sp, bottom: 24.sp),
+                  padding: EdgeInsets.only(
+                      left: 37.0.sp, right: 37.0.sp, top: 16.sp, bottom: 24.sp),
                   child: Column(
                     children: [
                       Center(
                           child: Text(
-                            controller.detailCollection.value.name,
-                            style: AppTextStyleData
-                                .regular()
-                                .koHeadingMediumSm
-                                .copyWith(
-                              color: AppColorData
-                                  .regular()
-                                  .colorTextPrimary,
+                        controller.detailCollection.value.name,
+                        style: AppTextStyleData.regular()
+                            .koHeadingMediumSm
+                            .copyWith(
+                              color: AppColorData.regular().colorTextPrimary,
                             ),
-                          )
-                      ),
-                      if(controller.detailCollection.value.toDateTime != null)
+                      )),
+                      if (controller.detailCollection.value.toDateTime != null)
                         Padding(
                           padding: EdgeInsets.only(top: 6.0.sp),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                '${formatDateUntilDay(controller.detailCollection.value.toDateTime)}까지',
-                                style: AppTextStyleData
-                                    .regular()
+                                'collection_deadline'.tr(args: [
+                                  formatDateUntilDay(controller
+                                      .detailCollection.value.toDateTime)
+                                ]),
+                                style: AppTextStyleData.regular()
                                     .koBodyMediumMd
                                     .copyWith(
-                                  color: AppColorData
-                                      .regular()
-                                      .colorTextTertiary,
-                                ),
+                                      color: AppColorData.regular()
+                                          .colorTextTertiary,
+                                    ),
                               ),
                               Text(
                                 ' · ',
-                                style: AppTextStyleData
-                                    .regular()
+                                style: AppTextStyleData.regular()
                                     .koBodyMediumMd
                                     .copyWith(
-                                  color: AppColorData
-                                      .regular()
-                                      .colorTextSecondary,
-                                ),
+                                      color: AppColorData.regular()
+                                          .colorTextSecondary,
+                                    ),
                               ),
-                              renderCollectionDateStatus(controller.detailCollection.value.toDateTime)
+                              renderCollectionDateStatus(
+                                  controller.detailCollection.value.toDateTime)
                             ],
-
                           ),
                         ),
                       Padding(
-                        padding: EdgeInsets.only(top: controller.detailCollection.value.toDateTime != null ? 12.0.sp : 36.sp),
+                        padding: EdgeInsets.only(
+                            top: controller.detailCollection.value.toDateTime !=
+                                    null
+                                ? 12.0.sp
+                                : 36.sp),
                         child: InkWell(
-                          onTap: () =>
-                          controller.detailCollection.value.gatheringReward.type == 'ITEM' || controller.detailCollection.value.gatheringReward.type == 'BADGE' ? Get.toNamed(
-                              Routes.collectionRewardDetail, arguments: {'item': controller.detailCollection.value.gatheringReward}) : null,
+                          onTap: () => controller.detailCollection.value
+                                          .gatheringReward.type ==
+                                      'ITEM' ||
+                                  controller.detailCollection.value
+                                          .gatheringReward.type ==
+                                      'BADGE'
+                              ? Get.toNamed(Routes.collectionRewardDetail,
+                                  arguments: {
+                                      'item': controller.detailCollection.value
+                                          .gatheringReward
+                                    })
+                              : null,
                           child: Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: AppColorData
-                                  .regular()
-                                  .colorBgTertiary,
+                              color: AppColorData.regular().colorBgTertiary,
                               borderRadius: BorderRadius.all(
-                                Radius.circular(AppDoubleData
-                                    .regular()
-                                    .numberRadius12),
+                                Radius.circular(
+                                    AppDoubleData.regular().numberRadius12),
                               ),
-
                             ),
                             child: Padding(
                               padding: EdgeInsets.all(20.0.sp),
-                              child: Stack(
-                                children: [
-                                  if(controller.detailCollection.value.gatheringReward.item != null && controller.detailCollection.value.gatheringReward.item!.publishType == 'NFT')
-                                    Positioned.fill(left: 24.sp, right: 24.sp, child: SvgPicture.asset('assets/images/shop/ico_nft_detail.svg')),
-                                  Column(
-                                    children: [
-                                      SizedBox(
-                                          width: 148.sp,
-                                          height: 148.sp,
-                                          child: controller.renderCollectionImage(controller.detailCollection.value.gatheringReward)
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 9.0.sp),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            if(controller.detailCollection.value.gatheringReward.item != null && controller.detailCollection.value.gatheringReward.item!.publishType == 'NFT')
-                                              Padding(
-                                                padding: EdgeInsets.only(right: 5.0.sp, top:2.8.sp),
-                                                child: SvgPicture.asset('assets/images/shop/ico_nft_label.svg'),
-                                              ),
-                                            controller.detailCollection.value.gatheringReward.type == 'ITEM' || controller.detailCollection.value.gatheringReward.type == 'BADGE' ?
-                                            Text(
-                                              controller.detailCollection.value.gatheringReward.item == null ? controller.detailCollection.value.gatheringReward.badgeComposeConfig!.name : controller
-                                                  .detailCollection.value
-                                                  .gatheringReward.item!.name,
-                                              style: AppTextStyleData
-                                                  .regular()
-                                                  .koBodyMediumLg
-                                                  .copyWith(
-                                                color: AppColorData
-                                                    .regular()
-                                                    .colorTextPrimary,
-                                              ),
-                                            ) :
-                                            Text(
-                                              '${formatDecimalPlaces(controller.detailCollection.value.gatheringReward.quantity, 0)} ${controller.detailCollection.value.gatheringReward.type}',
-                                              style: AppTextStyleData
-                                                  .regular()
-                                                  .koBodyMediumLg
-                                                  .copyWith(
-                                                color: AppColorData
-                                                    .regular()
-                                                    .colorTextPrimary,
-                                              ),
+                              child: Stack(children: [
+                                if (controller.detailCollection.value
+                                            .gatheringReward.item !=
+                                        null &&
+                                    controller
+                                            .detailCollection
+                                            .value
+                                            .gatheringReward
+                                            .item!
+                                            .publishType ==
+                                        'NFT')
+                                  Positioned.fill(
+                                      left: 24.sp,
+                                      right: 24.sp,
+                                      child: SvgPicture.asset(
+                                          'assets/images/shop/ico_nft_detail.svg')),
+                                Column(
+                                  children: [
+                                    SizedBox(
+                                        width: 148.sp,
+                                        height: 148.sp,
+                                        child: controller.renderCollectionImage(
+                                            controller.detailCollection.value
+                                                .gatheringReward)),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 9.0.sp),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          if (controller.detailCollection.value
+                                                      .gatheringReward.item !=
+                                                  null &&
+                                              controller
+                                                      .detailCollection
+                                                      .value
+                                                      .gatheringReward
+                                                      .item!
+                                                      .publishType ==
+                                                  'NFT')
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  right: 5.0.sp, top: 2.8.sp),
+                                              child: SvgPicture.asset(
+                                                  'assets/images/shop/ico_nft_label.svg'),
                                             ),
-                                            controller.detailCollection.value.gatheringReward.type == 'ITEM' || controller.detailCollection.value.gatheringReward.type == 'BADGE' ? Padding(
-                                              padding: EdgeInsets.only(top: 3.0.sp),
-                                              child: iconRightLinkArrow,
-                                            ) : Container(),
-
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ]
-                              ),
+                                          controller
+                                                          .detailCollection
+                                                          .value
+                                                          .gatheringReward
+                                                          .type ==
+                                                      'ITEM' ||
+                                                  controller
+                                                          .detailCollection
+                                                          .value
+                                                          .gatheringReward
+                                                          .type ==
+                                                      'BADGE'
+                                              ? Text(
+                                                  controller
+                                                              .detailCollection
+                                                              .value
+                                                              .gatheringReward
+                                                              .item ==
+                                                          null
+                                                      ? controller
+                                                          .detailCollection
+                                                          .value
+                                                          .gatheringReward
+                                                          .badgeComposeConfig!
+                                                          .name
+                                                      : controller
+                                                          .detailCollection
+                                                          .value
+                                                          .gatheringReward
+                                                          .item!
+                                                          .name,
+                                                  style:
+                                                      AppTextStyleData.regular()
+                                                          .koBodyMediumLg
+                                                          .copyWith(
+                                                            color: AppColorData
+                                                                    .regular()
+                                                                .colorTextPrimary,
+                                                          ),
+                                                )
+                                              : Text(
+                                                  '${formatDecimalPlaces(controller.detailCollection.value.gatheringReward.quantity, 0)} ${controller.detailCollection.value.gatheringReward.type}',
+                                                  style:
+                                                      AppTextStyleData.regular()
+                                                          .koBodyMediumLg
+                                                          .copyWith(
+                                                            color: AppColorData
+                                                                    .regular()
+                                                                .colorTextPrimary,
+                                                          ),
+                                                ),
+                                          controller
+                                                          .detailCollection
+                                                          .value
+                                                          .gatheringReward
+                                                          .type ==
+                                                      'ITEM' ||
+                                                  controller
+                                                          .detailCollection
+                                                          .value
+                                                          .gatheringReward
+                                                          .type ==
+                                                      'BADGE'
+                                              ? Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 3.0.sp),
+                                                  child: iconRightLinkArrow,
+                                                )
+                                              : Container(),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ]),
                             ),
                           ),
                         ),
                       ),
-                      if(controller.detailCollection.value.completeQuantity != null)
+                      if (controller.detailCollection.value.completeQuantity !=
+                          null)
                         Padding(
-                        padding: EdgeInsets.only(top: 20.0.sp),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-
-                            Expanded(
-                              child: CustomPaint(
-                                size: Size(double.infinity, 16.sp),
-                                painter: GaugePainter(
-                                    percentage: controller.detailCollection.value.alreadyIssued ? 100 : (controller.detailCollection.value.completeQuantity! /
-                                        controller.detailCollection.value.gatheringConditions.length) * 100,
-                                    fillColor: AppColorData
-                                        .regular()
-                                        .colorPointCyan,
-                                    backgroundColor: AppColorData
-                                        .regular()
-                                        .colorBgTertiary
+                          padding: EdgeInsets.only(top: 20.0.sp),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: CustomPaint(
+                                  size: Size(double.infinity, 16.sp),
+                                  painter: GaugePainter(
+                                      percentage: controller.detailCollection
+                                              .value.alreadyIssued
+                                          ? 100
+                                          : (controller.detailCollection.value
+                                                      .completeQuantity! /
+                                                  controller
+                                                      .detailCollection
+                                                      .value
+                                                      .gatheringConditions
+                                                      .length) *
+                                              100,
+                                      fillColor:
+                                          AppColorData.regular().colorPointCyan,
+                                      backgroundColor: AppColorData.regular()
+                                          .colorBgTertiary),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.0.sp),
-                              child: Text(
-                                '${controller.detailCollection.value.alreadyIssued ? controller.detailCollection.value.gatheringConditions.length : controller.detailCollection.value
-                                    .completeQuantity} / ${controller.detailCollection.value.gatheringConditions.length}',
-                                style: AppTextStyleData
-                                    .regular()
-                                    .enBodySemiboldMd
-                                    .copyWith(
-                                  color: AppColorData
-                                      .regular()
-                                      .colorTextPrimary,
-                                  height: 1,
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.0.sp),
+                                child: Text(
+                                  '${controller.detailCollection.value.alreadyIssued ? controller.detailCollection.value.gatheringConditions.length : controller.detailCollection.value.completeQuantity} / ${controller.detailCollection.value.gatheringConditions.length}',
+                                  style: AppTextStyleData.regular()
+                                      .enBodySemiboldMd
+                                      .copyWith(
+                                        color: AppColorData.regular()
+                                            .colorTextPrimary,
+                                        height: 1,
+                                      ),
                                 ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
-                      ),
                       Padding(
                         padding: EdgeInsets.only(top: 20.0.sp),
-                        child: controller.detailCollection.value.alreadyIssued ? Container(
-                            decoration: BoxDecoration(
-                              color: AppColorData
-                                  .regular()
-                                  .colorBgPrimary,
-                              border: Border.all(
-                                width: 2,
-                                style: BorderStyle.solid,
-                                color: AppColorData
-                                    .regular()
-                                    .colorBorderInteractivePrimaryPressed,
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(50.sp),
-                              ),
-
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 22.sp),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  iconCheckGetAble,
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 6.6.sp),
-                                    child: Text(
-                                      '수집완료',
-                                      style: AppTextStyleData
-                                          .regular()
-                                          .koBodyMediumXl
-                                          .copyWith(
-                                        color: AppColorData
-                                            .regular()
-                                            .colorBorderInteractivePrimaryPressed,
-                                        height: 1.1,
+                        child: controller.detailCollection.value.alreadyIssued
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  color: AppColorData.regular().colorBgPrimary,
+                                  border: Border.all(
+                                    width: 2,
+                                    style: BorderStyle.solid,
+                                    color: AppColorData.regular()
+                                        .colorBorderInteractivePrimaryPressed,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(50.sp),
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 13.0.sp, horizontal: 22.sp),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      iconCheckGetAble,
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 6.6.sp),
+                                        child: Text(
+                                          'collection_complete'.tr(),
+                                          style: AppTextStyleData.regular()
+                                              .koBodyMediumXl
+                                              .copyWith(
+                                                color: AppColorData.regular()
+                                                    .colorBorderInteractivePrimaryPressed,
+                                                height: 1.1,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ))
+                            : InkWell(
+                                onTap: () =>
+                                    controller.detailCollection.value.getAble ==
+                                            true
+                                        ? showConfirmCollectionRewardAlert(
+                                            controller)
+                                        : null,
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      color:
+                                          AppColorData.regular().colorBgPrimary,
+                                      border: Border.all(
+                                        width: 2,
+                                        style: BorderStyle.solid,
+                                        color: controller.detailCollection.value
+                                                    .getAble ==
+                                                true
+                                            ? AppColorData.regular()
+                                                .colorBorderInteractivePrimary
+                                            : AppColorData.regular()
+                                                .colorBorderInteractivePrimaryDisabled,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(50.sp),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 13.0.sp, horizontal: 25.sp),
+                                      child: Text(
+                                        'claim_reward'.tr(),
+                                        style: AppTextStyleData.regular()
+                                            .koBodyMediumXl
+                                            .copyWith(
+                                              color: controller.detailCollection
+                                                          .value.getAble ==
+                                                      true
+                                                  ? AppColorData.regular()
+                                                      .colorTextPrimary
+                                                  : AppColorData.regular()
+                                                      .colorBorderInteractivePrimaryDisabled,
+                                              height: 1.1,
+                                            ),
+                                      ),
+                                    )),
                               ),
-                            )) : InkWell(
-                          onTap: () => controller.detailCollection.value.getAble == true ? showConfirmCollectionRewardAlert(controller) : null,
-                          child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColorData
-                                    .regular()
-                                    .colorBgPrimary,
-                                border: Border.all(
-                                  width: 2,
-                                  style: BorderStyle.solid,
-                                  color: controller.detailCollection.value.getAble == true ? AppColorData
-                                      .regular()
-                                      .colorBorderInteractivePrimary : AppColorData
-                                      .regular()
-                                      .colorBorderInteractivePrimaryDisabled,
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(50.sp),
-                                ),
-
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 13.0.sp, horizontal: 25.sp),
-                                child: Text(
-                                  '리워드 받기',
-                                  style: AppTextStyleData
-                                      .regular()
-                                      .koBodyMediumXl
-                                      .copyWith(
-                                    color: controller.detailCollection.value.getAble == true ? AppColorData
-                                        .regular()
-                                        .colorTextPrimary : AppColorData
-                                        .regular()
-                                        .colorBorderInteractivePrimaryDisabled,
-                                    height: 1.1,
-                                  ),
-                                ),
-                              )),
-                        ),
                       )
                     ],
                   ),
@@ -579,49 +652,38 @@ class CollectionDetail extends StatelessWidget {
               ),
               Container(
                 width: double.infinity,
-                color: AppColorData
-                    .regular()
-                    .colorBgTertiary,
+                color: AppColorData.regular().colorBgTertiary,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 24.0.sp, left: 16.sp, right: 16.sp, bottom: 40.sp),
+                  padding: EdgeInsets.only(
+                      top: 24.0.sp, left: 16.sp, right: 16.sp, bottom: 40.sp),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       Text(
-                        '컬렉션 재료',
-                        style: AppTextStyleData
-                            .regular()
+                        'collection_materials'.tr(),
+                        style: AppTextStyleData.regular()
                             .koBodyMediumXl
                             .copyWith(
-                          color: AppColorData
-                              .regular()
-                              .colorTextPrimary,
-
-                        ),
+                              color: AppColorData.regular().colorTextPrimary,
+                            ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 4.0.sp),
                         child: Text(
-                          '아래의 컬렉션 재료를 모두 모아 리워드를 받아보세요!',
-                          style: AppTextStyleData
-                              .regular()
+                          'collect_materials_for_reward'.tr(),
+                          style: AppTextStyleData.regular()
                               .koBodyMediumMd
                               .copyWith(
-                            color: AppColorData
-                                .regular()
-                                .colorTextSecondary,
-
-                          ),
+                                color:
+                                    AppColorData.regular().colorTextSecondary,
+                              ),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 8.0.sp),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: AppColorData
-                                .regular()
-                                .colorBgPrimary,
+                            color: AppColorData.regular().colorBgPrimary,
                             borderRadius: BorderRadius.all(
                               Radius.circular(8.sp),
                             ),
@@ -635,28 +697,23 @@ class CollectionDetail extends StatelessWidget {
                                   children: [
                                     Text(
                                       '· ',
-                                      style: AppTextStyleData
-                                          .regular()
+                                      style: AppTextStyleData.regular()
                                           .koBodyMediumMd
                                           .copyWith(
-                                        color: AppColorData
-                                            .regular()
-                                            .colorTextPrimary,
-                                        fontSize: 20.sp,
-                                        height: 1
-                                      ),
+                                              color: AppColorData.regular()
+                                                  .colorTextPrimary,
+                                              fontSize: 20.sp,
+                                              height: 1),
                                     ),
                                     Expanded(
                                       child: Text(
-                                        '리워드를 받으면 컬렉션 재료는 사라져요.',
-                                        style: AppTextStyleData
-                                            .regular()
+                                        'reward_removes_materials'.tr(),
+                                        style: AppTextStyleData.regular()
                                             .koBodyMediumMd
                                             .copyWith(
-                                          color: AppColorData
-                                              .regular()
-                                              .colorTextPrimary,
-                                        ),
+                                              color: AppColorData.regular()
+                                                  .colorTextPrimary,
+                                            ),
                                       ),
                                     ),
                                   ],
@@ -666,28 +723,23 @@ class CollectionDetail extends StatelessWidget {
                                   children: [
                                     Text(
                                       '· ',
-                                      style: AppTextStyleData
-                                          .regular()
+                                      style: AppTextStyleData.regular()
                                           .koBodyMediumMd
                                           .copyWith(
-                                          color: AppColorData
-                                              .regular()
-                                              .colorTextPrimary,
-                                          fontSize: 20.sp,
-                                          height: 1
-                                      ),
+                                              color: AppColorData.regular()
+                                                  .colorTextPrimary,
+                                              fontSize: 20.sp,
+                                              height: 1),
                                     ),
                                     Expanded(
                                       child: Text(
-                                        '장착하지 않은 뱃지나 아이템만 재료로 쓸 수 있어요.',
-                                        style: AppTextStyleData
-                                            .regular()
+                                        'unequipped_items_only'.tr(),
+                                        style: AppTextStyleData.regular()
                                             .koBodyMediumMd
                                             .copyWith(
-                                          color: AppColorData
-                                              .regular()
-                                              .colorTextPrimary,
-                                        ),
+                                              color: AppColorData.regular()
+                                                  .colorTextPrimary,
+                                            ),
                                       ),
                                     ),
                                   ],
@@ -710,7 +762,13 @@ class CollectionDetail extends StatelessWidget {
                                   spacing: 8.0.sp, // 수평 간격
                                   runSpacing: 8.0.sp, // 수직 간격
                                   runAlignment: WrapAlignment.spaceBetween,
-                                  children: [...renderGatheringCollectionList(controller, controller.detailCollection.value.gatheringConditions, context)],
+                                  children: [
+                                    ...renderGatheringCollectionList(
+                                        controller,
+                                        controller.detailCollection.value
+                                            .gatheringConditions,
+                                        context)
+                                  ],
                                 ),
                               ),
                             ],
@@ -724,8 +782,7 @@ class CollectionDetail extends StatelessWidget {
             ],
           );
         }),
-      )
-      ,
+      ),
     );
   }
 }

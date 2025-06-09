@@ -15,7 +15,8 @@ import 'package:gaza_go/platform/services/identity_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:rxdart/rxdart.dart' as rx;
 
 class VerificationCertCodeController extends GetxController {
@@ -26,13 +27,15 @@ class VerificationCertCodeController extends GetxController {
   final RxString _certCode = RxString('');
   final RxBool isFormValid = RxBool(false);
   final Rx<Duration> countdownTime = const Duration().obs;
-  late VerificationUserModel verificationUserModel = Get.arguments['verificationUserModel'];
+  late VerificationUserModel verificationUserModel =
+      Get.arguments['verificationUserModel'];
   final RxBool isNotNext = RxBool(false);
   int _requestId = -1;
   Timer _timer = Timer.periodic(const Duration(seconds: 1), (timer) {});
   final FocusNode focusNode = FocusNode();
   RxString get countdownString {
-    String formatCounter(counterString) => counterString.toString().padLeft(2, '0');
+    String formatCounter(counterString) =>
+        counterString.toString().padLeft(2, '0');
     String minutes = formatCounter(countdownTime.value.inMinutes);
     String seconds = formatCounter(countdownTime.value.inSeconds.remainder(60));
     return '$minutes:$seconds'.obs;
@@ -42,7 +45,11 @@ class VerificationCertCodeController extends GetxController {
   void onInit() {
     super.onInit();
 
-    isFormValid.bindStream(rx.CombineLatestStream.combine2<String, Duration, bool>(_certCode.stream, countdownTime.stream, (code, count) => (code.length == 6) && (count.inSeconds != 0)));
+    isFormValid.bindStream(
+        rx.CombineLatestStream.combine2<String, Duration, bool>(
+            _certCode.stream,
+            countdownTime.stream,
+            (code, count) => (code.length == 6) && (count.inSeconds != 0)));
 
     _requestId = Get.arguments['requestId'];
   }
@@ -71,19 +78,25 @@ class VerificationCertCodeController extends GetxController {
         // HiveStore.save(key: HiveKey.profileImageUrl.name, value: user.profileImageUrl);
         // HiveStore.save(key: HiveKey.nickname.name, value: user.nickname);
         HiveStore.save(key: HiveKey.authorities.name, value: user.authorities);
-        HiveStore.save(key: HiveKey.certified.name, value: user.authorities!.contains('ROLE_CERTIFIED_USER'));
+        HiveStore.save(
+            key: HiveKey.certified.name,
+            value: user.authorities!.contains('ROLE_CERTIFIED_USER'));
       },
     );
   }
 
   void next() async {
     focusNode.unfocus();
-    await IdentityService.verifyIdentityCode({"requestId": _requestId.toInt(), "code": _certCode.toString(), "clientId": "GAZAGO"}, successCallback: () {
+    await IdentityService.verifyIdentityCode({
+      "requestId": _requestId.toInt(),
+      "code": _certCode.toString(),
+      "clientId": "GAZAGO"
+    }, successCallback: () {
       // 본인인증이 완료 이벤트
       Adjust.trackEvent(AdjustEvent('hed7a4'));
 
       HiveStore.save(key: HiveKey.certified.name, value: true);
-      showToastPopup('본인인증이 완료되었습니다.');
+      showToastPopup('authentication_complete'.tr());
       getAccountInfo();
       afterVerificationComplete();
     }, errorCallback: (res) {
@@ -124,7 +137,10 @@ class VerificationCertCodeController extends GetxController {
     String? enteredRoute = HiveStore.loadString(key: HiveKey.enteredRoute.name);
 
     if (enteredRoute != null &&
-        (enteredRoute.contains('challenge_detail') || enteredRoute.contains('shop/item/detail') || enteredRoute.contains('/activity/challenges') || enteredRoute.contains('/wallet'))) {
+        (enteredRoute.contains('challenge_detail') ||
+            enteredRoute.contains('shop/item/detail') ||
+            enteredRoute.contains('/activity/challenges') ||
+            enteredRoute.contains('/wallet'))) {
       Get.until((route) => Get.currentRoute == enteredRoute);
     } else {
       Get.until((route) => Get.currentRoute == Routes.home);
@@ -132,10 +148,11 @@ class VerificationCertCodeController extends GetxController {
   }
 
   void resendIdentityCode() async {
-    await IdentityService.sendIdentityCode(verificationUserModel, successCallback: (requestId) {
+    await IdentityService.sendIdentityCode(verificationUserModel,
+        successCallback: (requestId) {
       _requestId = requestId;
       _startTimer();
-      showToastPopup('인증코드가 재전송되었습니다.');
+      showToastPopup('auth_code_resent'.tr());
     });
   }
 
@@ -148,7 +165,7 @@ class VerificationCertCodeController extends GetxController {
       countdownTime.value = countdownTime.value - const Duration(seconds: 1);
       if (countdownTime.value.inSeconds == 0) {
         timer.cancel();
-        errorMsg.value = '인증번호가 만료 되었습니다. 다시 시도해주세요.';
+        errorMsg.value = 'auth_code_expired'.tr();
       }
     });
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 
 class NftAssetItem extends StatelessWidget {
@@ -64,8 +65,11 @@ class NftAssetItem extends StatelessWidget {
                               padding: EdgeInsets.only(left: 4.sp),
                               child: Text(
                                 'NFT',
-                                style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
-                                      color: AppColorData.regular().colorTextPrimary,
+                                style: AppTextStyleData.regular()
+                                    .koBodyMediumXl
+                                    .copyWith(
+                                      color: AppColorData.regular()
+                                          .colorTextPrimary,
                                     ),
                               ),
                             ),
@@ -84,20 +88,25 @@ class NftAssetItem extends StatelessWidget {
                             child: Container(
                               width: double.infinity,
                               alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(horizontal: 10.sp, vertical: 12.sp),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.sp, vertical: 12.sp),
                               decoration: BoxDecoration(
                                 color: AppColorData.regular().colorBgTertiary,
                                 border: Border.all(
                                   width: 2,
-                                  color: AppColorData.regular().colorBorderBlack,
+                                  color:
+                                      AppColorData.regular().colorBorderBlack,
                                 ),
                                 borderRadius: BorderRadius.circular(8.sp),
                               ),
                               child: FittedBox(
                                 child: Text(
-                                  '목록보기',
-                                  style: AppTextStyleData.regular().koBodyMediumXl.copyWith(
-                                        color: AppColorData.regular().colorTextPrimary,
+                                  'view_list'.tr(),
+                                  style: AppTextStyleData.regular()
+                                      .koBodyMediumXl
+                                      .copyWith(
+                                        color: AppColorData.regular()
+                                            .colorTextPrimary,
                                       ),
                                 ),
                               ),

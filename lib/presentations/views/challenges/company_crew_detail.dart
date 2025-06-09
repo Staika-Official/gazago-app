@@ -15,7 +15,8 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
 
 class CompanyCrewDetail extends StatelessWidget {
   const CompanyCrewDetail({super.key});
@@ -30,15 +31,20 @@ class CompanyCrewDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ChallengesDetailController challengesDetailController = Get.isRegistered<ChallengesDetailController>() ? Get.find<ChallengesDetailController>() : Get.put(ChallengesDetailController());
-    CompanyCrewController controller = Get.isRegistered<CompanyCrewController>() ? Get.find<CompanyCrewController>() : Get.put(CompanyCrewController());
+    ChallengesDetailController challengesDetailController =
+        Get.isRegistered<ChallengesDetailController>()
+            ? Get.find<ChallengesDetailController>()
+            : Get.put(ChallengesDetailController());
+    CompanyCrewController controller = Get.isRegistered<CompanyCrewController>()
+        ? Get.find<CompanyCrewController>()
+        : Get.put(CompanyCrewController());
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
           preferredSize: preferredSize, // here the desired height
-          child: const ShareAppbar(
-            titleText: '나의 크루',
+          child: ShareAppbar(
+            titleText: 'my_crew'.tr(),
             isBeta: false,
             isLockButton: false,
           )),
@@ -79,11 +85,14 @@ class CompanyCrewDetail extends StatelessWidget {
                               Container(
                                 decoration: BoxDecoration(
                                   color: popupBgColor,
-                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(15.sp), topRight: Radius.circular(15.sp)),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(15.sp),
+                                      topRight: Radius.circular(15.sp)),
                                 ),
                                 child: Center(
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 28.0.sp),
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 28.0.sp),
                                     child: Column(
                                       children: [
                                         StyledText(
@@ -93,20 +102,35 @@ class CompanyCrewDetail extends StatelessWidget {
                                           lineHeight: 25,
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.only(top: 12.0.sp),
+                                          padding:
+                                              EdgeInsets.only(top: 12.0.sp),
                                           child: CircleAvatar(
                                             radius: 34.sp,
                                             backgroundColor: Colors.transparent,
-                                            foregroundImage: (controller.myCrewInfo['crewIconImageUrl'] == null || controller.myCrewInfo['crewIconImageUrl'] == '')
+                                            foregroundImage: (controller
+                                                                .myCrewInfo[
+                                                            'crewIconImageUrl'] ==
+                                                        null ||
+                                                    controller.myCrewInfo[
+                                                            'crewIconImageUrl'] ==
+                                                        '')
                                                 ? Image.asset(
                                                     'assets/images/ic_launcher.png',
                                                     width: 68.sp,
                                                   ).image
-                                                : controller.myCrewInfo['crewIconImageUrl'].contains('.svg')
-                                                    ? sp.Svg(controller.myCrewInfo['crewIconImageUrl'], source: sp.SvgSource.network) as ImageProvider
+                                                : controller.myCrewInfo[
+                                                            'crewIconImageUrl']
+                                                        .contains('.svg')
+                                                    ? sp.Svg(
+                                                        controller.myCrewInfo[
+                                                            'crewIconImageUrl'],
+                                                        source: sp.SvgSource
+                                                            .network) as ImageProvider
                                                     : CachedNetworkImageProvider(
-                                                        controller.myCrewInfo['crewIconImageUrl'],
-                                                        headers: imageNetworkHeader,
+                                                        controller.myCrewInfo[
+                                                            'crewIconImageUrl'],
+                                                        headers:
+                                                            imageNetworkHeader,
                                                       ),
                                           ),
                                         )
@@ -118,18 +142,23 @@ class CompanyCrewDetail extends StatelessWidget {
                               Container(
                                 decoration: BoxDecoration(
                                   color: AppColorData.regular().colorBgPrimary,
-                                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15.sp), bottomRight: Radius.circular(15.sp)),
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(15.sp),
+                                      bottomRight: Radius.circular(15.sp)),
                                 ),
                                 child: Row(
                                   children: [
                                     Expanded(
                                       child: Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 21.0.sp, horizontal: 10.sp),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 21.0.sp,
+                                            horizontal: 10.sp),
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const StyledText(
-                                              '누적 평균 거리',
+                                            StyledText(
+                                              'cumulative_average_distance'
+                                                  .tr(),
                                               fontSize: 14,
                                               fontWeight: 500,
                                               lineHeight: 14,
@@ -152,7 +181,8 @@ class CompanyCrewDetail extends StatelessWidget {
                                       height: 42.sp,
                                       width: 1,
                                       child: VerticalDivider(
-                                        color: AppColorData.regular().colorBorderSecondary,
+                                        color: AppColorData.regular()
+                                            .colorBorderSecondary,
                                         thickness: 1,
                                       ),
                                     ),
@@ -162,15 +192,22 @@ class CompanyCrewDetail extends StatelessWidget {
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const StyledText(
-                                              '크루 랭킹',
+                                            StyledText(
+                                              'crew_ranking'.tr(),
                                               fontSize: 14,
                                               fontWeight: 500,
                                               lineHeight: 14,
                                               letterSpacing: -.5,
                                             ),
                                             StyledText(
-                                              controller.myCrewInfo['distance'] > 0 ? '${controller.myCrewInfo['rank']}등' : '-',
+                                              controller.myCrewInfo[
+                                                          'distance'] >
+                                                      0
+                                                  ? 'crew_rank'.tr(args: [
+                                                      controller
+                                                          .myCrewInfo['rank']
+                                                    ])
+                                                  : '-',
                                               fontSize: 24,
                                               fontWeight: 600,
                                               lineHeight: 33.6,
@@ -189,15 +226,20 @@ class CompanyCrewDetail extends StatelessWidget {
                       ),
                       Column(children: [
                         Padding(
-                          padding: EdgeInsets.only(left: 16.0.sp, right: 16.sp, top: 15.sp, bottom: 8.sp),
+                          padding: EdgeInsets.only(
+                              left: 16.0.sp,
+                              right: 16.sp,
+                              top: 15.sp,
+                              bottom: 8.sp),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               StyledText(
-                                '크루원',
+                                'crew_members'.tr(),
                                 fontSize: 16,
                                 fontWeight: 500,
-                                color: AppColorData.regular().colorTextSecondary,
+                                color:
+                                    AppColorData.regular().colorTextSecondary,
                               ),
                               Row(
                                 children: [
@@ -206,30 +248,39 @@ class CompanyCrewDetail extends StatelessWidget {
                                     child: iconPeople,
                                   ),
                                   StyledText(
-                                    '${controller.myCrewList.length} 명',
+                                    'crew_member_count'.tr(args: [
+                                      controller.myCrewList.length.toString()
+                                    ]),
                                     fontSize: 14,
                                     lineHeight: 16,
                                     fontWeight: 500,
                                     letterSpacing: -.5,
-                                    color: AppColorData.regular().colorTextSecondary,
+                                    color: AppColorData.regular()
+                                        .colorTextSecondary,
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 5.0.sp),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 5.0.sp),
                                     child: StyledText(
                                       '/',
                                       fontSize: 14,
                                       lineHeight: 16,
                                       fontWeight: 500,
-                                      color: AppColorData.regular().colorTextSecondary,
+                                      color: AppColorData.regular()
+                                          .colorTextSecondary,
                                     ),
                                   ),
                                   StyledText(
-                                    '${controller.myCrewInfo['maxMemberCount']} 명',
+                                    'max_crew_members'.tr(args: [
+                                      controller.myCrewInfo['maxMemberCount']
+                                          .toString()
+                                    ]),
                                     fontSize: 14,
                                     lineHeight: 16,
                                     fontWeight: 500,
                                     letterSpacing: -.5,
-                                    color: AppColorData.regular().colorTextSecondary,
+                                    color: AppColorData.regular()
+                                        .colorTextSecondary,
                                   ),
                                 ],
                               ),
@@ -244,7 +295,8 @@ class CompanyCrewDetail extends StatelessWidget {
                       ]),
                       if (controller.myCrewList.length < 2)
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 42.0.sp, horizontal: 16.sp),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 42.0.sp, horizontal: 16.sp),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -252,8 +304,8 @@ class CompanyCrewDetail extends StatelessWidget {
                               iconCompanyChallengeShare,
                               Padding(
                                 padding: EdgeInsets.only(top: 42.0.sp),
-                                child: const StyledText(
-                                  '내 크루를 공유해 보세요.',
+                                child: StyledText(
+                                  'share_my_crew'.tr(),
                                   fontWeight: 500,
                                   fontSize: 20,
                                   lineHeight: 28,
@@ -262,8 +314,8 @@ class CompanyCrewDetail extends StatelessWidget {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 12.0.sp),
-                                child: const StyledText(
-                                  '챌린지 기간 동안 함께 걸어\n리워드를 받아보세요!',
+                                child: StyledText(
+                                  'walk_together_get_rewards'.tr(),
                                   fontWeight: 500,
                                   fontSize: 16,
                                   lineHeight: 22.4,
@@ -274,13 +326,16 @@ class CompanyCrewDetail extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 34.0.sp),
                                 child: InkWell(
                                   onTap: () {
-                                    challengesDetailController.shareChallenge(challengeType: ChallengeType.companyCrew, shareSource: ShareSource.shareAppbar);
+                                    challengesDetailController.shareChallenge(
+                                        challengeType:
+                                            ChallengeType.companyCrew,
+                                        shareSource: ShareSource.shareAppbar);
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const StyledText(
-                                        '공유하기',
+                                      StyledText(
+                                        'share_link'.tr(),
                                         fontSize: 14,
                                         fontWeight: 500,
                                         color: Colors.white,
@@ -309,12 +364,19 @@ class CompanyCrewDetail extends StatelessWidget {
                     color: AppColorData.regular().colorBgPrimary,
                   ),
                   child: Padding(
-                    padding: EdgeInsets.only(left: 16.0.sp, top: 12.0.sp, right: 12.0.sp, bottom: 25.0.sp),
+                    padding: EdgeInsets.only(
+                        left: 16.0.sp,
+                        top: 12.0.sp,
+                        right: 12.0.sp,
+                        bottom: 25.0.sp),
                     child: GazagoButton(
                       onTap: () {
-                        Get.toNamed(Routes.webView, arguments: {'linkUrl': '${F.leaderboardUrl}/company/challenge/${controller.challengeId}/${controller.userId}'});
+                        Get.toNamed(Routes.webView, arguments: {
+                          'linkUrl':
+                              '${F.leaderboardUrl}/company/challenge/${controller.challengeId}/${controller.userId}'
+                        });
                       },
-                      buttonText: '크루 랭킹 보기',
+                      buttonText: 'view_crew_ranking'.tr(),
                       buttonColor: skyBlueColor,
                     ),
                   ),
@@ -344,10 +406,14 @@ class CompanyCrewRankingItem extends StatelessWidget {
       color: Colors.transparent,
       child: Ink(
         decoration: BoxDecoration(
-          color: index == 0 ? AppColorData.regular().colorBgSecondary : AppColorData.regular().colorBgPrimary,
+          color: index == 0
+              ? AppColorData.regular().colorBgSecondary
+              : AppColorData.regular().colorBgPrimary,
           border: Border(
             bottom: BorderSide(
-              color: index == 0 ? AppColorData.regular().colorBgPrimary : AppColorData.regular().colorBgSecondary,
+              color: index == 0
+                  ? AppColorData.regular().colorBgPrimary
+                  : AppColorData.regular().colorBgSecondary,
               width: 1,
             ),
           ),
@@ -375,7 +441,8 @@ class CompanyCrewRankingItem extends StatelessWidget {
                             height: 50.sp,
                             decoration: index == 0
                                 ? BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(50.0.sp)),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(50.0.sp)),
                                     border: Border.all(
                                       color: skyBlueColor,
                                       width: 1.5.sp,
@@ -386,13 +453,17 @@ class CompanyCrewRankingItem extends StatelessWidget {
                               child: CircleAvatar(
                                 radius: 19.sp,
                                 backgroundColor: Colors.black,
-                                foregroundImage: (item['profileImageUrl'] == null || item['profileImageUrl'] == '')
+                                foregroundImage: (item['profileImageUrl'] ==
+                                            null ||
+                                        item['profileImageUrl'] == '')
                                     ? Image.asset(
                                         'assets/images/ic_launcher.png',
                                         width: 38.sp,
                                       ).image
                                     : item['profileImageUrl'].contains('.svg')
-                                        ? sp.Svg(item['profileImageUrl'], source: sp.SvgSource.network) as ImageProvider
+                                        ? sp.Svg(item['profileImageUrl'],
+                                                source: sp.SvgSource.network)
+                                            as ImageProvider
                                         : CachedNetworkImageProvider(
                                             item['profileImageUrl'],
                                             headers: imageNetworkHeader,
@@ -424,7 +495,7 @@ class CompanyCrewRankingItem extends StatelessWidget {
                                   ),
                                 ),
                                 // StyledText(
-                                //   '크루장 : ${item.crewFounderNickName!.split('@')[0]}',
+                                //   'crew_leader_nickname'.tr('${item.crewFounderNickName!.split('@')[0]}'),
                                 //   color: deepGrayColor,
                                 //   fontWeight: 500,
                                 //   fontSize: 12,
