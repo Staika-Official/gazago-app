@@ -42,3 +42,7 @@ flutter build ipa --flavor [dev | prod] --export-method [ad-hoc | app-store(defa
 npm install -g style-dictionary-figma-flutter
 style-dictionary-figma-flutter
 ```
+
+
+
+fvm flutter run -d 00008030-001431E60E88802E --flavor dev -t lib/main_stage.dart
