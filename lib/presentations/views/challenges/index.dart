@@ -16,7 +16,7 @@ class ChallengesHome extends StatelessWidget {
   const ChallengesHome({super.key});
 
   List<Widget> renderChallengeList(ChallengesController controller) {
-    return controller.challengeList
+    return controller.joinableChallengeList
         .map(
           (item) => Container(
             margin: EdgeInsets.only(bottom: 15.sp),
@@ -472,7 +472,7 @@ class ChallengesHome extends StatelessWidget {
               //   ),
               // ),
 
-              challengesController.challengeList.isEmpty
+              challengesController.joinableChallengeList.isEmpty
                   ? challengesController.dataGetLoading.value
                       ? Padding(
                           padding: EdgeInsets.symmetric(vertical: 120.0.sp),

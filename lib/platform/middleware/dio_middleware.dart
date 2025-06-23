@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -68,12 +69,9 @@ class Api {
       'showLoading': showLoading,
     };
     _dio.options.headers['Content-Type'] = 'application/json; charset=utf-8';
-    String headerLang =
-        HiveStore.loadString(key: HiveKey.serviceLanguage.name) == 'ko'
-            ? 'ko-KR'
-            : 'ja-JP';
 
-    _dio.options.headers['Accept-Language'] = headerLang;
+    _dio.options.headers['Accept-Language'] =
+        PlatformDispatcher.instance.locale.languageCode;
 
     if (needsToken) {
       String? accessToken = HiveStore.loadString(key: HiveKey.accessToken.name);

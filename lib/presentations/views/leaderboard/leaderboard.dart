@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,7 +46,7 @@ class LeaderboardHome extends StatelessWidget {
                       child: TableCalendar(
                         rowHeight: Platform.isIOS ? 85 : 70,
                         daysOfWeekHeight: 30,
-                        locale: 'ko-KR',
+                        locale: PlatformDispatcher.instance.locale.languageCode,
                         firstDay: controller.firstDay.value!,
                         lastDay: controller.lastDay.value!,
                         focusedDay: controller.focusDay.value!,

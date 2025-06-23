@@ -22,6 +22,10 @@ class ChallengesController extends GetxController
   ScrollController challengesScrollController = ScrollController();
 
   final RxList<NewChallengeModel> challengeList = RxList.empty();
+  RxList<NewChallengeModel> get joinableChallengeList => challengeList
+      .where((element) => element.challengeState != 'CLOSED')
+      .toList()
+      .obs;
   final List<Map<String, String>> sortingList = [
     {'title': 'all'.tr(), 'value': 'id,DESC'},
     {'title': 'joinable'.tr(), 'value': 'price,DESC'},

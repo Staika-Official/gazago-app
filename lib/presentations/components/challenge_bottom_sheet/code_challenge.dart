@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
@@ -41,6 +43,7 @@ Map renderCodeReadyRegisterReady(
         )),
   );
 
+  String locale = PlatformDispatcher.instance.locale.languageCode;
   Widget content = RichText(
     text: TextSpan(
       style: TextStyle(
@@ -52,7 +55,7 @@ Map renderCodeReadyRegisterReady(
       children: [
         TextSpan(
           text: 'scheduled_date'.tr(args: [
-            DateFormat('MM.dd HH:mm', 'ko').format(DateTime.parse(
+            DateFormat('MM.dd HH:mm', locale).format(DateTime.parse(
                     challengesDetailController
                         .challengeDetails.value.reservedDate!)
                 .toLocal())

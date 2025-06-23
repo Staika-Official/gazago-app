@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
@@ -50,7 +51,8 @@ class DailyBenefitController extends GetxController {
 
   Rx<DateTime> todaysDate = Rx(DateTime.now());
   RxString get formattedDate {
-    return RxString(DateFormat('yyyy. MM. dd EEEE', 'ko')
+    String locale = PlatformDispatcher.instance.locale.languageCode;
+    return RxString(DateFormat('yyyy. MM. dd EEEE', locale)
         .format(todaysDate.value.toLocal()));
   }
 

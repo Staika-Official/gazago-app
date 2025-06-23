@@ -44,5 +44,7 @@ style-dictionary-figma-flutter
 ```
 
 
-
-fvm flutter run -d 00008030-001431E60E88802E --flavor dev -t lib/main_stage.dart
+### 스테이지 러닝 명령어
+```bash
+fvm flutter run -d <device> --flavor stage -t lib/main_stage.dart
+```

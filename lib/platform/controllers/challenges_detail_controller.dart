@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -263,10 +264,11 @@ class ChallengesDetailController extends SuperController
     await ActivityService.getChallengeDetails(challengeId.value,
         successCallback: (NewChallengeDetailModel data) {
       challengeDetails.value = data;
-      fromDate.value =
-          DateFormat('M.d (EEE)', 'ko').format(DateTime.parse(data.fromDate!));
+      String locale = PlatformDispatcher.instance.locale.languageCode;
+      fromDate.value = DateFormat('M.d (EEE)', locale)
+          .format(DateTime.parse(data.fromDate!));
       toDate.value =
-          DateFormat('M.d (EEE)', 'ko').format(DateTime.parse(data.toDate!));
+          DateFormat('M.d (EEE)', locale).format(DateTime.parse(data.toDate!));
       inDays.value = DateTime.parse(data.toDate!)
           .difference(DateTime.parse(data.fromDate!))
           .inDays;

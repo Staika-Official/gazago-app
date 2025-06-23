@@ -72,7 +72,10 @@ class InventoryTile extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             children: [
               Padding(
-                padding: badgeId != null && badgeId != -1 ? EdgeInsets.only(top: 10.0.sp, bottom: 30.sp, left: 35.sp, right: 35.sp) : EdgeInsets.all(index < 1 ? 20.sp : 10.0.sp),
+                padding: badgeId != null && badgeId != -1
+                    ? EdgeInsets.only(
+                        top: 10.0.sp, bottom: 30.sp, left: 35.sp, right: 35.sp)
+                    : EdgeInsets.all(index < 1 ? 20.sp : 10.0.sp),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,16 +87,56 @@ class InventoryTile extends StatelessWidget {
                               ? SvgPicture.network(
                                   fit: BoxFit.contain,
                                   imageUrl,
-                                  placeholderBuilder: (BuildContext context) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
+                                  placeholderBuilder: (BuildContext context) =>
+                                      const Center(
+                                          child: SizedBox.square(
+                                              dimension: 40,
+                                              child: CircularProgressIndicator(
+                                                  color: skyBlueColor))),
                                 )
                               : CachedNetworkImage(
                                   imageUrl: imageUrl,
-                                  placeholder: (context, url) => const Center(child: SizedBox.square(dimension: 40, child: CircularProgressIndicator(color:skyBlueColor))),
-                                  errorWidget: (context, url, error) => iconNoBadge,
+                                  placeholder: (context, url) => const Center(
+                                      child: SizedBox.square(
+                                          dimension: 40,
+                                          child: CircularProgressIndicator(
+                                              color: skyBlueColor))),
+                                  errorWidget: (context, url, error) => Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        iconNoBadge,
+                                        Center(
+                                            child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    bottom: 10.sp),
+                                                child: Text(
+                                                  'No Badges',
+                                                  style: AppTextStyleData
+                                                          .regular()
+                                                      .numBodySemiboldSm
+                                                      .copyWith(
+                                                          color: AppColorData
+                                                                  .regular()
+                                                              .colorTextTertiary),
+                                                )))
+                                      ]),
                                   fit: BoxFit.contain,
                                   httpHeaders: imageNetworkHeader,
                                 )
-                          : iconNoBadge,
+                          : Stack(alignment: Alignment.center, children: [
+                              iconNoBadge,
+                              Center(
+                                  child: Padding(
+                                      padding: EdgeInsets.only(bottom: 10.sp),
+                                      child: Text(
+                                        'No Badges',
+                                        style: AppTextStyleData.regular()
+                                            .numBodySemiboldSm
+                                            .copyWith(
+                                                color: AppColorData.regular()
+                                                    .colorTextTertiary),
+                                      )))
+                            ]),
                     ),
                   ],
                 ),
@@ -102,7 +145,8 @@ class InventoryTile extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(10.sp),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(60.sp),
                       border: Border.all(
@@ -112,15 +156,17 @@ class InventoryTile extends StatelessWidget {
                     ),
                     child: Text(
                       '#${badgeId.toString()}',
-                      style: AppTextStyleData.regular().numBodySemiboldMd.copyWith(
-                            color: AppColorData.regular().colorTextTertiary,
-                          ),
+                      style:
+                          AppTextStyleData.regular().numBodySemiboldMd.copyWith(
+                                color: AppColorData.regular().colorTextTertiary,
+                              ),
                     ),
                   ),
                 ),
               durability != null
                   ? Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15.0.sp, vertical: 9.0.sp),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 15.0.sp, vertical: 9.0.sp),
                       child: SizedBox(
                         height: 28.sp,
                         child: Stack(
@@ -139,8 +185,10 @@ class InventoryTile extends StatelessWidget {
                                             decoration: ShapeDecoration(
                                               color: const Color(0xFF2E3038),
                                               shape: RoundedRectangleBorder(
-                                                side: const BorderSide(width: 2),
-                                                borderRadius: BorderRadius.circular(12),
+                                                side:
+                                                    const BorderSide(width: 2),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                               ),
                                               shadows: [
                                                 const BoxShadow(
@@ -155,25 +203,37 @@ class InventoryTile extends StatelessWidget {
                                         ),
                                         durability! > 1.0
                                             ? Padding(
-                                                padding: EdgeInsets.only(top: 2.0.sp, left: 2.0.sp),
-                                                child: LayoutBuilder(builder: (context, constraints) {
+                                                padding: EdgeInsets.only(
+                                                    top: 2.0.sp, left: 2.0.sp),
+                                                child: LayoutBuilder(builder:
+                                                    (context, constraints) {
                                                   return Container(
                                                     height: 28.sp,
                                                     margin: EdgeInsets.zero,
                                                     width: durability! > 20
-                                                        ? constraints.maxWidth / (100 / durability!)
+                                                        ? constraints.maxWidth /
+                                                            (100 / durability!)
                                                         : durability! < 2
                                                             ? 0
                                                             : 34,
                                                     decoration: ShapeDecoration(
-                                                      color: durability! < 30 ? textRedColor : AppColorData.regular().colorPointPurple,
-                                                      shape: RoundedRectangleBorder(
-                                                        side: const BorderSide(width: 2),
-                                                        borderRadius: BorderRadius.circular(999),
+                                                      color: durability! < 30
+                                                          ? textRedColor
+                                                          : AppColorData
+                                                                  .regular()
+                                                              .colorPointPurple,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        side: const BorderSide(
+                                                            width: 2),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(999),
                                                       ),
                                                       shadows: [
                                                         const BoxShadow(
-                                                          color: Color(0xFF000000),
+                                                          color:
+                                                              Color(0xFF000000),
                                                           blurRadius: 0,
                                                           offset: Offset(0, 2),
                                                           spreadRadius: 0,
@@ -194,7 +254,10 @@ class InventoryTile extends StatelessWidget {
                               right: 0,
                               top: 2,
                               child: InkWell(
-                                onTap: () => controller.isDisableButton.value ? null : controller.showShoesRepairPopup(id!, context),
+                                onTap: () => controller.isDisableButton.value
+                                    ? null
+                                    : controller.showShoesRepairPopup(
+                                        id!, context),
                                 child: Container(
                                   width: 26,
                                   height: 26,
