@@ -81,7 +81,7 @@ mixin ActivityMixin {
       Throttling(duration: const Duration(milliseconds: 1500));
   final Rx<Control> luckLoadControl = Rx(Control.stop);
   RxBool isShowLuckAnimation = RxBool(false);
-  final assetsAudioPlayer = AssetsAudioPlayer();
+  // final assetsAudioPlayer = AssetsAudioPlayer();
 
   Rx<Color> get exerciseStateTextColor {
     Color color = Colors.white;
