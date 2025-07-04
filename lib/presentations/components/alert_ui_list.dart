@@ -8854,7 +8854,7 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
                       onTap: () {
                         Get.toNamed(Routes.webView, arguments: {
                           'linkUrl':
-                              'https://eztechfin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'
+                              'https://ltechpin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'
                         });
                       },
                       child: Text(
@@ -8938,7 +8938,7 @@ void showIOSDeniedAdPermissionAlert(DailyBenefitController controller) {
                       onTap: () {
                         Get.toNamed(Routes.webView, arguments: {
                           'linkUrl':
-                              'https://eztechfin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'
+                              'https://ltechpin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'
                         });
                       },
                       child: Text(

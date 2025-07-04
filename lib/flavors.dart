@@ -70,13 +70,13 @@ class F {
   static String get howToGoUrl {
     switch (appFlavor) {
       case Flavor.dev:
-        return 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043';
+        return 'https://ltechpin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043';
       case Flavor.stage:
-        return 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043';
+        return 'https://ltechpin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043';
       case Flavor.prod:
-        return 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043';
+        return 'https://ltechpin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043';
       default:
-        return 'https://eztechfin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043';
+        return 'https://ltechpin.notion.site/How-to-GO-61129dcb96324b0cb282d7743e19b043';
     }
   }
 

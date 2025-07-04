@@ -183,7 +183,7 @@ class Preferences extends StatelessWidget {
                   Adjust.trackEvent(AdjustEvent('pk4dwp'));
                   Get.toNamed(Routes.webView, arguments: {
                     'linkUrl':
-                        'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
+                        'https://ltechpin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
                   });
                 },
               ),
@@ -194,7 +194,7 @@ class Preferences extends StatelessWidget {
                   Adjust.trackEvent(AdjustEvent('bkeekw'));
                   Get.toNamed(Routes.webView, arguments: {
                     'linkUrl':
-                        'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
+                        'https://ltechpin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
                   });
                 },
               ),
