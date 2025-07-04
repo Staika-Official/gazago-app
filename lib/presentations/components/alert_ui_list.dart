@@ -6034,9 +6034,11 @@ void consumerItemUsagePopup(controller, context) {
                                                                 ? item.itemStat
                                                                     .recoveryStamina
                                                                     .toInt()
+                                                                    .toString()
                                                                 : item.itemStat
                                                                     .repairDurability
                                                                     .toInt()
+                                                                    .toString()
                                                           ]),
                                                           style: AppTextStyleData
                                                                   .regular()
