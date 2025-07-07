@@ -159,91 +159,89 @@ class ChallengeMap extends StatelessWidget {
 
         //required
         //This is the widget which will be overlapped by the bottom sheet.
-        background: Obx(() {
-          return Stack(
-            alignment: Alignment.topCenter,
-            children: [
-              Obx(
-                () => GoogleMap(
-                  markers: Set.of(controller.drawingMarkers),
-                  polylines: Set.of(controller.drawingPolylines),
-                  polygons: Set.of(controller.drawingPolygons),
-                  circles: Set.of(controller.drawingCircles),
-                  tiltGesturesEnabled: true,
-                  padding: const EdgeInsets.only(bottom: 100),
-                  mapType: MapType.normal,
-                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-                    Factory<OneSequenceGestureRecognizer>(
-                      () => EagerGestureRecognizer(),
+        background: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            Obx(
+              () => GoogleMap(
+                markers: Set.of(controller.drawingMarkers),
+                polylines: Set.of(controller.drawingPolylines),
+                polygons: Set.of(controller.drawingPolygons),
+                circles: Set.of(controller.drawingCircles),
+                tiltGesturesEnabled: true,
+                padding: const EdgeInsets.only(bottom: 150),
+                mapType: MapType.normal,
+                gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                  Factory<OneSequenceGestureRecognizer>(
+                    () => EagerGestureRecognizer(),
+                  ),
+                },
+                initialCameraPosition:
+                    controller.currentLocation.value.latitude > 0
+                        ? CameraPosition(
+                            target: LatLng(
+                                controller.currentLocation.value.latitude,
+                                controller.currentLocation.value.longitude),
+                            zoom: 14,
+                          )
+                        : const CameraPosition(
+                            target: LatLng(37.5665, 126.978),
+                            zoom: 14,
+                          ),
+                onMapCreated: (mapController) {
+                  controller.challengeMapController = mapController;
+                  controller.onChallengeMapCreated();
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    controller.addOverlayAll(
+                      {
+                        ...controller.challengeMarkers,
+                        ...controller.selectedChallengeMarkers
+                      },
+                    );
+                  });
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 68.sp),
+              child: Container(
+                padding: EdgeInsets.only(
+                    top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
+                decoration: BoxDecoration(
+                  color: popupBgColor,
+                  borderRadius: BorderRadius.circular(14.sp),
+                  border: Border.all(color: Colors.black, width: 2.sp),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      spreadRadius: 0,
+                      blurRadius: 0,
+                      offset: Offset(0, 4), // changes position of shadow
                     ),
-                  },
-                  initialCameraPosition:
-                      controller.currentLocation.value.latitude > 0
-                          ? CameraPosition(
-                              target: LatLng(
-                                  controller.currentLocation.value.latitude,
-                                  controller.currentLocation.value.longitude),
-                              zoom: 14,
-                            )
-                          : const CameraPosition(
-                              target: LatLng(37.5665, 126.978),
-                              zoom: 14,
-                            ),
-                  onMapCreated: (mapController) {
-                    controller.challengeMapController = mapController;
-                    controller.onChallengeMapCreated();
-                    Future.delayed(const Duration(milliseconds: 100), () {
-                      controller.addOverlayAll(
-                        {
-                          ...controller.challengeMarkers,
-                          ...controller.selectedChallengeMarkers
-                        },
-                      );
-                    });
-                  },
+                  ],
+                ),
+                child: StyledText(
+                  'challenge_course'.tr(),
+                  fontSize: 16,
+                  fontWeight: 500,
+                  lineHeight: 22,
+                  color: Colors.white,
+                  textAlign: TextAlign.center,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 68.sp),
-                child: Container(
-                  padding: EdgeInsets.only(
-                      top: 10.sp, bottom: 10.sp, right: 20.sp, left: 20.sp),
-                  decoration: BoxDecoration(
-                    color: popupBgColor,
-                    borderRadius: BorderRadius.circular(14.sp),
-                    border: Border.all(color: Colors.black, width: 2.sp),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black,
-                        spreadRadius: 0,
-                        blurRadius: 0,
-                        offset: Offset(0, 4), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: StyledText(
-                    'challenge_course'.tr(),
-                    fontSize: 16,
-                    fontWeight: 500,
-                    lineHeight: 22,
-                    color: Colors.white,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+            ),
+            Positioned(
+              top: 66.sp,
+              left: 20.sp,
+              child: InkWell(
+                onTap: () {
+                  Get.back();
+                },
+                child: iconChallengeScreenBack,
               ),
-              Positioned(
-                top: 66.sp,
-                left: 20.sp,
-                child: InkWell(
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: iconChallengeScreenBack,
-                ),
-              ),
-            ],
-          );
-        }),
+            ),
+          ],
+        ),
 
         //optional
         //This widget is sticking above the content and will never be contracted.

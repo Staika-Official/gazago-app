@@ -301,7 +301,7 @@ class ActivityController extends SuperController
     challengeSelectedIndex.value = course.id!;
     selectedChallengeMarkers.clear();
     challengeMarkers.removeWhere((element) {
-      return element.info.id == challengeSelectedIndex.value.toString();
+      return element.markerId == challengeSelectedIndex.value.toString();
     });
 
     selectedChallengeMarkers.add(getCustomMarker(
@@ -332,6 +332,10 @@ class ActivityController extends SuperController
         CameraUpdate.newLatLngBounds(_createBoundsFromLatLngList(markers), 120),
       );
     } else {
+      print(course.startLat!);
+      print(course.startLon!);
+      print(course.endLat!);
+      print(course.endLon!);
       challengeMapController.animateCamera(
         CameraUpdate.newLatLngBounds(
             _createBoundsFromLatLngList(
