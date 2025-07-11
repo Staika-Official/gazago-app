@@ -3,6 +3,18 @@ allprojects {
         google()
         mavenCentral()
     }
+
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            android {
+                if (project.name == 'facebook_audience_network') {
+                    namespace 'com.facebook.ads'
+                } else if (namespace == null) {
+                    namespace 'kr.co.eztechfin.gazaGo'
+                }
+            }
+        }
+    }
 }
 
 rootProject.buildDir = '../build'
@@ -11,6 +23,13 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(':app')
+    if (project.hasProperty('android')) {
+        android {
+            if (namespace == null) {
+                namespace "kr.co.eztechfin.gazaGo"
+            }
+        }
+    }
 }
 
 tasks.register("clean", Delete) {
