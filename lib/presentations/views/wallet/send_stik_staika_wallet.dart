@@ -1,0 +1,243 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/config.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/wallet_go_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
+
+class SendStikStaikaWallet extends StatelessWidget {
+  const SendStikStaikaWallet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    WalletMasterController walletMasterController = Get.find();
+    GoWalletController controller = Get.find();
+    return GestureDetector(
+      onTap: () {
+        controller.initTextController();
+      },
+      child: DefaultContainer(
+        titleText: 'send_to_staika_wallet_1'.tr(),
+        backgroundColor: subBg01Color,
+        headerBackgroundColor: Colors.transparent,
+        child: Obx(() {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding:
+                    EdgeInsets.only(top: 28.0.sp, left: 22.sp, right: 22.sp),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 19.sp,
+                      foregroundImage: walletMasterController.stik.value != null
+                          ? CachedNetworkImageProvider(
+                              walletMasterController.stik.value.logoUrl!,
+                              headers: imageNetworkHeader,
+                            )
+                          : Image.asset(
+                              'assets/images/ic_launcher.png',
+                              width: 23.sp,
+                            ).image,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0.sp),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          StyledText(
+                            'holding'.tr(),
+                            color: lightGrayColor,
+                            fontSize: 12,
+                            lineHeight: 13,
+                            fontWeight: 600,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 6.0.sp),
+                            child: StyledText(
+                              '${formatDecimalPlaces(double.parse(walletMasterController.stik.value.uiAmountString!), 4, isAutoDecimal: true, roundType: RoundType.floor)} STIK',
+                              fontSize: 18,
+                              lineHeight: 19,
+                              fontWeight: 500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(top: 50.0.sp, left: 28.sp, right: 28.sp),
+                child: StyledText(
+                  'sending_stik'.tr(),
+                  fontWeight: 500,
+                  fontSize: 18,
+                  lineHeight: 20,
+                ),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(top: 12.0.sp, left: 28.sp, right: 28.sp),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: '0',
+                        hintStyle: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        suffixIcon: Padding(
+                          padding: EdgeInsets.only(right: 12.0.sp),
+                          child: const StyledText(
+                            ' STIK',
+                            fontSize: 24,
+                            fontWeight: 400,
+                            lineHeight: 40,
+                          ),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide:
+                              BorderSide(width: 2, color: Color(0xFF363841)),
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide:
+                              BorderSide(width: 2, color: Color(0xFF363841)),
+                        ),
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
+                      ),
+                      controller: controller.stikAmountTextController,
+                      keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true, signed: false),
+                      textInputAction: TextInputAction.go,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'(\d*\.?\d*)')),
+                        TextInputFormatter.withFunction((oldValue, newValue) {
+                          if (newValue.text.isEmpty) {
+                            return newValue.copyWith(text: '');
+                          } else if (newValue.text.compareTo(oldValue.text) !=
+                              0) {
+                            RegExp exp =
+                                RegExp("^(([1-9]\\d{0,8})|0)(\\.\\d{0,4}?)?\$");
+                            if (exp.hasMatch(newValue.text)) {
+                              return newValue;
+                            } else {
+                              return oldValue;
+                            }
+                          } else {
+                            return newValue;
+                          }
+                        }),
+                      ],
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24.sp,
+                        height: 28 / 24,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      autofocus: false,
+                      cursorColor: Colors.white,
+                      focusNode: controller.focusNode,
+                      onChanged: (value) => controller.setAmount(value),
+                      onSubmitted: (val) =>
+                          !controller.loaderController.isLoading.value
+                              ? controller.openSendStikGoWalletAlert()
+                              : null,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0.sp),
+                      child: StyledText(
+                        'staika_wallet_transfer_limit'.tr(),
+                        fontWeight: 400,
+                        lineHeight: 20,
+                        fontSize: 12,
+                        letterSpacing: -.1,
+                        color: lightGrayColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: controller.isFetching.value
+                    ? Container(
+                        color: subBg01Color,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            color: popupBgColor,
+                            height: 60.sp,
+                            alignment: Alignment.center,
+                            child: InkWell(
+                              onTap: null,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0.sp),
+                                child: Center(
+                                  child: StyledText(
+                                    'send_item'.tr(),
+                                    color: deepGrayColor,
+                                    fontSize: 18,
+                                    fontWeight: 500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ))
+                    : Container(
+                        color: subBg01Color,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            color: controller.isValid.value
+                                ? skyBlueColor
+                                : popupBgColor,
+                            height: 60.sp,
+                            alignment: Alignment.center,
+                            child: InkWell(
+                              onTap: controller.isValid.value &&
+                                      !controller
+                                          .loaderController.isLoading.value
+                                  ? () => controller.openSendStikGoWalletAlert()
+                                  : null,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0.sp),
+                                child: Center(
+                                  child: StyledText(
+                                    'send_item'.tr(),
+                                    color: controller.isValid.value
+                                        ? Colors.black
+                                        : deepGrayColor,
+                                    fontSize: 18,
+                                    fontWeight: 500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )),
+              )
+            ],
+          );
+        }),
+      ),
+    );
+  }
+}

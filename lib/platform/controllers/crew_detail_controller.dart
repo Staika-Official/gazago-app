@@ -1,0 +1,107 @@
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/challenges_detail_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
+import 'package:gaza_go/platform/models/crew_member_model.dart';
+import 'package:gaza_go/platform/models/crew_model.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/services/crew_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:gaza_go/platform/helpers/map_mixin.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+class CrewDetailController extends GetxController
+    with GetTickerProviderStateMixin, MapMixin, ChallengeMixin {
+  RxInt dailyBlockCount = RxInt(0);
+  Rx<CrewModel> get selectedCrew {
+    if (!Get.isRegistered<ChallengesDetailController>())
+      Get.put(ChallengesDetailController());
+    return Rx(Get.find<ChallengesDetailController>().myCrew.value!['crew']);
+  }
+
+  RxInt get crewRanking {
+    return Get.find<ChallengesDetailController>().crewList.isNotEmpty
+        ? RxInt(Get.find<ChallengesDetailController>()
+                .crewList
+                .indexWhere((crew) => crew.id == selectedCrew.value.id) +
+            1)
+        : RxInt(0);
+  }
+
+  RxList<CrewMemberModel> get crewList {
+    return RxList(selectedCrew.value.crewMemberList!);
+  }
+
+  RxInt get accumulatedCrewInvite {
+    return RxInt(selectedCrew.value.crewMemberList!
+        .fold(0, (prevValue, element) => prevValue + element.inviteCount!));
+  }
+
+  RxInt get accumulatedCrewBlock {
+    return RxInt(selectedCrew.value.crewMemberList!
+        .fold(0, (prevValue, element) => prevValue + element.blockQuantity!));
+  }
+
+  RxBool get isFounder {
+    String userId = HiveStore.loadString(key: HiveKey.userId.name)!;
+    return RxBool(selectedCrew.value.crewFounderId.toString() == userId);
+  }
+
+  @override
+  void onInit() async {
+    await getDailyBlockCount();
+    showRelayEndedAlert();
+
+    super.onInit();
+  }
+
+  Future<void> refreshController() async {
+    await getDailyBlockCount();
+  }
+
+  Future<void> validateRecruitLock() async {
+    if (selectedCrew.value.crewRecruitStatus == 'OPEN') {
+      crewRecruitLimitAlert(this);
+    } else {
+      crewRecruitUnlimitAlert(this);
+    }
+  }
+
+  void showRelayEndedAlert() {
+    Future.delayed(const Duration(seconds: 1));
+    if (selectedCrew.value.crewRelayStatus! == "ENDED") {
+      showCrewRelayEndedAlert(this);
+    }
+  }
+
+  Future<void> requestToggleRecruitStatus() async {
+    await CrewService.changeRecruitStatus(
+      selectedCrew.value.id!,
+      selectedCrew.value.crewRecruitStatus! == 'OPEN' ? 'CLOSE' : 'OPEN',
+      successCallback: () {
+        selectedCrew.value.crewRecruitStatus! == 'OPEN'
+            ? showToastPopup('crew_recruitment_restricted'.tr())
+            : showToastPopup('crew_recruiting'.tr());
+      },
+      errorCallback: (ErrorResponseDataModel error) {
+        if (error.errorCode == 'NOT_AVAILABLE_RECRUIT_OPEN') {
+          crewRecruitToggleLimitErrorAlert(error.errorMessage!);
+        } else {
+          showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
+        }
+      },
+    );
+  }
+
+  Future<void> getDailyBlockCount() async {
+    await CrewService.getDailyBlockCount(
+      selectedCrew.value.id!,
+      successCallback: (data) {
+        if (data['dailyCrewBlockQuantity'] != null)
+          dailyBlockCount.value = data['dailyCrewBlockQuantity'];
+      },
+    );
+  }
+}

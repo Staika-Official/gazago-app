@@ -1,0 +1,57 @@
+import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
+
+class Notifications extends StatelessWidget {
+  const Notifications({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    NoticePopupController controller = Get.find<NoticePopupController>();
+
+    List<Widget> renderSubPopupList(NoticePopupController controller) {
+      return controller.noticePopupList
+          .map(
+            (notice) => Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              margin: const EdgeInsets.only(top: 14),
+              child: GestureDetector(
+                onTap: () => controller.moveToWebView(notice),
+                child: notice.subImageUrl != null &&
+                        notice.subImageUrl!.contains('http')
+                    ? Image.network(
+                        notice.subImageUrl!,
+                      )
+                    : Container(),
+              ),
+            ),
+          )
+          .toList();
+    }
+
+    return DefaultContainer(
+      titleText: 'notification'.tr(),
+      backgroundColor: subBg01Color,
+      child: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 22, right: 22),
+            child: Obx(() {
+              return Column(
+                children: [
+                  ...renderSubPopupList(controller),
+                ],
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+}

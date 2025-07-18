@@ -1,0 +1,355 @@
+import 'package:flutter/material.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/controllers/collection_controller.dart';
+import 'package:gaza_go/platform/controllers/collection_detail_controller.dart';
+import 'package:gaza_go/platform/controllers/loader_controller.dart';
+import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/helpers/solana_mixin.dart';
+import 'package:gaza_go/platform/models/charge_tik_model.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/exchange_stik_price_model.dart';
+import 'package:gaza_go/platform/models/exchange_stik_quotes_model.dart';
+import 'package:gaza_go/platform/models/exchange_stik_token_model.dart';
+import 'package:gaza_go/platform/models/on_chain_wallet_model.dart';
+import 'package:gaza_go/platform/services/solana_service.dart';
+import 'package:gaza_go/platform/services/wallet_service.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/presentations/components/product_list_dialog.dart';
+import 'package:gaza_go/presentations/components/product_list_stik_dialog.dart';
+import 'package:get/get.dart' hide Trans;
+import 'package:easy_localization/easy_localization.dart';
+
+class GoWalletController extends GetxController with SolanaMixin {
+  WalletMasterController walletMasterController = Get.find();
+  CollectionController collectionController =
+      Get.isRegistered<CollectionController>()
+          ? Get.find<CollectionController>()
+          : Get.put(CollectionController());
+  CollectionDetailController collectionDetailController =
+      Get.isRegistered<CollectionDetailController>()
+          ? Get.find<CollectionDetailController>()
+          : Get.put(CollectionDetailController());
+  LoaderController loaderController = Get.find();
+  RxList productList = RxList.empty();
+  Rx<ChargeTikModel> chargeTikData = Rx(ChargeTikModel(
+      userId: -1,
+      title: "STIK_TO_TIK",
+      fromTokenSymbol: "",
+      fromUiAmount: 0.0,
+      toTokenSymbol: "",
+      toUiAmount: 0,
+      priceKRW: 0.0,
+      priceUSD: 0.0,
+      feeUiAmount: 0,
+      lastUpdatedDate: ''));
+  final FocusNode focusNode = FocusNode();
+  final TextEditingController stikAmountTextController =
+      TextEditingController(text: '0');
+  final RxString sendStikUiAmount = RxString('0');
+  final RxString shortStikUiAmount = RxString('0');
+  final RxBool isFetching = RxBool(false);
+  Rx<ExchangeStikQuotesModel> stikQuotes = Rx(
+      ExchangeStikQuotesModel(priceKRW: 0.0, priceUSD: 0.0, lastUpdated: ''));
+
+  RxBool get isValid {
+    if (sendStikUiAmount.value != '') {
+      return RxBool(double.parse(sendStikUiAmount.value) != 0 &&
+          sendStikUiAmount.value != '0.');
+    }
+    return RxBool(false);
+  }
+
+  @override
+  void onInit() {
+    walletMasterController.getStikPriceInfo();
+    initTextController();
+
+    super.onInit();
+  }
+
+  @override
+  void onClose() async {
+    if (Get.previousRoute == Routes.collectionDetail) {
+      collectionController.initData();
+      await collectionController.initController();
+      await collectionDetailController.refreshController();
+      print(collectionController.selectedCollection.value.id);
+    }
+
+    super.onClose();
+  }
+
+  // void testEncode() async {
+  //   int i = 0;
+  //   while (i < 1000) {
+  //     print('---------------------------------------------------------');
+  //     final wallet = Keypair.generateSync();
+  //     // String? email = HiveStore.loadString(key: HiveKey.email.name);
+  //     String email = 'zicnet004@gmail.com';
+  //     String testWalletPassword = '!!qhd0328';
+  //     // String publicKey = wallet.publicKey.toBase58();
+  //     // 암호화된 시크릿키
+  //     String encryptSecretKey = encrypt(base58.encode(wallet.seckey), email, testWalletPassword);
+
+  //     print('encryptSecretKey : $encryptSecretKey');
+  //     // 지갑 생성 완료
+  //     String testEmail = 'zicnet004@gmail.com';
+  //     // 82mt6rd86r@privaterelay.appleid.com wfNI5FyPy45L4e++c8KHxMV+fLAVB+2Id1a+MsGgZz0K3DGED1m6+5OzL1ffyo1DHWBWpsUdxQqAhdIIwHRYZyzXfl8+rWbzqxNUyai1BzVw1trWz/7RaRSWyruHdQ9i
+  //     // zicnet004@gmail.com LTYYb5Fl7tzSW+8td1FUDdd2VVhD6ZuSY8N1YEWQcRL/e/Kq+zL2Fs9uZ4LEAqsF2pa+RyCXB6GJRpoDHnzhoxrwg9IaUS7AQ2MHAz1p4mrUY0dbd67RaRx9kCMyj8KE
+  //     // String accountSecretkey = 'LTYYb5Fl7tzSW+8td1FUDdd2VVhD6ZuSY8N1YEWQcRL/e/Kq+zL2Fs9uZ4LEAqsF2pa+RyCXB6GJRpoDHnzhoxrwg9IaUS7AQ2MHAz1p4mrUY0dbd67RaRx9kCMyj8KE';
+
+  //     String? decryptPrivateKey = decrypt(encryptSecretKey, testEmail, testWalletPassword);
+  //     print('decryptPrivateKey: $decryptPrivateKey');
+  //     print('---------------------------------------------------------');
+  //     i++;
+  //   }
+  // }
+
+  void checkShortBalance(ExchangeStikPriceModel item) {
+    double fromAmount =
+        walletMasterController.clickedAssetButton.value == 'STAIKA'
+            ? double.parse(item.fromUiAmountString!)
+            : productSumFeePrice(item.fromUiAmountString!, item.uiFeeString!);
+    double myAssetAmount = double.parse(
+        walletMasterController.clickedAssetButton.value == 'STAIKA'
+            ? walletMasterController.stik.value.uiAmountString!
+            : walletMasterController
+                .exchangeAvailableTik.value.uiAmountString!);
+
+    if (myAssetAmount < fromAmount) {
+      failureShortBalanceStikToTikAlert(this);
+    } else {
+      exchangeStikToTikAlert(this, item);
+    }
+  }
+
+  void exchangeStikToTik(ExchangeStikPriceModel exchangeProduct) async {
+    String? userId = HiveStore.loadString(key: HiveKey.userId.name);
+    // DateTime today = DateTime.now();
+    // int differenceTime = int.parse(today.difference(DateTime.parse(walletMasterController.stikPriceInfoKRW.value.lastUpdated!)).inSeconds.toString());
+    // 현재 시간과 가격정보 받아온 시간이 5분이상 차이나면
+    // if (differenceTime > 300) {
+    //   failureChargeStikToTikAlert(this, 'transaction_price_expired'.tr());
+    // } else {
+    //
+    // }
+
+    String exchangeTitle =
+        walletMasterController.clickedAssetButton.value == 'STAIKA'
+            ? "STIK_TO_TIK"
+            : "TIK_TO_STIK";
+    double fromAmount = walletMasterController.clickedAssetButton.value ==
+            'STAIKA'
+        ? double.parse(exchangeProduct.fromUiAmountString!)
+        : productSumFeePrice(
+            exchangeProduct.fromUiAmountString!, exchangeProduct.uiFeeString!);
+    double myAssetAmount =
+        walletMasterController.clickedAssetButton.value == 'STAIKA'
+            ? walletMasterController.stik.value.amount!
+            : walletMasterController.tik.value.amount!;
+
+    if (myAssetAmount >= fromAmount) {
+      loaderController.isLoading.value = true;
+      await SolanaService.fetchChargeStikToTik(
+        ChargeTikModel(
+          userId: int.parse(userId!),
+          title: exchangeTitle,
+          fromTokenSymbol: exchangeProduct.fromTokenSymbol!,
+          fromUiAmount: double.parse(exchangeProduct.fromUiAmountString!),
+          toTokenSymbol: exchangeProduct.toTokenSymbol!,
+          toUiAmount:
+              walletMasterController.clickedAssetButton.value == 'STAIKA'
+                  ? double.parse(exchangeProduct.toUiAmountString!)
+                  : int.parse(exchangeProduct.toUiAmountString!),
+          priceKRW: stikQuotes.value.priceKRW!,
+          priceUSD: stikQuotes.value.priceUSD!,
+          feeUiAmount: int.parse(exchangeProduct.uiFeeString!),
+          feeTokenSymbol:
+              int.parse(exchangeProduct.uiFeeString!) > 0 ? 'TIK' : null,
+          lastUpdatedDate: stikPriceInfoKRW.value.lastUpdated!,
+        ),
+        successCallback: (data) {
+          loaderController.isLoading.value = false;
+          successChargeStikToTikAlert(this);
+        },
+        errorCallback: (err) {
+          loaderController.isLoading.value = false;
+          if (err.status == 500) {
+            failureShortBalanceStikToTikAlert(this);
+          } else {
+            if (err.errorCode == 'LIMIT_EXCEED_COUNT' ||
+                err.errorCode == 'LIMIT_EXCEED_AMOUNT') {
+              errorBottomSheet(err.errorMessage);
+            } else {
+              failureChargeStikToTikAlert(this, err.errorMessage);
+            }
+          }
+        },
+      );
+    } else {
+      if (walletMasterController.clickedAssetButton.value == 'STAIKA') {
+        showToastPopup('insufficient_stik'.tr());
+      } else {
+        showToastPopup('insufficient_tik'.tr());
+      }
+    }
+  }
+
+  void handleSuccessChargeTik() {
+    walletMasterController.getSpendingWalletBalances();
+    handleReGetStikPriceAndProductList();
+  }
+
+  void handleReGetStikPriceAndProductList() async {
+    walletMasterController.getSpendingWalletBalances();
+    walletMasterController.getStikPriceInfo();
+    await getProductList();
+  }
+
+  void showProductDialog() async {
+    loaderController.isLoading.value = true;
+    await getProductList();
+    loaderController.isLoading.value = false;
+    showProductList();
+  }
+
+  void showProductStikDialog(String assetName) async {
+    walletMasterController.clickedAssetButton.value = assetName;
+    loaderController.isLoading.value = true;
+    await getProductList();
+    loaderController.isLoading.value = false;
+    showProductStikList(assetName);
+  }
+
+  void stikSwapWallet() async {
+    stikAmountTextController.text = '';
+    await getStaikaWalletInfo();
+  }
+
+  void checkUserVerified(Function callback) async {
+    // isDisableButton.value = true;
+    if (await handleCheckUserVerified()) {
+      callback();
+    } else {
+      showNeedVerificationExchangeAlert();
+    }
+    // isDisableButton.value = false;
+  }
+
+  Future<void> getStaikaWalletInfo() async {
+    loaderController.isLoading.value = true;
+    initTextController();
+    await WalletService.getOnChainWallet(
+      successCallback: (OnChainWalletModel data) async {
+        loaderController.isLoading.value = false;
+        bool isWalletConnectionPrompted =
+            HiveStore.load(key: HiveKey.walletConnectionPrompted.name) ?? false;
+        if (!isWalletConnectionPrompted) {
+          HiveStore.save(
+              key: HiveKey.walletConnectionPrompted.name, value: true);
+          showStaikaStatusAlert(
+              hasWallet: true,
+              tabController: walletMasterController.tabController);
+        } else {
+          Get.toNamed(Routes.sendStikStaikaWallet);
+        }
+      },
+      errorCallback: (ErrorResponseDataModel data) {
+        loaderController.isLoading.value = false;
+        // Future.delayed(const Duration(seconds: 3));
+        if (data.errorCode == 'NOT_FOUND_WALLET') {
+          showStaikaStatusAlert(
+              hasWallet: false,
+              tabController: walletMasterController.tabController);
+        } else if (data.errorCode == 'DATABASE_EXCEPTION') {
+          showToastPopup('retry_later'.tr());
+        }
+      },
+    );
+  }
+
+  Future<void> getProductList() async {
+    if (walletMasterController.clickedAssetButton.value == 'STAIKA') {
+      await SolanaService.getExchangeStikPriceInfo(
+          successCallback: (ExchangeStikTokenModel data) {
+        stikPriceInfoKRW.value.price = data.quotes!.priceKRW!;
+        stikPriceInfoUSD.value.price = data.quotes!.priceUSD!;
+        stikPriceInfoKRW.value.lastUpdated = data.quotes!.lastUpdated!;
+        stikPriceInfoUSD.value.lastUpdated = data.quotes!.lastUpdated!;
+        stikQuotes.value = data.quotes!;
+        productList.value = data.products;
+      });
+    } else {
+      await SolanaService.getExchangeTikPriceInfo(
+          successCallback: (ExchangeStikTokenModel data) {
+        stikPriceInfoKRW.value.price = data.quotes!.priceKRW!;
+        stikPriceInfoUSD.value.price = data.quotes!.priceUSD!;
+        stikPriceInfoKRW.value.lastUpdated = data.quotes!.lastUpdated!;
+        stikPriceInfoUSD.value.lastUpdated = data.quotes!.lastUpdated!;
+
+        stikQuotes.value = data.quotes!;
+        productList.value = data.products;
+      });
+    }
+  }
+
+  void setAmount(String changeAmount) {
+    sendStikUiAmount.value = changeAmount;
+  }
+
+  void openSendStikGoWalletAlert() {
+    focusNode.unfocus();
+    shortStikUiAmount.value = (double.parse(sendStikUiAmount.value) -
+            double.parse(walletMasterController.stik.value.uiAmountString!))
+        .toString();
+    if (double.parse(sendStikUiAmount.value) < 5) {
+      showMinimumSendStikAmountAlert();
+      return;
+    }
+    if (double.parse(sendStikUiAmount.value) <=
+        double.parse(formatDecimalPlaces(
+                double.parse(walletMasterController.stik.value.uiAmountString!),
+                4,
+                roundType: RoundType.floor)
+            .replaceAll(',', ''))) {
+      sendStikToStaikaWalletAlert(this);
+    } else {
+      sendStikShortBalanceAlert(this);
+    }
+  }
+
+  void confirmSendStikStaikaWallet() async {
+    isFetching.value = true;
+    loaderController.isLoading.value = true;
+    await WalletService.fetchStikMoveToStaikaWallet(
+      symbol: 'STIK',
+      amount: double.parse(sendStikUiAmount.value),
+      successCallback: (boolean) {
+        loaderController.isLoading.value = false;
+        successExchangeStikToStaikaWalletAlert(this);
+        walletMasterController.getSpendingWalletBalances();
+        initTextController();
+      },
+      errorCallback: (ErrorResponseDataModel error) {
+        loaderController.isLoading.value = false;
+        if (error.status == 400) {
+          showToastPopup(error.errorMessage!.replaceAll('\\n', '\n'));
+        } else {
+          failureExchangeStikToGoWalletAlert();
+        }
+      },
+    );
+    isFetching.value = false;
+    // loaderController.isLoading.value = false;
+  }
+
+  void initTextController() {
+    focusNode.unfocus();
+    sendStikUiAmount.value = '0';
+    stikAmountTextController.text = '';
+  }
+}

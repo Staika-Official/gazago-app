@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>321889905131-22r952df5n2g5i3qehb6dgcg5o4188dt.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.321889905131-22r952df5n2g5i3qehb6dgcg5o4188dt</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>321889905131-5400t3phnaanpkv72otpghrqhg14g8bv.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA0fw8oOZhK1DIRpQMCFaWvBA4D8L-bXIc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>321889905131</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>kr.co.eztechfin.gazaGo</string>
+	<key>PROJECT_ID</key>
+	<string>app-step-prod</string>
+	<key>STORAGE_BUCKET</key>
+	<string>app-step-prod.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<true></true>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:321889905131:ios:fcd56d852edb7bc40a11ae</string>
+	<key>DATABASE_URL</key>
+	<string>https://app-step-prod-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+	<key>ADMOB_APP_ID</key>
+	<string>ca-app-pub-4234536720874912~6134851285</string>
+</dict>
+</plist>

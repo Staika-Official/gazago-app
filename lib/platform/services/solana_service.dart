@@ -1,0 +1,90 @@
+import 'package:dio/dio.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/apis/token.dart';
+import 'package:gaza_go/platform/models/charge_tik_model.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/exchange_stik_token_model.dart';
+import 'package:gaza_go/platform/models/token_model.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
+
+class SolanaService {
+  static String? get userId {
+    return HiveStore.loadString(key: HiveKey.userId.name);
+  }
+
+  static Future<void> getStikPriceInfo(
+      {required Function successCallback, Function? errorCallback}) async {
+    Response res = await TokenApi.getStikPriceInfo();
+    if (res.statusCode == 200) {
+      successCallback(TokenModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getTokenPriceInfoList(
+      {required Function successCallback, Function? errorCallback}) async {
+    Response res = await TokenApi.getTokenPriceInfoList();
+    if (res.statusCode == 200) {
+      List<TokenModel> tokenPriceList = List.empty(growable: true);
+      if (res.data.length > 0) {
+        res.data.forEach((priceInfo) {
+          tokenPriceList.add(TokenModel.fromJson(priceInfo));
+        });
+      }
+      successCallback(tokenPriceList);
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getExchangeStikPriceInfo(
+      {required Function successCallback, Function? errorCallback}) async {
+    Response res = await TokenApi.getExchangeStikPriceInfo();
+    if (res.statusCode == 200) {
+      // List<ExchangeStikPriceModel> products = List.empty(growable: true);
+      // if (res.data.products.length > 0) {
+      //   res.data.products.forEach((product) {
+      //     products.add(ExchangeStikPriceModel.fromJson(product));
+      //   });
+      // }
+      // successCallback(products);
+      // print(res.data['products']);
+      // successCallback(res.data.products is Map<String, dynamic> ? ExchangeStikPriceModel.fromJson(res.data.products) : null);
+      successCallback(ExchangeStikTokenModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> getExchangeTikPriceInfo(
+      {required Function successCallback, Function? errorCallback}) async {
+    Response res = await TokenApi.getExchangeTikPriceInfo();
+    if (res.statusCode == 200) {
+      // List<ExchangeStikPriceModel> products = List.empty(growable: true);
+      // if (res.data.products.length > 0) {
+      //   res.data.products.forEach((product) {
+      //     products.add(ExchangeStikPriceModel.fromJson(product));
+      //   });
+      // }
+      // successCallback(products);
+      // print(res.data['products']);
+      // successCallback(res.data.products is Map<String, dynamic> ? ExchangeStikPriceModel.fromJson(res.data.products) : null);
+      successCallback(ExchangeStikTokenModel.fromJson(res.data));
+    } else {
+      if (errorCallback != null) errorCallback();
+    }
+  }
+
+  static Future<void> fetchChargeStikToTik(ChargeTikModel chargeData,
+      {required Function successCallback, Function? errorCallback}) async {
+    Response res = await TokenApi.fetchChargeStikToTik(chargeData, userId!);
+    if (res.statusCode == 201) {
+      successCallback('success'.tr());
+    } else {
+      if (errorCallback != null)
+        errorCallback(ErrorResponseDataModel.fromJson(res.data));
+    }
+  }
+}

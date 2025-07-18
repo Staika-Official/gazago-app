@@ -1,0 +1,120 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/controllers/wallet_actions_controller.dart';
+import 'package:gaza_go/presentations/components/default_container.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart' hide Trans;
+
+class WalletActions extends StatelessWidget {
+  const WalletActions({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    WalletActionsController controller = Get.put(WalletActionsController());
+
+    return Obx(() {
+      return DefaultContainer(
+        titleText: controller.pageHeader.value,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('From'),
+                const Row(
+                  children: [
+                    Expanded(child: TextField()),
+                    Text('STIK'),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('balance_stik'.tr(args: ['${100.00.toString()}'])),
+                      TextButton(
+                        onPressed: () => null,
+                        child: const Text('All'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 30.sp),
+              child: const Icon(
+                Icons.keyboard_double_arrow_down,
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('To'),
+                const Row(
+                  children: [
+                    Expanded(child: TextField()),
+                    Text('TIK'),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child:
+                      Text('balance_stik'.tr(args: ['${100.00.toString()}'])),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                top: 10.sp,
+              ),
+              child: Column(
+                children: [
+                  if (controller.actionType.value == WalletActionType.recharge)
+                    Padding(
+                      padding: EdgeInsets.all(8.0.sp),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('exchange_fee'.tr()),
+                          const Text(
+                            '1 STIK \u2248 100 TIK',
+                          )
+                        ],
+                      ),
+                    ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0.sp),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('estimated_fee'.tr()),
+                        Text(
+                          '${0.005.toString()} STIK',
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(8.sp),
+              child: ElevatedButton(
+                onPressed: () => null,
+                child: Text(
+                    controller.actionType.value == WalletActionType.recharge
+                        ? 'recharge_1'.tr()
+                        : 'send_item'.tr()),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+}

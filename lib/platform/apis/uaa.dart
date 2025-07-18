@@ -1,0 +1,115 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:gaza_go/constants/base_urls.dart';
+import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/platform/middleware/dio_middleware.dart';
+import 'package:gaza_go/platform/models/social_login_info_model.dart';
+import 'package:gaza_go/platform/stores/hive_store.dart';
+
+class UaaApi {
+  static Future<Response> emailLogin() async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService, needsToken: false).post('/sign-in/email', data: {
+      "username": "app-stage",
+      "password": "fadfRt4#00",
+      "clientId": "GAZAGO",
+    });
+  }
+
+  static Future<Response> fetchLogout() async {
+    String deviceId = HiveStore.loadString(key: HiveKey.uuid.name)!;
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).delete('/sign-out', data: {
+      "deviceId": deviceId,
+      "clientId": "GAZAGO",
+    });
+  }
+
+  static Future<Response> socialLogin(SocialLoginInfoModel loginInfo) async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService, needsToken: false, allowCustomErrorHandler: true).post('/sign-in/social', data: loginInfo);
+  }
+
+  static Future<Response> getAccountInfo() async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).get('/account');
+  }
+
+
+
+  static Future<Response> checkLoginStatus() async {
+    return await Api.client(
+      serviceUrl: '/services/gazago',
+      allowCustomErrorHandler: true,
+    ).get('/api/ping');
+  }
+
+  static Future<Response> modifyAccountInfo( String userId, Map<String, String> params) async {
+    return await Api.client(
+      serviceUrl: ServiceUrl.userService,
+      isPatch: true,
+    ).patch(
+      '/users/$userId',
+      data: {
+        'userId': userId,
+        ...params,
+        "clientId": "GAZAGO",
+      },
+    );
+  }
+
+  static Future<Response> fetchUploadImage(String userId, FormData imageFile) async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService, isFile: true).post('/users/$userId/upload-profile-image', data: imageFile);
+  }
+
+  static Future<Response> fetchUploadImageUrl(String fileName) async {
+    return await Api.client(
+      serviceUrl: ServiceUrl.uaaService,
+      isFile: false,
+      allowCustomErrorHandler: true,
+    ).get('/images/presigned-url/profile?fileName=$fileName');
+  }
+
+  static Future<Response> uploadToS3bucket(String presignedUrl, File profileImage, String contentType) async {
+    Dio dio = Dio();
+    return await dio.put(
+      presignedUrl,
+      data: profileImage.openRead(),
+      options: Options(
+        contentType: 'image/$contentType',
+        headers: {
+          "Content-Length": profileImage.lengthSync(),
+        },
+      ),
+    );
+  }
+
+  static Future<Response> fetchWithdrawMember(String userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).put('/account/users/$userId/termination', data: {
+      "userId": userId,
+      "reason": "APP_GAZAGO_WITHDRAW",
+      "clientId": "GAZAGO",
+    });
+  }
+
+  static Future<Response> fetchWithdrawCancel(String userId) async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).put('/account/users/$userId/activation?clientId=GAZAGO');
+  }
+
+  static Future<Response> pingConnection(int seconds) async {
+    return await Api.client(serviceUrl: '/services/gazago/api').get('/ping/wait/$seconds');
+  }
+
+  static Future<Response> verifyLabPassword(String password) async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService).post('/lab/verify', data: {
+      'password': password,
+    });
+  }
+
+  static Future<Response> requestLabSignIn(String email, String password) async {
+    return await Api.client(serviceUrl: ServiceUrl.uaaService, needsToken: false).post('/lab/sign-in', data: {
+      "clientId": "GAZAGO",
+      "username": email,
+      "password": password,
+    });
+  }
+
+
+}
