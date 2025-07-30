@@ -9,6 +9,7 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/wallet_staika_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:get/get.dart';
 
@@ -17,9 +18,12 @@ class CreateWalletWebview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 한국이 아닌 경우 본인인증 없이 지갑 생성
+    String languageCode = isKoreaRegion() ? 'ko-KR' : 'en-US';
+    
     return Scaffold(
       body: InAppWebView(
-        initialUrlRequest: URLRequest(url: WebUri('${F.webWalletUrl}/terms?hl=ko-KR&ci=GAZAGO')),
+        initialUrlRequest: URLRequest(url: WebUri('${F.webWalletUrl}/terms?hl=$languageCode&ci=GAZAGO')),
         initialSettings: InAppWebViewSettings(
           clearCache: true,
           transparentBackground: false,
@@ -40,6 +44,7 @@ class CreateWalletWebview extends StatelessWidget {
             handlerName: 'app',
             callback: (args) async {
               // print arguments coming from the JavaScript side!
+              print('WebView JavaScript callback: ${args[0]}');
               Map result = {};
 
               switch (args[0]) {
@@ -62,6 +67,15 @@ class CreateWalletWebview extends StatelessWidget {
                     await Get.find<StaikaWalletController>().getStaikaWalletInfo();
                   }
                   Get.until((route) => Get.currentRoute == Routes.wallet || Get.currentRoute == Routes.itemDetail);
+                  break;
+                  
+                case 'VERIFICATION_REQUIRED':
+                  // 한국이 아닌 경우 본인인증 우회
+                  if (!isKoreaRegion()) {
+                    print('Non-Korean user, bypassing verification');
+                    // 본인인증 완료 상태로 처리
+                    controller.evaluateJavascript(source: "window.completeVerification()");
+                  }
                   break;
               }
 

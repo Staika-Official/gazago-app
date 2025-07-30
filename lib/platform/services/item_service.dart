@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/apis/item.dart';
@@ -17,10 +15,7 @@ class ItemService {
     return HiveStore.loadString(key: HiveKey.userId.name);
   }
 
-  static Future<void> getAllMyItems(int page,
-      {required Function successCallback,
-      Function? errorCallback,
-      String? publishType}) async {
+  static Future<void> getAllMyItems(int page, {required Function successCallback, Function? errorCallback, String? publishType}) async {
     Response res = await ItemApi.getAllMyItems(userId!, page, publishType);
     if (res.statusCode == 200) {
       int totalItemCount = int.parse(res.headers.value('x-total-count')!);
@@ -36,8 +31,7 @@ class ItemService {
     }
   }
 
-  static Future<void> getMyItemsByCategory(String category, int page,
-      {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getMyItemsByCategory(String category, int page, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ItemApi.getMyItemsByCategory(userId!, category, page);
     if (res.statusCode == 200) {
       List<InventoryItemModel> userItemsByCategory = List.empty(growable: true);
@@ -52,8 +46,7 @@ class ItemService {
     }
   }
 
-  static Future<void> getItemDetailInfo(int itemId,
-      {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getItemDetailInfo(int itemId, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ItemApi.getItemDetailInfo(userId!, itemId);
     if (res.statusCode == 200) {
       successCallback(InventoryItemModel.fromJson(res.data));
@@ -62,32 +55,25 @@ class ItemService {
     }
   }
 
-  static Future<void> fetchRepairItemShoes(
-      int itemId, RepairShoesModel repairInfo,
-      {required Function successCallback, Function? errorCallback}) async {
-    Response res =
-        await ItemApi.fetchRepairItemShoes(userId!, itemId, repairInfo);
+  static Future<void> fetchRepairItemShoes(int itemId, RepairShoesModel repairInfo, {required Function successCallback, Function? errorCallback}) async {
+    Response res = await ItemApi.fetchRepairItemShoes(userId!, itemId, repairInfo);
     if (res.statusCode == 200) {
       successCallback(InventoryItemModel.fromJson(res.data));
     } else {
-      if (errorCallback != null)
-        errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
-  static Future<void> fetchRecoveryStamina(RecoveryStaminaModel recoveryInfo,
-      {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> fetchRecoveryStamina(RecoveryStaminaModel recoveryInfo, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ItemApi.fetchRecoveryStamina(userId!, recoveryInfo);
     if (res.statusCode == 200) {
       successCallback(UserStateModel.fromJson(res.data));
     } else {
-      if (errorCallback != null)
-        errorCallback(ErrorResponseDataModel.fromJson(res.data));
+      if (errorCallback != null) errorCallback(ErrorResponseDataModel.fromJson(res.data));
     }
   }
 
-  static Future<void> fetchEquippedItem(int itemId,
-      {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> fetchEquippedItem(int itemId, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ItemApi.fetchEquippedItem(userId!, itemId);
     if (res.statusCode == 200) {
       successCallback(InventoryItemModel.fromJson(res.data));
@@ -96,8 +82,7 @@ class ItemService {
     }
   }
 
-  static Future<void> fetchEquippedBadge(int badgeId,
-      {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> fetchEquippedBadge(int badgeId, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ItemApi.fetchEquippedBadge(userId!, badgeId);
     if (res.statusCode == 200) {
       successCallback(InventoryBadgeModel.fromJson(res.data));
@@ -106,8 +91,7 @@ class ItemService {
     }
   }
 
-  static Future<void> getUserConsumerItemByType(String itemType,
-      {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getUserConsumerItemByType(String itemType, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ItemApi.getUserConsumerItemByType(userId!, itemType);
     if (res.statusCode == 200) {
       List<InventoryItemModel> userItemsByType = List.empty(growable: true);

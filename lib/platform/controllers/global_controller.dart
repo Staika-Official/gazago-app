@@ -75,7 +75,7 @@ class GlobalController extends SuperController {
     InternetConnectionChecker internetConnectionChecker,
   ) async {
     internetConnectionListener =
-        InternetConnectionChecker().onStatusChange.listen(
+        internetConnectionChecker.onStatusChange.listen(
       (InternetConnectionStatus status) {
         switch (status) {
           case InternetConnectionStatus.connected:

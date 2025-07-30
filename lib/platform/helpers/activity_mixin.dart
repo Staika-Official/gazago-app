@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
-// import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -81,7 +81,7 @@ mixin ActivityMixin {
       Throttling(duration: const Duration(milliseconds: 1500));
   final Rx<Control> luckLoadControl = Rx(Control.stop);
   RxBool isShowLuckAnimation = RxBool(false);
-  // final assetsAudioPlayer = AssetsAudioPlayer();
+  final audioPlayer = AudioPlayer();
 
   Rx<Color> get exerciseStateTextColor {
     Color color = Colors.white;
@@ -972,10 +972,11 @@ mixin ActivityMixin {
     // if (isAbleSound) {
     //   HapticFeedback.vibrate();
     //
-    //   if (!assetsAudioPlayer.isPlaying.value) {
-    //     assetsAudioPlayer.open(Audio("assets/audio/bonus_go.mp3")).then((value) {
-    //       assetsAudioPlayer.play();
-    //     }).onError((error, stackTrace) {});
+    //   try {
+    //     await audioPlayer.setAsset('assets/audio/bonus_go.mp3');
+    //     await audioPlayer.play();
+    //   } catch (e) {
+    //     print('Audio playback error: $e');
     //   }
     // }
   }

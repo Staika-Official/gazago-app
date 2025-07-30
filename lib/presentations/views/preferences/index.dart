@@ -9,6 +9,7 @@ import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/debugging_controller.dart';
 import 'package:gaza_go/platform/controllers/notice_popup_controller.dart';
 import 'package:gaza_go/platform/controllers/preference_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
@@ -95,50 +96,55 @@ class Preferences extends StatelessWidget {
                   );
                 }),
               ),
-              controller.profile.value.authorities!
-                      .contains('ROLE_CERTIFIED_USER')
-                  ? SizedBox(
-                      height: 60.sp,
-                      child: Padding(
-                          padding: EdgeInsets.only(left: 25.sp, right: 20.sp),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              StyledText(
-                                'identity_verification'.tr(),
-                                fontSize: 18,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(right: 5.sp),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      width: 1,
-                                      style: BorderStyle.solid,
-                                      color: skyBlueColor,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 2.0.sp, horizontal: 10.sp),
+              // 한국인 경우에만 Identity Verification 메뉴 표시
+              isKoreaRegion()
+                  ? (controller.profile.value.authorities!
+                          .contains('ROLE_CERTIFIED_USER')
+                      ? SizedBox(
+                          height: 60.sp,
+                          child: Padding(
+                              padding: EdgeInsets.only(left: 25.sp, right: 20.sp),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
                                     child: StyledText(
-                                      'authentication_complete_1'.tr(),
-                                      color: skyBlueColor,
-                                      fontWeight: 500,
-                                      fontSize: 14,
-                                      lineHeight: 18,
+                                      'identity_verification'.tr(),
+                                      fontSize: 18,
                                     ),
                                   ),
-                                ),
-                              ),
-                            ],
-                          )),
-                    )
-                  : PreferenceItem(
-                      title: 'identity_verification'.tr(),
-                      onTap: () => Get.toNamed(Routes.verificationTerms),
-                    ),
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 5.sp),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                          width: 1,
+                                          style: BorderStyle.solid,
+                                          color: skyBlueColor,
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 2.0.sp, horizontal: 10.sp),
+                                        child: StyledText(
+                                          'authentication_complete_1'.tr(),
+                                          color: skyBlueColor,
+                                          fontWeight: 500,
+                                          fontSize: 14,
+                                          lineHeight: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        )
+                      : PreferenceItem(
+                          title: 'identity_verification'.tr(),
+                          onTap: () => Get.toNamed(Routes.verificationTerms),
+                        ))
+                  : Container(), // 한국이 아닌 경우 메뉴 숨김
               Padding(
                 padding: EdgeInsets.only(left: 25.sp, right: 20.sp),
                 child: SizedBox(
@@ -183,7 +189,7 @@ class Preferences extends StatelessWidget {
                   Adjust.trackEvent(AdjustEvent('pk4dwp'));
                   Get.toNamed(Routes.webView, arguments: {
                     'linkUrl':
-                        'https://ltechpin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
+                        'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
                   });
                 },
               ),
@@ -194,7 +200,7 @@ class Preferences extends StatelessWidget {
                   Adjust.trackEvent(AdjustEvent('bkeekw'));
                   Get.toNamed(Routes.webView, arguments: {
                     'linkUrl':
-                        'https://ltechpin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
+                        'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
                   });
                 },
               ),

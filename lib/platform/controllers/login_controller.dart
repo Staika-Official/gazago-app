@@ -82,20 +82,23 @@ class LoginController extends GetxController {
 
   Future<void> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn(scopes: [
-        'email',
-        'profile',
-      ]).signIn();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn.instance.authenticate();
 
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      if (googleUser == null) return;
 
-      if (googleAuth == null) return;
+      // Get authorization headers for Firebase
+      final Map<String, String>? headers = 
+          await googleUser.authorizationClient.authorizationHeaders([
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile',
+      ]);
 
-      // Create a new credential
+      if (headers == null) return;
+
+      // Create a new credential using the authorization token
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+        accessToken: headers['Authorization']?.replaceFirst('Bearer ', '') ?? '',
+        idToken: headers['Authorization']?.replaceFirst('Bearer ', '') ?? '',
       );
 
       await FirebaseAuth.instance.signInWithCredential(credential);

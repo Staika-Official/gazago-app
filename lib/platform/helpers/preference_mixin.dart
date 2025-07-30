@@ -35,6 +35,11 @@ mixin PreferenceMixin {
           },
         );
         originalNickname.value = account.nickname!;
+        
+        // countryCode 저장
+        if (account.countryCode != null) {
+          HiveStore.save(key: HiveKey.countryCode.name, value: account.countryCode);
+        }
       },
       errorCallback: (message) {
         showToastPopup(message);

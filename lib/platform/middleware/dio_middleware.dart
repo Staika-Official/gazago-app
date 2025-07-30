@@ -475,8 +475,10 @@ class Api {
       HiveKey.refreshToken.name,
     ]);
 
-    if (await GoogleSignIn().isSignedIn()) {
-      GoogleSignIn().signOut();
+    try {
+      await GoogleSignIn.instance.disconnect();
+    } catch (e) {
+      // Google Sign In 에러 무시
     }
 
     if (getx.Get.isRegistered<ActivityController>()) {

@@ -63,8 +63,10 @@ void handleKeysOnLogout() {
 
 void forceLogout() async {
   handleKeysOnLogout();
-  if (await GoogleSignIn().isSignedIn()) {
-    GoogleSignIn().signOut();
+  try {
+    await GoogleSignIn.instance.disconnect();
+  } catch (e) {
+    // Google Sign In 에러 무시
   }
 
   if (Get.isRegistered<ActivityController>()) {

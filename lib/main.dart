@@ -125,10 +125,18 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
     await EasyLocalization.ensureInitialized();
 
-    AdjustConfig adjustConfig = new AdjustConfig('egsa3l7qwj5s',
-        F.isDev ? AdjustEnvironment.sandbox : AdjustEnvironment.production);
+    AdjustConfig adjustConfig = AdjustConfig(
+      'egsa3l7qwj5s',
+      F.isDev ? AdjustEnvironment.sandbox : AdjustEnvironment.production,
+    );
     adjustConfig.logLevel = AdjustLogLevel.verbose;
-    Adjust.start(adjustConfig);
+    // Adjust SDK 초기화
+    try {
+      Adjust.initSdk(adjustConfig);
+    } catch (e) {
+      // Adjust 초기화 실패 시 무시
+      print('Adjust initialization failed: $e');
+    }
 
     await Hive.initFlutter();
     HiveStore.registerAdapters();

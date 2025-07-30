@@ -301,7 +301,7 @@ class ActivityController extends SuperController
     challengeSelectedIndex.value = course.id!;
     selectedChallengeMarkers.clear();
     challengeMarkers.removeWhere((element) {
-      return element.markerId == challengeSelectedIndex.value.toString();
+      return element.info.id == challengeSelectedIndex.value.toString();
     });
 
     selectedChallengeMarkers.add(getCustomMarker(
@@ -332,10 +332,6 @@ class ActivityController extends SuperController
         CameraUpdate.newLatLngBounds(_createBoundsFromLatLngList(markers), 120),
       );
     } else {
-      print(course.startLat!);
-      print(course.startLon!);
-      print(course.endLat!);
-      print(course.endLon!);
       challengeMapController.animateCamera(
         CameraUpdate.newLatLngBounds(
             _createBoundsFromLatLngList(
@@ -1398,14 +1394,14 @@ class ActivityController extends SuperController
             // Get.toNamed(Routes.noticeList);
             Get.toNamed(Routes.webView, arguments: {
               'linkUrl':
-                  'https://ltechpin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
+                  'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
             });
             break;
           case 'FAQ':
             // Get.toNamed(Routes.preferenceBoard);
             Get.toNamed(Routes.webView, arguments: {
               'linkUrl':
-                  'https://ltechpin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
+                  'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
             });
             break;
         }

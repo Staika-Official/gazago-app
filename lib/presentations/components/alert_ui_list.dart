@@ -4894,6 +4894,11 @@ void failureExchangeStikToGoWalletAlert() {
 }
 
 void showNeedVerificationAlert(WalletMasterController controller) {
+  // 한국이 아닌 경우 인증 알림 표시하지 않음
+  if (!isKoreaRegion()) {
+    return;
+  }
+  
   showAlert(
     title: 'verification_required'.tr(),
     contentText: 'verification_required_for_voucher_exchange'.tr(),
@@ -6034,11 +6039,9 @@ void consumerItemUsagePopup(controller, context) {
                                                                 ? item.itemStat
                                                                     .recoveryStamina
                                                                     .toInt()
-                                                                    .toString()
                                                                 : item.itemStat
                                                                     .repairDurability
                                                                     .toInt()
-                                                                    .toString()
                                                           ]),
                                                           style: AppTextStyleData
                                                                   .regular()
@@ -8036,6 +8039,11 @@ void showConfirmNicknameChange(MyPageController controller) {
 }
 
 void showChallengeNeedVerificationAlert() {
+  // 한국이 아닌 경우 인증 알림 표시하지 않음
+  if (!isKoreaRegion()) {
+    return;
+  }
+  
   Get.dialog(
     barrierColor: subBg01Color.withOpacity(0.8),
     PopScope(
@@ -8114,6 +8122,11 @@ void showChallengeNeedVerificationAlert() {
 }
 
 void showChallengeItemBuyNeedVerificationAlert() {
+  // 한국이 아닌 경우 인증 알림 표시하지 않음
+  if (!isKoreaRegion()) {
+    return;
+  }
+  
   Get.dialog(
     barrierColor: Colors.transparent,
     PopScope(
@@ -8623,6 +8636,11 @@ void errorBottomSheet(String errorMsg) {
 }
 
 void showNeedVerificationExchangeAlert() {
+  // 한국이 아닌 경우 인증 알림 표시하지 않음
+  if (!isKoreaRegion()) {
+    return;
+  }
+  
   showAlert(
     title: 'verification_required'.tr(),
     contentText: 'identity_verification_redirect'.tr(),
@@ -8856,7 +8874,7 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
                       onTap: () {
                         Get.toNamed(Routes.webView, arguments: {
                           'linkUrl':
-                              'https://ltechpin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'
+                              'https://eztechfin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'
                         });
                       },
                       child: Text(
@@ -8940,7 +8958,7 @@ void showIOSDeniedAdPermissionAlert(DailyBenefitController controller) {
                       onTap: () {
                         Get.toNamed(Routes.webView, arguments: {
                           'linkUrl':
-                              'https://ltechpin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'
+                              'https://eztechfin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'
                         });
                       },
                       child: Text(

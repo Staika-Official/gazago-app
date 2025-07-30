@@ -77,6 +77,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
   Future<void> getNoticePopupList() async {
     await BoardService.getNoticePopupList(
       successCallback: (List<NoticePopupModel> records) async {
+
         List<NoticePopupModel> mainPopupList = records.toList();
         List<NoticePopupModel> alramList = records.toList();
 
@@ -86,17 +87,16 @@ class NoticePopupController extends GetxController with PromotionMixin {
     );
   }
 
-  bool dateRangeFiltered(item) {
+  bool dateRangeFiltered(item){
     DateTime now = DateTime.now();
     DateTime displayFromDate = DateTime.parse(item.displayFromDate);
     DateTime displayToDate = DateTime.parse(item.displayToDate);
     return now.isAfter(displayFromDate) && now.isBefore(displayToDate);
   }
 
-  void setMainNoticePopupList(List<NoticePopupModel> list) {
-    list.removeWhere((element) =>
-        (element.type == 'INSPECTION' || element.mainDisplayed == false) ||
-        !dateRangeFiltered(element));
+  void setMainNoticePopupList(List<NoticePopupModel>  list)  {
+
+    list.removeWhere((element) => (element.type == 'INSPECTION' || element.mainDisplayed == false) || !dateRangeFiltered(element));
 
     if (promotionAdsList.isNotEmpty) {
       for (PromotionAdModel promotion in promotionAdsList) {
@@ -115,14 +115,13 @@ class NoticePopupController extends GetxController with PromotionMixin {
     noticeMainPopupList.sort((a, b) => a.listOrder!.compareTo(b.listOrder!));
   }
 
-  setNoticePopupList(List<NoticePopupModel> list) {
+  setNoticePopupList(List<NoticePopupModel>  list) {
     list.removeWhere((element) => element.type == 'INSPECTION');
     print('getMainNoticePopupList : ${list.length}');
     print('getMainNoticePopupList : ${list}');
     noticePopupList.addAll(list);
     // noticePopupList.sort((a, b) => a.listOrder!.compareTo(b.listOrder!));
-    List<int>? noticePopupListIds =
-        HiveStore.load(key: HiveKey.noticePopupListIds.name);
+    List<int>? noticePopupListIds = HiveStore.load(key: HiveKey.noticePopupListIds.name);
     if (noticePopupListIds != null && noticePopupListIds.isNotEmpty) {
       for (NoticePopupModel notice in noticePopupList) {
         if (!noticePopupListIds.contains(notice.id!)) {
@@ -141,8 +140,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
     // 미래에셋 광고 클릭 이벤트
     if (item.isAdsBanner != null && item.isAdsBanner!) {
       Adjust.trackEvent(AdjustEvent('qljdfk'));
-      bool bannerAdClick =
-          HiveStore.load(key: HiveKey.bannerAdClick.name) ?? false;
+      bool bannerAdClick = HiveStore.load(key: HiveKey.bannerAdClick.name) ?? false;
       if (!bannerAdClick) {
         Adjust.trackEvent(AdjustEvent('ytqi48'));
         HiveStore.save(key: HiveKey.bannerAdClick.name, value: true);
@@ -160,28 +158,22 @@ class NoticePopupController extends GetxController with PromotionMixin {
         switch (item.linkUrl) {
           case 'CHALLENGES':
             Get.find<HomeMenuController>().selectMenu(0);
-            Get.toNamed(Routes.challengeDetail
-                .replaceAll(':id', item.referenceId.toString()));
+            Get.toNamed(Routes.challengeDetail.replaceAll(':id', item.referenceId.toString()));
             break;
           case 'COMPANY_CHALLENGES':
             String? userId = HiveStore.loadString(key: HiveKey.userId.name);
-            DatabaseReference userDiInfoRef = FirebaseDatabase.instance
-                .ref('crewChallengeLeaderboard/${item.referenceId}');
+            DatabaseReference userDiInfoRef = FirebaseDatabase.instance.ref('crewChallengeLeaderboard/${item.referenceId}');
             Query query = userDiInfoRef.child(userId!);
             query.get().then((DataSnapshot snapshot) async {
               if (snapshot.value != null) {
                 // Get.find<HomeMenuController>().selectMenu(0);
-                Get.toNamed(Routes.companyChallengeDetail
-                    .replaceAll(':id', item.referenceId.toString()));
+                Get.toNamed(Routes.companyChallengeDetail.replaceAll(':id', item.referenceId.toString()));
               } else {
-                await ActivityService.getChallengeDetails(item.referenceId!,
-                    successCallback: (NewChallengeDetailModel data) async {
+                await ActivityService.getChallengeDetails(item.referenceId!, successCallback: (NewChallengeDetailModel data) async {
                   if (data.challengeUserState == null) {
-                    miraeAssetAlert(
-                        int.parse(item.referenceId.toString()), null);
+                    miraeAssetAlert(int.parse(item.referenceId.toString()), null);
                   } else {
-                    miraeAssetAlert(int.parse(item.referenceId.toString()),
-                        data.challengeUserState!);
+                    miraeAssetAlert(int.parse(item.referenceId.toString()), data.challengeUserState!);
                   }
                 });
               }
@@ -198,8 +190,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
             if (Get.isRegistered<LeaderboardController>()) {
               Get.find<LeaderboardController>().tabController.animateTo(1);
             } else {
-              LeaderboardController leaderboardController =
-                  Get.put(LeaderboardController());
+              LeaderboardController leaderboardController = Get.put(LeaderboardController());
               leaderboardController.tabController.animateTo(1);
             }
 
@@ -215,8 +206,7 @@ class NoticePopupController extends GetxController with PromotionMixin {
             if (Get.isRegistered<LeaderboardController>()) {
               Get.find<LeaderboardController>().tabController.animateTo(0);
             } else {
-              LeaderboardController leaderboardController =
-                  Get.put(LeaderboardController());
+              LeaderboardController leaderboardController = Get.put(LeaderboardController());
               leaderboardController.tabController.animateTo(0);
             }
             break;
@@ -226,24 +216,17 @@ class NoticePopupController extends GetxController with PromotionMixin {
             break;
           case 'NOTICE':
             // Get.toNamed(Routes.noticeList);
-            Get.toNamed(Routes.webView, arguments: {
-              'linkUrl':
-                  'https://ltechpin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
-            });
+            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/c5103042de5d4e3a9a61c1101508ffed'});
             break;
           case 'FAQ':
             // Get.toNamed(Routes.preferenceBoard);
-            Get.toNamed(Routes.webView, arguments: {
-              'linkUrl':
-                  'https://ltechpin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
-            });
+            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'https://eztechfin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'});
             break;
         }
         break;
       case 'INTERNAL_WEB_VIEW':
         // Get.toNamed(Routes.webView, arguments: {'id': item.id, 'linkUrl': item.linkUrl});
-        showModalWebview(this, Get.context,
-            title: item.label!, linkUrl: item.linkUrl!);
+        showModalWebview(this, Get.context, title: item.label!, linkUrl: item.linkUrl!);
         break;
       case 'EXTERNAL_BROWSER':
         Uri url = Uri.parse(item.linkUrl!);
@@ -255,19 +238,16 @@ class NoticePopupController extends GetxController with PromotionMixin {
   }
 
   void checkBlockUser(item) async {
-    bool hasSeenFairPlayAlert =
-        HiveStore.load(key: HiveKey.hasSeenFairPlayAlert.name) ?? false;
+    bool hasSeenFairPlayAlert = HiveStore.load(key: HiveKey.hasSeenFairPlayAlert.name) ?? false;
     if (!hasSeenFairPlayAlert) {
       HiveStore.save(key: HiveKey.hasSeenFairPlayAlert.name, value: true);
       await showFairPlayAlert();
     }
 
-    if (activityController.userState.value.state!.locked != null &&
-        activityController.userState.value.state!.locked! == true) {
+    if (activityController.userState.value.state!.locked != null && activityController.userState.value.state!.locked! == true) {
       showLockedUserAlert();
     } else {
-      Get.toNamed(Routes.challengeCourseDetail,
-          arguments: {'id': item.referenceId}, preventDuplicates: false);
+      Get.toNamed(Routes.challengeCourseDetail, arguments: {'id': item.referenceId}, preventDuplicates: false);
     }
   }
 
@@ -306,10 +286,8 @@ class NoticePopupController extends GetxController with PromotionMixin {
 
   void moveToNotificationsListPage() {
     Adjust.trackEvent(AdjustEvent('fl5g4k'));
-    List<int> noticePopupListIds =
-        noticePopupList.map((element) => element.id!).toSet().toList();
-    HiveStore.save(
-        key: HiveKey.noticePopupListIds.name, value: noticePopupListIds);
+    List<int> noticePopupListIds = noticePopupList.map((element) => element.id!).toSet().toList();
+    HiveStore.save(key: HiveKey.noticePopupListIds.name, value: noticePopupListIds);
     hasNewNotice.value = false;
     Get.toNamed(Routes.notifications);
   }
