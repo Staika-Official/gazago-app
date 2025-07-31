@@ -16,8 +16,9 @@ import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/mirae/alert_ui_list.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../models/promotion_ad_model.dart';
 
@@ -226,17 +227,12 @@ class NoticePopupController extends GetxController with PromotionMixin {
             break;
           case 'NOTICE':
             // Get.toNamed(Routes.noticeList);
-            Get.toNamed(Routes.webView, arguments: {
-              'linkUrl':
-                  'https://ltechpin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
-            });
+            Get.toNamed(Routes.webView,
+                arguments: {'linkUrl': 'notice_url'.tr()});
             break;
           case 'FAQ':
             // Get.toNamed(Routes.preferenceBoard);
-            Get.toNamed(Routes.webView, arguments: {
-              'linkUrl':
-                  'https://ltechpin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
-            });
+            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'faq_url'.tr()});
             break;
         }
         break;

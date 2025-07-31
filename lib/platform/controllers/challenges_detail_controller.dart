@@ -928,14 +928,14 @@ class ChallengesDetailController extends SuperController
             // Get.toNamed(Routes.noticeList);
             Get.toNamed(Routes.webView, arguments: {
               'linkUrl':
-                  'https://ltechpin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
+                  'notice_url'.tr()
             });
             break;
           case 'FAQ':
             // Get.toNamed(Routes.preferenceBoard);
             Get.toNamed(Routes.webView, arguments: {
               'linkUrl':
-                  'https://ltechpin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
+                  'faq_url'.tr()
             });
             break;
         }

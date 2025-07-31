@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class NoticeWebView extends StatelessWidget {
   const NoticeWebView({super.key});
@@ -12,9 +13,7 @@ class NoticeWebView extends StatelessWidget {
       child: SafeArea(
         child: InAppWebView(
           key: webViewKey,
-          initialUrlRequest: URLRequest(
-              url: WebUri(
-                  'https://ltechpin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3')),
+          initialUrlRequest: URLRequest(url: WebUri('faq_url'.tr())),
           initialSettings: InAppWebViewSettings(
             disableContextMenu: true,
             javaScriptEnabled: true,

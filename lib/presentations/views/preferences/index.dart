@@ -181,10 +181,8 @@ class Preferences extends StatelessWidget {
                 // onTap: () => Get.toNamed(Routes.noticeList, arguments: {'boardType': 'NOTICE'}),
                 onTap: () {
                   Adjust.trackEvent(AdjustEvent('pk4dwp'));
-                  Get.toNamed(Routes.webView, arguments: {
-                    'linkUrl':
-                        'https://ltechpin.notion.site/c5103042de5d4e3a9a61c1101508ffed'
-                  });
+                  Get.toNamed(Routes.webView,
+                      arguments: {'linkUrl': 'notice_url'.tr()});
                 },
               ),
               PreferenceItem(
@@ -192,10 +190,8 @@ class Preferences extends StatelessWidget {
                 // onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'FAQ'}),
                 onTap: () {
                   Adjust.trackEvent(AdjustEvent('bkeekw'));
-                  Get.toNamed(Routes.webView, arguments: {
-                    'linkUrl':
-                        'https://ltechpin.notion.site/FAQ-2f6b0ec4d6134fd398cd7a832bfa6cd3'
-                  });
+                  Get.toNamed(Routes.webView,
+                      arguments: {'linkUrl': 'faq_url'.tr()});
                 },
               ),
               PreferenceItem(
@@ -203,7 +199,7 @@ class Preferences extends StatelessWidget {
                 onTap: () {
                   Adjust.trackEvent(AdjustEvent('tbldgc'));
                   Get.toNamed(Routes.webView,
-                      arguments: {'linkUrl': F.howToGoUrl});
+                      arguments: {'linkUrl': 'how_to_go_url'.tr()});
                 },
               ),
               Container(

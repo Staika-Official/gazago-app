@@ -8855,8 +8855,7 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
                     child: InkWell(
                       onTap: () {
                         Get.toNamed(Routes.webView, arguments: {
-                          'linkUrl':
-                              'https://ltechpin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'
+                          'linkUrl':'no_ads_guide_url'.tr()
                         });
                       },
                       child: Text(
@@ -8939,8 +8938,7 @@ void showIOSDeniedAdPermissionAlert(DailyBenefitController controller) {
                     child: InkWell(
                       onTap: () {
                         Get.toNamed(Routes.webView, arguments: {
-                          'linkUrl':
-                              'https://ltechpin.notion.site/883801b0ca0e465d976f9a0062d080df?pvs=4'
+                          'linkUrl':'no_ads_guide_url'.tr()
                         });
                       },
                       child: Text(
