@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/my_page_controller.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/preference_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -525,7 +526,8 @@ class MyPage extends StatelessWidget {
                       children: [
                         Divider(color: subBg01Color, height: 6.sp),
                         if (controller.profile.value.authorities!
-                            .contains('ROLE_CERTIFIED_USER'))
+                                .contains('ROLE_CERTIFIED_USER') &&
+                            isKoreaRegion())
                           Container(
                             color: subBg02Color,
                             child: Padding(

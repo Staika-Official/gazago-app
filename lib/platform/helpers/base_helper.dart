@@ -337,6 +337,11 @@ void handlePendingDynamicLink() {
 }
 
 Future<bool> handleCheckUserVerified() async {
+  // 한국이 아닌 경우 인증 비활성화
+  if (!isKoreaRegion()) {
+    return true; // 인증 완료로 처리
+  }
+
   bool isVerified = HiveStore.load(key: HiveKey.certified.name) ?? false;
 
   if (!isVerified) {
@@ -353,6 +358,18 @@ Future<bool> handleCheckUserVerified() async {
   }
 
   return isVerified;
+}
+
+// 한국 지역인지 확인하는 함수
+bool isKoreaRegion() {
+  // 1. 디바이스 로케일로 확인
+  try {
+    String deviceLocale = Get.locale?.languageCode ?? 'ko';
+    return deviceLocale == 'ko';
+  } catch (e) {
+    // 에러 발생 시 기본값으로 한국 설정
+    return true;
+  }
 }
 
 void moveToVerification() {
