@@ -106,7 +106,7 @@
     <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="high_importance_channel"/>
     <meta-data
         android:name="com.google.android.gms.ads.APPLICATION_ID"
-        android:value="ca-app-pub-4234536720874912~8391712480"/>
+        android:value="ca-app-pub-3467340260114612~4655329175"/>
     <meta-data android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyBUnX4OE_OOe3XA4oRIdqPvX6jBMtZ9A38"/>
   </application>

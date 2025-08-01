@@ -138,7 +138,7 @@ class F {
       case Flavor.stage:
         return 'ca-app-pub-3940256099942544/1712485313';
       case Flavor.prod:
-        return 'ca-app-pub-4234536720874912/7717252030';
+        return 'ca-app-pub-3467340260114612/4088959171';
       default:
         return 'ca-app-pub-3940256099942544/1712485313';
     }
@@ -151,7 +151,7 @@ class F {
       case Flavor.stage:
         return 'ca-app-pub-3940256099942544/5224354917';
       case Flavor.prod:
-        return 'ca-app-pub-4234536720874912/8417209744';
+        return 'ca-app-pub-3467340260114612/8242954463';
       default:
         return 'ca-app-pub-3940256099942544/5224354917';
     }
@@ -164,7 +164,7 @@ class F {
       case Flavor.stage:
         return 'ca-app-pub-3940256099942544/1712485313';
       case Flavor.prod:
-        return 'ca-app-pub-4234536720874912/6348330049';
+        return 'ca-app-pub-3467340260114612/3023289514';
       default:
         return 'ca-app-pub-3940256099942544/1712485313';
     }
@@ -177,7 +177,7 @@ class F {
       case Flavor.stage:
         return 'ca-app-pub-3940256099942544/5224354917';
       case Flavor.prod:
-        return 'ca-app-pub-4234536720874912/9538719725';
+        return 'ca-app-pub-3467340260114612/6962534524';
       default:
         return 'ca-app-pub-3940256099942544/5224354917';
     }
@@ -190,7 +190,7 @@ class F {
       case Flavor.stage:
         return 'ca-app-pub-3940256099942544/6978759866';
       case Flavor.prod:
-        return 'ca-app-pub-4234536720874912/3997694956';
+        return 'ca-app-pub-3467340260114612/6850853883';
       default:
         return 'ca-app-pub-3940256099942544/6978759866';
     }
@@ -203,7 +203,7 @@ class F {
       case Flavor.stage:
         return 'ca-app-pub-3940256099942544/5354046379';
       case Flavor.prod:
-        return 'ca-app-pub-4234536720874912/6128284879';
+        return 'ca-app-pub-3467340260114612/5092061416';
       default:
         return 'ca-app-pub-3940256099942544/5354046379';
     }
@@ -242,7 +242,7 @@ class F {
       case Flavor.stage:
         return 'ca-app-pub-3940256099942544/1712485313';
       case Flavor.prod:
-        return 'ca-app-pub-4234536720874912/3194013355';
+        return 'ca-app-pub-3467340260114612/2465898076';
       default:
         return 'ca-app-pub-3940256099942544/1712485313';
     }
@@ -255,7 +255,7 @@ class F {
       case Flavor.stage:
         return 'ca-app-pub-3940256099942544/5224354917';
       case Flavor.prod:
-        return 'ca-app-pub-4234536720874912/9567850011';
+        return 'ca-app-pub-3467340260114612/8275616199';
       default:
         return 'ca-app-pub-3940256099942544/5224354917';
     }
