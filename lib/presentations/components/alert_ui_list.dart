@@ -4894,6 +4894,11 @@ void failureExchangeStikToGoWalletAlert() {
 }
 
 void showNeedVerificationAlert(WalletMasterController controller) {
+  // 한국이 아닌 경우 인증 알림 표시하지 않음
+  if (!isKoreaRegion()) {
+    return;
+  }
+
   showAlert(
     title: 'verification_required'.tr(),
     contentText: 'verification_required_for_voucher_exchange'.tr(),
@@ -8036,6 +8041,9 @@ void showConfirmNicknameChange(MyPageController controller) {
 }
 
 void showChallengeNeedVerificationAlert() {
+  if (!isKoreaRegion()) {
+    return;
+  }
   Get.dialog(
     barrierColor: subBg01Color.withOpacity(0.8),
     PopScope(
@@ -8114,6 +8122,10 @@ void showChallengeNeedVerificationAlert() {
 }
 
 void showChallengeItemBuyNeedVerificationAlert() {
+  if (!isKoreaRegion()) {
+    return;
+  }
+
   Get.dialog(
     barrierColor: Colors.transparent,
     PopScope(
@@ -8623,6 +8635,10 @@ void errorBottomSheet(String errorMsg) {
 }
 
 void showNeedVerificationExchangeAlert() {
+  // 한국이 아닌 경우 인증 알림 표시하지 않음
+  if (!isKoreaRegion()) {
+    return;
+  }
   showAlert(
     title: 'verification_required'.tr(),
     contentText: 'identity_verification_redirect'.tr(),
@@ -8854,9 +8870,8 @@ void showIOSAdPermissionAlert(DailyBenefitController controller) {
                     padding: EdgeInsets.only(top: 8.0.sp, bottom: 24.sp),
                     child: InkWell(
                       onTap: () {
-                        Get.toNamed(Routes.webView, arguments: {
-                          'linkUrl':'no_ads_guide_url'.tr()
-                        });
+                        Get.toNamed(Routes.webView,
+                            arguments: {'linkUrl': 'no_ads_guide_url'.tr()});
                       },
                       child: Text(
                         'tracking_permission_not_found'.tr(),
@@ -8937,9 +8952,8 @@ void showIOSDeniedAdPermissionAlert(DailyBenefitController controller) {
                     padding: EdgeInsets.only(top: 8.0.sp, bottom: 24.sp),
                     child: InkWell(
                       onTap: () {
-                        Get.toNamed(Routes.webView, arguments: {
-                          'linkUrl':'no_ads_guide_url'.tr()
-                        });
+                        Get.toNamed(Routes.webView,
+                            arguments: {'linkUrl': 'no_ads_guide_url'.tr()});
                       },
                       child: Text(
                         'tracking_permission_not_found'.tr(),

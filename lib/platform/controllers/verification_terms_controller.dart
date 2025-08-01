@@ -1,5 +1,6 @@
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
 import 'package:gaza_go/platform/services/board_service.dart';
 import 'package:get/get.dart' hide Trans;
@@ -20,6 +21,11 @@ class VerificationTermsController extends GetxController {
 
   @override
   void onInit() {
+    // 로케일이 한국이 아닌경우 인증 페이지 접근 제한
+    if (!isKoreaRegion()) {
+      Get.back();
+      return;
+    }
     getTermsList();
     super.onInit();
   }
