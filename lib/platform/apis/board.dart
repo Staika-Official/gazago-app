@@ -5,8 +5,8 @@ import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 class BoardApi {
   // - 스펜딩 월렛 api
 
-  static Future<Response> getPostListByType(String boardTypes, String platform) async {
-    return await Api.client(serviceUrl: ServiceUrl.boardService).get('/$platform/posts/list', queryParameters: {'boardTypes': boardTypes, 'lang': 'ko'});
+  static Future<Response> getPostListByType(String boardTypes, String platform, String lang) async {
+    return await Api.client(serviceUrl: ServiceUrl.boardService).get('/$platform/posts/list', queryParameters: {'boardTypes': boardTypes, 'lang': lang,});
   }
 
   static Future<Response> getPostById(int id, String platform) async {

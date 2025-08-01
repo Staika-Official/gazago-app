@@ -1,12 +1,18 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gaza_go/platform/apis/board.dart';
 import 'package:gaza_go/platform/models/challenge_notification_group_model.dart';
 import 'package:gaza_go/platform/models/notice_popup_model.dart';
 import 'package:gaza_go/platform/models/term_item_model.dart';
 
 class BoardService {
-  static Future<void> getPostListByType(String boardTypes, {String platform = 'gazago', required Function successCallback, Function? errorCallback}) async {
-    Response res = await BoardApi.getPostListByType(boardTypes, platform);
+  static Future<void> getPostListByType(String boardTypes,
+      {String platform = 'gazago',
+      required Function successCallback,
+      Function? errorCallback,
+      String? lang}) async {
+    if (lang == null) lang = PlatformDispatcher.instance.locale.languageCode;
+    Response res = await BoardApi.getPostListByType(boardTypes, platform, lang);
     if (res.statusCode == 200) {
       List<TermItemModel> termsList = List.empty(growable: true);
       res.data.forEach((term) {
@@ -20,7 +26,10 @@ class BoardService {
     }
   }
 
-  static Future<void> getPostById(int id, {String platform = 'gazago', required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getPostById(int id,
+      {String platform = 'gazago',
+      required Function successCallback,
+      Function? errorCallback}) async {
     Response res = await BoardApi.getPostById(id, platform);
     if (res.statusCode == 200) {
       successCallback(TermItemModel.fromJson(res.data));
@@ -29,7 +38,8 @@ class BoardService {
     }
   }
 
-  static Future<void> getMainNoticePopupList({required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getMainNoticePopupList(
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await BoardApi.getMainNoticePopupList();
     if (res.statusCode == 200) {
       List<NoticePopupModel> noticePopupList = List.empty(growable: true);
@@ -43,7 +53,8 @@ class BoardService {
     }
   }
 
-  static Future<void> getNoticePopupList({required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getNoticePopupList(
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await BoardApi.getNoticePopupList();
     if (res.statusCode == 200) {
       List<NoticePopupModel> noticePopupList = List.empty(growable: true);
@@ -57,12 +68,17 @@ class BoardService {
     }
   }
 
-  static Future<void> getChallengeNotifications(int challengeId, {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getChallengeNotifications(int challengeId,
+      {required Function successCallback, Function? errorCallback}) async {
     Response res = await BoardApi.getChallengeNotifications(challengeId);
     if (res.statusCode == 200) {
-      ChallengeNotificationGroupModel? challengeNotificationGroupModel = res.data != null && res.data != '' ? ChallengeNotificationGroupModel.fromJson(res.data) : null;
+      ChallengeNotificationGroupModel? challengeNotificationGroupModel =
+          res.data != null && res.data != ''
+              ? ChallengeNotificationGroupModel.fromJson(res.data)
+              : null;
 
-      challengeNotificationGroupModel?.challengeNotifications.sort((a, b) => a.listOrder.compareTo(b.listOrder));
+      challengeNotificationGroupModel?.challengeNotifications
+          .sort((a, b) => a.listOrder.compareTo(b.listOrder));
       successCallback(challengeNotificationGroupModel);
     } else {
       if (errorCallback != null) errorCallback();
