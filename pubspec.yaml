@@ -140,6 +140,7 @@ dependencies:
   google_maps_flutter: ^2.10.1
   google_maps_flutter_platform_interface: ^2.11.1
   easy_localization: ^3.0.7+1
+  clipboard: ^2.0.2
 
 
 dependency_overrides:

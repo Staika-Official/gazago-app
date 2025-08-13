@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
+import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/login_controller.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/presentations/views/referral/index.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:easy_localization/easy_localization.dart';
 
@@ -88,6 +90,19 @@ class Login extends StatelessWidget {
               child: Column(
                 children: [
                   ...renderLoginButtons(controller),
+
+                  //TODO: for testing purposes
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ReferralPage(),
+                        ),
+                      );
+                    },
+                    child: Text('Referral Screen'),
+                  ),
                 ],
               ),
             )
