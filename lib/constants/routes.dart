@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
+import 'package:gaza_go/platform/controllers/referral_controller.dart';
 import 'package:gaza_go/platform/middleware/router_middleware.dart';
 import 'package:gaza_go/presentations/components/in_app_modal_webview.dart';
 import 'package:gaza_go/presentations/views/activity/activity_active.dart';
@@ -55,6 +56,7 @@ import 'package:gaza_go/presentations/views/preferences/preference_board.dart';
 import 'package:gaza_go/presentations/views/preferences/terms_list.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_completed.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_confirm.dart';
+import 'package:gaza_go/presentations/views/referral/index.dart';
 import 'package:gaza_go/presentations/views/shop/shop_item_detail.dart';
 import 'package:gaza_go/presentations/views/term.dart';
 import 'package:gaza_go/presentations/views/verification/verification_cert_code.dart';
@@ -158,6 +160,7 @@ class Routes {
   static const collectionDetail = '/collection_detail';
   static const collectionRewardDetail = '/collection_reward_detail';
   static const createWalletWebview = '/create_wallet_webview';
+  static const referral = '/referral';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -243,6 +246,7 @@ class Routes {
     stepPage(name: Routes.collectionHome, page: const CollectionHome()),
     stepPage(name: Routes.collectionDetail, page: const CollectionDetail()),
     stepPage(name: Routes.collectionRewardDetail, page: const CollectionRewardDetail()),
+    stepPage(name: Routes.referral, page: const ReferralPage()),
   ];
 }
 
