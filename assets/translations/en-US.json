@@ -980,5 +980,17 @@
     "how_to_go_url": "https://ltechpin.notion.site/How-to-GO-2419b0c07d1c8042ab17d0b414cfd48c?source=copy_link",
     "notice_url": "https://ltechpin.notion.site/1-2419b0c07d1c8028808ce01cbf847c05?source=copy_link",
     "faq_url":"https://ltechpin.notion.site/FAQ-1-2419b0c07d1c80ecbce2ea4363430ddf?source=copy_link",
-    "no_ads_guide_url":"https://ltechpin.notion.site/2419b0c07d1c815aaec3d6da1d0e39ab"
+    "no_ads_guide_url":"https://ltechpin.notion.site/2419b0c07d1c815aaec3d6da1d0e39ab",
+    "referral": "Referral",
+    "share_your_code_with_friends": "Share your code with friends",
+    "your_referral_code": "Your Referral Code",
+    "copy": "Copy",
+    "copied": "Copied",
+    "redeem_code": "Redeem Code",
+    "referral_history": "Referral History",
+    "claim": "Claim",
+    "claimed": "Claimed",
+    "rewards_x_go_points": "Rewards: {} GO Points",
+    "code_copied": "Code copied!",
+    "no_referred_users": "No Referred Users"
   }

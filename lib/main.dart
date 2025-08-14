@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'generated/codegen_loader.g.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -159,6 +160,7 @@ void main() async {
     await checkInspectionNotice();
 
     runApp(EasyLocalization(
+        assetLoader: const CodegenLoader(),
         supportedLocales: supportedLocales,
         path: 'assets/translations',
         fallbackLocale: const Locale('en', 'US'),

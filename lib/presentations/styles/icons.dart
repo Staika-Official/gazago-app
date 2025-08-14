@@ -41,6 +41,7 @@ SvgPicture iconAllCheckDisagree = SvgPicture.asset('assets/images/common/ico_all
 SvgPicture iconCheckAgree = SvgPicture.asset('assets/images/common/ico_check_agree.svg', width: 24.sp, height: 24.sp);
 SvgPicture iconCheckDisagree = SvgPicture.asset('assets/images/common/ico_check_disagree.svg', width: 24.sp, height: 24.sp);
 SvgPicture iconTermsArrowRight = SvgPicture.asset('assets/images/common/ico_terms_arrow_right.svg', width: 18.sp, height: 18.sp);
+SvgPicture iconCheckOutlineWhite = SvgPicture.asset('assets/images/common/ico_check_outline_white.svg', width: 25.sp, height: 25.sp);
 
 // Header
 SvgPicture iconHeaderTik = SvgPicture.asset('assets/images/common/ico_header_tik.svg', width: 24.sp, height: 24.sp);

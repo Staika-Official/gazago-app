@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gaza_go/presentations/components/bottom_sheet_alert.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:hive/hive.dart';
 import 'package:in_app_update/in_app_update.dart';
 
 Future<void> showAlert({
@@ -77,6 +81,49 @@ void showUpdateSnackbar() {
       onTap: (snackbar) {
         InAppUpdate.completeFlexibleUpdate();
       },
+    ),
+  );
+}
+
+void showToastWithIcon({
+  required String message,
+  Color backgroundColor = Colors.black,
+  Color? textColor,
+  SvgPicture? icon,
+}) {
+  ScaffoldMessenger.of(Get.context!).showSnackBar(
+    SnackBar(
+      content: UnconstrainedBox(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 13.h,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.r),
+            color: backgroundColor,
+          ),
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                icon,
+                const SizedBox(width: 4),
+              ],
+              StyledText(
+                message,
+                fontSize: 15,
+                fontWeight: 500,
+              ),
+            ],
+          ),
+        ),
+      ),
+      elevation: 0,
+      duration: 2.seconds,
+      backgroundColor: Colors.transparent,
+      behavior: SnackBarBehavior.floating,
     ),
   );
 }
