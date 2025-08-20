@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:io';
 import 'dart:math';
 
@@ -21,6 +20,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
+import 'package:gaza_go/platform/helpers/image_helper.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
@@ -32,6 +32,7 @@ import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/promotion_ad_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
+import 'package:gaza_go/platform/models/treasure_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
@@ -139,6 +140,17 @@ class ActivityController extends SuperController
   RxInt calcDelay = RxInt(300);
   bool _isRequestingChallenges = false;
   RxBool isClickedBtn = RxBool(false);
+  final _treasureBaseSize = const Size(16, 10);
+  late final _treasureZoomSize = _treasureBaseSize * 1.5;
+  final _mockListTreasure = <TreasureModel>[
+    TreasureModel(
+      id: 1,
+      latitude: 37.420954,
+      longitude: -122.085791,
+      type: TreasureType.personal,
+    ),
+  ];
+  int? _currentHighlightedTreasureId;
 
   void checkNewCollectionStatus() {
     if (HiveStore.load(key: HiveKey.isNewCollection.name) != null &&
@@ -1032,6 +1044,8 @@ class ActivityController extends SuperController
             // outlineColor: Colors.white,
           ));
         }
+
+        _compareDistanceWithNearestTreasure(position);
       } else {
         // HiveStore.save(key: HiveKey.accessToken.name, value: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJramg0MzU3IiwiYXV0aCI6IlJPTEVfQURNSU4sUk9MRV9MT0NBVElPTixST0xFX0xPQ0FUSU9OX1NVUEVSVklTT1IiLCJleHAiOjE3MTg3ODYwNzksInVzZXJJZCI6IjI1NSJ9.rNf30NedosrnS4iPLLgEFR2RCNQSCLsytDqXsM4jLkJB_wKwhC-LQ0PVYnr3gzrDcT031n7cBBWyheYv_Ml9rA');
         // 첼린지 존 찾기(30초마다 요청)
@@ -1088,9 +1102,7 @@ class ActivityController extends SuperController
               'nearChallengeLocation.value : ${nearChallengeLocation.value!.startLat}');
 
           // 주기적으로 가장 가까운 챌린지 코스 지점 5분마다 재조회
-          if (calcNearCourseTime.value
-              .add(Duration(seconds: 300))
-              .isBefore(now)) {
+          if (calcNearCourseTime.value.add(300.seconds).isBefore(now)) {
             calculateNearByHierarchyCourse(
                 position.latitude, position.longitude);
           }
@@ -1439,45 +1451,109 @@ class ActivityController extends SuperController
     );
   }
 
-  // TODO(khoi.tran): mock data for now, will impletment in UC-005
+  /// make custom marker based on position
+  Future<Set<Marker>> _buildCustomMarkers({
+    required List<TreasureModel> positions,
+    required Size markerSize,
+  }) async {
+    final Set<Marker> markers = {};
+
+    for (int i = 0; i < positions.length; i++) {
+      final BitmapDescriptor customIcon =
+          await ImageHelper.bitmapDescriptorFromSvgAsset(
+        positions[i].treasureIconPath,
+        markerSize,
+      );
+      markers.add(
+        Marker(
+          markerId: MarkerId(positions[i].id.toString()),
+          position: LatLng(positions[i].latitude, positions[i].longitude),
+          icon: customIcon,
+          onTap: () => _onPickupTreasure(positions[i]),
+        ),
+      );
+    }
+
+    return markers;
+  }
+
+  // TODO(khoi.tran): mock data for now, will implement in UC-005
   Future<void> fetchRewardsItemsMarkers() async {
     await Future.delayed(2.seconds);
 
-    Future<Set<Marker>> buildCustomMarkers({
-      required List<LatLng> positions,
-      required List<String> ids,
-      required String assetPath, // e.g. 'assets/custom_marker.png'
-    }) async {
-      final BitmapDescriptor customIcon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(size: Size(48, 48)),
-        assetPath,
+    final markers = await _buildCustomMarkers(
+      positions: _mockListTreasure,
+      markerSize: _treasureBaseSize,
+    );
+    clearMarkers();
+    addOverlayAll(markers);
+  }
+
+  /// compare user location with the nearest treasure
+  /// to see if they can pick it up or not
+  /// UI purpose: zoom treasure if they can pick it up
+  void _compareDistanceWithNearestTreasure(Position userPosition) {
+    TreasureModel? nearestTreasure;
+    double minDistance = double.infinity;
+
+    for (final t in _mockListTreasure) {
+      final distance = Geolocator.distanceBetween(
+        userPosition.latitude,
+        userPosition.longitude,
+        t.latitude,
+        t.longitude,
       );
 
-      final Set<Marker> markers = {};
-
-      for (int i = 0; i < positions.length; i++) {
-        markers.add(
-          Marker(
-            markerId: MarkerId(ids[i]),
-            position: positions[i],
-            icon: customIcon,
-          ),
-        );
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestTreasure = t;
       }
-
-      return markers;
     }
 
-    final markers = await buildCustomMarkers(
-      positions: [
-        LatLng(37.42796133580664, -122.085749655962),
-        LatLng(37.43296265331129, -122.08832357078792),
-      ],
-      ids: ['m1', 'm2'],
-      assetPath: 'assets/images/@temp_shoe.png',
-    );
+    // if nearest treasure is within pickupRadius (10-15m for now)
+    if (nearestTreasure != null && minDistance <= 10) {
+      if (_currentHighlightedTreasureId != nearestTreasure.id) {
+        debugPrint("TREASURE CAN BE PICKED UP: $minDistance");
+        _currentHighlightedTreasureId = nearestTreasure.id;
+        _updateTreasureZoom(isZoom: true);
+      }
+    } else {
+      // no need to update if no treasure highlighted before
+      if (_currentHighlightedTreasureId == null) {
+        return;
+      }
 
-    addOverlayAll(markers);
+      debugPrint("REMOVE PICKABLE TREASURE: $minDistance");
+      _updateTreasureZoom(isZoom: false);
+      _currentHighlightedTreasureId = null;
+    }
+  }
+
+  /// sub-method to update UI for nearest treasure marker
+  Future<void> _updateTreasureZoom({required bool isZoom}) async {
+    final newMarkers = await _buildCustomMarkers(
+        positions: _mockListTreasure
+            .where((t) => t.id == _currentHighlightedTreasureId)
+            .toList(),
+        markerSize: isZoom ? _treasureZoomSize : _treasureBaseSize);
+
+    /// make sure always 1 marker return in this case
+    /// so there will be only 1 can be picked
+    if (newMarkers.length == 1) {
+      updateMarkerById(newMarkers.first);
+    }
+  }
+
+  /// method to handle when user pick up a treasure
+  /// only work if the treasure can be picked up + exercise is ongoing
+  /// which mean the treasure is within 10m
+  void _onPickupTreasure(TreasureModel position) {
+    if (_currentHighlightedTreasureId != null &&
+        _currentHighlightedTreasureId == position.id &&
+        exerciseState.value == ExerciseState.ongoing) {
+      /// logic to pick here
+      debugPrint("PICKKKKKK ${position.id}");
+    }
   }
 
   @override
