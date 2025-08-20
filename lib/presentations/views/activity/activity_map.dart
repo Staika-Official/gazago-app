@@ -29,6 +29,8 @@ class ActivityMap extends StatelessWidget {
             minMaxZoomPreference: const MinMaxZoomPreference(8, 20),
             mapType: MapType.normal,
             indoorViewEnabled: true,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
             initialCameraPosition: CameraPosition(
               target: LatLng(controller.currentLocation.value.latitude,
                   controller.currentLocation.value.longitude),
@@ -40,7 +42,6 @@ class ActivityMap extends StatelessWidget {
               ),
             },
             onMapCreated: (mapController) {
-              controller.challengeMapController = mapController;
               // mapController
               //     .setLocationTrackingMode(NLocationTrackingMode.follow);
               controller.addOverlayAll(
@@ -51,12 +52,9 @@ class ActivityMap extends StatelessWidget {
                     ...renderMarkers(controller.selectedCourse.value),
                 },
               );
-              print('map_ready'.tr());
-
               if (controller.coordinates.length >= 10) {
-                print('entered_here'.tr());
                 controller.addOverlay(Polyline(
-                  polylineId: PolylineId('path'),
+                  polylineId: const PolylineId('path'),
                   width: 3,
                   color: Colors.red,
                   points: controller.coordinates,

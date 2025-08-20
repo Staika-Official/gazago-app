@@ -118,6 +118,7 @@ SvgPicture iconExerciseStop = SvgPicture.asset('assets/images/activity/ico_exerc
 SvgPicture iconRepairPlus = SvgPicture.asset('assets/images/activity/ico_plus.svg', width: 12.sp, height: 12.sp);
 SvgPicture iconPause = SvgPicture.asset('assets/images/activity/ico_pause.svg', width: 26.sp, height: 30.3.sp);
 SvgPicture iconActivityLuck = SvgPicture.asset('assets/images/activity/ico_activity_luck.svg', width: 14.sp, height: 14.sp);
+SvgPicture iconZoomOut = SvgPicture.asset('assets/images/activity/ico_zoom_out.svg', width: 16.sp, height: 16.sp);
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15.sp, height: 20.sp);
 SvgPicture iconWasteBasket = SvgPicture.asset('assets/images/common/ico_wastebasket.svg', width: 32.sp, height: 32.sp);

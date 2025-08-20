@@ -59,10 +59,12 @@ class ActivityController extends SuperController
         ConsumerItemMixin,
         PromotionMixin {
   final WalletMasterController walletMasterController = Get.find();
+
   // ActivityController activityController = Get.isRegistered<ActivityController>() ? Get.find<ActivityController>() : Get.put(ActivityController());
   LoaderController loaderController = Get.isRegistered<LoaderController>()
       ? Get.find<LoaderController>()
       : Get.put(LoaderController());
+
   RxList<StatModel> get statList {
     return RxList([
       StatModel(
@@ -81,6 +83,7 @@ class ActivityController extends SuperController
   }
 
   GlobalKey webViewKey = GlobalKey();
+
   // final RxDouble currentSliderValue = RxDouble(0);
   // final RxInt remainDurability = RxInt(0);
   // final RxInt repairDurability = RxInt(0);
@@ -136,6 +139,7 @@ class ActivityController extends SuperController
   RxInt calcDelay = RxInt(300);
   bool _isRequestingChallenges = false;
   RxBool isClickedBtn = RxBool(false);
+
   void checkNewCollectionStatus() {
     if (HiveStore.load(key: HiveKey.isNewCollection.name) != null &&
         HiveStore.load(key: HiveKey.isNewCollection.name) == true) {
@@ -1019,11 +1023,9 @@ class ActivityController extends SuperController
                   coordinates.last.longitude);
         }
 
-        if (Get.currentRoute == Routes.activityMap &&
-            coordinates.length >= 10) {
-          print('entered_here'.tr());
+        if (coordinates.length >= 10) {
           addOverlay(Polyline(
-            polylineId: PolylineId('path'),
+            polylineId: const PolylineId('path'),
             width: 3,
             color: Colors.red,
             points: coordinates,
@@ -1282,12 +1284,12 @@ class ActivityController extends SuperController
   }
 
   void refreshUpdateCamera() {
-    if (nearByCourses.value != null && googleMapController != null) {
+    if (googleMapController != null) {
       List overlays = [];
-      nearByCourses.value.forEach((item) {
+      for (var item in nearByCourses) {
         overlays.addAll(renderCircleOverlays(item));
         overlays.addAll(renderMarkers(item));
-      });
+      }
       print(overlays);
       clearOverlays();
       addOverlayAll({...overlays});
@@ -1396,17 +1398,12 @@ class ActivityController extends SuperController
             break;
           case 'NOTICE':
             // Get.toNamed(Routes.noticeList);
-            Get.toNamed(Routes.webView, arguments: {
-              'linkUrl':
-                  'notice_url'.tr()
-            });
+            Get.toNamed(Routes.webView,
+                arguments: {'linkUrl': 'notice_url'.tr()});
             break;
           case 'FAQ':
             // Get.toNamed(Routes.preferenceBoard);
-            Get.toNamed(Routes.webView, arguments: {
-              'linkUrl':
-                  'faq_url'.tr()
-            });
+            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'faq_url'.tr()});
             break;
         }
         break;
@@ -1422,6 +1419,20 @@ class ActivityController extends SuperController
         }
         break;
     }
+  }
+
+  Future<void> moveMapToMyLocation() async {
+    LatLng target = LatLng(
+      currentLocation.value.latitude,
+      currentLocation.value.longitude,
+    );
+
+    challengeMapController.animateCamera(
+      CameraUpdate.newLatLngZoom(
+        target,
+        await challengeMapController.getZoomLevel(),
+      ),
+    );
   }
 
   @override

@@ -731,7 +731,6 @@ mixin ActivityMixin {
         // }
       } else {
         counter = counter + const Duration(milliseconds: 10);
-        stopProgress.value += (10 / 500);
       }
     });
   }
