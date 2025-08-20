@@ -90,19 +90,6 @@ class Login extends StatelessWidget {
               child: Column(
                 children: [
                   ...renderLoginButtons(controller),
-
-                  //TODO: for testing purposes
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const ReferralPage(),
-                        ),
-                      );
-                    },
-                    child: Text('Referral Screen'),
-                  ),
                 ],
               ),
             )

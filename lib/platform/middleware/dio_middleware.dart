@@ -41,6 +41,7 @@ class Api {
         onError: (DioException e, ErrorInterceptorHandler handler) =>
             _onErrorInterceptor(e, handler),
       ),
+      CurlInterceptor(),
       // LogInterceptor(
       //   error: true,
       //   request: true,
@@ -494,5 +495,35 @@ class Api {
 
     if (getx.Get.currentRoute != Routes.login)
       getx.Get.offAllNamed(Routes.login);
+  }
+}
+
+class CurlInterceptor extends Interceptor {
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    final method = options.method;
+    final url = options.uri.toString();
+
+    // Headers
+    final headers = options.headers.entries
+        .map((e) => "-H '${e.key}: ${e.value}'")
+        .join(' ');
+
+    // Data (body)
+    String data = '';
+    if (options.data != null) {
+      if (options.data is Map || options.data is List) {
+        data = "-d '${options.data}'";
+      } else {
+        data = "-d '${options.data.toString()}'";
+      }
+    }
+
+    final curl =
+        "curl -X $method $headers $data '$url'";
+
+    print("CURL: $curl");
+
+    super.onRequest(options, handler);
   }
 }
