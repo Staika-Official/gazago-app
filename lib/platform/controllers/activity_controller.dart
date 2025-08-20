@@ -1058,10 +1058,14 @@ class ActivityController extends SuperController
           }
 
           double prevPositionLat = nearChallengeLocation.value != null
-              ? double.parse(nearChallengeLocation.value!.startLat.toString())
+              ? double.tryParse(
+                      nearChallengeLocation.value!.startLat.toString()) ??
+                  0
               : position.latitude;
           double prevPositionLng = nearChallengeLocation.value != null
-              ? double.parse(nearChallengeLocation.value!.startLon.toString())
+              ? double.tryParse(
+                      nearChallengeLocation.value!.startLon.toString()) ??
+                  0
               : position.longitude;
 
           betweenDistance.value = calculateDistance(prevPositionLat,
@@ -1433,6 +1437,47 @@ class ActivityController extends SuperController
         await challengeMapController.getZoomLevel(),
       ),
     );
+  }
+
+  // TODO(khoi.tran): mock data for now, will impletment in UC-005
+  Future<void> fetchRewardsItemsMarkers() async {
+    await Future.delayed(2.seconds);
+
+    Future<Set<Marker>> buildCustomMarkers({
+      required List<LatLng> positions,
+      required List<String> ids,
+      required String assetPath, // e.g. 'assets/custom_marker.png'
+    }) async {
+      final BitmapDescriptor customIcon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(size: Size(48, 48)),
+        assetPath,
+      );
+
+      final Set<Marker> markers = {};
+
+      for (int i = 0; i < positions.length; i++) {
+        markers.add(
+          Marker(
+            markerId: MarkerId(ids[i]),
+            position: positions[i],
+            icon: customIcon,
+          ),
+        );
+      }
+
+      return markers;
+    }
+
+    final markers = await buildCustomMarkers(
+      positions: [
+        LatLng(37.42796133580664, -122.085749655962),
+        LatLng(37.43296265331129, -122.08832357078792),
+      ],
+      ids: ['m1', 'm2'],
+      assetPath: 'assets/images/@temp_shoe.png',
+    );
+
+    addOverlayAll(markers);
   }
 
   @override

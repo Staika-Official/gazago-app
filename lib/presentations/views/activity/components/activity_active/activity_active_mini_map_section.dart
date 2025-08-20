@@ -77,6 +77,8 @@ class ActivityActiveMiniMapSection extends GetWidget<ActivityController> {
                           // outlineColor: Colors.white,
                         ));
                       }
+
+                      controller.fetchRewardsItemsMarkers();
                     },
                   ),
                 ),
