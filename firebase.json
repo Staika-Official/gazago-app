@@ -1,0 +1,23 @@
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "buildConfigurations": {
+                    "src/dev": {
+                        "projectId": "app-step-prod",
+                        "appId": "1:321889905131:android:945691702c6a0df10a11ae",
+                        "fileOutput": "android/app/src/dev/google-services.json"
+                    }
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "app-step-prod",
+                    "configurations": {
+                        "android": "1:321889905131:android:945691702c6a0df10a11ae"
+                    }
+                }
+            }
+        }
+    }
+}
