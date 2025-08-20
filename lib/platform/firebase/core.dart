@@ -7,8 +7,8 @@ import 'package:gaza_go/platform/firebase/remote_config.dart';
 
 Future<void> initFirebase() async {
   await Firebase.initializeApp(
-    name: 'gazaGo',
-    options: DefaultFirebaseOptions.currentPlatform,
+    // name: 'gazaGo',
+    // options: DefaultFirebaseOptions.currentPlatform,
   );
 }
 
