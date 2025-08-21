@@ -15,9 +15,13 @@ import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
+import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/activity_mixin.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/helpers/gps_filter_helper.dart';
+import 'package:gaza_go/platform/helpers/battery_aware_gps.dart';
+import 'package:gaza_go/platform/helpers/gps_metrics.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
@@ -95,6 +99,7 @@ class ActivityController extends SuperController
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
   Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
   Rx<DateTime> calcNearCourseTime = Rx(DateTime.now());
+  DateTime? lastPositionTime;
   BitmapDescriptor? startMarker;
   BitmapDescriptor? endMarker;
   List<Marker> checkpointMarkers = List.empty(growable: true);
@@ -935,30 +940,48 @@ class ActivityController extends SuperController
 
   void initLocationStream() async {
     late LocationSettings locationSettings;
-    print('44444');
-    if (Platform.isAndroid) {
-      locationSettings = AndroidSettings(
+    print('Initializing GPS location stream with Phase 1 & 2 improvements...');
+
+    // Clear GPS filter history when starting new location stream
+    GPSFilterHelper.clearHistory();
+
+    // Phase 2: Start GPS metrics session
+    GPSMetrics.startSession();
+
+    // Phase 2: Use battery-aware GPS settings
+    try {
+      locationSettings = await BatteryAwareGPS.getOptimalLocationSettings();
+      print('Using battery-aware GPS settings');
+      // Record battery optimization
+      GPSMetrics.recordBatteryOptimization();
+    } catch (e) {
+      print('Battery-aware GPS failed, using fallback settings: $e');
+      // Fallback to Phase 1 settings if battery-aware fails
+      if (Platform.isAndroid) {
+        locationSettings = AndroidSettings(
+            accuracy: locationAccuracyQuality,
+            distanceFilter: gpsDistanceFilterMeters.toInt(),
+            forceLocationManager: true,
+            intervalDuration:
+                Duration(seconds: gpsUpdateIntervalSeconds.toInt()),
+            useMSLAltitude: true,
+            //(Optional) Set foreground notification config to keep the app alive
+            //when going to the background
+            foregroundNotificationConfig: ForegroundNotificationConfig(
+              notificationText: 'measuring_exercise_record'.tr(),
+              notificationTitle: 'recording_location'.tr(),
+              enableWakeLock: true,
+            ));
+      } else if (Platform.isIOS) {
+        locationSettings = AppleSettings(
           accuracy: locationAccuracyQuality,
-          distanceFilter: 1,
-          forceLocationManager: false,
-          intervalDuration: const Duration(seconds: 5),
-          useMSLAltitude: true,
-          //(Optional) Set foreground notification config to keep the app alive
-          //when going to the background
-          foregroundNotificationConfig: ForegroundNotificationConfig(
-            notificationText: 'measuring_exercise_record'.tr(),
-            notificationTitle: 'recording_location'.tr(),
-            enableWakeLock: true,
-          ));
-    } else if (Platform.isIOS) {
-      locationSettings = AppleSettings(
-        accuracy: locationAccuracyQuality,
-        activityType: ActivityType.fitness,
-        distanceFilter: 1,
-        pauseLocationUpdatesAutomatically: false,
-        // Only set to true if our app will be started up in the background.
-        showBackgroundLocationIndicator: false,
-      );
+          activityType: ActivityType.fitness,
+          distanceFilter: gpsDistanceFilterMeters.toInt(),
+          pauseLocationUpdatesAutomatically: false,
+          // Only set to true if our app will be started up in the background.
+          showBackgroundLocationIndicator: false,
+        );
+      }
     }
 
     locationSubscription ??=
@@ -966,14 +989,35 @@ class ActivityController extends SuperController
             (
       Position position,
     ) async {
-      currentLocation.value = position;
-      gpsAccuracySensitive.value = position.accuracy;
-      // gpsAccuracySensitive.value = 40;
-      print('registration'.tr());
-      isFakeGps.value = position.isMocked;
-      print('position : $position');
-      print('position.accuracy : ${position.accuracy}');
-      // HiveStore.save(key: HiveKey.currentPosition.name, value: null);
+      // Phase 1 & 2: Apply GPS filtering with fallback mechanism
+      Position? filteredPosition;
+      bool wasFiltered = false;
+
+      if (GPSFilterHelper.isFilteringEnabled) {
+        filteredPosition = GPSFilterHelper.filterPosition(position);
+        if (filteredPosition == null) {
+          wasFiltered = true;
+          print('GPS position filtered out - accuracy: ${position.accuracy}m');
+          // Phase 2: Record metrics and fallback
+          GPSMetrics.recordPosition(position, true);
+          await _handleGPSFallback(position);
+          return;
+        }
+      } else {
+        filteredPosition = position;
+      }
+
+      // Phase 2: Record GPS metrics
+      GPSMetrics.recordPosition(filteredPosition, wasFiltered);
+
+      // Use filtered position for all subsequent operations
+      currentLocation.value = filteredPosition;
+      gpsAccuracySensitive.value = filteredPosition.accuracy;
+      isFakeGps.value = filteredPosition.isMocked;
+
+      print('GPS position updated - accuracy: ${filteredPosition.accuracy}m');
+      print('Filtered position: $filteredPosition');
+
       detectFakeGps();
 
       if (HiveStore.load(key: HiveKey.isDebuggingMode.name) &&
@@ -983,34 +1027,41 @@ class ActivityController extends SuperController
 
         var logForm = {
           'positionRawDataInfo': '===================================='
-              '\nAltitude: ${position.altitude}'
-              '\nSpeed: ${convertMStoKMH(position.speed)}'
+              '\nOriginal - Altitude: ${position.altitude}, Speed: ${convertMStoKMH(position.speed)}, Accuracy: ${position.accuracy}'
+              '\nFiltered - Altitude: ${filteredPosition.altitude}, Speed: ${convertMStoKMH(filteredPosition.speed)}, Accuracy: ${filteredPosition.accuracy}'
               '\nSteps: ${exerciseSteps.value}'
-              '\nAccuracy: ${position.accuracy}'
-              '\nLatitude: ${position.latitude}'
-              '\nLongitude: ${position.longitude}'
+              '\nFiltered Latitude: ${filteredPosition.latitude}'
+              '\nFiltered Longitude: ${filteredPosition.longitude}'
               '\nLocationUpdateTime: ${DateTime.now()}'
+              '\nGPS Filter Stats: ${GPSFilterHelper.getFilteringStats()}'
         };
         positionRawData.add(logForm);
         HiveStore.savePositionRawData(value: positionRawData);
       }
 
       if (exerciseState.value == ExerciseState.ongoing &&
-          position.accuracy < gpsAccuracy) {
+          filteredPosition.accuracy < gpsAccuracy) {
         exerciseData.add(UserExerciseModel(
-          altitude: position.altitude,
-          speed: convertMStoKMH(position.speed),
+          altitude: filteredPosition.altitude,
+          speed: convertMStoKMH(filteredPosition.speed),
           steps: exerciseSteps.value,
           locationUpdateTime: DateTime.now(),
         ));
 
-        coordinates.add(LatLng(position.latitude, position.longitude));
+        coordinates
+            .add(LatLng(filteredPosition.latitude, filteredPosition.longitude));
         if (coordinates.isNotEmpty && coordinates.length > 1) {
-          //TODO. need to edit filter test
+          // Phase 2: Enhanced filterCoordinates with time validation
+          DateTime currentTime = DateTime.now();
           filterCoordinates(
-              coordinates.last,
-              LatLng(position.latitude, position.longitude),
-              userState.value.exercise!.id!);
+              coordinates[coordinates.length - 2], // Previous position
+              LatLng(filteredPosition.latitude, filteredPosition.longitude),
+              userState.value.exercise!.id!,
+              lastTime: lastPositionTime,
+              currentTime: currentTime);
+
+          // Update last position time for next iteration
+          lastPositionTime = currentTime;
           exerciseDistance.value = exerciseDistance.value +
               Geolocator.distanceBetween(
                   coordinates[coordinates.length - 2].latitude,
@@ -1062,10 +1113,13 @@ class ActivityController extends SuperController
               ? double.parse(nearChallengeLocation.value!.startLon.toString())
               : position.longitude;
 
-          betweenDistance.value = calculateDistance(prevPositionLat,
-              prevPositionLng, position.latitude, position.longitude);
+          betweenDistance.value = calculateDistance(
+              prevPositionLat,
+              prevPositionLng,
+              filteredPosition.latitude,
+              filteredPosition.longitude);
 
-          gpsSpeed.value = convertMStoKMH(position.speed);
+          gpsSpeed.value = convertMStoKMH(filteredPosition.speed);
           // gpsSpeed.value = betweenDistance.value * 3.6 / 1000;
           // gpsSpeed.value = calculateDistance( prevL ?? position.latitude, prevG ?? position.longitude, position.latitude, position.longitude);
           // gpsSpeed.value = position.speed;
@@ -1086,7 +1140,7 @@ class ActivityController extends SuperController
               .add(Duration(seconds: 300))
               .isBefore(now)) {
             calculateNearByHierarchyCourse(
-                position.latitude, position.longitude);
+                filteredPosition.latitude, filteredPosition.longitude);
           }
 
           if (betweenDistance.value < 1000) {
@@ -1117,9 +1171,9 @@ class ActivityController extends SuperController
 
       HiveStore.save(
           key: HiveKey.currentPosition.name,
-          value: '${position.latitude},${position.longitude}');
+          value: '${filteredPosition.latitude},${filteredPosition.longitude}');
       locationThr.throttle(() {
-        detectChallengeZone(position);
+        detectChallengeZone(filteredPosition!);
       });
     }, onError: (e) {});
   }
@@ -1243,20 +1297,182 @@ class ActivityController extends SuperController
   }
 
   Future<void> getCurrentLocation() async {
-    await Geolocator.getCurrentPosition(
+    try {
+      print('Getting current location with Phase 1 improvements...');
+      Position location = await Geolocator.getCurrentPosition(
+        desiredAccuracy: locationAccuracyQuality,
+        timeLimit: const Duration(seconds: 10),
+      );
+
+      // Apply GPS filtering if enabled
+      Position? filteredLocation;
+      if (GPSFilterHelper.isFilteringEnabled) {
+        filteredLocation = GPSFilterHelper.filterPosition(location);
+        if (filteredLocation == null) {
+          print(
+              'Initial location filtered out - accuracy: ${location.accuracy}m, retrying...');
+          // Retry once if filtered out
+          await Future.delayed(const Duration(seconds: 2));
+          location = await Geolocator.getCurrentPosition(
             desiredAccuracy: locationAccuracyQuality,
-            timeLimit: const Duration(seconds: 5))
-        .then((location) {
-      currentLocation.value = location;
-      isListeningToLocation.value = true;
-    }).onError((error, stackTrace) {
+            timeLimit: const Duration(seconds: 10),
+          );
+          filteredLocation =
+              GPSFilterHelper.filterPosition(location) ?? location;
+        }
+      } else {
+        filteredLocation = location;
+      }
+
+      // Validation accuracy with configurable threshold
+      if (filteredLocation.accuracy <= maxGpsAccuracy) {
+        currentLocation.value = filteredLocation;
+        isListeningToLocation.value = true;
+        print('Location acquired with accuracy: ${filteredLocation.accuracy}m');
+      } else {
+        print(
+            'Location accuracy too poor: ${filteredLocation.accuracy}m (max: ${maxGpsAccuracy}m)');
+        showToastPopup('gps_accuracy_poor'.tr());
+      }
+    } catch (error, stackTrace) {
+      print('getCurrentLocation error: $error');
       showToastPopup('location_info_unavailable'.tr());
-    });
+    }
+  }
+
+  /// Phase 2: GPS Fallback mechanism when GPS signal is poor or filtered out
+  Future<void> _handleGPSFallback(Position originalPosition) async {
+    try {
+      print(
+          'Attempting GPS fallback - original accuracy: ${originalPosition.accuracy}m');
+
+      // Record fallback attempt
+      GPSMetrics.recordFallback();
+
+      // Check if fallback is enabled via remote config
+      bool fallbackEnabled = getConfig(
+              dataType: ConfigType.bool,
+              configKey: 'enable_gps_fallback_mechanism') ??
+          true;
+      if (!fallbackEnabled) {
+        print('GPS fallback disabled via remote config');
+        return;
+      }
+
+      // Try to get a single position with best accuracy
+      Position fallbackPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best,
+        timeLimit: const Duration(seconds: 10),
+      );
+
+      // Use more lenient threshold for fallback (2x normal threshold)
+      double fallbackThreshold = gpsAccuracyFallback; // 10m from config
+      if (fallbackPosition.accuracy <= fallbackThreshold) {
+        // Apply basic filtering to fallback position
+        Position? filteredFallback;
+        if (GPSFilterHelper.isFilteringEnabled) {
+          filteredFallback = GPSFilterHelper.filterPosition(fallbackPosition);
+        }
+
+        if (filteredFallback != null) {
+          currentLocation.value = filteredFallback;
+          gpsAccuracySensitive.value = filteredFallback.accuracy;
+          print(
+              'Fallback position used: accuracy ${filteredFallback.accuracy}m');
+        } else {
+          // If even fallback is filtered, use original with warning
+          currentLocation.value = originalPosition;
+          gpsAccuracySensitive.value = originalPosition.accuracy;
+          print(
+              'Using original position as last resort: accuracy ${originalPosition.accuracy}m');
+        }
+      } else {
+        print(
+            'Fallback position also poor: ${fallbackPosition.accuracy}m (threshold: ${fallbackThreshold}m)');
+        // Use last known good position if available
+        Position? lastGoodPosition = GPSFilterHelper.lastGoodPosition;
+        if (lastGoodPosition != null) {
+          print(
+              'Using last known good position from ${lastGoodPosition.timestamp}');
+          // Don't update currentLocation to avoid stale data, just log
+        }
+      }
+    } catch (e) {
+      print('GPS fallback failed: $e');
+      // Record error
+      GPSMetrics.recordError('GPS fallback failed: $e');
+      // Show user-friendly message about GPS issues
+      showToastPopup('gps_signal_unstable'.tr());
+    }
+  }
+
+  /// Phase 2: GPS Warm-up process to improve initial accuracy
+  Future<void> initializeGPSWithWarmup() async {
+    try {
+      print('Starting GPS warm-up process...');
+
+      // Check if warm-up is enabled via remote config
+      bool warmupEnabled = getConfig(
+              dataType: ConfigType.bool, configKey: 'enable_gps_warm_up') ??
+          true;
+      if (!warmupEnabled) {
+        print('GPS warm-up disabled via remote config');
+        return;
+      }
+
+      // Clear any previous filtering history
+      GPSFilterHelper.clearHistory();
+
+      // Show user feedback about GPS initialization
+      showToastPopup('initializing_gps'.tr());
+
+      // Warm-up GPS by requesting multiple positions
+      for (int i = 0; i < 3; i++) {
+        try {
+          Position warmupPosition = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.bestForNavigation,
+            timeLimit: const Duration(seconds: 15),
+          );
+
+          print('GPS warm-up ${i + 1}/3: accuracy ${warmupPosition.accuracy}m');
+
+          // Add to filter history for better initial filtering
+          if (GPSFilterHelper.isFilteringEnabled) {
+            GPSFilterHelper.filterPosition(warmupPosition);
+          }
+
+          // If we get good accuracy, we can break early
+          if (warmupPosition.accuracy <= gpsAccuracy) {
+            print('GPS warm-up completed successfully with good accuracy');
+            showToastPopup('gps_ready'.tr());
+            break;
+          }
+
+          // Wait between attempts
+          if (i < 2) {
+            await Future.delayed(const Duration(seconds: 3));
+          }
+        } catch (e) {
+          print('GPS warm-up attempt ${i + 1} failed: $e');
+          if (i == 2) {
+            // Last attempt failed
+            showToastPopup('gps_warmup_failed'.tr());
+          }
+        }
+      }
+
+      // Final check - get current location after warm-up
+      await getCurrentLocation();
+    } catch (e) {
+      print('GPS warm-up process failed: $e');
+      showToastPopup('gps_initialization_failed'.tr());
+    }
   }
 
   Future<void> initializeActivity() async {
-    print('2222222222222');
-    await getCurrentLocation();
+    print('Initializing activity with Phase 2 improvements...');
+    // Phase 2: Use GPS warm-up for better initial accuracy
+    await initializeGPSWithWarmup();
     await getChallengesNearByHierarchy();
     initLocationStream();
     initGpsServiceStream();
@@ -1396,17 +1612,12 @@ class ActivityController extends SuperController
             break;
           case 'NOTICE':
             // Get.toNamed(Routes.noticeList);
-            Get.toNamed(Routes.webView, arguments: {
-              'linkUrl':
-                  'notice_url'.tr()
-            });
+            Get.toNamed(Routes.webView,
+                arguments: {'linkUrl': 'notice_url'.tr()});
             break;
           case 'FAQ':
             // Get.toNamed(Routes.preferenceBoard);
-            Get.toNamed(Routes.webView, arguments: {
-              'linkUrl':
-                  'faq_url'.tr()
-            });
+            Get.toNamed(Routes.webView, arguments: {'linkUrl': 'faq_url'.tr()});
             break;
         }
         break;

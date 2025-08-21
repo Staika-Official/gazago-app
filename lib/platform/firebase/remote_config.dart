@@ -5,10 +5,32 @@ import 'package:logger/logger.dart';
 
 enum ConfigType { bool, double, int, string, json }
 
-Map<String, dynamic> _defaultConfigs = {"abuse_radius": 50, "abuse_inside_radius_ratio": 80, "abuse_report_time": 600};
+Map<String, dynamic> _defaultConfigs = {
+  // Existing abuse detection configs
+  "abuse_radius": 50,
+  "abuse_inside_radius_ratio": 80,
+  "abuse_report_time": 600,
+
+  // GPS Accuracy Configs
+  "gps_accuracy_threshold": 5.0,
+  "gps_accuracy_fallback": 10.0,
+  "gps_max_acceptable_accuracy": 20.0,
+  "gps_filter_max_speed": 50.0,
+  "gps_filter_history_size": 5,
+  "gps_update_interval_seconds": 2.0,
+  "gps_distance_filter_meters": 3.0,
+  "gps_filter_min_time_interval": 1.0,
+
+  // GPS Feature Flags
+  "enable_advanced_gps_filtering": true,
+  "enable_gps_fallback_mechanism": true,
+  "enable_gps_warm_up": true,
+};
 
 Future<void> initRemoteConfig() async {
-  await FirebaseRemoteConfig.instance.setConfigSettings(RemoteConfigSettings(fetchTimeout: const Duration(seconds: 10), minimumFetchInterval: Duration.zero));
+  await FirebaseRemoteConfig.instance.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: const Duration(seconds: 10),
+      minimumFetchInterval: Duration.zero));
   await _setDefaultConfigs(_defaultConfigs);
   try {
     await FirebaseRemoteConfig.instance.fetchAndActivate();

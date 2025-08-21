@@ -57,14 +57,68 @@ Future<List<dynamic>> getLocationsData(int exerciseId) async {
   return completer.future;
 }
 
-void filterCoordinates(
-    LatLng lastPosition, LatLng newPosition, int exerciseId) {
+/// Enhanced coordinate filtering with speed and time validation - Phase 2
+void filterCoordinates(LatLng lastPosition, LatLng newPosition, int exerciseId,
+    {DateTime? lastTime, DateTime? currentTime}) {
   double distance = Geolocator.distanceBetween(lastPosition.latitude,
       lastPosition.longitude, newPosition.latitude, newPosition.longitude);
-  if (distance > 10) {
+
+  // Basic distance check (legacy behavior)
+  if (distance > 100) {
+    // Increased from 10m to 100m for more realistic threshold
     MemberService.reportAbuse(
         abusingType: "EXERCISE",
         exerciseId: exerciseId,
         description: 'large_coordinate_difference'.tr());
+    return;
+  }
+
+  // Enhanced validation with time and speed - Phase 2
+  if (lastTime != null && currentTime != null) {
+    double timeInterval = currentTime.difference(lastTime).inSeconds.toDouble();
+
+    // Avoid division by zero
+    if (timeInterval <= 0) {
+      print('Invalid time interval: $timeInterval seconds');
+      return;
+    }
+
+    double speed = distance / timeInterval; // m/s
+    double speedKmh = speed * 3.6; // km/h
+
+    // Speed validation for different exercise types
+    double maxSpeedThreshold = gpsFilterMaxSpeed; // Default 50 km/h from config
+
+    // Detect abnormal speed (teleportation)
+    if (speedKmh > maxSpeedThreshold) {
+      MemberService.reportAbuse(
+          abusingType: "EXERCISE",
+          exerciseId: exerciseId,
+          description:
+              'abnormal_speed_detected: ${speedKmh.toStringAsFixed(1)} km/h'
+                  .tr());
+      print('Abnormal speed detected: ${speedKmh.toStringAsFixed(1)} km/h');
+      return;
+    }
+
+    // Detect GPS jumps (large distance in short time)
+    if (distance > 50 && timeInterval < 5) {
+      MemberService.reportAbuse(
+          abusingType: "EXERCISE",
+          exerciseId: exerciseId,
+          description:
+              'gps_jump_detected: ${distance.toStringAsFixed(1)}m in ${timeInterval.toStringAsFixed(1)}s'
+                  .tr());
+      print(
+          'GPS jump detected: ${distance.toStringAsFixed(1)}m in ${timeInterval.toStringAsFixed(1)}s');
+      return;
+    }
+
+    // Log normal movement for debugging
+    if (distance > 1) {
+      // Only log significant movements
+      print(
+          'Normal movement: ${distance.toStringAsFixed(1)}m in ${timeInterval.toStringAsFixed(1)}s (${speedKmh.toStringAsFixed(1)} km/h)');
+    }
   }
 }
