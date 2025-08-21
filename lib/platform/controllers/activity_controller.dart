@@ -41,6 +41,7 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
+import 'package:gaza_go/presentations/views/activity/components/activity_active/pick_up_treasure_bottom_sheet.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Trans;
@@ -156,6 +157,7 @@ class ActivityController extends SuperController
   // if lock, user is centered map, can't zoom and drag
   // if unlock, user can zoom and drag, user not necessarily centered
   var isLockMap = false.obs;
+  Timer? _pickupCoolDownTimer;
 
   void checkNewCollectionStatus() {
     if (HiveStore.load(key: HiveKey.isNewCollection.name) != null &&
@@ -1562,9 +1564,29 @@ class ActivityController extends SuperController
     if (_currentHighlightedTreasureId != null &&
         _currentHighlightedTreasureId == position.id &&
         exerciseState.value == ExerciseState.ongoing) {
-      /// logic to pick here
-      debugPrint("PICKKKKKK ${position.id}");
-      showToastV2(message: 'Treasure collected!');
+      /// check cool down timer
+      if (_pickupCoolDownTimer != null) {
+        showToastV2(
+          message: 'cannot_pickup_in_cooldown'.tr(),
+          type: ToastV2Type.error,
+        );
+        return;
+      }
+
+      /// TODO: check daily limit here too
+      /// .....
+
+      /// can be picked up
+      /// show pick up bottom sheet
+      Get.bottomSheet(
+        isScrollControlled: true,
+        PickUpTreasureBottomSheet(
+          treasureModel: position,
+          onPickUp: () {
+            showToastV2(message: 'treasure_collected'.tr());
+          },
+        ),
+      );
     }
   }
 
