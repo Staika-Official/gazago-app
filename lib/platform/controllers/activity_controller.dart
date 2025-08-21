@@ -1107,10 +1107,14 @@ class ActivityController extends SuperController
           }
 
           double prevPositionLat = nearChallengeLocation.value != null
-              ? double.parse(nearChallengeLocation.value!.startLat.toString())
+              ? double.tryParse(
+                      nearChallengeLocation.value!.startLat.toString()) ??
+                  position.latitude
               : position.latitude;
           double prevPositionLng = nearChallengeLocation.value != null
-              ? double.parse(nearChallengeLocation.value!.startLon.toString())
+              ? double.tryParse(
+                      nearChallengeLocation.value!.startLon.toString()) ??
+                  position.longitude
               : position.longitude;
 
           betweenDistance.value = calculateDistance(
