@@ -22,7 +22,12 @@ class ActivityActiveMainButtonSection extends GetWidget<ActivityController> {
             CircularButton(
               radius: 48,
               color: Colors.white,
-              onTap: controller.moveMapToMyLocation,
+              onTap: () async {
+                controller.isLockMap.value = true;
+                controller
+                    .showExerciseMap()
+                    .whenComplete(() => controller.isLockMap.toggle());
+              },
               padding: const EdgeInsets.all(8),
               child: SvgPicture.asset(
                 'assets/images/activity/ico_exercise_location.svg',

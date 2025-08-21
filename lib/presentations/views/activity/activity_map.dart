@@ -9,13 +9,24 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart' hide Trans;
 
-class ActivityMap extends StatelessWidget {
+class ActivityMap extends StatefulWidget {
   const ActivityMap({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    ActivityController controller = Get.find();
+  State<ActivityMap> createState() => _ActivityMapState();
+}
 
+class _ActivityMapState extends State<ActivityMap> {
+  ActivityController controller = Get.find();
+
+  @override
+  void dispose() {
+    controller.challengeMapControllers.removeLast();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       children: [
         Obx(() {
@@ -36,6 +47,10 @@ class ActivityMap extends StatelessWidget {
                   controller.currentLocation.value.longitude),
               zoom: 17,
             ),
+            zoomGesturesEnabled: controller.isLockMap.isFalse,
+            tiltGesturesEnabled: controller.isLockMap.isFalse,
+            rotateGesturesEnabled: controller.isLockMap.isFalse,
+            scrollGesturesEnabled: controller.isLockMap.isFalse,
             gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
               Factory<OneSequenceGestureRecognizer>(
                 () => EagerGestureRecognizer(),
@@ -44,6 +59,7 @@ class ActivityMap extends StatelessWidget {
             onMapCreated: (mapController) {
               // mapController
               //     .setLocationTrackingMode(NLocationTrackingMode.follow);
+              controller.challengeMapControllers.add(mapController);
               controller.addOverlayAll(
                 {
                   if (controller.selectedCourse.value != null)
@@ -62,19 +78,6 @@ class ActivityMap extends StatelessWidget {
                 ));
               }
             },
-            // onCameraChange: (position, isGesture) {
-            //   // controller.challengeMapController.clearOverlays();
-            //   print('camera_moving'.tr());
-            //   if(controller.coordinates.length >= 10) {
-            //     controller.challengeMapController.addOverlay( NPathOverlay(
-            //       id: 'path',
-            //       width: 3,
-            //       color: Colors.red,
-            //       coords: controller.coordinates,
-            //       // outlineColor: Colors.white,
-            //     ));
-            //   }
-            // },
           );
         }),
         Positioned(

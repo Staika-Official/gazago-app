@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
+
 // import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -37,6 +38,7 @@ import 'package:uuid/uuid.dart';
 
 mixin ActivityMixin {
   GlobalController globalController = Get.find();
+
   // InspectionNoticeController inspectionNoticeController = Get.isRegistered<InspectionNoticeController>() ? Get.find<InspectionNoticeController>() : Get.put(InspectionNoticeController());
   final Rx<CurrentUserStateModel> userState = Rx(CurrentUserStateModel());
   final RxInt loadingTime = RxInt(1);
@@ -81,6 +83,7 @@ mixin ActivityMixin {
       Throttling(duration: const Duration(milliseconds: 1500));
   final Rx<Control> luckLoadControl = Rx(Control.stop);
   RxBool isShowLuckAnimation = RxBool(false);
+
   // final assetsAudioPlayer = AssetsAudioPlayer();
 
   Rx<Color> get exerciseStateTextColor {
@@ -953,9 +956,8 @@ mixin ActivityMixin {
     Get.until((route) => route.isFirst);
   }
 
-  void showExerciseMap() {
-    // Get.dialog(mapWidget, barrierDismissible: false);
-    Get.toNamed(Routes.activityMap);
+  Future<void> showExerciseMap() async {
+    await Get.toNamed(Routes.activityMap);
   }
 
   bool isTestingFakeGps() {

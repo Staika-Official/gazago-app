@@ -152,6 +152,10 @@ class ActivityController extends SuperController
   ];
   int? _currentHighlightedTreasureId;
 
+  // if lock, user is centered map, can't zoom and drag
+  // if unlock, user can zoom and drag, user not necessarily centered
+  var isLockMap = false.obs;
+
   void checkNewCollectionStatus() {
     if (HiveStore.load(key: HiveKey.isNewCollection.name) != null &&
         HiveStore.load(key: HiveKey.isNewCollection.name) == true) {
@@ -344,7 +348,7 @@ class ActivityController extends SuperController
     );
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
       List<LatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
-      challengeMapController.animateCamera(
+      challengeMapControllers.last.animateCamera(
         CameraUpdate.newLatLngBounds(_createBoundsFromLatLngList(markers), 120),
       );
     } else {
@@ -352,7 +356,7 @@ class ActivityController extends SuperController
       print(course.startLon!);
       print(course.endLat!);
       print(course.endLon!);
-      challengeMapController.animateCamera(
+      challengeMapControllers.last.animateCamera(
         CameraUpdate.newLatLngBounds(
             _createBoundsFromLatLngList(
               [
@@ -1011,6 +1015,10 @@ class ActivityController extends SuperController
         HiveStore.savePositionRawData(value: positionRawData);
       }
 
+      if (isLockMap.isTrue) {
+        _moveMapToMyLocation();
+      }
+
       if (exerciseState.value == ExerciseState.ongoing &&
           position.accuracy < gpsAccuracy) {
         exerciseData.add(UserExerciseModel(
@@ -1437,16 +1445,18 @@ class ActivityController extends SuperController
     }
   }
 
-  Future<void> moveMapToMyLocation() async {
+  Future<void> _moveMapToMyLocation() async {
     LatLng target = LatLng(
       currentLocation.value.latitude,
       currentLocation.value.longitude,
     );
 
-    challengeMapController.animateCamera(
-      CameraUpdate.newLatLngZoom(
-        target,
-        await challengeMapController.getZoomLevel(),
+    challengeMapControllers.forEach(
+      (controller) async => controller.animateCamera(
+        CameraUpdate.newLatLngZoom(
+          target,
+          await controller.getZoomLevel(),
+        ),
       ),
     );
   }

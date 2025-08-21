@@ -7,8 +7,23 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class ActivityActiveMiniMapSection extends GetWidget<ActivityController> {
+class ActivityActiveMiniMapSection extends StatefulWidget {
   const ActivityActiveMiniMapSection({super.key});
+
+  @override
+  State<ActivityActiveMiniMapSection> createState() =>
+      _ActivityActiveMiniMapSectionState();
+}
+
+class _ActivityActiveMiniMapSectionState
+    extends State<ActivityActiveMiniMapSection> {
+  final controller = Get.find<ActivityController>();
+
+  @override
+  void dispose() {
+    controller.challengeMapControllers.removeLast();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +70,7 @@ class ActivityActiveMiniMapSection extends GetWidget<ActivityController> {
                       ),
                     },
                     onMapCreated: (mapController) {
-                      controller.challengeMapController = mapController;
+                      controller.challengeMapControllers.add(mapController);
                       // mapController
                       //     .setLocationTrackingMode(NLocationTrackingMode.follow);
                       controller.addOverlayAll(
@@ -88,7 +103,10 @@ class ActivityActiveMiniMapSection extends GetWidget<ActivityController> {
               bottom: 10,
               right: 10,
               child: GestureDetector(
-                onTap: () => controller.showExerciseMap(),
+                onTap: () {
+                  controller.isLockMap.value = false;
+                  controller.showExerciseMap();
+                },
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
