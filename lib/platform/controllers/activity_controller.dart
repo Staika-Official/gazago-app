@@ -41,6 +41,7 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:health/health.dart';
@@ -1563,6 +1564,7 @@ class ActivityController extends SuperController
         exerciseState.value == ExerciseState.ongoing) {
       /// logic to pick here
       debugPrint("PICKKKKKK ${position.id}");
+      showToastV2(message: 'Treasure collected!');
     }
   }
 

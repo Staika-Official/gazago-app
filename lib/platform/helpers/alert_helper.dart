@@ -4,11 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gaza_go/presentations/components/bottom_sheet_alert.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:easy_localization/easy_localization.dart';
-import 'package:hive/hive.dart';
 import 'package:in_app_update/in_app_update.dart';
 
 Future<void> showAlert({
@@ -85,23 +84,31 @@ void showUpdateSnackbar() {
   );
 }
 
-void showToastWithIcon({
+enum ToastV2Type { error, success }
+
+void showToastV2({
   required String message,
-  Color backgroundColor = Colors.black,
-  Color? textColor,
   SvgPicture? icon,
+  ToastV2Type type = ToastV2Type.success,
 }) {
   ScaffoldMessenger.of(Get.context!).showSnackBar(
     SnackBar(
       content: UnconstrainedBox(
         child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 13.h,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
           ),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.r),
-            color: backgroundColor,
+            borderRadius: BorderRadius.circular(16),
+            color: () {
+              switch (type) {
+                case ToastV2Type.error:
+                  return AppColorData.regular().colorIconWarning;
+                case ToastV2Type.success:
+                  return AppColorData.regular().colorPointGreen;
+              }
+            }(),
           ),
           alignment: Alignment.center,
           child: Row(
@@ -113,8 +120,16 @@ void showToastWithIcon({
               ],
               StyledText(
                 message,
-                fontSize: 15,
+                fontSize: 16,
                 fontWeight: 500,
+                color: () {
+                  switch (type) {
+                    case ToastV2Type.error:
+                      return const Color(0xff440000);
+                    case ToastV2Type.success:
+                      return const Color(0xff003B22);
+                  }
+                }(),
               ),
             ],
           ),
