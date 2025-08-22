@@ -1506,9 +1506,9 @@ class ActivityController extends SuperController
   /// to see if they can pick it up or not
   /// UI purpose: zoom treasure if they can pick it up
   void _compareDistanceWithNearestTreasure(Position userPosition) {
-    TreasureModel? nearestTreasure;
-    double minDistance = double.infinity;
+    final Map<double, List<TreasureModel>> treasureDistanceMap = {};
 
+    /// calculate all distance of treasures
     for (final t in _mockListTreasure) {
       final distance = Geolocator.distanceBetween(
         userPosition.latitude,
@@ -1517,16 +1517,23 @@ class ActivityController extends SuperController
         t.longitude,
       );
 
-      if (distance < minDistance) {
-        minDistance = distance;
-        nearestTreasure = t;
+      if (treasureDistanceMap.containsKey(distance)) {
+        treasureDistanceMap[distance]!.add(t);
+      } else {
+        treasureDistanceMap[distance] = [t];
       }
     }
 
-    // if nearest treasure is within pickupRadius (10-15m for now)
-    if (nearestTreasure != null && minDistance <= 10) {
+    /// get nearest treasure
+    var nearestTreasures =
+        treasureDistanceMap.entries.reduce((a, b) => a.key < b.key ? a : b);
+    // if nearest treasure is within pickupRadius (10m for now)
+    bool isInRange = nearestTreasures.key <= 10;
+    final nearestTreasure = nearestTreasures.value.first;
+
+    if (isInRange) {
       if (_currentHighlightedTreasureId != nearestTreasure.id) {
-        debugPrint("TREASURE CAN BE PICKED UP: $minDistance");
+        debugPrint("TREASURE CAN BE PICKED UP: ${nearestTreasures.key}");
         _currentHighlightedTreasureId = nearestTreasure.id;
         _updateTreasureZoom(isZoom: true);
       }
@@ -1536,7 +1543,7 @@ class ActivityController extends SuperController
         return;
       }
 
-      debugPrint("REMOVE PICKABLE TREASURE: $minDistance");
+      debugPrint("REMOVE PICKABLE TREASURE: ${nearestTreasures.key}");
       _updateTreasureZoom(isZoom: false);
       _currentHighlightedTreasureId = null;
     }
