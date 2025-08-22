@@ -150,7 +150,7 @@ class ActivityController extends SuperController
       type: TreasureType.personal,
     ),
   ];
-  int? _currentHighlightedTreasureId;
+  List<int> _currentHighlightedTreasuresId = [];
 
   // if lock, user is centered map, can't zoom and drag
   // if unlock, user can zoom and drag, user not necessarily centered
@@ -1053,7 +1053,7 @@ class ActivityController extends SuperController
           ));
         }
 
-        _compareDistanceWithNearestTreasure(position);
+        await _compareDistanceWithNearestTreasure(position);
       } else {
         // HiveStore.save(key: HiveKey.accessToken.name, value: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJramg0MzU3IiwiYXV0aCI6IlJPTEVfQURNSU4sUk9MRV9MT0NBVElPTixST0xFX0xPQ0FUSU9OX1NVUEVSVklTT1IiLCJleHAiOjE3MTg3ODYwNzksInVzZXJJZCI6IjI1NSJ9.rNf30NedosrnS4iPLLgEFR2RCNQSCLsytDqXsM4jLkJB_wKwhC-LQ0PVYnr3gzrDcT031n7cBBWyheYv_Ml9rA');
         // 첼린지 존 찾기(30초마다 요청)
@@ -1502,7 +1502,8 @@ class ActivityController extends SuperController
   /// compare user location with the nearest treasure
   /// to see if they can pick it up or not
   /// UI purpose: zoom treasure if they can pick it up
-  void _compareDistanceWithNearestTreasure(Position userPosition) {
+  Future<void> _compareDistanceWithNearestTreasure(
+      Position userPosition) async {
     final Map<double, List<TreasureModel>> treasureDistanceMap = {};
 
     /// calculate all distance of treasures
@@ -1521,28 +1522,31 @@ class ActivityController extends SuperController
       }
     }
 
-    /// get nearest treasure
+    /// get nearest treasures
     var nearestTreasures =
         treasureDistanceMap.entries.reduce((a, b) => a.key < b.key ? a : b);
     // if nearest treasure is within pickupRadius (10m for now)
     bool isInRange = nearestTreasures.key <= 10;
-    final nearestTreasure = nearestTreasures.value.first;
+
+    if (_currentHighlightedTreasuresId.isNotEmpty) {
+      await _updateTreasureZoom(isZoom: false);
+      _currentHighlightedTreasuresId.clear();
+    }
 
     if (isInRange) {
-      if (_currentHighlightedTreasureId != nearestTreasure.id) {
-        debugPrint("TREASURE CAN BE PICKED UP: ${nearestTreasures.key}");
-        _currentHighlightedTreasureId = nearestTreasure.id;
-        _updateTreasureZoom(isZoom: true);
-      }
+      debugPrint("TREASURE CAN BE PICKED UP: ${nearestTreasures.key}");
+      _currentHighlightedTreasuresId =
+          nearestTreasures.value.map((e) => e.id).toList();
+      _updateTreasureZoom(isZoom: true);
     } else {
       // no need to update if no treasure highlighted before
-      if (_currentHighlightedTreasureId == null) {
+      if (_currentHighlightedTreasuresId.isEmpty) {
         return;
       }
 
       debugPrint("REMOVE PICKABLE TREASURE: ${nearestTreasures.key}");
       _updateTreasureZoom(isZoom: false);
-      _currentHighlightedTreasureId = null;
+      _currentHighlightedTreasuresId.clear();
     }
   }
 
@@ -1550,26 +1554,23 @@ class ActivityController extends SuperController
   Future<void> _updateTreasureZoom({required bool isZoom}) async {
     final newMarkers = await _buildCustomMarkers(
         positions: _mockListTreasure
-            .where((t) => t.id == _currentHighlightedTreasureId)
+            .where((t) => _currentHighlightedTreasuresId.contains(t.id))
             .toList(),
         markerSize: isZoom ? _treasureZoomSize : _treasureBaseSize);
 
-    /// make sure always 1 marker return in this case
-    /// so there will be only 1 can be picked
-    if (newMarkers.length == 1) {
-      updateMarkerById(newMarkers.first);
+    for (var element in newMarkers) {
+      updateMarkerById(element);
     }
   }
 
   /// method to handle when user pick up a treasure
   /// only work if the treasure can be picked up + exercise is ongoing
   /// which mean the treasure is within 10m
-  void _onPickupTreasure(TreasureModel position) {
-    if (_currentHighlightedTreasureId != null &&
-        _currentHighlightedTreasureId == position.id &&
+  void _onPickupTreasure(TreasureModel treasure) {
+    if (_currentHighlightedTreasuresId.contains(treasure.id) &&
         exerciseState.value == ExerciseState.ongoing) {
       /// logic to pick here
-      debugPrint("PICKKKKKK ${position.id}");
+      debugPrint("PICKKKKKK ${treasure.id}");
     }
   }
 
