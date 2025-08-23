@@ -91,6 +91,7 @@ void showToastV2({
   SvgPicture? icon,
   ToastV2Type type = ToastV2Type.success,
 }) {
+  ScaffoldMessenger.of(Get.context!).clearSnackBars();
   ScaffoldMessenger.of(Get.context!).showSnackBar(
     SnackBar(
       content: UnconstrainedBox(

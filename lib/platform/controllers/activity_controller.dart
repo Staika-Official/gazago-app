@@ -157,6 +157,10 @@ class ActivityController extends SuperController
   // if lock, user is centered map, can't zoom and drag
   // if unlock, user can zoom and drag, user not necessarily centered
   var isLockMap = false.obs;
+
+  // timer when pick up treasure
+  final _kCoolDownTime = 5.minutes;
+  var coolDownTimeLeft = 0.obs;
   Timer? _pickupCoolDownTimer;
 
   void checkNewCollectionStatus() {
@@ -1573,7 +1577,7 @@ class ActivityController extends SuperController
     if (_currentHighlightedTreasuresId.contains(treasure.id) &&
         exerciseState.value == ExerciseState.ongoing) {
       /// check cool down timer
-      if (_pickupCoolDownTimer != null) {
+      if (_pickupCoolDownTimer?.isActive == true) {
         showToastV2(
           message: 'cannot_pickup_in_cooldown'.tr(),
           type: ToastV2Type.error,
@@ -1582,7 +1586,13 @@ class ActivityController extends SuperController
       }
 
       /// TODO: check daily limit here too
-      /// .....
+      if (false) {
+        showToastV2(
+          message: 'cannot_pick_over_daily_limit'.tr(),
+          type: ToastV2Type.error,
+        );
+        return;
+      }
 
       /// can be picked up
       /// show pick up bottom sheet
@@ -1591,15 +1601,36 @@ class ActivityController extends SuperController
         PickUpTreasureBottomSheet(
           treasureModel: treasure,
           onPickUp: () {
+            /// call api pick
             showToastV2(message: 'treasure_collected'.tr());
+
+            /// if success then start timer
+            _startCooldownTimer();
           },
         ),
       );
     }
   }
 
+  /// method to active the cool down if user picked a treasure
+  void _startCooldownTimer() {
+    coolDownTimeLeft.value = _kCoolDownTime.inSeconds;
+
+    _pickupCoolDownTimer?.cancel();
+    _pickupCoolDownTimer = Timer.periodic(
+      1.seconds,
+      (timer) {
+        coolDownTimeLeft--;
+        if (coolDownTimeLeft.value == 0) {
+          timer.cancel();
+        }
+      },
+    );
+  }
+
   @override
   void onDetached() {
+    _pickupCoolDownTimer?.cancel();
     updateTimer?.cancel();
     updateTimer = null;
     exerciseTimer?.cancel();

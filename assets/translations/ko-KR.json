@@ -984,5 +984,6 @@
     "you_can_collect_a_treasure": "",
     "collect" : "",
     "treasure_collected": "",
-    "cannot_pickup_in_cooldown": ""
+    "cannot_pickup_in_cooldown": "",
+    "cannot_pick_over_daily_limit": ""
   }

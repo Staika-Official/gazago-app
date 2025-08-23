@@ -653,7 +653,7 @@ mixin ActivityMixin {
                   lowStaminaNotified.value = true;
                 }
               }
-              if (userState.value.shoes!.durability! < 30 &&
+              if ((userState.value.shoes?.durability ?? 0) < 30 &&
                   !zeroDurabilityNotified.value) {
                 if (userState.value.shoes!.durability! == 0) {
                   showLocalNotification(

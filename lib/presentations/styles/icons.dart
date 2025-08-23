@@ -120,6 +120,7 @@ SvgPicture iconPause = SvgPicture.asset('assets/images/activity/ico_pause.svg', 
 SvgPicture iconActivityLuck = SvgPicture.asset('assets/images/activity/ico_activity_luck.svg', width: 14.sp, height: 14.sp);
 SvgPicture iconZoomOut = SvgPicture.asset('assets/images/activity/ico_zoom_out.svg', width: 16.sp, height: 16.sp);
 SvgPicture iconCoinTik24 = SvgPicture.asset('assets/images/activity/ico_coin_tik_24.svg');
+SvgPicture iconSnowSharp = SvgPicture.asset('assets/images/activity/ico_snow_sharp.svg', width: 20.sp, height: 20.sp);
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15.sp, height: 20.sp);
 SvgPicture iconWasteBasket = SvgPicture.asset('assets/images/common/ico_wastebasket.svg', width: 32.sp, height: 32.sp);
