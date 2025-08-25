@@ -19,7 +19,7 @@ import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/models/user_state_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:gaza_go/platform/models/location_model.dart';
 
 class ActivityService {
   static String? get userId {
@@ -56,7 +56,8 @@ class ActivityService {
     }
   }
 
-  static Future<void> getChallengesHierarchy(Position currentLocation, int challengeId, {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getChallengesHierarchy(LocationModel currentLocation, int challengeId, {required Function successCallback, Function? errorCallback}) async {
+    // Convert to map payload expected by API
     Response res = await ActivityApi.getChallengesHierarchy(currentLocation, challengeId);
     if (res.statusCode == 200) {
       List<ChallengeHierarchyModel> challengeList = List.empty(growable: true);
@@ -71,7 +72,7 @@ class ActivityService {
     }
   }
 
-  static Future<void> getChallengesNearByHierarchy(Position currentLocation, {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getChallengesNearByHierarchy(LocationModel currentLocation, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ActivityApi.getChallengesNearByHierarchy(currentLocation);
     if (res.statusCode == 200) {
       List<ChallengeHierarchyModel> challengeList = List.empty(growable: true);
@@ -141,7 +142,7 @@ class ActivityService {
     }
   }
 
-  static Future<void> getNearByCourses(Position currentLocation, {required Function successCallback, Function? errorCallback}) async {
+  static Future<void> getNearByCourses(LocationModel currentLocation, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ActivityApi.getNearByCourses(currentLocation);
     if (res.statusCode == 200) {
       if (res.data != null) {

@@ -6,7 +6,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'generated/codegen_loader.g.dart';
 import 'package:gaza_go/constants/enums.dart';
@@ -15,6 +14,8 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/configs/unified_gps_config.dart';
+import 'package:gaza_go/platform/helpers/gps_helper.dart' as gps_helper;
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
@@ -157,6 +158,19 @@ void main() async {
     await initializeDateFormatting();
     await requestNotificationPermission();
     await requestTrackingPermission();
+
+    // Initialize UnifiedGPSManager early in app lifecycle
+    print('🌍 Initializing Unified GPS System...');
+    await UnifiedGPSConfig.initialize();
+    // Initialize GPS manager and request permissions
+    final gpsPermissionGranted =
+        await gps_helper.GPS.checkAndRequestPermissions();
+    if (gpsPermissionGranted) {
+      print('✅ GPS System initialized with permissions');
+    } else {
+      print('⚠️ GPS System initialized but permissions not granted');
+    }
+
     await checkInspectionNotice();
 
     runApp(EasyLocalization(

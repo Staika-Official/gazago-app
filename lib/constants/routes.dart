@@ -27,6 +27,7 @@ import 'package:gaza_go/presentations/views/debugging/position_raw_data_logs.dar
 import 'package:gaza_go/presentations/views/debugging/request_info.dart';
 import 'package:gaza_go/presentations/views/debugging/response_error_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/user_exercise_data_logs.dart';
+import 'package:gaza_go/presentations/views/gps_debug_page.dart';
 import 'package:gaza_go/presentations/views/home.dart';
 import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dart';
@@ -80,7 +81,6 @@ import 'package:get/get.dart';
 import '../presentations/views/debugging/activity_logs.dart';
 import '../presentations/views/laboratory/index.dart';
 import '../presentations/views/verification/verification_terms.dart';
-import '../presentations/views/gps_debug_page.dart';
 
 class Routes {
   static const login = '/login';

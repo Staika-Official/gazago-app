@@ -177,11 +177,11 @@ class ChallengeMap extends StatelessWidget {
                   ),
                 },
                 initialCameraPosition:
-                    controller.currentLocation.value.latitude > 0
+                    controller.currentLocation.value != null && controller.currentLocation.value!.latitude > 0
                         ? CameraPosition(
                             target: LatLng(
-                                controller.currentLocation.value.latitude,
-                                controller.currentLocation.value.longitude),
+                                controller.currentLocation.value!.latitude,
+                                controller.currentLocation.value!.longitude),
                             zoom: 14,
                           )
                         : const CameraPosition(

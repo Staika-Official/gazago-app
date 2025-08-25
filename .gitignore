@@ -7,6 +7,29 @@
 
 **/.history/**
 
+# Test reports and temp files
+test_reports/
+*test_report*
+*_readable.md
+*.log
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+backup/
+*_backup*
+*_old*
+
 # FVM Version Cache
 .fvm/
 .fvmrc
+android/.idea/AndroidProjectSystem.xml
+android/.idea/compiler.xml
+android/.idea/deploymentTargetSelector.xml
+android/.idea/gradle.xml
+android/.idea/migrations.xml
+android/.idea/misc.xml
+android/.idea/runConfigurations.xml
+android/.idea/vcs.xml
+android/.idea/caches/deviceStreaming.xml

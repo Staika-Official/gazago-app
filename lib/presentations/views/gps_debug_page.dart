@@ -1,439 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gaza_go/platform/helpers/gps_filter_helper.dart';
-import 'package:gaza_go/platform/helpers/gps_metrics.dart';
-import 'package:gaza_go/platform/helpers/battery_aware_gps.dart';
-import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'dart:async';
+import 'package:gaza_go/platform/controllers/gps_debug_controller.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'dart:math' as math;
 
-class GPSDebugController extends GetxController {
-  // GPS State
-  var isGPSActive = false.obs;
-  var currentPosition = Rxn<Position>();
-  var gpsAccuracy = 0.0.obs;
-  var currentSpeed = 0.0.obs;
-  var totalDistance = 0.0.obs;
-  var sessionDuration = 0.obs;
-
-  // GPS Settings
-  var accuracyThreshold = 20.0.obs;
-  var speedThreshold = 50.0.obs;
-  var updateInterval = 1000.obs; // milliseconds
-
-  // Statistics
-  var totalPositions = 0.obs;
-  var filteredPositions = 0.obs;
-  var filterRate = 0.0.obs;
-  var averageAccuracy = 0.0.obs;
-  var maxSpeed = 0.0.obs;
-  var performanceGrade = 'C'.obs;
-
-  // Advanced metrics from commit 968a37f9
-  var fallbackCount = 0.obs;
-  var errorCount = 0.obs;
-  var batteryOptimizations = 0.obs;
-  var gpsJumps = 0.obs;
-  var abnormalSpeeds = 0.obs;
-
-  // Real-time data
-  var realtimeData = <String>[].obs;
-  var batteryLevel = 0.obs;
-  var gpsMode = 'Unknown'.obs;
-  var isDataSyncing = false.obs;
-
-  // Track last logged values to prevent spam
-  String _lastLoggedGpsMode = 'Unknown';
-  int _lastLoggedBatteryLevel = 0;
-
-  // Map and tracking data
-  NaverMapController? mapController;
-  var mapPositions = <NLatLng>[].obs;
-  var rawPositions = <NLatLng>[].obs; // Unfiltered positions
-  var gpsJumpDetected = false.obs;
-  var lastJumpDistance = 0.0.obs;
-
-  StreamSubscription<Position>? _positionStream;
-  Timer? _sessionTimer;
-  Timer? _dataUpdateTimer;
-  DateTime? _sessionStart;
-  Position? _lastPosition;
-
-  @override
-  void onInit() {
-    super.onInit();
-    _initializeGPS();
-  }
-
-  @override
-  void onClose() {
-    stopGPSTracking();
-    _dataUpdateTimer?.cancel();
-    super.onClose();
-  }
-
-  void _initializeGPS() async {
-    // Initialize GPS components
-    GPSMetrics.startSession();
-    GPSFilterHelper.clearHistory();
-
-    // Start periodic data sync from helpers
-    _startDataSync();
-
-    // Get initial data
-    _syncDataFromHelpers();
-  }
-
-  void _startDataSync() {
-    // Update data from helpers every 2 seconds
-    _dataUpdateTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      _syncDataFromHelpers();
-    });
-  }
-
-  void _syncDataFromHelpers() async {
-    isDataSyncing.value = true;
-    try {
-      // Sync battery info from BatteryAwareGPS
-      Map<String, dynamic> batteryInfo = await BatteryAwareGPS.getBatteryInfo();
-
-      // Update battery level (only log significant changes)
-      int newBatteryLevel = batteryInfo['battery_level'] ?? batteryLevel.value;
-      if ((newBatteryLevel - _lastLoggedBatteryLevel).abs() >= 5) {
-        batteryLevel.value = newBatteryLevel;
-        addRealtimeLog('Battery level: ${newBatteryLevel}%');
-        _lastLoggedBatteryLevel = newBatteryLevel;
-      } else {
-        batteryLevel.value = newBatteryLevel;
-      }
-
-      // Update GPS mode (only log when actually changes)
-      String newGpsMode = batteryInfo['gps_mode'] ?? 'Unknown';
-      if (newGpsMode != _lastLoggedGpsMode) {
-        gpsMode.value = newGpsMode;
-        addRealtimeLog('GPS mode changed: $newGpsMode');
-        _lastLoggedGpsMode = newGpsMode;
-      } else {
-        gpsMode.value = newGpsMode;
-      }
-
-      // Sync GPS filter statistics
-      Map<String, dynamic> filterStats = GPSFilterHelper.getFilteringStats();
-      totalPositions.value =
-          filterStats['total_positions'] ?? totalPositions.value;
-      filteredPositions.value =
-          filterStats['rejected_positions'] ?? filteredPositions.value;
-      if (totalPositions.value > 0) {
-        filterRate.value =
-            (filteredPositions.value / totalPositions.value) * 100;
-      }
-
-      // Sync GPS metrics
-      Map<String, dynamic> metrics = GPSMetrics.getSessionMetrics();
-      averageAccuracy.value =
-          metrics['average_accuracy'] ?? averageAccuracy.value;
-      performanceGrade.value =
-          metrics['performance_grade'] ?? performanceGrade.value;
-      fallbackCount.value = metrics['fallback_count'] ?? fallbackCount.value;
-      errorCount.value = metrics['error_count'] ?? errorCount.value;
-      batteryOptimizations.value =
-          metrics['battery_optimizations'] ?? batteryOptimizations.value;
-
-      // Sync current thresholds from helpers (if they expose them)
-      _syncThresholdsFromHelpers();
-    } catch (e) {
-      addRealtimeLog('Data sync error: $e');
-    } finally {
-      isDataSyncing.value = false;
-    }
-  }
-
-  // Track last logged threshold values to prevent spam
-  double _lastLoggedAccuracyThreshold = 20.0;
-  double _lastLoggedSpeedThreshold = 50.0;
-  bool _isUserChangingSettings = false;
-
-  void _syncThresholdsFromHelpers() {
-    // Try to get current thresholds from GPS helpers
-    // This ensures debug page shows actual values being used
-    try {
-      // Only log when user is not actively changing settings
-      // and when thresholds actually change from external sources
-      if (!_isUserChangingSettings) {
-        if (accuracyThreshold.value != _lastLoggedAccuracyThreshold) {
-          addRealtimeLog(
-              'External accuracy threshold sync: ${accuracyThreshold.value}m');
-          _lastLoggedAccuracyThreshold = accuracyThreshold.value;
-        }
-        if (speedThreshold.value != _lastLoggedSpeedThreshold) {
-          addRealtimeLog(
-              'External speed threshold sync: ${speedThreshold.value} km/h');
-          _lastLoggedSpeedThreshold = speedThreshold.value;
-        }
-      }
-    } catch (e) {
-      // Ignore threshold sync errors
-    }
-  }
-
-  void startGPSTracking() async {
-    if (isGPSActive.value) return;
-
-    try {
-      // Check permissions
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          addRealtimeLog('GPS permission denied');
-          return;
-        }
-      }
-
-      // Start session
-      _sessionStart = DateTime.now();
-      isGPSActive.value = true;
-      totalDistance.value = 0.0;
-      _lastPosition = null;
-
-      // Start session timer
-      _sessionTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (_sessionStart != null) {
-          sessionDuration.value =
-              DateTime.now().difference(_sessionStart!).inSeconds;
-        }
-      });
-
-      // Configure location settings
-      LocationSettings locationSettings = LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 1, // Update every 1 meter
-        timeLimit: Duration(milliseconds: updateInterval.value),
-      );
-
-      // Start position stream
-      _positionStream = Geolocator.getPositionStream(
-        locationSettings: locationSettings,
-      ).listen((Position position) {
-        _processNewPosition(position);
-      });
-
-      addRealtimeLog('GPS tracking started');
-    } catch (e) {
-      addRealtimeLog('GPS start error: $e');
-      isGPSActive.value = false;
-    }
-  }
-
-  void stopGPSTracking() {
-    if (!isGPSActive.value) return;
-
-    _positionStream?.cancel();
-    _sessionTimer?.cancel();
-    isGPSActive.value = false;
-
-    // End GPS session
-    GPSMetrics.endSession();
-
-    addRealtimeLog('GPS tracking stopped');
-    _updateStatistics();
-  }
-
-  void _processNewPosition(Position position) {
-    currentPosition.value = position;
-    gpsAccuracy.value = position.accuracy;
-    currentSpeed.value = position.speed * 3.6; // Convert m/s to km/h
-
-    // Add raw position to map (before filtering)
-    NLatLng rawMapPosition = NLatLng(position.latitude, position.longitude);
-    rawPositions.add(rawMapPosition);
-
-    // Update max speed
-    if (currentSpeed.value > maxSpeed.value) {
-      maxSpeed.value = currentSpeed.value;
-    }
-
-    // Calculate distance and detect GPS jumps
-    if (_lastPosition != null) {
-      double distance = Geolocator.distanceBetween(
-        _lastPosition!.latitude,
-        _lastPosition!.longitude,
-        position.latitude,
-        position.longitude,
-      );
-      totalDistance.value += distance;
-
-      // Detect GPS jumps (large distance in short time)
-      if (distance > 100) {
-        // 100m threshold for jump detection
-        gpsJumpDetected.value = true;
-        lastJumpDistance.value = distance;
-        addRealtimeLog('GPS JUMP detected: ${distance.toStringAsFixed(1)}m');
-        gpsJumps.value++;
-      } else {
-        gpsJumpDetected.value = false;
-      }
-    }
-    _lastPosition = position;
-
-    // Process through GPS filter
-    Position? filteredPosition = GPSFilterHelper.filterPosition(position);
-    totalPositions.value++;
-
-    if (filteredPosition == null) {
-      filteredPositions.value++;
-      addRealtimeLog(
-          'Position FILTERED: Accuracy ${position.accuracy.toStringAsFixed(1)}m, Speed ${currentSpeed.value.toStringAsFixed(1)} km/h');
-    } else {
-      addRealtimeLog(
-          'Position ACCEPTED: Accuracy ${position.accuracy.toStringAsFixed(1)}m, Speed ${currentSpeed.value.toStringAsFixed(1)} km/h');
-
-      // Add filtered position to map
-      NLatLng filteredMapPosition =
-          NLatLng(filteredPosition.latitude, filteredPosition.longitude);
-      mapPositions.add(filteredMapPosition);
-
-      // Update map camera to follow user
-      _updateMapCamera(filteredMapPosition);
-
-      // Record in GPS metrics
-      GPSMetrics.recordPosition(position, false);
-    }
-
-    _updateStatistics();
-  }
-
-  void _updateStatistics() {
-    // Statistics are now updated via _syncDataFromHelpers()
-    // This method is kept for compatibility but delegates to sync
-    _syncDataFromHelpers();
-  }
-
-  void addRealtimeLog(String message) {
-    String timestamp = DateTime.now().toString().substring(11, 19);
-    realtimeData.insert(0, '[$timestamp] $message');
-
-    // Keep only last 50 entries
-    if (realtimeData.length > 50) {
-      realtimeData.removeRange(50, realtimeData.length);
-    }
-  }
-
-  void clearLogs() {
-    realtimeData.clear();
-  }
-
-  void _updateMapCamera(NLatLng position) {
-    if (mapController != null) {
-      // Camera update not needed for custom painter
-      // The custom painter will automatically update when positions change
-    }
-  }
-
-  void clearMapData() {
-    mapPositions.clear();
-    rawPositions.clear();
-    gpsJumpDetected.value = false;
-    lastJumpDistance.value = 0.0;
-    addRealtimeLog('Map data cleared');
-  }
-
-  void onMapReady() {
-    addRealtimeLog('GPS visualization initialized');
-  }
-
-  void resetStatistics() {
-    totalPositions.value = 0;
-    filteredPositions.value = 0;
-    filterRate.value = 0.0;
-    averageAccuracy.value = 0.0;
-    maxSpeed.value = 0.0;
-    totalDistance.value = 0.0;
-    sessionDuration.value = 0;
-    performanceGrade.value = 'C';
-
-    // Reset advanced metrics
-    fallbackCount.value = 0;
-    errorCount.value = 0;
-    batteryOptimizations.value = 0;
-    gpsJumps.value = 0;
-    abnormalSpeeds.value = 0;
-
-    GPSFilterHelper.clearHistory();
-    GPSMetrics.startSession();
-    _sessionStart = DateTime.now();
-
-    addRealtimeLog('Statistics reset');
-  }
-
-  void updateAccuracyThreshold(double value) {
-    _isUserChangingSettings = true;
-    accuracyThreshold.value = value;
-    _lastLoggedAccuracyThreshold = value;
-    // Try to apply to actual GPS filter helper
-    _applyThresholdToHelpers();
-    addRealtimeLog(
-        'Accuracy threshold updated to ${value.toStringAsFixed(1)}m');
-    _isUserChangingSettings = false;
-  }
-
-  void updateSpeedThreshold(double value) {
-    _isUserChangingSettings = true;
-    speedThreshold.value = value;
-    _lastLoggedSpeedThreshold = value;
-    // Try to apply to actual GPS filter helper
-    _applyThresholdToHelpers();
-    addRealtimeLog(
-        'Speed threshold updated to ${value.toStringAsFixed(1)} km/h');
-    _isUserChangingSettings = false;
-  }
-
-  void updateUpdateInterval(int milliseconds) {
-    updateInterval.value = milliseconds;
-    addRealtimeLog('Update interval changed to ${milliseconds}ms');
-
-    // Restart GPS with new interval if active
-    if (isGPSActive.value) {
-      stopGPSTracking();
-      Future.delayed(const Duration(milliseconds: 500), () {
-        startGPSTracking();
-      });
-    }
-  }
-
-  void _applyThresholdToHelpers() {
-    try {
-      // If GPS helpers have methods to update thresholds, call them here
-      // Only log once when user actually changes settings, not during sync
-
-      // Example: If GPSFilterHelper had a method like this:
-      // GPSFilterHelper.updateAccuracyThreshold(accuracyThreshold.value);
-      // GPSFilterHelper.updateSpeedThreshold(speedThreshold.value);
-
-      // For BatteryAwareGPS, we might need to trigger a reconfiguration
-      // BatteryAwareGPS.reconfigure();
-    } catch (e) {
-      addRealtimeLog('Failed to apply thresholds: $e');
-    }
-  }
-
-  String formatDuration(int seconds) {
-    int hours = seconds ~/ 3600;
-    int minutes = (seconds % 3600) ~/ 60;
-    int secs = seconds % 60;
-    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
-  }
-}
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GPSDebugPage extends StatelessWidget {
   const GPSDebugPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final GPSDebugController controller = Get.put(GPSDebugController());
+    final controller = Get.put(GPSDebugController());
 
     return Scaffold(
       backgroundColor: AppColorData.regular().colorBgPrimary,
@@ -441,27 +20,19 @@ class GPSDebugPage extends StatelessWidget {
         backgroundColor: AppColorData.regular().colorBgPrimary,
         title: Row(
           children: [
-            Text(
-              'GPS Debug & Testing',
-              style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                    color: AppColorData.regular().colorTextPrimary,
-                  ),
-            ),
-            SizedBox(width: 8.sp),
-            Obx(() => controller.isDataSyncing.value
-                ? SizedBox(
-                    width: 12.sp,
-                    height: 12.sp,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.0,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            Expanded(
+              child: Text(
+                'GPS Debug & Config',
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                      color: AppColorData.regular().colorTextPrimary,
+                      fontWeight: FontWeight.bold,
                     ),
-                  )
-                : Icon(
-                    Icons.sync,
-                    size: 16.sp,
-                    color: Colors.green,
-                  )),
+              ),
+            ),
+            const SizedBox(width: 8),
+            // _buildSyncIndicator already uses Obx internally; avoid nested Obx here
+            _buildSyncIndicator(controller),
           ],
         ),
         leading: IconButton(
@@ -471,6 +42,23 @@ class GPSDebugPage extends StatelessWidget {
           ),
           onPressed: () => Get.back(),
         ),
+        actions: [
+          // Permission check button
+          IconButton(
+            icon: const Icon(Icons.location_on),
+            onPressed: () async {
+              controller.addLog('🔍 Manual permission check requested...');
+              await controller.checkLocationPermission();
+            },
+            tooltip: 'Check Permissions',
+          ),
+          // Debug info button
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showDebugInfo(context, controller),
+            tooltip: 'Debug Info',
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.sp),
@@ -485,31 +73,47 @@ class GPSDebugPage extends StatelessWidget {
             _buildRealtimeStatus(controller),
             SizedBox(height: 16.sp),
 
-            // GPS Minimap
-            _buildGPSMinimap(controller),
+            // GPS Visualization
+            _buildGPSVisualization(controller),
             SizedBox(height: 16.sp),
 
             // Statistics
             _buildStatistics(controller),
             SizedBox(height: 16.sp),
 
-            // Settings
-            _buildSettings(controller),
-            SizedBox(height: 16.sp),
-
-            // Advanced Monitoring (from commit 968a37f9)
-            _buildAdvancedMonitoring(controller),
+            // Helper Status
+            _buildHelperStatus(controller),
             SizedBox(height: 16.sp),
 
             // Real-time Logs
             _buildRealtimeLogs(controller),
 
-            // Extra spacing at bottom to prevent content being cut off
             SizedBox(height: 32.sp),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildSyncIndicator(GPSDebugController controller) {
+    return Obx(() {
+      if (controller.isDataSyncing.value || controller.isConfigSyncing) {
+        return SizedBox(
+          width: 16.sp,
+          height: 16.sp,
+          child: const CircularProgressIndicator(
+            strokeWidth: 2.0,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+          ),
+        );
+      } else {
+        return Icon(
+          Icons.sync,
+          size: 16.sp,
+          color: Colors.green,
+        );
+      }
+    });
   }
 
   Widget _buildControlPanel(GPSDebugController controller) {
@@ -525,27 +129,27 @@ class GPSDebugPage extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(
-                'GPS Control Panel',
-                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                      color: AppColorData.regular().colorTextPrimary,
-                    ),
-              ),
+              Icon(Icons.control_camera, size: 20.sp, color: Colors.blue),
               SizedBox(width: 8.sp),
-              Tooltip(
-                message: 'Start/Stop GPS tracking and reset all statistics',
-                child: Icon(
-                  Icons.info_outline,
-                  size: 16.sp,
-                  color: AppColorData.regular().colorTextSecondary,
+              Expanded(
+                child: Text(
+                  'GPS Control Panel',
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 12.sp),
+          SizedBox(height: 16.sp),
+          
+          // Main Controls
           Row(
             children: [
               Expanded(
+                flex: 2,
                 child: Obx(() => ElevatedButton.icon(
                       onPressed: controller.isGPSActive.value
                           ? controller.stopGPSTracking
@@ -561,26 +165,35 @@ class GPSDebugPage extends StatelessWidget {
                             ? Colors.red
                             : Colors.green,
                         foregroundColor: Colors.white,
+                        minimumSize: Size(double.infinity, 48.sp),
                       ),
                     )),
               ),
               SizedBox(width: 8.sp),
-              ElevatedButton.icon(
-                onPressed: controller.resetStatistics,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Reset'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  foregroundColor: Colors.white,
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: controller.resetStatistics,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Reset'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                    minimumSize: Size(double.infinity, 48.sp),
+                  ),
                 ),
               ),
             ],
           ),
+           
         ],
       ),
     );
   }
 
+ 
+
+
+   
   Widget _buildRealtimeStatus(GPSDebugController controller) {
     return Container(
       padding: EdgeInsets.all(16.sp),
@@ -594,68 +207,69 @@ class GPSDebugPage extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(
-                'Real-time Status',
-                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                      color: AppColorData.regular().colorTextPrimary,
-                    ),
-              ),
+              Icon(Icons.sensors, size: 20.sp, color: Colors.green),
               SizedBox(width: 8.sp),
-              Tooltip(
-                message:
-                    'Live GPS data: speed, accuracy, distance, battery level, and GPS jump detection',
-                child: Icon(
-                  Icons.info_outline,
-                  size: 16.sp,
-                  color: AppColorData.regular().colorTextSecondary,
+              Expanded(
+                child: Text(
+                  'Real-time Status',
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 12.sp),
+          SizedBox(height: 16.sp),
+          
           Obx(() => Column(
                 children: [
-                  _buildStatusRow(
-                      'GPS Status',
-                      controller.isGPSActive.value ? 'ACTIVE' : 'INACTIVE',
-                      controller.isGPSActive.value ? Colors.green : Colors.red),
-                  _buildStatusRow(
-                      'Current Speed',
-                      '${controller.currentSpeed.value.toStringAsFixed(1)} km/h',
-                      _getSpeedColor(controller.currentSpeed.value)),
-                  _buildStatusRow(
-                      'GPS Accuracy',
-                      '${controller.gpsAccuracy.value.toStringAsFixed(1)}m',
-                      _getAccuracyColor(controller.gpsAccuracy.value)),
-                  _buildStatusRow(
-                      'Total Distance',
-                      '${controller.totalDistance.value.toStringAsFixed(1)}m',
-                      Colors.blue),
-                  _buildStatusRow(
-                      'Session Duration',
-                      controller
-                          .formatDuration(controller.sessionDuration.value),
-                      Colors.purple),
-                  _buildStatusRow(
-                      'Battery Level',
-                      '${controller.batteryLevel.value}%',
-                      _getBatteryColor(controller.batteryLevel.value)),
-                  _buildStatusRow(
-                      'GPS Mode', controller.gpsMode.value, Colors.cyan),
-                  _buildStatusRow(
-                      'GPS Jumps',
-                      '${controller.gpsJumps.value}',
-                      controller.gpsJumps.value > 0
-                          ? Colors.red
-                          : Colors.green),
-                  _buildStatusRow(
-                      'Last Jump',
-                      controller.lastJumpDistance.value > 0
-                          ? '${controller.lastJumpDistance.value.toStringAsFixed(1)}m'
-                          : 'None',
-                      controller.gpsJumpDetected.value
-                          ? Colors.red
-                          : Colors.green),
+                  Row(
+                    children: [
+                      Expanded(child: _buildStatusCard('GPS Status', 
+                          controller.isGPSActive.value ? 'ACTIVE' : 'INACTIVE',
+                          controller.isGPSActive.value ? Colors.green : Colors.red,
+                          Icons.gps_fixed)),
+                      SizedBox(width: 8.sp),
+                      Expanded(child: _buildStatusCard('Current Speed', 
+                          '${controller.currentSpeed.value.toStringAsFixed(1)} km/h',
+                          _getSpeedColor(controller.currentSpeed.value),
+                          Icons.speed)),
+                    ],
+                  ),
+                  SizedBox(height: 8.sp),
+                  Row(
+                    children: [
+                      Expanded(child: _buildStatusCard('GPS Accuracy', 
+                          controller.currentPosition.value != null 
+                              ? '${controller.currentPosition.value!.accuracy.toStringAsFixed(1)}m'
+                              : 'N/A',
+                          controller.currentPosition.value != null
+                              ? _getAccuracyColor(controller.currentPosition.value!.accuracy)
+                              : Colors.grey,
+                          Icons.my_location)),
+                      SizedBox(width: 8.sp),
+                      Expanded(child: _buildStatusCard('Session Time', 
+                          controller.formatDuration(controller.sessionDuration.value),
+                          Colors.purple,
+                          Icons.timer)),
+                    ],
+                  ),
+                  SizedBox(height: 8.sp),
+                  Row(
+                    children: [
+                      Expanded(child: _buildStatusCard('Battery Level', 
+                          '${controller.batteryLevel.value}%',
+                          _getBatteryColor(controller.batteryLevel.value),
+                          Icons.battery_std)),
+                      SizedBox(width: 8.sp),
+                      Expanded(child: _buildStatusCard('GPS Mode', 
+                          controller.gpsMode.value,
+                          Colors.cyan,
+                          Icons.settings)),
+                    ],
+                  ),
                 ],
               )),
         ],
@@ -663,7 +277,42 @@ class GPSDebugPage extends StatelessWidget {
     );
   }
 
-  Widget _buildGPSMinimap(GPSDebugController controller) {
+  Widget _buildStatusCard(String label, String value, Color color, IconData icon) {
+    return Container(
+      padding: EdgeInsets.all(12.sp),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8.sp),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 20.sp),
+          SizedBox(height: 4.sp),
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 2.sp),
+          Text(
+            label,
+            style: TextStyle(
+              color: AppColorData.regular().colorTextSecondary,
+              fontSize: 10.sp,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGPSVisualization(GPSDebugController controller) {
     return Container(
       padding: EdgeInsets.all(16.sp),
       decoration: BoxDecoration(
@@ -675,64 +324,43 @@ class GPSDebugPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Icon(Icons.map, size: 20.sp, color: Colors.indigo),
+              SizedBox(width: 8.sp),
               Expanded(
-                child: Row(
-                  children: [
-                    Text(
-                      'GPS Tracking Map',
-                      style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                            color: AppColorData.regular().colorTextPrimary,
-                          ),
-                    ),
-                    SizedBox(width: 8.sp),
-                    Tooltip(
-                      message:
-                          'Visual GPS path tracking: Red=raw positions, Green=filtered positions, Blue=current location',
-                      child: Icon(
-                        Icons.info_outline,
-                        size: 16.sp,
-                        color: AppColorData.regular().colorTextSecondary,
+                child: Text(
+                  'GPS Visualization',
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ],
                 ),
               ),
-              Row(
-                children: [
-                  Obx(() => Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 8.sp, vertical: 4.sp),
-                        decoration: BoxDecoration(
-                          color: controller.gpsJumpDetected.value
-                              ? Colors.red
-                              : Colors.green,
-                          borderRadius: BorderRadius.circular(12.sp),
-                        ),
-                        child: Text(
-                          controller.gpsJumpDetected.value
-                              ? 'JUMP: ${controller.lastJumpDistance.value.toStringAsFixed(0)}m'
-                              : 'STABLE',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )),
-                  SizedBox(width: 8.sp),
-                  IconButton(
-                    onPressed: controller.clearMapData,
-                    icon: const Icon(Icons.clear_all),
-                    iconSize: 20.sp,
-                    tooltip: 'Clear Map Data',
-                  ),
-                ],
-              ),
+              const Spacer(),
+              Obx(() => Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                    decoration: BoxDecoration(
+                      color: controller.gpsJumpDetected.value ? Colors.red : Colors.green,
+                      borderRadius: BorderRadius.circular(12.sp),
+                    ),
+                    child: Text(
+                      controller.gpsJumpDetected.value
+                          ? 'JUMP: ${controller.lastJumpDistance.value.toStringAsFixed(0)}m'
+                          : 'STABLE',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )),
             ],
           ),
-          SizedBox(height: 12.sp),
+          SizedBox(height: 16.sp),
+          
+          // GPS Map
           Container(
             height: 200.sp,
             decoration: BoxDecoration(
@@ -741,83 +369,103 @@ class GPSDebugPage extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.sp),
-              child: Container(
-                color: Colors.grey[300],
-                child: Stack(
-                  children: [
-                    // Background grid pattern
-                    CustomPaint(
+              child: Stack(
+                children: [
+                  // Background
+                  Container(
+                    color: Colors.grey[100],
+                    child: CustomPaint(
                       size: Size.infinite,
                       painter: GridPainter(),
                     ),
-                    // GPS tracking visualization
-                    Obx(() => CustomPaint(
-                          size: Size.infinite,
-                          painter: GPSTrackingPainter(
-                            rawPositions: controller.rawPositions.toList(),
-                            filteredPositions: controller.mapPositions.toList(),
-                            currentPosition: controller.currentPosition.value,
-                          ),
-                        )),
-                    // Center info
-                    Center(
-                      child: Container(
-                        padding: EdgeInsets.all(8.sp),
-                        decoration: BoxDecoration(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.circular(8.sp),
+                  ),
+                  // GPS paths
+                  Obx(() => CustomPaint(
+                        size: Size.infinite,
+                        painter: GPSPathPainter(
+                          rawPositions: controller.rawPositions.toList(),
+                          filteredPositions: controller.filteredPositions.toList(),
+                          currentPosition: null, // TODO: Convert LocationModel to LocationDto when needed
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'GPS Tracking Map',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.bold,
+                      )),
+                  // GPS info overlay
+                  Positioned(
+                    top: 8.sp,
+                    right: 8.sp,
+                    child: Container(
+                      padding: EdgeInsets.all(8.sp),
+                      decoration: BoxDecoration(
+                        color: Colors.black87,
+                        borderRadius: BorderRadius.circular(8.sp),
+                      ),
+                      child: Obx(() => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '📍 Live GPS',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 4.sp),
-                            Obx(() => Text(
-                                  controller.currentPosition.value != null
-                                      ? 'Lat: ${controller.currentPosition.value!.latitude.toStringAsFixed(6)}\nLng: ${controller.currentPosition.value!.longitude.toStringAsFixed(6)}'
-                                      : 'No GPS Data',
+                              if (controller.currentPosition.value != null) ...[
+                                SizedBox(height: 4.sp),
+                                Text(
+                                  'Lat: ${controller.currentPosition.value!.latitude.toStringAsFixed(6)}',
                                   style: TextStyle(
                                     color: Colors.white70,
-                                    fontSize: 10.sp,
+                                    fontSize: 8.sp,
+                                    fontFamily: 'monospace',
                                   ),
-                                  textAlign: TextAlign.center,
-                                )),
-                          ],
-                        ),
-                      ),
+                                ),
+                                Text(
+                                  'Lng: ${controller.currentPosition.value!.longitude.toStringAsFixed(6)}',
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 8.sp,
+                                    fontFamily: 'monospace',
+                                  ),
+                                ),
+                                Text(
+                                  'Acc: ${controller.currentPosition.value!.accuracy.toStringAsFixed(1)}m',
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 8.sp,
+                                    fontFamily: 'monospace',
+                                  ),
+                                ),
+                              ],
+                            ],
+                          )),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
-          SizedBox(height: 8.sp),
-          // Map Legend
+          
+          SizedBox(height: 12.sp),
+          
+          // Legend and Stats
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildLegendItem('Raw Path', Colors.red),
+              _buildLegendItem('Raw Path', Colors.red.withOpacity(0.7)),
               _buildLegendItem('Filtered Path', Colors.green),
               _buildLegendItem('Current Pos', Colors.blue),
             ],
           ),
+          
           SizedBox(height: 8.sp),
+          
           Obx(() => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildMapStat('Raw Points',
-                      '${controller.rawPositions.length}', Colors.red),
-                  _buildMapStat('Filtered Points',
-                      '${controller.mapPositions.length}', Colors.green),
-                  _buildMapStat('GPS Jumps', '${controller.gpsJumps.value}',
-                      Colors.orange),
+                  _buildMapStat('Raw', '${controller.rawPositions.length}', Colors.red),
+                  _buildMapStat('Filtered', '${controller.filteredPositions.length}', Colors.green),
+                  _buildMapStat('Jumps', '${controller.gpsJumps.value}', Colors.orange),
                 ],
               )),
         ],
@@ -884,55 +532,57 @@ class GPSDebugPage extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(
-                'GPS Statistics',
-                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                      color: AppColorData.regular().colorTextPrimary,
-                    ),
-              ),
+              Icon(Icons.analytics, size: 20.sp, color: Colors.teal),
               SizedBox(width: 8.sp),
-              Tooltip(
-                message:
-                    'GPS performance metrics: filter rate, accuracy, speed, and performance grade (A-F)',
-                child: Icon(
-                  Icons.info_outline,
-                  size: 16.sp,
-                  color: AppColorData.regular().colorTextSecondary,
+              Expanded(
+                child: Text(
+                  'GPS Statistics',
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 12.sp),
+          SizedBox(height: 16.sp),
+          
           Obx(() => Column(
                 children: [
-                  _buildStatusRow('Total Positions',
-                      '${controller.totalPositions.value}', Colors.blue),
-                  _buildStatusRow('Filtered Positions',
-                      '${controller.filteredPositions.value}', Colors.red),
-                  _buildStatusRow(
-                      'Filter Rate',
-                      '${controller.filterRate.value.toStringAsFixed(1)}%',
-                      _getFilterRateColor(controller.filterRate.value)),
-                  _buildStatusRow(
-                      'Average Accuracy',
-                      '${controller.averageAccuracy.value.toStringAsFixed(1)}m',
-                      _getAccuracyColor(controller.averageAccuracy.value)),
-                  _buildStatusRow(
-                      'Max Speed',
-                      '${controller.maxSpeed.value.toStringAsFixed(1)} km/h',
-                      _getSpeedColor(controller.maxSpeed.value)),
-                  _buildStatusRow(
-                      'Performance Grade',
-                      controller.performanceGrade.value,
-                      _getGradeColor(controller.performanceGrade.value)),
-                  _buildStatusRow('Fallback Count',
-                      '${controller.fallbackCount.value}', Colors.orange),
-                  _buildStatusRow('Error Count',
-                      '${controller.errorCount.value}', Colors.red),
-                  _buildStatusRow(
-                      'Battery Optimizations',
-                      '${controller.batteryOptimizations.value}',
-                      Colors.purple),
+                  Row(
+                    children: [
+                      Expanded(child: _buildStatCard('Total Positions', 
+                          '${controller.totalPositions.value}', Colors.blue, Icons.gps_fixed)),
+                      SizedBox(width: 8.sp),
+                      Expanded(child: _buildStatCard('Filtered', 
+                          '${controller.rejectedPositions.value}', Colors.red, Icons.filter_alt)),
+                    ],
+                  ),
+                  SizedBox(height: 8.sp),
+                  Row(
+                    children: [
+                      Expanded(child: _buildStatCard('Filter Rate', 
+                          '${controller.filterRate.value.toStringAsFixed(1)}%',
+                          _getFilterRateColor(controller.filterRate.value), Icons.percent)),
+                      SizedBox(width: 8.sp),
+                      Expanded(child: _buildStatCard('Avg Accuracy', 
+                          '${controller.averageAccuracy.value.toStringAsFixed(1)}m',
+                          _getAccuracyColor(controller.averageAccuracy.value), Icons.air)),
+                    ],
+                  ),
+                  SizedBox(height: 8.sp),
+                  Row(
+                    children: [
+                      Expanded(child: _buildStatCard('Max Speed', 
+                          '${controller.maxSpeed.value.toStringAsFixed(1)} km/h',
+                          _getSpeedColor(controller.maxSpeed.value), Icons.speed)),
+                      SizedBox(width: 8.sp),
+                      Expanded(child: _buildStatCard('Grade', 
+                          controller.performanceGrade.value,
+                          _getGradeColor(controller.performanceGrade.value), Icons.grade)),
+                    ],
+                  ),
                 ],
               )),
         ],
@@ -940,7 +590,42 @@ class GPSDebugPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSettings(GPSDebugController controller) {
+  Widget _buildStatCard(String label, String value, Color color, IconData icon) {
+    return Container(
+      padding: EdgeInsets.all(12.sp),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8.sp),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 18.sp),
+          SizedBox(height: 4.sp),
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 2.sp),
+          Text(
+            label,
+            style: TextStyle(
+              color: AppColorData.regular().colorTextSecondary,
+              fontSize: 10.sp,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHelperStatus(GPSDebugController controller) {
     return Container(
       padding: EdgeInsets.all(16.sp),
       decoration: BoxDecoration(
@@ -953,50 +638,42 @@ class GPSDebugPage extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(
-                'GPS Settings',
-                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                      color: AppColorData.regular().colorTextPrimary,
-                    ),
-              ),
+              Icon(Icons.extension, size: 20.sp, color: Colors.deepOrange),
               SizedBox(width: 8.sp),
-              Tooltip(
-                message:
-                    'Configurable GPS parameters: accuracy threshold, speed limit, and update frequency',
-                child: Icon(
-                  Icons.info_outline,
-                  size: 16.sp,
-                  color: AppColorData.regular().colorTextSecondary,
+              Expanded(
+                child: Text(
+                  'Helper Status',
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                        color: AppColorData.regular().colorTextPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 12.sp),
+          SizedBox(height: 16.sp),
+          
           Obx(() => Column(
                 children: [
-                  _buildSliderSetting(
-                    'Accuracy Threshold',
-                    controller.accuracyThreshold.value,
-                    5.0,
-                    50.0,
-                    (value) => controller.updateAccuracyThreshold(value),
-                    'meters',
+                  Row(
+                    children: [
+                      Expanded(child: _buildHelperCard('Fallbacks', 
+                          '${controller.fallbackCount.value}', Colors.orange, Icons.warning)),
+                      SizedBox(width: 8.sp),
+                      Expanded(child: _buildHelperCard('Errors', 
+                          '${controller.errorCount.value}', Colors.red, Icons.error)),
+                    ],
                   ),
-                  _buildSliderSetting(
-                    'Speed Threshold',
-                    controller.speedThreshold.value,
-                    10.0,
-                    100.0,
-                    (value) => controller.updateSpeedThreshold(value),
-                    'km/h',
-                  ),
-                  _buildSliderSetting(
-                    'Update Interval',
-                    controller.updateInterval.value.toDouble(),
-                    500.0,
-                    5000.0,
-                    (value) => controller.updateUpdateInterval(value.toInt()),
-                    'ms',
+                  SizedBox(height: 8.sp),
+                  Row(
+                    children: [
+                      Expanded(child: _buildHelperCard('Battery Opts', 
+                          '${controller.batteryOptimizations.value}', Colors.purple, Icons.battery_saver)),
+                      SizedBox(width: 8.sp),
+                      Expanded(child: _buildHelperCard('Total Distance', 
+                          '${controller.totalDistance.value.toStringAsFixed(1)}m', Colors.blue, Icons.straighten)),
+                    ],
                   ),
                 ],
               )),
@@ -1005,88 +682,39 @@ class GPSDebugPage extends StatelessWidget {
     );
   }
 
-  Widget _buildAdvancedMonitoring(GPSDebugController controller) {
+  Widget _buildHelperCard(String label, String value, Color color, IconData icon) {
     return Container(
-      padding: EdgeInsets.all(16.sp),
+      padding: EdgeInsets.all(12.sp),
       decoration: BoxDecoration(
-        color: AppColorData.regular().colorBgSecondary,
-        borderRadius: BorderRadius.circular(12.sp),
-        border: Border.all(color: Colors.grey.withOpacity(0.3)),
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8.sp),
+        border: Border.all(color: color.withOpacity(0.3)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Text(
-                'Advanced Monitoring (Commit 968a37f9)',
-                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                      color: AppColorData.regular().colorTextPrimary,
-                    ),
-              ),
-              SizedBox(width: 8.sp),
-              Tooltip(
-                message:
-                    'Advanced GPS features: warm-up, fallback, Kalman filtering, and anti-cheat detection',
-                child: Icon(
-                  Icons.info_outline,
-                  size: 16.sp,
-                  color: AppColorData.regular().colorTextSecondary,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.sp),
-          Obx(() => Column(
-                children: [
-                  _buildStatusRow('GPS Warm-up', 'Available', Colors.green),
-                  _buildStatusRow('Fallback Mechanism', 'Enabled', Colors.blue),
-                  _buildStatusRow('Kalman Filtering', 'Active', Colors.cyan),
-                  _buildStatusRow(
-                      'Battery Optimization',
-                      controller.batteryOptimizations.value > 0
-                          ? 'Active'
-                          : 'Inactive',
-                      controller.batteryOptimizations.value > 0
-                          ? Colors.green
-                          : Colors.grey),
-                  _buildStatusRow(
-                      'Performance Monitoring', 'Real-time', Colors.purple),
-                  _buildStatusRow(
-                      'Anti-cheat Detection', 'Enhanced', Colors.orange),
-                ],
-              )),
-          SizedBox(height: 12.sp),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    controller.addRealtimeLog('GPS warm-up initiated');
-                    // Simulate GPS warm-up
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
+          Icon(icon, color: color, size: 16.sp),
+          SizedBox(width: 8.sp),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value,
+                  style: TextStyle(
+                    color: color,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
                   ),
-                  child: const Text('Test Warm-up'),
                 ),
-              ),
-              SizedBox(width: 8.sp),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    controller.addRealtimeLog('Fallback mechanism tested');
-                    // Simulate fallback
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.white,
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: AppColorData.regular().colorTextSecondary,
+                    fontSize: 10.sp,
                   ),
-                  child: const Text('Test Fallback'),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -1105,37 +733,27 @@ class GPSDebugPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Text(
-                      'Real-time Logs',
-                      style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                            color: AppColorData.regular().colorTextPrimary,
-                          ),
+              Icon(Icons.terminal, size: 20.sp, color: Colors.green),
+              SizedBox(width: 8.sp),
+              Text(
+                'Real-time Logs',
+                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
+                      color: AppColorData.regular().colorTextPrimary,
+                      fontWeight: FontWeight.bold,
                     ),
-                    SizedBox(width: 8.sp),
-                    Tooltip(
-                      message:
-                          'Console-style logs showing GPS events, filtering decisions, and system messages',
-                      child: Icon(
-                        Icons.info_outline,
-                        size: 16.sp,
-                        color: AppColorData.regular().colorTextSecondary,
-                      ),
-                    ),
-                  ],
-                ),
               ),
-              TextButton(
+              const Spacer(),
+              TextButton.icon(
                 onPressed: controller.clearLogs,
-                child: const Text('Clear'),
+                icon: const Icon(Icons.clear_all, size: 16),
+                label: const Text('Clear'),
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
               ),
             ],
           ),
-          SizedBox(height: 12.sp),
+          SizedBox(height: 16.sp),
+          
           Container(
             height: 200.sp,
             decoration: BoxDecoration(
@@ -1144,14 +762,15 @@ class GPSDebugPage extends StatelessWidget {
             ),
             child: Obx(() => ListView.builder(
                   padding: EdgeInsets.all(8.sp),
-                  itemCount: controller.realtimeData.length,
+                  itemCount: controller.realtimeLogs.length,
                   itemBuilder: (context, index) {
+                    final log = controller.realtimeLogs[index];
                     return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 2.sp),
+                      padding: EdgeInsets.symmetric(vertical: 1.sp),
                       child: Text(
-                        controller.realtimeData[index],
+                        log,
                         style: TextStyle(
-                          color: Colors.green,
+                          color: _getLogColor(log),
                           fontSize: 11.sp,
                           fontFamily: 'monospace',
                         ),
@@ -1165,73 +784,18 @@ class GPSDebugPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusRow(String label, String value, Color color) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.sp),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                  color: AppColorData.regular().colorTextSecondary,
-                ),
-          ),
-          Text(
-            value,
-            style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ],
-      ),
-    );
+  Color _getLogColor(String log) {
+    if (log.contains('❌') || log.contains('ERROR')) return Colors.red;
+    if (log.contains('⚠️') || log.contains('WARNING')) return Colors.orange;
+    if (log.contains('✅') || log.contains('SUCCESS')) return Colors.green;
+    if (log.contains('🔍') || log.contains('FILTERED')) return Colors.yellow;
+    if (log.contains('🚀') || log.contains('🔄')) return Colors.blue;
+    if (log.contains('👤')) return Colors.cyan;
+    if (log.contains('📍') || log.contains('📋')) return Colors.purple;
+    return Colors.green; // Default terminal green
   }
 
-  Widget _buildSliderSetting(
-    String label,
-    double value,
-    double min,
-    double max,
-    Function(double) onChanged,
-    String unit,
-  ) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.sp),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                label,
-                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                      color: AppColorData.regular().colorTextPrimary,
-                    ),
-              ),
-              Text(
-                '${value.toStringAsFixed(0)} $unit',
-                style: AppTextStyleData.regular().koBodyMediumMd.copyWith(
-                      color: AppColorData.regular().colorTextSecondary,
-                    ),
-              ),
-            ],
-          ),
-          Slider(
-            value: value,
-            min: min,
-            max: max,
-            divisions: ((max - min) / (max > 100 ? 10 : 1)).round(),
-            onChanged: onChanged,
-            activeColor: Colors.blue,
-          ),
-        ],
-      ),
-    );
-  }
-
+  // Color helper methods
   Color _getSpeedColor(double speed) {
     if (speed < 5) return Colors.green;
     if (speed < 20) return Colors.yellow;
@@ -1260,24 +824,71 @@ class GPSDebugPage extends StatelessWidget {
   }
 
   Color _getGradeColor(String grade) {
-    switch (grade) {
-      case 'A':
-        return Colors.green;
-      case 'B':
-        return Colors.lightGreen;
-      case 'C':
-        return Colors.yellow;
-      case 'D':
-        return Colors.orange;
-      case 'F':
-        return Colors.red;
-      default:
-        return Colors.grey;
+    switch (grade.toUpperCase()) {
+      case 'A': return Colors.green;
+      case 'B': return Colors.lightGreen;
+      case 'C': return Colors.yellow;
+      case 'D': return Colors.orange;
+      case 'F': return Colors.red;
+      default: return Colors.grey;
     }
+  }
+
+  // Debug info dialog
+  void _showDebugInfo(BuildContext context, GPSDebugController controller) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Debug Information'),
+        content: SizedBox(
+          width: double.maxFinite,
+          height: 400,
+          child: FutureBuilder<Map<String, dynamic>>(
+            future: controller.getDebugInfo(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return SingleChildScrollView(
+                  child: Text(
+                    _formatDebugInfo(snapshot.data!),
+                    style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                  ),
+                );
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDebugInfo(Map<String, dynamic> info) {
+    final buffer = StringBuffer();
+    
+    void writeMap(Map<String, dynamic> map, [int indent = 0]) {
+      final prefix = '  ' * indent;
+      for (final entry in map.entries) {
+        if (entry.value is Map<String, dynamic>) {
+          buffer.writeln('$prefix${entry.key}:');
+          writeMap(entry.value, indent + 1);
+        } else {
+          buffer.writeln('$prefix${entry.key}: ${entry.value}');
+        }
+      }
+    }
+    
+    writeMap(info);
+    return buffer.toString();
   }
 }
 
-// Custom painters for GPS visualization
+// Custom painters
 class GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -1285,7 +896,6 @@ class GridPainter extends CustomPainter {
       ..color = Colors.grey.withOpacity(0.3)
       ..strokeWidth = 1.0;
 
-    // Draw grid lines
     const gridSize = 20.0;
     for (double x = 0; x < size.width; x += gridSize) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
@@ -1299,12 +909,19 @@ class GridPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-class GPSTrackingPainter extends CustomPainter {
-  final List<NLatLng> rawPositions;
-  final List<NLatLng> filteredPositions;
-  final Position? currentPosition;
+class GPSPathPainter extends CustomPainter {
+  final List<LatLng> rawPositions;
+  final List<LatLng> filteredPositions;
+  final dynamic currentPosition; // Accept Position, LocationModel or map
+  
+  // Cache for bounds calculation
+  static double? _cachedMinLat;
+  static double? _cachedMaxLat;
+  static double? _cachedMinLng;
+  static double? _cachedMaxLng;
+  static int _lastPositionCount = 0;
 
-  GPSTrackingPainter({
+  GPSPathPainter({
     required this.rawPositions,
     required this.filteredPositions,
     this.currentPosition,
@@ -1314,104 +931,215 @@ class GPSTrackingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (rawPositions.isEmpty && filteredPositions.isEmpty) return;
 
-    // Find bounds for all positions
-    double minLat = double.infinity;
-    double maxLat = -double.infinity;
-    double minLng = double.infinity;
-    double maxLng = -double.infinity;
+    // Optimize bounds calculation - only recalculate when positions change significantly
+    final totalPositions = rawPositions.length + filteredPositions.length;
+    bool shouldRecalculateBounds = _cachedMinLat == null || 
+        (totalPositions - _lastPositionCount).abs() > 5; // Recalculate every 5 new points
+    
+    double minLat, maxLat, minLng, maxLng;
+    
+    if (shouldRecalculateBounds) {
+      minLat = double.infinity;
+      maxLat = -double.infinity;
+      minLng = double.infinity;
+      maxLng = -double.infinity;
 
-    for (var pos in [...rawPositions, ...filteredPositions]) {
-      minLat = math.min(minLat, pos.latitude);
-      maxLat = math.max(maxLat, pos.latitude);
-      minLng = math.min(minLng, pos.longitude);
-      maxLng = math.max(maxLng, pos.longitude);
-    }
-
-    // Add padding
-    double latRange = maxLat - minLat;
-    double lngRange = maxLng - minLng;
-    if (latRange == 0) latRange = 0.001;
-    if (lngRange == 0) lngRange = 0.001;
-
-    minLat -= latRange * 0.1;
-    maxLat += latRange * 0.1;
-    minLng -= lngRange * 0.1;
-    maxLng += lngRange * 0.1;
-
-    // Convert lat/lng to screen coordinates
-    Offset latLngToScreen(double lat, double lng) {
-      double x = (lng - minLng) / (maxLng - minLng) * size.width;
-      double y = (maxLat - lat) / (maxLat - minLat) * size.height;
-      return Offset(x, y);
-    }
-
-    // Draw raw path (red)
-    if (rawPositions.length > 1) {
-      final rawPaint = Paint()
-        ..color = Colors.red
-        ..strokeWidth = 2.0
-        ..style = PaintingStyle.stroke;
-
-      final rawPath = Path();
-      rawPath.moveTo(
-          latLngToScreen(rawPositions[0].latitude, rawPositions[0].longitude)
-              .dx,
-          latLngToScreen(rawPositions[0].latitude, rawPositions[0].longitude)
-              .dy);
-
-      for (int i = 1; i < rawPositions.length; i++) {
-        final point =
-            latLngToScreen(rawPositions[i].latitude, rawPositions[i].longitude);
-        rawPath.lineTo(point.dx, point.dy);
+      // Use a more efficient approach - check last 50 positions for bounds
+      final recentRaw = rawPositions.length > 50 ? rawPositions.sublist(rawPositions.length - 50) : rawPositions;
+      final recentFiltered = filteredPositions.length > 50 ? filteredPositions.sublist(filteredPositions.length - 50) : filteredPositions;
+      
+      for (final pos in [...recentRaw, ...recentFiltered]) {
+        minLat = math.min(minLat, pos.latitude);
+        maxLat = math.max(maxLat, pos.latitude);
+        minLng = math.min(minLng, pos.longitude);
+        maxLng = math.max(maxLng, pos.longitude);
       }
-      canvas.drawPath(rawPath, rawPaint);
+      
+      // Include current position in bounds
+      if (currentPosition != null) {
+        minLat = math.min(minLat, currentPosition!.latitude);
+        maxLat = math.max(maxLat, currentPosition!.latitude);
+        minLng = math.min(minLng, currentPosition!.longitude);
+        maxLng = math.max(maxLng, currentPosition!.longitude);
+      }
+
+      // Add padding
+      final latRange = (maxLat - minLat).clamp(0.001, double.infinity);
+      final lngRange = (maxLng - minLng).clamp(0.001, double.infinity);
+      minLat -= latRange * 0.15; // Increased padding for better visibility
+      maxLat += latRange * 0.15;
+      minLng -= lngRange * 0.15;
+      maxLng += lngRange * 0.15;
+      
+      // Cache the bounds
+      _cachedMinLat = minLat;
+      _cachedMaxLat = maxLat;
+      _cachedMinLng = minLng;
+      _cachedMaxLng = maxLng;
+      _lastPositionCount = totalPositions;
+    } else {
+      // Use cached bounds
+      minLat = _cachedMinLat!;
+      maxLat = _cachedMaxLat!;
+      minLng = _cachedMinLng!;
+      maxLng = _cachedMaxLng!;
     }
 
-    // Draw filtered path (green)
+    // Optimized coordinate transformation
+    Offset toScreen(double lat, double lng) {
+      final x = (lng - minLng) / (maxLng - minLng) * size.width;
+      final y = (maxLat - lat) / (maxLat - minLat) * size.height;
+      return Offset(x.clamp(0.0, size.width), y.clamp(0.0, size.height));
+    }
+
+    // Draw filtered path first (main track) - only recent points for performance
     if (filteredPositions.length > 1) {
       final filteredPaint = Paint()
         ..color = Colors.green
         ..strokeWidth = 3.0
-        ..style = PaintingStyle.stroke;
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round;
 
-      final filteredPath = Path();
-      filteredPath.moveTo(
-          latLngToScreen(
-                  filteredPositions[0].latitude, filteredPositions[0].longitude)
-              .dx,
-          latLngToScreen(
-                  filteredPositions[0].latitude, filteredPositions[0].longitude)
-              .dy);
+      // Optimize path drawing - use only recent points or subsample for performance
+      final pointsToUse = filteredPositions.length > 100 
+          ? _subsamplePoints(filteredPositions, 100) 
+          : filteredPositions;
+      
+      if (pointsToUse.length > 1) {
+        final filteredPath = Path();
+        final startPoint = toScreen(pointsToUse[0].latitude, pointsToUse[0].longitude);
+        filteredPath.moveTo(startPoint.dx, startPoint.dy);
 
-      for (int i = 1; i < filteredPositions.length; i++) {
-        final point = latLngToScreen(
-            filteredPositions[i].latitude, filteredPositions[i].longitude);
-        filteredPath.lineTo(point.dx, point.dy);
+        for (int i = 1; i < pointsToUse.length; i++) {
+          final point = toScreen(pointsToUse[i].latitude, pointsToUse[i].longitude);
+          filteredPath.lineTo(point.dx, point.dy);
+        }
+        canvas.drawPath(filteredPath, filteredPaint);
       }
-      canvas.drawPath(filteredPath, filteredPaint);
     }
 
-    // Draw current position (blue circle)
+    // Draw raw path (less prominent) - subsample more aggressively
+    if (rawPositions.length > 1) {
+      final rawPaint = Paint()
+        ..color = Colors.red.withOpacity(0.4) // More transparent
+        ..strokeWidth = 1.5 // Thinner
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round;
+
+      // More aggressive subsampling for raw data
+      final pointsToUse = rawPositions.length > 50 
+          ? _subsamplePoints(rawPositions, 50) 
+          : rawPositions;
+      
+      if (pointsToUse.length > 1) {
+        final rawPath = Path();
+        final startPoint = toScreen(pointsToUse[0].latitude, pointsToUse[0].longitude);
+        rawPath.moveTo(startPoint.dx, startPoint.dy);
+
+        for (int i = 1; i < pointsToUse.length; i++) {
+          final point = toScreen(pointsToUse[i].latitude, pointsToUse[i].longitude);
+          rawPath.lineTo(point.dx, point.dy);
+        }
+        canvas.drawPath(rawPath, rawPaint);
+      }
+    }
+
+    // Draw current position with enhanced visibility
     if (currentPosition != null) {
+      final currentPoint = toScreen(currentPosition!.latitude, currentPosition!.longitude);
+      
+  // Accuracy circle (simplified)
+  // Ensure we pass a concrete double to math.min to avoid generic inference issues
+  final double _accuracyVal = ((currentPosition?.accuracy ?? 0) as num).toDouble();
+  final accuracyRadius = math.min(_accuracyVal * 0.5, 25.0);
+  if (accuracyRadius > 3.0) {
+        final accuracyPaint = Paint()
+          ..color = Colors.blue.withOpacity(0.15)
+          ..style = PaintingStyle.fill;
+        canvas.drawCircle(currentPoint, accuracyRadius, accuracyPaint);
+        
+        // Accuracy circle border
+        final accuracyBorderPaint = Paint()
+          ..color = Colors.blue.withOpacity(0.3)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.0;
+        canvas.drawCircle(currentPoint, accuracyRadius, accuracyBorderPaint);
+      }
+
+      // Current position dot (enhanced)
       final currentPaint = Paint()
         ..color = Colors.blue
         ..style = PaintingStyle.fill;
+      canvas.drawCircle(currentPoint, 8.0, currentPaint);
 
-      final currentPoint =
-          latLngToScreen(currentPosition!.latitude, currentPosition!.longitude);
-      canvas.drawCircle(currentPoint, 6.0, currentPaint);
-
-      // Draw accuracy circle
-      final accuracyPaint = Paint()
-        ..color = Colors.blue.withOpacity(0.3)
-        ..style = PaintingStyle.fill;
-
-      // Approximate accuracy radius in pixels (very rough)
-      double accuracyRadius = currentPosition!.accuracy * 2;
-      canvas.drawCircle(currentPoint, accuracyRadius, accuracyPaint);
+      // White border (enhanced)
+      final borderPaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.5;
+      canvas.drawCircle(currentPoint, 8.0, borderPaint);
+      
+      // Direction indicator (if available)
+      if (currentPosition!.heading > 0) {
+        final headingRadians = currentPosition!.heading * math.pi / 180;
+        final arrowLength = 15.0;
+        final arrowEnd = Offset(
+          currentPoint.dx + math.sin(headingRadians) * arrowLength,
+          currentPoint.dy - math.cos(headingRadians) * arrowLength,
+        );
+        
+        final arrowPaint = Paint()
+          ..color = Colors.white
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3.0
+          ..strokeCap = StrokeCap.round;
+        
+        canvas.drawLine(currentPoint, arrowEnd, arrowPaint);
+        
+        // Arrow head
+        final arrowHeadLength = 6.0;
+        final leftArrow = Offset(
+          arrowEnd.dx - math.sin(headingRadians + 0.5) * arrowHeadLength,
+          arrowEnd.dy + math.cos(headingRadians + 0.5) * arrowHeadLength,
+        );
+        final rightArrow = Offset(
+          arrowEnd.dx - math.sin(headingRadians - 0.5) * arrowHeadLength,
+          arrowEnd.dy + math.cos(headingRadians - 0.5) * arrowHeadLength,
+        );
+        
+        canvas.drawLine(arrowEnd, leftArrow, arrowPaint);
+        canvas.drawLine(arrowEnd, rightArrow, arrowPaint);
+      }
     }
+  }
+  
+  /// Subsample points to reduce rendering complexity
+  List<LatLng> _subsamplePoints(List<LatLng> points, int maxPoints) {
+    if (points.length <= maxPoints) return points;
+    
+    final step = points.length / maxPoints;
+    final result = <LatLng>[];
+    
+    for (int i = 0; i < points.length; i += step.ceil()) {
+      if (i < points.length) {
+        result.add(points[i]);
+      }
+    }
+    
+    // Always include the last point
+    if (result.last != points.last) {
+      result.add(points.last);
+    }
+    
+    return result;
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant GPSPathPainter oldDelegate) {
+    // More intelligent repaint logic
+    return rawPositions.length != oldDelegate.rawPositions.length ||
+           filteredPositions.length != oldDelegate.filteredPositions.length ||
+           currentPosition != oldDelegate.currentPosition;
+  }
 }

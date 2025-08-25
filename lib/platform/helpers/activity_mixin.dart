@@ -17,6 +17,7 @@ import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
+import 'package:gaza_go/platform/helpers/gps_helper.dart' as gps_helper;
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
@@ -26,7 +27,6 @@ import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:health/health.dart';
@@ -34,23 +34,17 @@ import 'package:pedometer/pedometer.dart';
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
 import 'package:throttling/throttling.dart';
 import 'package:uuid/uuid.dart';
+import 'package:gaza_go/platform/models/location_model.dart';
 
 mixin ActivityMixin {
   GlobalController globalController = Get.find();
   // InspectionNoticeController inspectionNoticeController = Get.isRegistered<InspectionNoticeController>() ? Get.find<InspectionNoticeController>() : Get.put(InspectionNoticeController());
   final Rx<CurrentUserStateModel> userState = Rx(CurrentUserStateModel());
   final RxInt loadingTime = RxInt(1);
-  final Rx<Position> currentLocation = Rx(Position(
-      speed: 0,
-      altitude: 0,
-      accuracy: 0,
-      heading: 0,
-      latitude: 0,
-      longitude: 0,
-      speedAccuracy: 0,
-      timestamp: DateTime.now(),
-      altitudeAccuracy: 0.0,
-      headingAccuracy: 0.0));
+  final Rxn<LocationModel> currentLocation = Rxn<LocationModel>();
+
+  // LocationModel support for modern location tracking
+  final Rxn<LocationModel> currentLocationModel = Rxn<LocationModel>();
   final RxBool isFakeGps = RxBool(false);
   final RxList<UserExerciseModel> exerciseData = RxList.empty();
   final RxList<LatLng> coordinates = RxList.empty();
@@ -66,7 +60,8 @@ mixin ActivityMixin {
   Timer? stopTimer;
   Timer? walkingStateTimer;
   final RxDouble stopProgress = RxDouble(0);
-  StreamSubscription<Position>? locationSubscription;
+  StreamSubscription<LocationModel>? locationSubscription;
+  StreamSubscription<LocationModel>? locationModelSubscription;
   StreamSubscription<StepCount>? stepSubscription;
   StreamSubscription<PedestrianStatus>? pedestrianStatusSubscription;
   final Health health = Health();
@@ -231,10 +226,10 @@ mixin ActivityMixin {
         adId: userState.value.exercise!.adId,
         lastLatitude: coordinates.isNotEmpty
             ? coordinates.last.latitude
-            : currentLocation.value.latitude,
+            : currentLocation.value?.latitude ?? 0.0,
         lastLongitude: coordinates.isNotEmpty
             ? coordinates.last.longitude
-            : currentLocation.value.longitude,
+            : currentLocation.value?.longitude ?? 0.0,
         latestLocations: partialCoordinates,
         sequence: const Uuid().v4(),
       ),
@@ -250,6 +245,48 @@ mixin ActivityMixin {
   void initStream() {
     initExerciseTimer();
     initStepStream();
+    initLocationStream();
+  }
+
+  void initLocationStream() {
+    // Cancel existing subscription
+    locationModelSubscription?.cancel();
+    locationModelSubscription = null;
+
+    // Subscribe to UnifiedGPSManager location stream
+    locationModelSubscription = gps_helper.GPS.instance.locationStream.listen(
+      (LocationModel location) {
+        currentLocationModel.value = location;
+        currentLocation.value = location; // For backward compatibility
+
+        if (exerciseState.value == ExerciseState.ongoing) {
+          // Add location to exercise data
+          exerciseData.add(UserExerciseModel(
+            id: userState.value.exercise?.id,
+            userId: int.parse(
+                HiveStore.loadString(key: HiveKey.userId.name) ?? '0'),
+            steps: exerciseSteps.value,
+            speed: location.speed,
+            distance: exerciseDistance.value,
+            altitude: location.altitude,
+            time: exerciseTime.value,
+            locationUpdateTime: DateTime.now(),
+            lastLatitude: location.latitude,
+            lastLongitude: location.longitude,
+          ));
+
+          // Add coordinates
+          coordinates.add(LatLng(location.latitude, location.longitude));
+
+          // Update real-time speed
+          gpsSpeed.value = location.speed;
+          calRealtimeSpeed();
+        }
+      },
+      onError: (error) {
+        print('Location stream error: $error');
+      },
+    );
   }
 
   void initExerciseStats() {
@@ -434,10 +471,11 @@ mixin ActivityMixin {
 
     HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: 0);
 
-    if (Get.isDialogOpen != null && Get.isDialogOpen!)
+    if (Get.isDialogOpen != null && Get.isDialogOpen!) {
       Get.until((route) =>
           Get.currentRoute == Routes.activityActive &&
           (Get.isDialogOpen == false || Get.isDialogOpen == null));
+    }
     if (isFakeGps.value && !isTestingFakeGps()) {
       return;
     }
@@ -465,13 +503,13 @@ mixin ActivityMixin {
           steps: 0,
           speed: 0,
           distance: 0,
-          altitude: currentLocation.value.altitude,
+          altitude: currentLocation.value?.altitude ?? 0.0,
           time: 0,
           startPoint: course != null
               ? course.firstName
-              : '${currentLocation.value.longitude}, ${currentLocation.value.latitude}',
-          lastLongitude: currentLocation.value.longitude,
-          lastLatitude: currentLocation.value.latitude,
+              : '${currentLocation.value?.longitude ?? 0.0}, ${currentLocation.value?.latitude ?? 0.0}',
+          lastLongitude: currentLocation.value?.longitude ?? 0.0,
+          lastLatitude: currentLocation.value?.latitude ?? 0.0,
           challengeId: course?.challengeId,
           challengeCourseId: course?.id,
           locationUpdateTime: DateTime.now(),
@@ -768,6 +806,8 @@ mixin ActivityMixin {
     exerciseTimer = null;
     stepSubscription?.cancel();
     stepSubscription = null;
+    locationModelSubscription?.cancel();
+    locationModelSubscription = null;
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;
     exerciseState.value = ExerciseState.paused;
@@ -922,6 +962,8 @@ mixin ActivityMixin {
   void resetSubscriptions() {
     stepSubscription?.cancel();
     stepSubscription = null;
+    locationModelSubscription?.cancel();
+    locationModelSubscription = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
     HiveStore.initializeExerciseCoordinates();

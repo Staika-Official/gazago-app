@@ -1,27 +1,28 @@
 import 'dart:convert';
 
 import 'package:gaza_go/platform/firebase/remote_config.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 int updateInterval = 30000;
 // GPS Accuracy Settings - Phase 1 Improvements
 double gpsAccuracy = 5; // Improved from 30m to 5m for better accuracy
 double gpsAccuracyFallback = 10; // Fallback threshold when primary fails
-double maxGpsAccuracy = 20; // Maximum acceptable accuracy
-LocationAccuracy locationAccuracyQuality = LocationAccuracy
-    .bestForNavigation; // Improved from high to bestForNavigation
-
-// GPS Filtering Parameters
-double gpsFilterMaxSpeed =
-    50.0; // km/h - Maximum acceptable speed for fitness tracking
+double maxGpsAccuracy = 50; // Maximum acceptable accuracy (relaxed for indoor testing)
+// GPS quality setting (best for navigation equivalent)
+int locationAccuracyQuality = 0; // 0 = best for navigation, 1 = high, 2 = medium, 3 = low
+ 
 int gpsFilterHistorySize =
     5; // Number of positions to keep in history for filtering
 double gpsFilterMinTimeInterval =
-    1.0; // seconds - Minimum time interval between positions
+    0.5; // seconds - Minimum time interval between positions
 double gpsUpdateIntervalSeconds = 2.0; // GPS update interval in seconds
 double gpsDistanceFilterMeters =
     3.0; // Distance filter in meters (improved from 1m to 3m)
+
+// Runtime GPS Configuration - These are the ACTIVE thresholds used by helpers
+double runtimeMaxGpsAccuracy = 30.0; // Runtime accuracy threshold (meters) - relaxed for indoor testing
+double runtimeGpsFilterMaxSpeed = 15.0; // ACTIVE speed threshold used by all GPS helpers (km/h, range 1-15) - increased for walking
+int runtimeGpsUpdateInterval = 1000; // Runtime update interval in ms
 
 int stopTimeInterval = 5;
 int stepDifference = 0;
@@ -45,9 +46,7 @@ Future<void> initRemoteConfigData() async {
   gpsAccuracyFallback = getConfig(
       dataType: ConfigType.double, configKey: 'gps_accuracy_fallback');
   maxGpsAccuracy = getConfig(
-      dataType: ConfigType.double, configKey: 'gps_max_acceptable_accuracy');
-  gpsFilterMaxSpeed =
-      getConfig(dataType: ConfigType.double, configKey: 'gps_filter_max_speed');
+      dataType: ConfigType.double, configKey: 'gps_max_acceptable_accuracy'); 
   gpsFilterHistorySize =
       getConfig(dataType: ConfigType.int, configKey: 'gps_filter_history_size');
   gpsUpdateIntervalSeconds = getConfig(

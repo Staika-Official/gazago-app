@@ -15,7 +15,7 @@ import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:gaza_go/platform/models/location_model.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:throttling/throttling.dart';
@@ -174,7 +174,7 @@ mixin ChallengeMixin on MapMixin {
   }
 
   Future<void> getNearByCourses(
-      Position currentLocation, ExerciseState exerciseState) async {
+      LocationModel currentLocation, ExerciseState exerciseState) async {
     // Future.delayed(Duration(milliseconds: 500));
     await ActivityService.getNearByCourses(currentLocation,
         successCallback: (List<ChallengeCourseModel> result) {
@@ -191,7 +191,7 @@ mixin ChallengeMixin on MapMixin {
   }
 
   Future<void> getChallengesHierarchy(
-      Position currentLocation, int challengeId) async {
+      LocationModel currentLocation, int challengeId) async {
     hierarchyChallengesList.clear();
 
     await ActivityService.getChallengesHierarchy(
@@ -381,20 +381,7 @@ mixin ChallengeMixin on MapMixin {
     return outermostCoords;
   }
 
-  void detectChallengeZone(Position location) {
-    if (nearByCourses.isNotEmpty) {
-      doableCourses.clear();
-      for (ChallengeCourseModel challenge in nearByCourses) {
-        double distance = calculateDistance(location.latitude,
-            location.longitude, challenge.startLat, challenge.startLon);
-        if (distance <= convertMetersToKm(challenge.startRadius!)) {
-          doableCourses.add(challenge);
-        }
-      }
-    } else {
-      doableCourses.clear();
-    }
-  }
+  // duplicate/different signature removed — use detectChallengeZone(LocationModel)
 
   Future<void> getChallenges(
       {required Function successCallback, Function? errorCallback}) async {

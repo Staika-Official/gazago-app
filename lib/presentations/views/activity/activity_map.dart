@@ -30,8 +30,10 @@ class ActivityMap extends StatelessWidget {
             mapType: MapType.normal,
             indoorViewEnabled: true,
             initialCameraPosition: CameraPosition(
-              target: LatLng(controller.currentLocation.value.latitude,
-                  controller.currentLocation.value.longitude),
+              target: LatLng(
+                controller.currentLocation.value?.latitude ?? 31.5,
+                controller.currentLocation.value?.longitude ?? 34.4
+              ),
               zoom: 17,
             ),
             gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
