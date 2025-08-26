@@ -142,16 +142,6 @@ class ActivityController extends SuperController
   RxInt calcDelay = RxInt(300);
   bool _isRequestingChallenges = false;
   RxBool isClickedBtn = RxBool(false);
-  final _treasureBaseSize = const Size(16, 10);
-  late final _treasureZoomSize = _treasureBaseSize * 1.5;
-  final _mockListTreasure = <TreasureModel>[
-    TreasureModel(
-      id: 1,
-      latitude: 37.420954,
-      longitude: -122.085791,
-      type: TreasureType.personal,
-    ),
-  ];
   List<int> _currentHighlightedTreasuresId = [];
 
   // if lock, user is centered map, can't zoom and drag
@@ -1468,44 +1458,6 @@ class ActivityController extends SuperController
     );
   }
 
-  /// make custom marker based on position
-  Future<Set<Marker>> _buildCustomMarkers({
-    required List<TreasureModel> positions,
-    required Size markerSize,
-  }) async {
-    final Set<Marker> markers = {};
-
-    for (int i = 0; i < positions.length; i++) {
-      final BitmapDescriptor customIcon =
-          await ImageHelper.bitmapDescriptorFromSvgAsset(
-        positions[i].treasureIconPath,
-        markerSize,
-      );
-      markers.add(
-        Marker(
-          markerId: MarkerId(positions[i].id.toString()),
-          position: LatLng(positions[i].latitude, positions[i].longitude),
-          icon: customIcon,
-          onTap: () => _onPickupTreasure(positions[i]),
-        ),
-      );
-    }
-
-    return markers;
-  }
-
-  // TODO(khoi.tran): mock data for now, will implement in UC-005
-  Future<void> fetchRewardsItemsMarkers() async {
-    await Future.delayed(2.seconds);
-
-    final markers = await _buildCustomMarkers(
-      positions: _mockListTreasure,
-      markerSize: _treasureBaseSize,
-    );
-    clearMarkers();
-    addOverlayAll(markers);
-  }
-
   /// compare user location with the nearest treasure
   /// to see if they can pick it up or not
   /// UI purpose: zoom treasure if they can pick it up
@@ -1514,7 +1466,7 @@ class ActivityController extends SuperController
     final Map<double, List<TreasureModel>> treasureDistanceMap = {};
 
     /// calculate all distance of treasures
-    for (final t in _mockListTreasure) {
+    for (final t in listTreasureOfSession) {
       final distance = Geolocator.distanceBetween(
         userPosition.latitude,
         userPosition.longitude,
@@ -1529,11 +1481,15 @@ class ActivityController extends SuperController
       }
     }
 
+    if (treasureDistanceMap.isEmpty) {
+      return;
+    }
+
     /// get nearest treasures
     var nearestTreasures =
         treasureDistanceMap.entries.reduce((a, b) => a.key < b.key ? a : b);
-    // if nearest treasure is within pickupRadius (10m for now)
-    bool isInRange = nearestTreasures.key <= 10;
+    // if nearest treasure is within pickupRadius (fetch from BE)
+    bool isInRange = nearestTreasures.key <= minPickupRadius;
 
     if (_currentHighlightedTreasuresId.isNotEmpty) {
       await _updateTreasureZoom(isZoom: false);
@@ -1559,11 +1515,11 @@ class ActivityController extends SuperController
 
   /// sub-method to update UI for nearest treasure marker
   Future<void> _updateTreasureZoom({required bool isZoom}) async {
-    final newMarkers = await _buildCustomMarkers(
-        positions: _mockListTreasure
+    final newMarkers = await buildCustomMarkers(
+        positions: listTreasureOfSession
             .where((t) => _currentHighlightedTreasuresId.contains(t.id))
             .toList(),
-        markerSize: isZoom ? _treasureZoomSize : _treasureBaseSize);
+        markerSize: isZoom ? treasureZoomSize : treasureBaseSize);
 
     for (var element in newMarkers) {
       updateMarkerById(element);
@@ -1573,7 +1529,7 @@ class ActivityController extends SuperController
   /// method to handle when user pick up a treasure
   /// only work if the treasure can be picked up + exercise is ongoing
   /// which mean the treasure is within 10m
-  void _onPickupTreasure(TreasureModel treasure) {
+  void onPickupTreasure(TreasureModel treasure) {
     if (_currentHighlightedTreasuresId.contains(treasure.id) &&
         exerciseState.value == ExerciseState.ongoing) {
       /// check cool down timer

@@ -92,8 +92,6 @@ class _ActivityActiveMiniMapSectionState
                           // outlineColor: Colors.white,
                         ));
                       }
-
-                      controller.fetchRewardsItemsMarkers();
                     },
                   ),
                 ),
