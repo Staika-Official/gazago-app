@@ -1,6 +1,7 @@
 /.dart_tool/
 /build/
 /.idea/
+android/.idea/
 /.flutter-plugins
 /.flutter-plugins-dependencies
 **/*.g.dart

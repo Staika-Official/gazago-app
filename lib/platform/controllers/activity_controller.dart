@@ -21,6 +21,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
+import 'package:gaza_go/platform/helpers/image_helper.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
@@ -34,6 +35,7 @@ import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/promotion_ad_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
+import 'package:gaza_go/platform/models/treasure_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
@@ -62,10 +64,12 @@ class ActivityController extends SuperController
         ConsumerItemMixin,
         PromotionMixin {
   final WalletMasterController walletMasterController = Get.find();
+
   // ActivityController activityController = Get.isRegistered<ActivityController>() ? Get.find<ActivityController>() : Get.put(ActivityController());
   LoaderController loaderController = Get.isRegistered<LoaderController>()
       ? Get.find<LoaderController>()
       : Get.put(LoaderController());
+
   RxList<StatModel> get statList {
     return RxList([
       StatModel(
@@ -84,6 +88,7 @@ class ActivityController extends SuperController
   }
 
   GlobalKey webViewKey = GlobalKey();
+
   // final RxDouble currentSliderValue = RxDouble(0);
   // final RxInt remainDurability = RxInt(0);
   // final RxInt repairDurability = RxInt(0);
@@ -162,6 +167,12 @@ class ActivityController extends SuperController
   RxInt calcDelay = RxInt(300);
   bool _isRequestingChallenges = false;
   RxBool isClickedBtn = RxBool(false);
+  List<int> _currentHighlightedTreasuresId = [];
+
+  // if lock, user is centered map, can't zoom and drag
+  // if unlock, user can zoom and drag, user not necessarily centered
+  var isLockMap = false.obs;
+
   void checkNewCollectionStatus() {
     if (HiveStore.load(key: HiveKey.isNewCollection.name) != null &&
         HiveStore.load(key: HiveKey.isNewCollection.name) == true) {
@@ -354,7 +365,7 @@ class ActivityController extends SuperController
     );
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
       List<LatLng> markers = getfitBoundCourseMarker(selectedChallengeMarkers);
-      challengeMapController.animateCamera(
+      challengeMapControllers.last.animateCamera(
         CameraUpdate.newLatLngBounds(_createBoundsFromLatLngList(markers), 120),
       );
     } else {
@@ -362,7 +373,7 @@ class ActivityController extends SuperController
       print(course.startLon!);
       print(course.endLat!);
       print(course.endLon!);
-      challengeMapController.animateCamera(
+      challengeMapControllers.last.animateCamera(
         CameraUpdate.newLatLngBounds(
             _createBoundsFromLatLngList(
               [
@@ -1091,6 +1102,10 @@ class ActivityController extends SuperController
         HiveStore.savePositionRawData(value: positionRawData);
       }
 
+      if (isLockMap.isTrue) {
+        _moveMapToMyLocation();
+      }
+
       if (exerciseState.value == ExerciseState.ongoing &&
           filteredLocationModel.accuracy < gpsAccuracy) {
         exerciseData.add(UserExerciseModel(
@@ -1123,17 +1138,17 @@ class ActivityController extends SuperController
                   coordinates.last.longitude);
         }
 
-        if (Get.currentRoute == Routes.activityMap &&
-            coordinates.length >= 10) {
-          print('entered_here'.tr());
+        if (coordinates.length >= 10) {
           addOverlay(Polyline(
-            polylineId: PolylineId('path'),
+            polylineId: const PolylineId('path'),
             width: 3,
             color: Colors.red,
             points: coordinates,
             // outlineColor: Colors.white,
           ));
         }
+
+        await _compareDistanceWithNearestTreasure(position);
       } else {
         // HiveStore.save(key: HiveKey.accessToken.name, value: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJramg0MzU3IiwiYXV0aCI6IlJPTEVfQURNSU4sUk9MRV9MT0NBVElPTixST0xFX0xPQ0FUSU9OX1NVUEVSVklTT1IiLCJleHAiOjE3MTg3ODYwNzksInVzZXJJZCI6IjI1NSJ9.rNf30NedosrnS4iPLLgEFR2RCNQSCLsytDqXsM4jLkJB_wKwhC-LQ0PVYnr3gzrDcT031n7cBBWyheYv_Ml9rA');
         // 첼린지 존 찾기(30초마다 요청)
@@ -1575,7 +1590,7 @@ class ActivityController extends SuperController
       nearByCourses.forEach((item) {
         overlays.addAll(renderCircleOverlays(item));
         overlays.addAll(renderMarkers(item));
-      });
+      }
       print(overlays);
       clearOverlays();
       addOverlayAll({...overlays});
@@ -1704,6 +1719,101 @@ class ActivityController extends SuperController
           await launchUrl(url, mode: LaunchMode.externalApplication);
         }
         break;
+    }
+  }
+
+  Future<void> _moveMapToMyLocation() async {
+    LatLng target = LatLng(
+      currentLocation.value.latitude,
+      currentLocation.value.longitude,
+    );
+
+    challengeMapControllers.forEach(
+      (controller) async => controller.animateCamera(
+        CameraUpdate.newLatLngZoom(
+          target,
+          await controller.getZoomLevel(),
+        ),
+      ),
+    );
+  }
+
+  /// compare user location with the nearest treasure
+  /// to see if they can pick it up or not
+  /// UI purpose: zoom treasure if they can pick it up
+  Future<void> _compareDistanceWithNearestTreasure(
+      Position userPosition) async {
+    final Map<double, List<TreasureModel>> treasureDistanceMap = {};
+
+    /// calculate all distance of treasures
+    for (final t in listTreasureOfSession) {
+      final distance = Geolocator.distanceBetween(
+        userPosition.latitude,
+        userPosition.longitude,
+        t.latitude,
+        t.longitude,
+      );
+
+      if (treasureDistanceMap.containsKey(distance)) {
+        treasureDistanceMap[distance]!.add(t);
+      } else {
+        treasureDistanceMap[distance] = [t];
+      }
+    }
+
+    if (treasureDistanceMap.isEmpty) {
+      return;
+    }
+
+    /// get nearest treasures
+    var nearestTreasures =
+        treasureDistanceMap.entries.reduce((a, b) => a.key < b.key ? a : b);
+    // if nearest treasure is within pickupRadius (fetch from BE)
+    bool isInRange = nearestTreasures.key <= minPickupRadius;
+
+    if (_currentHighlightedTreasuresId.isNotEmpty) {
+      await _updateTreasureZoom(isZoom: false);
+      _currentHighlightedTreasuresId.clear();
+    }
+
+    if (isInRange) {
+      debugPrint("TREASURE CAN BE PICKED UP: ${nearestTreasures.key}");
+      _currentHighlightedTreasuresId =
+          nearestTreasures.value.map((e) => e.id).toList();
+      _updateTreasureZoom(isZoom: true);
+    } else {
+      // no need to update if no treasure highlighted before
+      if (_currentHighlightedTreasuresId.isEmpty) {
+        return;
+      }
+
+      debugPrint("REMOVE PICKABLE TREASURE: ${nearestTreasures.key}");
+      _updateTreasureZoom(isZoom: false);
+      _currentHighlightedTreasuresId.clear();
+    }
+  }
+
+  /// sub-method to update UI for nearest treasure marker
+  Future<void> _updateTreasureZoom({required bool isZoom}) async {
+    final newMarkers = await buildCustomMarkers(
+        positions: listTreasureOfSession
+            .where((t) => _currentHighlightedTreasuresId.contains(t.id))
+            .toList(),
+        markerSize: isZoom ? treasureZoomSize : treasureBaseSize);
+
+    for (var element in newMarkers) {
+      updateMarkerById(element);
+    }
+  }
+
+  /// method to handle when user pick up a treasure
+  /// only work if the treasure can be picked up + exercise is ongoing
+  /// which mean the treasure is within 10m
+  void onPickupTreasure(TreasureModel treasure) {
+    if (_currentHighlightedTreasuresId.contains(treasure.id) &&
+        exerciseState.value == ExerciseState.ongoing) {
+      /// logic to pick here
+      debugPrint("PICKKKKKK ${treasure.id}");
     }
   }
 

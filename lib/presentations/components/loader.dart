@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
-import 'package:get/get.dart';
 
 class Loader extends StatelessWidget {
   const Loader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    LoaderController loaderController = Get.find();
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(.3),
-      body: Stack(
+      body: const Stack(
         children: [
           Center(
-            key: loaderController.dialogKey,
-            child: const CircularProgressIndicator(color:skyBlueColor), //무지성 돌돌이~
+            child: CircularProgressIndicator(color: skyBlueColor), //무지성 돌돌이~
           ),
         ],
       ),

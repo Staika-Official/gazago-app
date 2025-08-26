@@ -9,13 +9,24 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart' hide Trans;
 
-class ActivityMap extends StatelessWidget {
+class ActivityMap extends StatefulWidget {
   const ActivityMap({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    ActivityController controller = Get.find();
+  State<ActivityMap> createState() => _ActivityMapState();
+}
 
+class _ActivityMapState extends State<ActivityMap> {
+  ActivityController controller = Get.find();
+
+  @override
+  void dispose() {
+    controller.challengeMapControllers.removeLast();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       children: [
         Obx(() {
@@ -29,6 +40,8 @@ class ActivityMap extends StatelessWidget {
             minMaxZoomPreference: const MinMaxZoomPreference(8, 20),
             mapType: MapType.normal,
             indoorViewEnabled: true,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
             initialCameraPosition: CameraPosition(
               target: LatLng(
                 controller.currentLocation.value?.latitude ?? 31.5,
@@ -36,15 +49,19 @@ class ActivityMap extends StatelessWidget {
               ),
               zoom: 17,
             ),
+            zoomGesturesEnabled: controller.isLockMap.isFalse,
+            tiltGesturesEnabled: controller.isLockMap.isFalse,
+            rotateGesturesEnabled: controller.isLockMap.isFalse,
+            scrollGesturesEnabled: controller.isLockMap.isFalse,
             gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
               Factory<OneSequenceGestureRecognizer>(
                 () => EagerGestureRecognizer(),
               ),
             },
             onMapCreated: (mapController) {
-              controller.challengeMapController = mapController;
               // mapController
               //     .setLocationTrackingMode(NLocationTrackingMode.follow);
+              controller.challengeMapControllers.add(mapController);
               controller.addOverlayAll(
                 {
                   if (controller.selectedCourse.value != null)
@@ -53,12 +70,9 @@ class ActivityMap extends StatelessWidget {
                     ...renderMarkers(controller.selectedCourse.value),
                 },
               );
-              print('map_ready'.tr());
-
               if (controller.coordinates.length >= 10) {
-                print('entered_here'.tr());
                 controller.addOverlay(Polyline(
-                  polylineId: PolylineId('path'),
+                  polylineId: const PolylineId('path'),
                   width: 3,
                   color: Colors.red,
                   points: controller.coordinates,
@@ -66,19 +80,6 @@ class ActivityMap extends StatelessWidget {
                 ));
               }
             },
-            // onCameraChange: (position, isGesture) {
-            //   // controller.challengeMapController.clearOverlays();
-            //   print('camera_moving'.tr());
-            //   if(controller.coordinates.length >= 10) {
-            //     controller.challengeMapController.addOverlay( NPathOverlay(
-            //       id: 'path',
-            //       width: 3,
-            //       color: Colors.red,
-            //       coords: controller.coordinates,
-            //       // outlineColor: Colors.white,
-            //     ));
-            //   }
-            // },
           );
         }),
         Positioned(

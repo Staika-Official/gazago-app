@@ -19,8 +19,22 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:easy_localization/easy_localization.dart';
 
-class ActivityChallengeCourses extends StatelessWidget {
+class ActivityChallengeCourses extends StatefulWidget {
   const ActivityChallengeCourses({super.key});
+
+  @override
+  State<ActivityChallengeCourses> createState() =>
+      _ActivityChallengeCoursesState();
+}
+
+class _ActivityChallengeCoursesState extends State<ActivityChallengeCourses> {
+  ActivityController controller = Get.find();
+
+  @override
+  void dispose() {
+    controller.challengeMapControllers.removeLast();
+    super.dispose();
+  }
 
   List<Widget> renderCourseList(ActivityController controller) {
     if (controller.doableCoursesByChallenge.isNotEmpty) {
@@ -85,8 +99,6 @@ class ActivityChallengeCourses extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ActivityController controller = Get.find();
-
     return Scaffold(
       body: Obx(() {
         return Stack(
@@ -113,7 +125,7 @@ class ActivityChallengeCourses extends StatelessWidget {
                   ),
                 },
                 onMapCreated: (mapController) {
-                  controller.challengeMapController = mapController;
+                  controller.challengeMapControllers.add(mapController);
                   controller.onChallengeMapCreated();
                   Future.delayed(const Duration(milliseconds: 100), () {
                     controller.addOverlayAll(

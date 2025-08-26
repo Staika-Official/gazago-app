@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
+import 'package:easy_localization/easy_localization.dart';
 // import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -16,19 +16,23 @@ import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/helpers/image_helper.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/gps_helper.dart' as gps_helper;
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/request/get_treasure_request_model.dart';
+import 'package:gaza_go/platform/models/treasure_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
+import 'package:gaza_go/platform/services/treasure_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart' hide Trans;
-import 'package:easy_localization/easy_localization.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:health/health.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
@@ -38,6 +42,7 @@ import 'package:gaza_go/platform/models/location_model.dart';
 
 mixin ActivityMixin {
   GlobalController globalController = Get.find();
+
   // InspectionNoticeController inspectionNoticeController = Get.isRegistered<InspectionNoticeController>() ? Get.find<InspectionNoticeController>() : Get.put(InspectionNoticeController());
   final Rx<CurrentUserStateModel> userState = Rx(CurrentUserStateModel());
   final RxInt loadingTime = RxInt(1);
@@ -76,6 +81,13 @@ mixin ActivityMixin {
       Throttling(duration: const Duration(milliseconds: 1500));
   final Rx<Control> luckLoadControl = Rx(Control.stop);
   RxBool isShowLuckAnimation = RxBool(false);
+
+  // treasure of current exercise session
+  final listTreasureOfSession = <TreasureModel>[].obs;
+  final treasureBaseSize = const Size(16, 10);
+  late final treasureZoomSize = treasureBaseSize * 1.5;
+  num minPickupRadius = 0;
+
   // final assetsAudioPlayer = AssetsAudioPlayer();
 
   Rx<Color> get exerciseStateTextColor {
@@ -544,6 +556,7 @@ mixin ActivityMixin {
           initExerciseStats();
           initStream();
           startPeriodicUpdate();
+          fetchExerciseTreasures();
         },
         errorCallback: (String? statusMessage) {
           showToastPopup(statusMessage ?? 'exercise_start_failed'.tr());
@@ -584,6 +597,7 @@ mixin ActivityMixin {
     activityMixinThr
         .throttle(() => updateExercise(source: source, wasPaused: true));
     startPeriodicUpdate();
+    fetchExerciseTreasures();
   }
 
   Future<RxList<LatLng>> parseCoordinates(int? exerciseId) async {
@@ -707,9 +721,10 @@ mixin ActivityMixin {
                   lowStaminaNotified.value = true;
                 }
               }
-              if (userState.value.shoes!.durability! < 30 &&
+              if (userState.value.shoes?.durability != null &&
+                  userState.value.shoes!.durability! < 30 &&
                   !zeroDurabilityNotified.value) {
-                if (userState.value.shoes!.durability! == 0) {
+                if (userState.value.shoes!.durability == 0) {
                   showLocalNotification(
                       notificationType: NotificationType.durabilityDepleted,
                       title: 'item_repair_notification'.tr(),
@@ -788,7 +803,6 @@ mixin ActivityMixin {
         // }
       } else {
         counter = counter + const Duration(milliseconds: 10);
-        stopProgress.value += (10 / 500);
       }
     });
   }
@@ -1015,9 +1029,8 @@ mixin ActivityMixin {
     Get.until((route) => route.isFirst);
   }
 
-  void showExerciseMap() {
-    // Get.dialog(mapWidget, barrierDismissible: false);
-    Get.toNamed(Routes.activityMap);
+  Future<void> showExerciseMap() async {
+    await Get.toNamed(Routes.activityMap);
   }
 
   bool isTestingFakeGps() {
@@ -1088,5 +1101,62 @@ mixin ActivityMixin {
         key: HiveKey.savedStepCount.name, value: userState.exercise!.steps!);
 
     await Future.delayed(const Duration(milliseconds: 500));
+  }
+
+  Future<void> fetchExerciseTreasures() async {
+    final req = GetTreasureRequestModel(
+      userId: userState.value.state?.id ?? -1,
+      userExerciseId: userState.value.exercise?.id ?? -1,
+      userLat: currentLocation.value.latitude,
+      userLng: currentLocation.value.longitude,
+    );
+
+    await TreasureService.getTreasureByExerciseId(
+      req: req,
+      successCallback: (treasures) async {
+        listTreasureOfSession.value = List.from(treasures.treasures);
+        minPickupRadius = treasures.minPickupDistance;
+        await _initTreasureMarker();
+      },
+      errorCallback: () {
+        print("error");
+      },
+    );
+  }
+
+  Future<void> _initTreasureMarker() async {
+    final markers = await buildCustomMarkers(
+      positions: listTreasureOfSession,
+      markerSize: treasureBaseSize,
+    );
+    (this as ActivityController).clearMarkers();
+    (this as ActivityController).addOverlayAll(markers);
+  }
+
+  /// make custom marker based on position
+  Future<Set<Marker>> buildCustomMarkers({
+    required List<TreasureModel> positions,
+    required Size markerSize,
+  }) async {
+    final Set<Marker> markers = {};
+
+    for (int i = 0; i < positions.length; i++) {
+      final BitmapDescriptor customIcon =
+          await ImageHelper.bitmapDescriptorFromSvgAsset(
+        positions[i].iconPathLocal,
+        markerSize,
+      );
+      markers.add(
+        Marker(
+          markerId: MarkerId(positions[i].id.toString()),
+          position: LatLng(positions[i].latitude, positions[i].longitude),
+          icon: customIcon,
+          onTap: () =>
+              (this as ActivityController).onPickupTreasure(positions[i]),
+        ),
+      );
+    }
+
+    return markers;
   }
 }

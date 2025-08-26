@@ -39,7 +39,7 @@ mixin ChallengeMixin on MapMixin {
   final RxList<Marker> selectedChallengeMarkers = RxList.empty();
   final Throttling challengeThr =
       Throttling(duration: const Duration(milliseconds: 500));
-  late GoogleMapController challengeMapController;
+  List<GoogleMapController> challengeMapControllers = [];
   RxList<ChallengeCourseModel> get doableCoursesByChallenge {
     if (selectedChallenge.value != null) {
       return RxList(doableCourses
@@ -304,7 +304,7 @@ mixin ChallengeMixin on MapMixin {
       LatLngBounds bounds = _createBoundsFromLatLngList(markers);
 
 // 3. 카메라 이동
-      challengeMapController.animateCamera(
+      challengeMapControllers.last.animateCamera(
         CameraUpdate.newLatLngBounds(bounds, 150), // padding은 px 단위
       );
     }
@@ -322,14 +322,14 @@ mixin ChallengeMixin on MapMixin {
     if (course.checkpoints != null && course.checkpoints!.isNotEmpty) {
       List<LatLng> markers = getCheckPointsCourse(
           selectedCourse.value!.checkpoints!, selectedCourse.value!);
-      challengeMapController.animateCamera(
+      challengeMapControllers.last.animateCamera(
         CameraUpdate.newLatLngBounds(
           _createBoundsFromLatLngList(markers),
           150,
         ),
       );
     } else {
-      challengeMapController.animateCamera(
+      challengeMapControllers.last.animateCamera(
         CameraUpdate.newLatLngBounds(
           _createBoundsFromLatLngList(
             [
