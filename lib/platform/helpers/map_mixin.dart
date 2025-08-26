@@ -7,6 +7,19 @@ mixin MapMixin {
   RxList<Polygon> drawingPolygons = RxList<Polygon>();
   RxList<Circle> drawingCircles = RxList<Circle>();
 
+  void clearMarkers() => drawingMarkers.clear();
+
+  void updateMarkerById(Marker newMarker) {
+    final index = drawingMarkers.indexWhere(
+      (m) => m.markerId.value == newMarker.markerId.value,
+    );
+
+    if (index != -1) {
+      drawingMarkers[index] = newMarker;
+      drawingMarkers.refresh();
+    }
+  }
+
   void clearOverlays() {
     drawingMarkers.clear();
     drawingPolylines.clear();
