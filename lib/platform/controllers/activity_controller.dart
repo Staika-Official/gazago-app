@@ -21,7 +21,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/challenge_mixin.dart';
 import 'package:gaza_go/platform/helpers/consumer_item_mixin.dart';
-import 'package:gaza_go/platform/helpers/image_helper.dart';
+
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
@@ -158,11 +158,7 @@ class ActivityController extends SuperController
   Rxn<ChallengeCourseModel> nearChallengeLocation = Rxn(null);
   GoogleMapController? googleMapController;
   RxDouble betweenDistance = RxDouble(0.0);
-  // Backfill reactive lists used by views (challenge mixin compatibility)
-  RxList<ChallengeCourseModel> allCoursesList = RxList.empty();
-  RxList<ChallengeCourseModel> nearByCourses = RxList.empty();
-  RxList<ChallengeCourseModel> doableCourses = RxList.empty();
-  Rxn<ChallengeCourseModel> selectedCourse = Rxn();
+
   RxInt detectDelay = RxInt(30);
   RxInt calcDelay = RxInt(300);
   bool _isRequestingChallenges = false;
@@ -1736,19 +1732,21 @@ class ActivityController extends SuperController
   }
 
   Future<void> _moveMapToMyLocation() async {
+    if (currentLocation.value == null) return;
+
     LatLng target = LatLng(
-      currentLocation.value.latitude,
-      currentLocation.value.longitude,
+      currentLocation.value!.latitude,
+      currentLocation.value!.longitude,
     );
 
-    challengeMapControllers.forEach(
-      (controller) async => controller.animateCamera(
+    for (var controller in challengeMapControllers) {
+      await controller.animateCamera(
         CameraUpdate.newLatLngZoom(
           target,
           await controller.getZoomLevel(),
         ),
-      ),
-    );
+      );
+    }
   }
 
   /// compare user location with the nearest treasure

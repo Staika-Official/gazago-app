@@ -59,8 +59,8 @@ class _ActivityActiveMiniMapSectionState
                     zoomControlsEnabled: false,
                     initialCameraPosition: CameraPosition(
                       target: LatLng(
-                        controller.currentLocation.value.latitude,
-                        controller.currentLocation.value.longitude,
+                        controller.currentLocation.value?.latitude ?? 0.0,
+                        controller.currentLocation.value?.longitude ?? 0.0,
                       ),
                       zoom: 17,
                     ),

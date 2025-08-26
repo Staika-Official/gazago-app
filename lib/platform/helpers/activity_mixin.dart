@@ -1038,7 +1038,6 @@ mixin ActivityMixin {
   }
 
   void showLuckAnimation() async {
-    bool isAbleSound = HiveStore.load(key: HiveKey.luckSound.name) ?? false;
     await Future.delayed(const Duration(milliseconds: 300));
     luckLoadControl.value = Control.playReverseFromEnd;
     isShowLuckAnimation.value = true;
@@ -1107,8 +1106,8 @@ mixin ActivityMixin {
     final req = GetTreasureRequestModel(
       userId: userState.value.state?.id ?? -1,
       userExerciseId: userState.value.exercise?.id ?? -1,
-      userLat: currentLocation.value.latitude,
-      userLng: currentLocation.value.longitude,
+      userLat: currentLocation.value?.latitude ?? 0.0,
+      userLng: currentLocation.value?.longitude ?? 0.0,
     );
 
     await TreasureService.getTreasureByExerciseId(
