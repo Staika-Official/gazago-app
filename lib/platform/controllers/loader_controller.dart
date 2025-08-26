@@ -25,7 +25,10 @@ class LoaderController extends GetxController {
           name: 'progressCircle',
         );
       } else {
-        Get.back(closeOverlays: true);
+        if (Get.isDialogOpen == true) {
+          Get.back();
+        }
+        Get.back();
       }
     });
     super.onInit();

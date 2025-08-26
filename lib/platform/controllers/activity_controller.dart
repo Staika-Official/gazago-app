@@ -149,7 +149,6 @@ class ActivityController extends SuperController
   var isLockMap = false.obs;
 
   // timer when pick up treasure
-  final _kCoolDownTime = 5.minutes;
   var coolDownTimeLeft = 0.obs;
   Timer? _pickupCoolDownTimer;
 
@@ -1489,7 +1488,7 @@ class ActivityController extends SuperController
     var nearestTreasures =
         treasureDistanceMap.entries.reduce((a, b) => a.key < b.key ? a : b);
     // if nearest treasure is within pickupRadius (fetch from BE)
-    bool isInRange = nearestTreasures.key <= minPickupRadius;
+    bool isInRange = nearestTreasures.key <= kMinPickupRadius;
 
     if (_currentHighlightedTreasuresId.isNotEmpty) {
       await _updateTreasureZoom(isZoom: false);
@@ -1519,7 +1518,7 @@ class ActivityController extends SuperController
         positions: listTreasureOfSession
             .where((t) => _currentHighlightedTreasuresId.contains(t.id))
             .toList(),
-        markerSize: isZoom ? treasureZoomSize : treasureBaseSize);
+        markerSize: isZoom ? kTreasureZoomSize : kTreasureBaseSize);
 
     for (var element in newMarkers) {
       updateMarkerById(element);
@@ -1561,7 +1560,7 @@ class ActivityController extends SuperController
             showToastV2(message: 'treasure_collected'.tr());
 
             /// if success then start timer
-            _startCooldownTimer();
+            _startCooldownTimer(kPickupCoolDownTime.toInt());
           },
         ),
       );
@@ -1569,9 +1568,8 @@ class ActivityController extends SuperController
   }
 
   /// method to active the cool down if user picked a treasure
-  void _startCooldownTimer() {
-    coolDownTimeLeft.value = _kCoolDownTime.inSeconds;
-
+  void _startCooldownTimer(int timeLeft) {
+    coolDownTimeLeft.value = timeLeft;
     _pickupCoolDownTimer?.cancel();
     _pickupCoolDownTimer = Timer.periodic(
       1.seconds,
@@ -1582,6 +1580,15 @@ class ActivityController extends SuperController
         }
       },
     );
+  }
+
+  void initCoolDownTimerIfNeeded(DateTime lastClaimTime) {
+    final now = DateTime.now();
+    final secondsLeft = now.difference(lastClaimTime).inSeconds;
+
+    if (secondsLeft > 0) {
+      _startCooldownTimer(secondsLeft);
+    }
   }
 
   @override

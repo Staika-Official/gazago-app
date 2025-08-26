@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:easy_localization/easy_localization.dart';
+
 // import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -89,9 +90,10 @@ mixin ActivityMixin {
 
   // treasure of current exercise session
   final listTreasureOfSession = <TreasureModel>[].obs;
-  final treasureBaseSize = const Size(16, 10);
-  late final treasureZoomSize = treasureBaseSize * 1.5;
-  num minPickupRadius = 0;
+  final kTreasureBaseSize = const Size(16, 10);
+  late final kTreasureZoomSize = kTreasureBaseSize * 1.5;
+  num kMinPickupRadius = 10;
+  num kPickupCoolDownTime = 5.minutes.inSeconds;
 
   // final assetsAudioPlayer = AssetsAudioPlayer();
 
@@ -1054,7 +1056,10 @@ mixin ActivityMixin {
       req: req,
       successCallback: (treasures) async {
         listTreasureOfSession.value = List.from(treasures.treasures);
-        minPickupRadius = treasures.minPickupDistance;
+        kMinPickupRadius = treasures.minPickupDistance;
+        kPickupCoolDownTime = treasures.cooldownDuration; // in seconds
+        (this as ActivityController)
+            .initCoolDownTimerIfNeeded(treasures.lastClaimTime);
         await _initTreasureMarker();
       },
       errorCallback: () {
@@ -1066,7 +1071,7 @@ mixin ActivityMixin {
   Future<void> _initTreasureMarker() async {
     final markers = await buildCustomMarkers(
       positions: listTreasureOfSession,
-      markerSize: treasureBaseSize,
+      markerSize: kTreasureBaseSize,
     );
     (this as ActivityController).clearMarkers();
     (this as ActivityController).addOverlayAll(markers);
