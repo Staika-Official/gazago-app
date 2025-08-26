@@ -665,9 +665,10 @@ mixin ActivityMixin {
                   lowStaminaNotified.value = true;
                 }
               }
-              if ((userState.value.shoes?.durability! ?? 0) < 30 &&
+              if (userState.value.shoes?.durability != null &&
+                  userState.value.shoes!.durability! < 30 &&
                   !zeroDurabilityNotified.value) {
-                if ((userState.value.shoes?.durability ?? 0) == 0) {
+                if (userState.value.shoes!.durability == 0) {
                   showLocalNotification(
                       notificationType: NotificationType.durabilityDepleted,
                       title: 'item_repair_notification'.tr(),
