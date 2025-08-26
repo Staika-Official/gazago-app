@@ -507,21 +507,21 @@ class ActivityActive extends StatelessWidget {
                                                           Padding(
                                                             padding:
                                                                 EdgeInsets.only(
-                                                                    left:
-                                                                        5.0.sp,
-                                                                    right:
-                                                                        5.0.sp),
+                                                                    left: 8.sp),
                                                             child: Text(
-                                                              'lucky_effect'
-                                                                  .tr(),
+                                                              controller.rewardDistance
+                                                                          .value >
+                                                                      0
+                                                                  ? '${formatDecimalPlaces(controller.totalDistance.value, 2)}km (${formatDecimalPlaces(controller.rewardDistance.value, 2)} km)'
+                                                                  : '${formatDecimalPlaces(controller.totalDistance.value, 2)}km',
                                                               style: AppTextStyleData
                                                                       .regular()
-                                                                  .koBodyMediumMd
+                                                                  .enBodyMediumLg
                                                                   .copyWith(
                                                                     color: AppColorData
                                                                             .regular()
-                                                                        .colorPointPink,
-                                                                    height: 1.2,
+                                                                        .colorTextPrimary,
+                                                                    height: 1.5,
                                                                   ),
                                                             ),
                                                           ),
@@ -810,7 +810,23 @@ class ActivityActive extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          '${formatDecimalPlaces(controller.rewardDistance.value, 2)}km',
+                                          controller.userState.value
+                                                          .exercise !=
+                                                      null &&
+                                                  controller
+                                                          .userState
+                                                          .value
+                                                          .exercise!
+                                                          .rewardDistance !=
+                                                      null &&
+                                                  controller
+                                                          .userState
+                                                          .value
+                                                          .exercise!
+                                                          .rewardDistance! >
+                                                      0
+                                              ? '${formatDecimalPlaces(controller.rewardDistance.value, 2)}km (${formatDecimalPlaces(controller.totalDistance.value, 2)} km local)'
+                                              : '${formatDecimalPlaces(controller.totalDistance.value, 2)}km',
                                           style: AppTextStyleData.regular()
                                               .enBodyMediumLg
                                               .copyWith(

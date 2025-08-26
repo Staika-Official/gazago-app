@@ -968,6 +968,7 @@ class ActivityController extends SuperController
     }
   }
 
+  @override
   void initLocationStream() async {
     late LocationSettings locationSettings;
     print('Initializing GPS location stream with Phase 1 & 2 improvements...');
@@ -979,11 +980,11 @@ class ActivityController extends SuperController
     // Phase 2: Start GPS session (handled automatically by UnifiedGPSManager)
     print('GPS session will be started by UnifiedGPSManager');
 
-    // Phase 2: Use UnifiedGPSManager's battery-aware configuration
+    // Phase 2: Use high-performance GPS configuration for activity tracking
     try {
-      // Get current GPS mode from UnifiedGPSManager (handles battery awareness automatically)
-      final gpsMode = GPS.gpsMode;
-      final config = UnifiedGPSConfig.getConfigForMode(gpsMode);
+      // Force high-performance activity tracking mode
+      final config = UnifiedGPSConfig.getConfigForMode('activity_tracking');
+      UnifiedGPSConfig.updateAll(config);
 
       // Create location settings based on config
       if (Platform.isAndroid) {

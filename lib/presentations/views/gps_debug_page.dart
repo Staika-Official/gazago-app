@@ -30,9 +30,6 @@ class GPSDebugPage extends StatelessWidget {
                     ),
               ),
             ),
-            const SizedBox(width: 8),
-            // _buildSyncIndicator already uses Obx internally; avoid nested Obx here
-            _buildSyncIndicator(controller),
           ],
         ),
         leading: IconButton(
@@ -95,27 +92,6 @@ class GPSDebugPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSyncIndicator(GPSDebugController controller) {
-    return Obx(() {
-      if (controller.isDataSyncing.value || controller.isConfigSyncing) {
-        return SizedBox(
-          width: 16.sp,
-          height: 16.sp,
-          child: const CircularProgressIndicator(
-            strokeWidth: 2.0,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-          ),
-        );
-      } else {
-        return Icon(
-          Icons.sync,
-          size: 16.sp,
-          color: Colors.green,
-        );
-      }
-    });
-  }
-
   Widget _buildControlPanel(GPSDebugController controller) {
     return Container(
       padding: EdgeInsets.all(16.sp),
@@ -144,16 +120,20 @@ class GPSDebugPage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.sp),
-          
+
           // Main Controls
           Row(
             children: [
               Expanded(
                 flex: 2,
                 child: Obx(() => ElevatedButton.icon(
-                      onPressed: controller.isGPSActive.value
-                          ? controller.stopGPSTracking
-                          : controller.startGPSTracking,
+                      onPressed: () async {
+                        if (controller.isGPSActive.value) {
+                          await controller.stopGPSTracking();
+                        } else {
+                          await controller.startGPSTracking();
+                        }
+                      },
                       icon: Icon(controller.isGPSActive.value
                           ? Icons.stop
                           : Icons.play_arrow),
@@ -184,16 +164,11 @@ class GPSDebugPage extends StatelessWidget {
               ),
             ],
           ),
-           
         ],
       ),
     );
   }
 
- 
-
-
-   
   Widget _buildRealtimeStatus(GPSDebugController controller) {
     return Container(
       padding: EdgeInsets.all(16.sp),
@@ -222,52 +197,69 @@ class GPSDebugPage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.sp),
-          
           Obx(() => Column(
                 children: [
                   Row(
                     children: [
-                      Expanded(child: _buildStatusCard('GPS Status', 
-                          controller.isGPSActive.value ? 'ACTIVE' : 'INACTIVE',
-                          controller.isGPSActive.value ? Colors.green : Colors.red,
-                          Icons.gps_fixed)),
+                      Expanded(
+                          child: _buildStatusCard(
+                              'GPS Status',
+                              controller.isGPSActive.value
+                                  ? 'ACTIVE'
+                                  : 'INACTIVE',
+                              controller.isGPSActive.value
+                                  ? Colors.green
+                                  : Colors.red,
+                              Icons.gps_fixed)),
                       SizedBox(width: 8.sp),
-                      Expanded(child: _buildStatusCard('Current Speed', 
-                          '${controller.currentSpeed.value.toStringAsFixed(1)} km/h',
-                          _getSpeedColor(controller.currentSpeed.value),
-                          Icons.speed)),
+                      Expanded(
+                          child: _buildStatusCard(
+                              'Current Speed',
+                              '${controller.currentSpeed.value.toStringAsFixed(1)} km/h',
+                              _getSpeedColor(controller.currentSpeed.value),
+                              Icons.speed)),
                     ],
                   ),
                   SizedBox(height: 8.sp),
                   Row(
                     children: [
-                      Expanded(child: _buildStatusCard('GPS Accuracy', 
-                          controller.currentPosition.value != null 
-                              ? '${controller.currentPosition.value!.accuracy.toStringAsFixed(1)}m'
-                              : 'N/A',
-                          controller.currentPosition.value != null
-                              ? _getAccuracyColor(controller.currentPosition.value!.accuracy)
-                              : Colors.grey,
-                          Icons.my_location)),
+                      Expanded(
+                          child: _buildStatusCard(
+                              'GPS Accuracy',
+                              controller.currentPosition.value != null
+                                  ? '${controller.currentPosition.value!.accuracy.toStringAsFixed(1)}m'
+                                  : 'N/A',
+                              controller.currentPosition.value != null
+                                  ? _getAccuracyColor(controller
+                                      .currentPosition.value!.accuracy)
+                                  : Colors.grey,
+                              Icons.my_location)),
                       SizedBox(width: 8.sp),
-                      Expanded(child: _buildStatusCard('Session Time', 
-                          controller.formatDuration(controller.sessionDuration.value),
-                          Colors.purple,
-                          Icons.timer)),
+                      Expanded(
+                          child: _buildStatusCard(
+                              'Session Time',
+                              controller.formatDuration(
+                                  controller.sessionDuration.value),
+                              Colors.purple,
+                              Icons.timer)),
                     ],
                   ),
                   SizedBox(height: 8.sp),
                   Row(
                     children: [
-                      Expanded(child: _buildStatusCard('Battery Level', 
-                          '${controller.batteryLevel.value}%',
-                          _getBatteryColor(controller.batteryLevel.value),
-                          Icons.battery_std)),
+                      Expanded(
+                          child: _buildStatusCard(
+                              'Battery Level',
+                              '${controller.batteryLevel.value}%',
+                              _getBatteryColor(controller.batteryLevel.value),
+                              Icons.battery_std)),
                       SizedBox(width: 8.sp),
-                      Expanded(child: _buildStatusCard('GPS Mode', 
-                          controller.gpsMode.value,
-                          Colors.cyan,
-                          Icons.settings)),
+                      Expanded(
+                          child: _buildStatusCard(
+                              'GPS Mode',
+                              controller.gpsMode.value,
+                              Colors.cyan,
+                              Icons.settings)),
                     ],
                   ),
                 ],
@@ -277,7 +269,8 @@ class GPSDebugPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusCard(String label, String value, Color color, IconData icon) {
+  Widget _buildStatusCard(
+      String label, String value, Color color, IconData icon) {
     return Container(
       padding: EdgeInsets.all(12.sp),
       decoration: BoxDecoration(
@@ -339,9 +332,12 @@ class GPSDebugPage extends StatelessWidget {
               ),
               const Spacer(),
               Obx(() => Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.sp, vertical: 4.sp),
                     decoration: BoxDecoration(
-                      color: controller.gpsJumpDetected.value ? Colors.red : Colors.green,
+                      color: controller.gpsJumpDetected.value
+                          ? Colors.red
+                          : Colors.green,
                       borderRadius: BorderRadius.circular(12.sp),
                     ),
                     child: Text(
@@ -359,7 +355,7 @@ class GPSDebugPage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.sp),
-          
+
           // GPS Map
           Container(
             height: 200.sp,
@@ -384,8 +380,10 @@ class GPSDebugPage extends StatelessWidget {
                         size: Size.infinite,
                         painter: GPSPathPainter(
                           rawPositions: controller.rawPositions.toList(),
-                          filteredPositions: controller.filteredPositions.toList(),
-                          currentPosition: null, // TODO: Convert LocationModel to LocationDto when needed
+                          filteredPositions:
+                              controller.filteredPositions.toList(),
+                          currentPosition:
+                              null, // TODO: Convert LocationModel to LocationDto when needed
                         ),
                       )),
                   // GPS info overlay
@@ -445,9 +443,9 @@ class GPSDebugPage extends StatelessWidget {
               ),
             ),
           ),
-          
+
           SizedBox(height: 12.sp),
-          
+
           // Legend and Stats
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -457,15 +455,18 @@ class GPSDebugPage extends StatelessWidget {
               _buildLegendItem('Current Pos', Colors.blue),
             ],
           ),
-          
+
           SizedBox(height: 8.sp),
-          
+
           Obx(() => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildMapStat('Raw', '${controller.rawPositions.length}', Colors.red),
-                  _buildMapStat('Filtered', '${controller.filteredPositions.length}', Colors.green),
-                  _buildMapStat('Jumps', '${controller.gpsJumps.value}', Colors.orange),
+                  _buildMapStat(
+                      'Raw', '${controller.rawPositions.length}', Colors.red),
+                  _buildMapStat('Filtered',
+                      '${controller.filteredPositions.length}', Colors.green),
+                  _buildMapStat(
+                      'Jumps', '${controller.gpsJumps.value}', Colors.orange),
                 ],
               )),
         ],
@@ -547,40 +548,60 @@ class GPSDebugPage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.sp),
-          
           Obx(() => Column(
                 children: [
                   Row(
                     children: [
-                      Expanded(child: _buildStatCard('Total Positions', 
-                          '${controller.totalPositions.value}', Colors.blue, Icons.gps_fixed)),
+                      Expanded(
+                          child: _buildStatCard(
+                              'Total Positions',
+                              '${controller.totalPositions.value}',
+                              Colors.blue,
+                              Icons.gps_fixed)),
                       SizedBox(width: 8.sp),
-                      Expanded(child: _buildStatCard('Filtered', 
-                          '${controller.rejectedPositions.value}', Colors.red, Icons.filter_alt)),
+                      Expanded(
+                          child: _buildStatCard(
+                              'Filtered',
+                              '${controller.rejectedPositions.value}',
+                              Colors.red,
+                              Icons.filter_alt)),
                     ],
                   ),
                   SizedBox(height: 8.sp),
                   Row(
                     children: [
-                      Expanded(child: _buildStatCard('Filter Rate', 
-                          '${controller.filterRate.value.toStringAsFixed(1)}%',
-                          _getFilterRateColor(controller.filterRate.value), Icons.percent)),
+                      Expanded(
+                          child: _buildStatCard(
+                              'Filter Rate',
+                              '${controller.filterRate.value.toStringAsFixed(1)}%',
+                              _getFilterRateColor(controller.filterRate.value),
+                              Icons.percent)),
                       SizedBox(width: 8.sp),
-                      Expanded(child: _buildStatCard('Avg Accuracy', 
-                          '${controller.averageAccuracy.value.toStringAsFixed(1)}m',
-                          _getAccuracyColor(controller.averageAccuracy.value), Icons.air)),
+                      Expanded(
+                          child: _buildStatCard(
+                              'Avg Accuracy',
+                              '${controller.averageAccuracy.value.toStringAsFixed(1)}m',
+                              _getAccuracyColor(
+                                  controller.averageAccuracy.value),
+                              Icons.air)),
                     ],
                   ),
                   SizedBox(height: 8.sp),
                   Row(
                     children: [
-                      Expanded(child: _buildStatCard('Max Speed', 
-                          '${controller.maxSpeed.value.toStringAsFixed(1)} km/h',
-                          _getSpeedColor(controller.maxSpeed.value), Icons.speed)),
+                      Expanded(
+                          child: _buildStatCard(
+                              'Max Speed',
+                              '${controller.maxSpeed.value.toStringAsFixed(1)} km/h',
+                              _getSpeedColor(controller.maxSpeed.value),
+                              Icons.speed)),
                       SizedBox(width: 8.sp),
-                      Expanded(child: _buildStatCard('Grade', 
-                          controller.performanceGrade.value,
-                          _getGradeColor(controller.performanceGrade.value), Icons.grade)),
+                      Expanded(
+                          child: _buildStatCard(
+                              'Grade',
+                              controller.performanceGrade.value,
+                              _getGradeColor(controller.performanceGrade.value),
+                              Icons.grade)),
                     ],
                   ),
                 ],
@@ -590,7 +611,8 @@ class GPSDebugPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String label, String value, Color color, IconData icon) {
+  Widget _buildStatCard(
+      String label, String value, Color color, IconData icon) {
     return Container(
       padding: EdgeInsets.all(12.sp),
       decoration: BoxDecoration(
@@ -653,26 +675,41 @@ class GPSDebugPage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.sp),
-          
           Obx(() => Column(
                 children: [
                   Row(
                     children: [
-                      Expanded(child: _buildHelperCard('Fallbacks', 
-                          '${controller.fallbackCount.value}', Colors.orange, Icons.warning)),
+                      Expanded(
+                          child: _buildHelperCard(
+                              'Fallbacks',
+                              '${controller.fallbackCount.value}',
+                              Colors.orange,
+                              Icons.warning)),
                       SizedBox(width: 8.sp),
-                      Expanded(child: _buildHelperCard('Errors', 
-                          '${controller.errorCount.value}', Colors.red, Icons.error)),
+                      Expanded(
+                          child: _buildHelperCard(
+                              'Errors',
+                              '${controller.errorCount.value}',
+                              Colors.red,
+                              Icons.error)),
                     ],
                   ),
                   SizedBox(height: 8.sp),
                   Row(
                     children: [
-                      Expanded(child: _buildHelperCard('Battery Opts', 
-                          '${controller.batteryOptimizations.value}', Colors.purple, Icons.battery_saver)),
+                      Expanded(
+                          child: _buildHelperCard(
+                              'Battery Opts',
+                              '${controller.batteryOptimizations.value}',
+                              Colors.purple,
+                              Icons.battery_saver)),
                       SizedBox(width: 8.sp),
-                      Expanded(child: _buildHelperCard('Total Distance', 
-                          '${controller.totalDistance.value.toStringAsFixed(1)}m', Colors.blue, Icons.straighten)),
+                      Expanded(
+                          child: _buildHelperCard(
+                              'Total Distance',
+                              '${controller.totalDistance.value.toStringAsFixed(1)}m',
+                              Colors.blue,
+                              Icons.straighten)),
                     ],
                   ),
                 ],
@@ -682,7 +719,8 @@ class GPSDebugPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHelperCard(String label, String value, Color color, IconData icon) {
+  Widget _buildHelperCard(
+      String label, String value, Color color, IconData icon) {
     return Container(
       padding: EdgeInsets.all(12.sp),
       decoration: BoxDecoration(
@@ -753,7 +791,6 @@ class GPSDebugPage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.sp),
-          
           Container(
             height: 200.sp,
             decoration: BoxDecoration(
@@ -825,12 +862,18 @@ class GPSDebugPage extends StatelessWidget {
 
   Color _getGradeColor(String grade) {
     switch (grade.toUpperCase()) {
-      case 'A': return Colors.green;
-      case 'B': return Colors.lightGreen;
-      case 'C': return Colors.yellow;
-      case 'D': return Colors.orange;
-      case 'F': return Colors.red;
-      default: return Colors.grey;
+      case 'A':
+        return Colors.green;
+      case 'B':
+        return Colors.lightGreen;
+      case 'C':
+        return Colors.yellow;
+      case 'D':
+        return Colors.orange;
+      case 'F':
+        return Colors.red;
+      default:
+        return Colors.grey;
     }
   }
 
@@ -850,7 +893,8 @@ class GPSDebugPage extends StatelessWidget {
                 return SingleChildScrollView(
                   child: Text(
                     _formatDebugInfo(snapshot.data!),
-                    style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                    style:
+                        const TextStyle(fontFamily: 'monospace', fontSize: 12),
                   ),
                 );
               }
@@ -870,7 +914,7 @@ class GPSDebugPage extends StatelessWidget {
 
   String _formatDebugInfo(Map<String, dynamic> info) {
     final buffer = StringBuffer();
-    
+
     void writeMap(Map<String, dynamic> map, [int indent = 0]) {
       final prefix = '  ' * indent;
       for (final entry in map.entries) {
@@ -882,7 +926,7 @@ class GPSDebugPage extends StatelessWidget {
         }
       }
     }
-    
+
     writeMap(info);
     return buffer.toString();
   }
@@ -913,7 +957,7 @@ class GPSPathPainter extends CustomPainter {
   final List<LatLng> rawPositions;
   final List<LatLng> filteredPositions;
   final dynamic currentPosition; // Accept Position, LocationModel or map
-  
+
   // Cache for bounds calculation
   static double? _cachedMinLat;
   static double? _cachedMaxLat;
@@ -933,11 +977,12 @@ class GPSPathPainter extends CustomPainter {
 
     // Optimize bounds calculation - only recalculate when positions change significantly
     final totalPositions = rawPositions.length + filteredPositions.length;
-    bool shouldRecalculateBounds = _cachedMinLat == null || 
-        (totalPositions - _lastPositionCount).abs() > 5; // Recalculate every 5 new points
-    
+    bool shouldRecalculateBounds = _cachedMinLat == null ||
+        (totalPositions - _lastPositionCount).abs() >
+            5; // Recalculate every 5 new points
+
     double minLat, maxLat, minLng, maxLng;
-    
+
     if (shouldRecalculateBounds) {
       minLat = double.infinity;
       maxLat = -double.infinity;
@@ -945,16 +990,20 @@ class GPSPathPainter extends CustomPainter {
       maxLng = -double.infinity;
 
       // Use a more efficient approach - check last 50 positions for bounds
-      final recentRaw = rawPositions.length > 50 ? rawPositions.sublist(rawPositions.length - 50) : rawPositions;
-      final recentFiltered = filteredPositions.length > 50 ? filteredPositions.sublist(filteredPositions.length - 50) : filteredPositions;
-      
+      final recentRaw = rawPositions.length > 50
+          ? rawPositions.sublist(rawPositions.length - 50)
+          : rawPositions;
+      final recentFiltered = filteredPositions.length > 50
+          ? filteredPositions.sublist(filteredPositions.length - 50)
+          : filteredPositions;
+
       for (final pos in [...recentRaw, ...recentFiltered]) {
         minLat = math.min(minLat, pos.latitude);
         maxLat = math.max(maxLat, pos.latitude);
         minLng = math.min(minLng, pos.longitude);
         maxLng = math.max(maxLng, pos.longitude);
       }
-      
+
       // Include current position in bounds
       if (currentPosition != null) {
         minLat = math.min(minLat, currentPosition!.latitude);
@@ -970,7 +1019,7 @@ class GPSPathPainter extends CustomPainter {
       maxLat += latRange * 0.15;
       minLng -= lngRange * 0.15;
       maxLng += lngRange * 0.15;
-      
+
       // Cache the bounds
       _cachedMinLat = minLat;
       _cachedMaxLat = maxLat;
@@ -1002,17 +1051,19 @@ class GPSPathPainter extends CustomPainter {
         ..strokeJoin = StrokeJoin.round;
 
       // Optimize path drawing - use only recent points or subsample for performance
-      final pointsToUse = filteredPositions.length > 100 
-          ? _subsamplePoints(filteredPositions, 100) 
+      final pointsToUse = filteredPositions.length > 100
+          ? _subsamplePoints(filteredPositions, 100)
           : filteredPositions;
-      
+
       if (pointsToUse.length > 1) {
         final filteredPath = Path();
-        final startPoint = toScreen(pointsToUse[0].latitude, pointsToUse[0].longitude);
+        final startPoint =
+            toScreen(pointsToUse[0].latitude, pointsToUse[0].longitude);
         filteredPath.moveTo(startPoint.dx, startPoint.dy);
 
         for (int i = 1; i < pointsToUse.length; i++) {
-          final point = toScreen(pointsToUse[i].latitude, pointsToUse[i].longitude);
+          final point =
+              toScreen(pointsToUse[i].latitude, pointsToUse[i].longitude);
           filteredPath.lineTo(point.dx, point.dy);
         }
         canvas.drawPath(filteredPath, filteredPaint);
@@ -1028,17 +1079,19 @@ class GPSPathPainter extends CustomPainter {
         ..strokeCap = StrokeCap.round;
 
       // More aggressive subsampling for raw data
-      final pointsToUse = rawPositions.length > 50 
-          ? _subsamplePoints(rawPositions, 50) 
+      final pointsToUse = rawPositions.length > 50
+          ? _subsamplePoints(rawPositions, 50)
           : rawPositions;
-      
+
       if (pointsToUse.length > 1) {
         final rawPath = Path();
-        final startPoint = toScreen(pointsToUse[0].latitude, pointsToUse[0].longitude);
+        final startPoint =
+            toScreen(pointsToUse[0].latitude, pointsToUse[0].longitude);
         rawPath.moveTo(startPoint.dx, startPoint.dy);
 
         for (int i = 1; i < pointsToUse.length; i++) {
-          final point = toScreen(pointsToUse[i].latitude, pointsToUse[i].longitude);
+          final point =
+              toScreen(pointsToUse[i].latitude, pointsToUse[i].longitude);
           rawPath.lineTo(point.dx, point.dy);
         }
         canvas.drawPath(rawPath, rawPaint);
@@ -1047,18 +1100,20 @@ class GPSPathPainter extends CustomPainter {
 
     // Draw current position with enhanced visibility
     if (currentPosition != null) {
-      final currentPoint = toScreen(currentPosition!.latitude, currentPosition!.longitude);
-      
-  // Accuracy circle (simplified)
-  // Ensure we pass a concrete double to math.min to avoid generic inference issues
-  final double _accuracyVal = ((currentPosition?.accuracy ?? 0) as num).toDouble();
-  final accuracyRadius = math.min(_accuracyVal * 0.5, 25.0);
-  if (accuracyRadius > 3.0) {
+      final currentPoint =
+          toScreen(currentPosition!.latitude, currentPosition!.longitude);
+
+      // Accuracy circle (simplified)
+      // Ensure we pass a concrete double to math.min to avoid generic inference issues
+      final double _accuracyVal =
+          ((currentPosition?.accuracy ?? 0) as num).toDouble();
+      final accuracyRadius = math.min(_accuracyVal * 0.5, 25.0);
+      if (accuracyRadius > 3.0) {
         final accuracyPaint = Paint()
           ..color = Colors.blue.withOpacity(0.15)
           ..style = PaintingStyle.fill;
         canvas.drawCircle(currentPoint, accuracyRadius, accuracyPaint);
-        
+
         // Accuracy circle border
         final accuracyBorderPaint = Paint()
           ..color = Colors.blue.withOpacity(0.3)
@@ -1079,7 +1134,7 @@ class GPSPathPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.5;
       canvas.drawCircle(currentPoint, 8.0, borderPaint);
-      
+
       // Direction indicator (if available)
       if (currentPosition!.heading > 0) {
         final headingRadians = currentPosition!.heading * math.pi / 180;
@@ -1088,15 +1143,15 @@ class GPSPathPainter extends CustomPainter {
           currentPoint.dx + math.sin(headingRadians) * arrowLength,
           currentPoint.dy - math.cos(headingRadians) * arrowLength,
         );
-        
+
         final arrowPaint = Paint()
           ..color = Colors.white
           ..style = PaintingStyle.stroke
           ..strokeWidth = 3.0
           ..strokeCap = StrokeCap.round;
-        
+
         canvas.drawLine(currentPoint, arrowEnd, arrowPaint);
-        
+
         // Arrow head
         final arrowHeadLength = 6.0;
         final leftArrow = Offset(
@@ -1107,31 +1162,31 @@ class GPSPathPainter extends CustomPainter {
           arrowEnd.dx - math.sin(headingRadians - 0.5) * arrowHeadLength,
           arrowEnd.dy + math.cos(headingRadians - 0.5) * arrowHeadLength,
         );
-        
+
         canvas.drawLine(arrowEnd, leftArrow, arrowPaint);
         canvas.drawLine(arrowEnd, rightArrow, arrowPaint);
       }
     }
   }
-  
+
   /// Subsample points to reduce rendering complexity
   List<LatLng> _subsamplePoints(List<LatLng> points, int maxPoints) {
     if (points.length <= maxPoints) return points;
-    
+
     final step = points.length / maxPoints;
     final result = <LatLng>[];
-    
+
     for (int i = 0; i < points.length; i += step.ceil()) {
       if (i < points.length) {
         result.add(points[i]);
       }
     }
-    
+
     // Always include the last point
     if (result.last != points.last) {
       result.add(points.last);
     }
-    
+
     return result;
   }
 
@@ -1139,7 +1194,7 @@ class GPSPathPainter extends CustomPainter {
   bool shouldRepaint(covariant GPSPathPainter oldDelegate) {
     // More intelligent repaint logic
     return rawPositions.length != oldDelegate.rawPositions.length ||
-           filteredPositions.length != oldDelegate.filteredPositions.length ||
-           currentPosition != oldDelegate.currentPosition;
+        filteredPositions.length != oldDelegate.filteredPositions.length ||
+        currentPosition != oldDelegate.currentPosition;
   }
 }

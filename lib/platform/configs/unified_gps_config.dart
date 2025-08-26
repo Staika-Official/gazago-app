@@ -4,36 +4,45 @@ import 'package:gaza_go/platform/firebase/remote_config.dart';
 /// Replaces scattered GPS configs and provides centralized configuration management
 class UnifiedGPSConfig {
   static final Map<String, dynamic> _defaultConfig = {
-    // Core GPS Settings
-    'accuracy_threshold': 30.0, // meters - maximum acceptable accuracy
-    'speed_threshold': 50.0, // km/h - filter unrealistic speeds (teleportation)
-    'distance_filter': 3, // meters (int) - minimum distance for location updates
-    'update_interval': 2000, // milliseconds (int) - location update frequency
-    'min_time_interval': 0.5, // seconds - minimum time between valid updates
-    
-    // Filtering & Smoothing
+    // Core GPS Settings - Optimized for high-frequency, high-accuracy tracking
+    'accuracy_threshold':
+        15.0, // meters - maximum acceptable accuracy (reduced from 30.0)
+    'speed_threshold':
+        7.0, // km/h - filter unrealistic speeds (reduced from 50.0 for better filtering)
+    'distance_filter':
+        1, // meters (int) - minimum distance for location updates (reduced from 3)
+    'update_interval':
+        1000, // milliseconds (int) - location update frequency (reduced from 2000)
+    'min_time_interval':
+        0.3, // seconds - minimum time between valid updates (reduced from 0.5)
+
+    // Filtering & Smoothing - Optimized for path accuracy
     'enable_filtering': true, // enable advanced GPS filtering
-    'max_history_size': 10, // maximum location history to keep
-    'smoothing_window': 3, // number of points for smoothing algorithm
-    'outlier_threshold': 2.0, // standard deviations for outlier detection
-    
-    // Battery Optimization
+    'max_history_size':
+        15, // maximum location history to keep (increased for better smoothing)
+    'smoothing_window':
+        2, // number of points for smoothing algorithm (reduced from 3 for less smoothing)
+    'outlier_threshold':
+        1.5, // standard deviations for outlier detection (reduced for stricter filtering)
+
+    // Battery Optimization - Disabled for maximum GPS performance
     'battery_threshold_high': 50, // % - high performance threshold
     'battery_threshold_low': 20, // % - power saving threshold
-    'enable_battery_optimization': true,
-    
+    'enable_battery_optimization':
+        false, // Disabled to prioritize GPS accuracy over battery
+
     // Performance & Recovery
     'auto_fallback': true, // enable automatic error recovery
     'max_retry_attempts': 3, // maximum recovery attempts
     'error_recovery_delay': 5000, // ms - delay before retry
     'performance_monitoring_interval': 10, // seconds
-    
+
     // Advanced Settings
     'enable_background_tracking': true,
     'foreground_notification_enabled': true,
     'wake_lock_enabled': true,
     'use_network_fallback': true,
-    
+
     // Abuse Detection (from legacy system)
     'abuse_radius': 50.0, // meters
     'abuse_inside_radius_ratio': 80.0, // percentage
@@ -42,8 +51,9 @@ class UnifiedGPSConfig {
     'gps_jump_distance': 50.0, // meters - GPS jump detection
     'gps_jump_time': 5.0, // seconds - time threshold for jump detection
   };
-  
-  static Map<String, dynamic> _currentConfig = Map<String, dynamic>.from(_defaultConfig);
+
+  static Map<String, dynamic> _currentConfig =
+      Map<String, dynamic>.from(_defaultConfig);
   static DateTime? _lastRemoteConfigFetch;
   static const int _remoteConfigCacheSeconds = 300; // 5 minutes
 
@@ -59,37 +69,52 @@ class UnifiedGPSConfig {
       // Check if we should fetch from remote (cache control)
       final now = DateTime.now();
       if (_lastRemoteConfigFetch != null &&
-          now.difference(_lastRemoteConfigFetch!).inSeconds < _remoteConfigCacheSeconds) {
+          now.difference(_lastRemoteConfigFetch!).inSeconds <
+              _remoteConfigCacheSeconds) {
         print('Using cached remote config');
         return;
       }
 
       // Core GPS settings
-      _updateConfigFromRemote('gps_accuracy_threshold', 'accuracy_threshold', ConfigType.double);
-      _updateConfigFromRemote('gps_speed_threshold', 'speed_threshold', ConfigType.double);
-      _updateConfigFromRemote('gps_distance_filter_meters', 'distance_filter', ConfigType.double);
-      _updateConfigFromRemote('gps_update_interval_seconds', 'update_interval', ConfigType.double, 
-          transform: (value) => (value * 1000).toInt()); // Convert to milliseconds
-      _updateConfigFromRemote('gps_filter_min_time_interval', 'min_time_interval', ConfigType.double);
-      
+      _updateConfigFromRemote(
+          'gps_accuracy_threshold', 'accuracy_threshold', ConfigType.double);
+      _updateConfigFromRemote(
+          'gps_speed_threshold', 'speed_threshold', ConfigType.double);
+      _updateConfigFromRemote(
+          'gps_distance_filter_meters', 'distance_filter', ConfigType.double);
+      _updateConfigFromRemote(
+          'gps_update_interval_seconds', 'update_interval', ConfigType.double,
+          transform: (value) =>
+              (value * 1000).toInt()); // Convert to milliseconds
+      _updateConfigFromRemote('gps_filter_min_time_interval',
+          'min_time_interval', ConfigType.double);
+
       // Advanced settings
-      _updateConfigFromRemote('enable_advanced_gps_filtering', 'enable_filtering', ConfigType.bool);
-      _updateConfigFromRemote('gps_filter_history_size', 'max_history_size', ConfigType.int);
-      _updateConfigFromRemote('gps_smoothing_window', 'smoothing_window', ConfigType.int);
-      
+      _updateConfigFromRemote(
+          'enable_advanced_gps_filtering', 'enable_filtering', ConfigType.bool);
+      _updateConfigFromRemote(
+          'gps_filter_history_size', 'max_history_size', ConfigType.int);
+      _updateConfigFromRemote(
+          'gps_smoothing_window', 'smoothing_window', ConfigType.int);
+
       // Battery optimization
-      _updateConfigFromRemote('gps_battery_high_threshold', 'battery_threshold_high', ConfigType.int);
-      _updateConfigFromRemote('gps_battery_low_threshold', 'battery_threshold_low', ConfigType.int);
-      _updateConfigFromRemote('enable_battery_gps_optimization', 'enable_battery_optimization', ConfigType.bool);
-      
+      _updateConfigFromRemote('gps_battery_high_threshold',
+          'battery_threshold_high', ConfigType.int);
+      _updateConfigFromRemote(
+          'gps_battery_low_threshold', 'battery_threshold_low', ConfigType.int);
+      _updateConfigFromRemote('enable_battery_gps_optimization',
+          'enable_battery_optimization', ConfigType.bool);
+
       // Abuse detection (legacy)
-      _updateConfigFromRemote('abuse_radius', 'abuse_radius', ConfigType.double);
-      _updateConfigFromRemote('abuse_inside_radius_ratio', 'abuse_inside_radius_ratio', ConfigType.double);
-      _updateConfigFromRemote('abuse_report_time', 'abuse_report_time', ConfigType.double);
-      
+      _updateConfigFromRemote(
+          'abuse_radius', 'abuse_radius', ConfigType.double);
+      _updateConfigFromRemote('abuse_inside_radius_ratio',
+          'abuse_inside_radius_ratio', ConfigType.double);
+      _updateConfigFromRemote(
+          'abuse_report_time', 'abuse_report_time', ConfigType.double);
+
       _lastRemoteConfigFetch = now;
       print('Remote GPS config loaded successfully');
-      
     } catch (e) {
       print('Failed to load remote GPS config, using defaults: $e');
       // Keep current config on error
@@ -98,15 +123,13 @@ class UnifiedGPSConfig {
 
   /// Helper to update config from remote with type safety
   static void _updateConfigFromRemote(
-    String remoteKey, 
-    String localKey, 
-    ConfigType dataType, 
-    {dynamic Function(dynamic)? transform}
-  ) {
+      String remoteKey, String localKey, ConfigType dataType,
+      {dynamic Function(dynamic)? transform}) {
     try {
       final remoteValue = getConfig(dataType: dataType, configKey: remoteKey);
       if (remoteValue != null) {
-        final finalValue = transform != null ? transform(remoteValue) : remoteValue;
+        final finalValue =
+            transform != null ? transform(remoteValue) : remoteValue;
         _currentConfig[localKey] = finalValue;
         print('Config updated: $localKey = $finalValue (from $remoteKey)');
       }
@@ -121,7 +144,7 @@ class UnifiedGPSConfig {
     if (value is T) {
       return value;
     }
-    
+
     // Type conversion fallback
     if (T == double && value is num) {
       return value.toDouble() as T;
@@ -132,8 +155,9 @@ class UnifiedGPSConfig {
     if (T == bool && value is String) {
       return (value.toLowerCase() == 'true') as T;
     }
-    
-    throw ArgumentError('Config value $key has type ${value.runtimeType}, expected $T');
+
+    throw ArgumentError(
+        'Config value $key has type ${value.runtimeType}, expected $T');
   }
 
   /// Set configuration value
@@ -168,85 +192,98 @@ class UnifiedGPSConfig {
   /// Get configuration for specific GPS mode (high performance, balanced, power saving)
   static Map<String, dynamic> getConfigForMode(String mode) {
     final baseConfig = Map<String, dynamic>.from(_currentConfig);
-    
+
     switch (mode.toLowerCase()) {
       case 'high_performance':
-        final currentInterval = get<int>('update_interval');
-        final currentDistanceFilter = get<int>('distance_filter');
-        final currentAccuracyThreshold = get<double>('accuracy_threshold');
-        
+      case 'activity_tracking': // New dedicated mode for activity tracking
         baseConfig.addAll({
-          'update_interval': (currentInterval * 0.7).round(), // 30% faster
-          'distance_filter': (currentDistanceFilter * 0.7).round(), // 30% more sensitive
-          'accuracy_threshold': currentAccuracyThreshold * 0.8, // Stricter accuracy
+          'update_interval': 1000, // 1 second updates
+          'distance_filter': 1, // 1 meter sensitivity
+          'accuracy_threshold': 10.0, // 10 meter accuracy requirement
+          'speed_threshold': 7.0, // 7 km/h speed limit for walking/running
+          'min_time_interval': 0.2, // 200ms minimum interval
+          'smoothing_window': 2, // Minimal smoothing for real-time accuracy
           'wake_lock_enabled': true,
           'use_network_fallback': false, // GPS only for best accuracy
+          'enable_battery_optimization': false, // Disable battery optimization
         });
         break;
-        
+
       case 'balanced':
-        // Use default config
+        // Use default config with minor optimizations
+        baseConfig.addAll({
+          'update_interval': 1500, // 1.5 second updates
+          'distance_filter': 2, // 2 meter sensitivity
+          'accuracy_threshold': 15.0, // 15 meter accuracy
+        });
         break;
-        
+
       case 'power_saving':
         final currentInterval = get<int>('update_interval');
         final currentDistanceFilter = get<int>('distance_filter');
         final currentAccuracyThreshold = get<double>('accuracy_threshold');
         final currentSmoothingWindow = get<int>('smoothing_window');
-        
+
         baseConfig.addAll({
           'update_interval': (currentInterval * 1.5).round(), // 50% slower
-          'distance_filter': (currentDistanceFilter * 1.5).round(), // 50% less sensitive
+          'distance_filter':
+              (currentDistanceFilter * 1.5).round(), // 50% less sensitive
           'accuracy_threshold': currentAccuracyThreshold * 1.3, // More relaxed
           'wake_lock_enabled': false,
           'use_network_fallback': true, // Allow network location
           'smoothing_window': currentSmoothingWindow + 2, // More smoothing
         });
         break;
-        
+
       default:
         print('Unknown GPS mode: $mode, using balanced config');
     }
-    
+
     return baseConfig;
   }
 
   /// Validate configuration values
   static List<String> validateConfig() {
     final errors = <String>[];
-    
+
     // Validate ranges
-    if (get<double>('accuracy_threshold') <= 0 || get<double>('accuracy_threshold') > 1000) {
+    if (get<double>('accuracy_threshold') <= 0 ||
+        get<double>('accuracy_threshold') > 1000) {
       errors.add('accuracy_threshold must be between 0 and 1000 meters');
     }
-    
-    if (get<double>('speed_threshold') <= 0 || get<double>('speed_threshold') > 200) {
+
+    if (get<double>('speed_threshold') <= 0 ||
+        get<double>('speed_threshold') > 200) {
       errors.add('speed_threshold must be between 0 and 200 km/h');
     }
-    
-    if (get<int>('update_interval') < 500 || get<int>('update_interval') > 30000) {
+
+    if (get<int>('update_interval') < 500 ||
+        get<int>('update_interval') > 30000) {
       errors.add('update_interval must be between 500 and 30000 milliseconds');
     }
-    
-    if (get<double>('distance_filter') < 0 || get<double>('distance_filter') > 100) {
+
+    if (get<double>('distance_filter') < 0 ||
+        get<double>('distance_filter') > 100) {
       errors.add('distance_filter must be between 0 and 100 meters');
     }
-    
-    if (get<int>('max_history_size') < 3 || get<int>('max_history_size') > 100) {
+
+    if (get<int>('max_history_size') < 3 ||
+        get<int>('max_history_size') > 100) {
       errors.add('max_history_size must be between 3 and 100');
     }
-    
-    if (get<int>('smoothing_window') < 1 || get<int>('smoothing_window') > get<int>('max_history_size')) {
+
+    if (get<int>('smoothing_window') < 1 ||
+        get<int>('smoothing_window') > get<int>('max_history_size')) {
       errors.add('smoothing_window must be between 1 and max_history_size');
     }
-    
+
     return errors;
   }
 
   /// Get configuration optimized for specific activity type
   static Map<String, dynamic> getConfigForActivity(String activity) {
     final baseConfig = Map<String, dynamic>.from(_currentConfig);
-    
+
     switch (activity.toLowerCase()) {
       case 'walking':
         baseConfig.addAll({
@@ -256,7 +293,7 @@ class UnifiedGPSConfig {
           'smoothing_window': 4, // More smoothing for stability
         });
         break;
-        
+
       case 'running':
         baseConfig.addAll({
           'speed_threshold': 30.0, // km/h - running speed limit
@@ -265,7 +302,7 @@ class UnifiedGPSConfig {
           'smoothing_window': 3, // Balanced smoothing
         });
         break;
-        
+
       case 'cycling':
         baseConfig.addAll({
           'speed_threshold': 60.0, // km/h - cycling speed limit
@@ -274,7 +311,7 @@ class UnifiedGPSConfig {
           'smoothing_window': 2, // Less smoothing for responsiveness
         });
         break;
-        
+
       case 'driving':
         baseConfig.addAll({
           'speed_threshold': 120.0, // km/h - driving speed limit
@@ -283,26 +320,28 @@ class UnifiedGPSConfig {
           'smoothing_window': 5, // More smoothing for stability
         });
         break;
-        
+
       default:
         print('Unknown activity: $activity, using default config');
     }
-    
+
     return baseConfig;
   }
 
   /// Get debug information about current configuration
   static Map<String, dynamic> getDebugInfo() {
     final validationErrors = validateConfig();
-    
+
     return {
       'current_config': _currentConfig,
       'default_config': _defaultConfig,
       'last_remote_fetch': _lastRemoteConfigFetch?.toIso8601String(),
       'validation_errors': validationErrors,
       'config_source': _lastRemoteConfigFetch != null ? 'remote' : 'default',
-      'cache_expiry': _lastRemoteConfigFetch != null 
-          ? _lastRemoteConfigFetch!.add(Duration(seconds: _remoteConfigCacheSeconds)).toIso8601String()
+      'cache_expiry': _lastRemoteConfigFetch != null
+          ? _lastRemoteConfigFetch!
+              .add(Duration(seconds: _remoteConfigCacheSeconds))
+              .toIso8601String()
           : null,
     };
   }
@@ -316,7 +355,8 @@ class UnifiedGPSConfig {
   static bool get filteringEnabled => get<bool>('enable_filtering');
   static int get maxHistorySize => get<int>('max_history_size');
   static int get smoothingWindow => get<int>('smoothing_window');
-  static bool get batteryOptimizationEnabled => get<bool>('enable_battery_optimization');
+  static bool get batteryOptimizationEnabled =>
+      get<bool>('enable_battery_optimization');
   static int get batteryHighThreshold => get<int>('battery_threshold_high');
   static int get batteryLowThreshold => get<int>('battery_threshold_low');
 }

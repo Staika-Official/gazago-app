@@ -420,7 +420,25 @@ mixin ActivityMixin {
 
     RxDouble calRealtimeSpeed = RxDouble(0);
 
-    double speed = exerciseData.isNotEmpty ? exerciseData.last.speed! : 0;
+    // Improved initial speed handling - use GPS speed immediately if available
+    double speed = 0;
+    if (exerciseData.isNotEmpty) {
+      speed = exerciseData.last.speed!;
+
+      // For initial data (first few seconds), use GPS speed directly
+      if (exerciseData.length <= 3) {
+        // Convert m/s to km/h and use GPS speed directly for immediate display
+        double gpsSpeedKmh = speed * 3.6;
+        if (gpsSpeedKmh > 0 && gpsSpeedKmh < 15) {
+          // Reasonable walking/running speed
+          realTimeSpeed.value =
+              (exerciseState.value != ExerciseState.ongoing) ? 0 : gpsSpeedKmh;
+          return;
+        }
+      }
+    }
+
+    // Original step-based calculation for established tracking
     List<UserExerciseModel> sortedList = List.empty(growable: true);
     UserExerciseModel? prevData;
     if (exerciseData.length > 1) {
@@ -442,8 +460,9 @@ mixin ActivityMixin {
 
     // 15초 이상 걷기 감지가 되지 않을 경우에는 속도 0으로 표시
     if (currentStep - prevStep > stepDifference) {
-      calRealtimeSpeed.value =
-          (exerciseState.value != ExerciseState.ongoing) ? 0 : speed;
+      calRealtimeSpeed.value = (exerciseState.value != ExerciseState.ongoing)
+          ? 0
+          : speed * 3.6; // Convert to km/h
     }
 
     realTimeSpeed.value = calRealtimeSpeed.value;
