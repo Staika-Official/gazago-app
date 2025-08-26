@@ -1474,6 +1474,10 @@ class ActivityController extends SuperController
       }
     }
 
+    if (treasureDistanceMap.isEmpty) {
+      return;
+    }
+
     /// get nearest treasures
     var nearestTreasures =
         treasureDistanceMap.entries.reduce((a, b) => a.key < b.key ? a : b);

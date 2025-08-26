@@ -8,12 +8,10 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
-import 'package:gaza_go/presentations/components/circular_button.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
-import 'package:gaza_go/presentations/views/activity/activity_map.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/activity_active_main_button_section.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/activity_active_mini_map_section.dart';
 import 'package:gaza_go/theme/theme.g.dart';
@@ -24,7 +22,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:simple_animations/movie_tween/movie_tween.dart';
 
 class ActivityActive extends StatelessWidget {
-  const ActivityActive({Key? key}) : super(key: key);
+  const ActivityActive({super.key});
 
   List<Widget> renderGauge(ExerciseType exerciseType, Color color) {
     List<Widget> gaugeList = List.empty(growable: true);

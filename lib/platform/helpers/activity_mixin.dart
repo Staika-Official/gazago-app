@@ -667,7 +667,7 @@ mixin ActivityMixin {
               }
               if ((userState.value.shoes?.durability! ?? 0) < 30 &&
                   !zeroDurabilityNotified.value) {
-                if (userState.value.shoes!.durability! == 0) {
+                if ((userState.value.shoes?.durability ?? 0) == 0) {
                   showLocalNotification(
                       notificationType: NotificationType.durabilityDepleted,
                       title: 'item_repair_notification'.tr(),
