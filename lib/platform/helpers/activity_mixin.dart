@@ -18,7 +18,7 @@ import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/image_helper.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
-import 'package:gaza_go/platform/helpers/gps_helper.dart' as gps_helper;
+import 'package:gaza_go/platform/managers/unified_gps_manager.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
@@ -266,7 +266,7 @@ mixin ActivityMixin {
     locationModelSubscription = null;
 
     // Subscribe to UnifiedGPSManager location stream
-    locationModelSubscription = gps_helper.GPS.instance.locationStream.listen(
+    locationModelSubscription = GPS.locationStream.listen(
       (LocationModel location) {
         currentLocationModel.value = location;
         currentLocation.value = location; // For backward compatibility

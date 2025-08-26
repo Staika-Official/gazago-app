@@ -15,7 +15,7 @@ import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
 import 'package:gaza_go/platform/configs/unified_gps_config.dart';
-import 'package:gaza_go/platform/helpers/gps_helper.dart' as gps_helper;
+import 'package:gaza_go/platform/managers/unified_gps_manager.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
@@ -123,7 +123,6 @@ Future<void> checkRegion() async {
 
 void main() async {
   await runZonedGuarded(() async {
-    int isServiceInspection = 0;
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
     await EasyLocalization.ensureInitialized();
 
@@ -163,8 +162,7 @@ void main() async {
     print('🌍 Initializing Unified GPS System...');
     await UnifiedGPSConfig.initialize();
     // Initialize GPS manager and request permissions
-    final gpsPermissionGranted =
-        await gps_helper.GPS.checkAndRequestPermissions();
+    final gpsPermissionGranted = await GPS.checkAndRequestPermissions();
     if (gpsPermissionGranted) {
       print('✅ GPS System initialized with permissions');
     } else {

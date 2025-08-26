@@ -121,7 +121,9 @@ class UnifiedGPSManager extends GetxController {
       if (isActive.value) {
         _configureLocationSettings();
       }
-    } catch (e) {}
+    } catch (e) {
+      // Ignore battery status errors
+    }
   }
 
   /// Start performance monitoring
@@ -581,7 +583,9 @@ class UnifiedGPSManager extends GetxController {
       if (isActive.value) {
         await _startPositionStream();
       }
-    } catch (e) {}
+    } catch (e) {
+      // Ignore recovery errors
+    }
   }
 
   /// Reset metrics for new session
@@ -610,7 +614,9 @@ class UnifiedGPSManager extends GetxController {
       // Calculate performance grade
       String grade = _calculatePerformanceGrade(filterRate);
       performanceGrade.value = grade;
-    } catch (e) {}
+    } catch (e) {
+      // Ignore performance calculation errors
+    }
   }
 
   /// Calculate performance grade based on metrics
@@ -681,7 +687,9 @@ class UnifiedGPSManager extends GetxController {
     // Log to Firebase Analytics if needed
     try {
       FirebaseCrashlytics.instance.log('GPS Performance Report: $report');
-    } catch (e) {}
+    } catch (e) {
+      // Ignore logging errors
+    }
   }
 
   /// Get current location once
