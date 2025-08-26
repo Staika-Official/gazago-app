@@ -1148,7 +1148,20 @@ class ActivityController extends SuperController
           ));
         }
 
-        await _compareDistanceWithNearestTreasure(position);
+        // Convert LocationModel to Position for treasure comparison
+        Position positionForTreasure = Position(
+          latitude: filteredLocationModel.latitude,
+          longitude: filteredLocationModel.longitude,
+          timestamp: filteredLocationModel.timestamp,
+          accuracy: filteredLocationModel.accuracy,
+          altitude: filteredLocationModel.altitude,
+          heading: 0.0,
+          speed: filteredLocationModel.speed,
+          speedAccuracy: 0.0,
+          altitudeAccuracy: 0.0,
+          headingAccuracy: 0.0,
+        );
+        await _compareDistanceWithNearestTreasure(positionForTreasure);
       } else {
         // HiveStore.save(key: HiveKey.accessToken.name, value: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJramg0MzU3IiwiYXV0aCI6IlJPTEVfQURNSU4sUk9MRV9MT0NBVElPTixST0xFX0xPQ0FUSU9OX1NVUEVSVklTT1IiLCJleHAiOjE3MTg3ODYwNzksInVzZXJJZCI6IjI1NSJ9.rNf30NedosrnS4iPLLgEFR2RCNQSCLsytDqXsM4jLkJB_wKwhC-LQ0PVYnr3gzrDcT031n7cBBWyheYv_Ml9rA');
         // 첼린지 존 찾기(30초마다 요청)
@@ -1587,7 +1600,7 @@ class ActivityController extends SuperController
   void refreshUpdateCamera() {
     if (nearByCourses.isNotEmpty && googleMapController != null) {
       List overlays = [];
-      nearByCourses.forEach((item) {
+      for (var item in nearByCourses) {
         overlays.addAll(renderCircleOverlays(item));
         overlays.addAll(renderMarkers(item));
       }
