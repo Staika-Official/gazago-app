@@ -10,6 +10,7 @@ class TreasureService {
     void Function()? errorCallback,
   }) async {
     Response res = await TreasureApi.getTreasureByExerciseId(
+      userId: req.userId,
       userExerciseId: req.userExerciseId,
       userLat: req.userLat,
       userLng: req.userLng,
