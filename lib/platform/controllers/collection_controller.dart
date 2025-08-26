@@ -160,7 +160,9 @@ class CollectionController extends SuperController with GetTickerProviderStateMi
               HiveStore.save(key: HiveKey.collectionIdList.name, value: collectionIdList.toString());
             }
           }
-          fixedCollection.value = data.firstWhere((item) => item.type == 'FIXED');
+          if(data.isNotEmpty){
+            fixedCollection.value = data.firstWhere((item) => item.type == 'FIXED');
+          }
           collectionList.value = data.where((item) => item.type != 'FIXED').toList();
           sortObjectsByGatheringDifficulty(collectionList);
           await Future.delayed(const Duration(milliseconds: 200));
