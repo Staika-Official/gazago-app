@@ -3,14 +3,9 @@ import 'dart:io';
 
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 // import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
-import 'package:gaza_go/platform/helpers/image_helper.dart';
-import 'package:gaza_go/platform/models/request/get_treasure_request_model.dart';
-import 'package:gaza_go/platform/models/treasure_model.dart';
-import 'package:gaza_go/platform/services/treasure_service.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
@@ -21,19 +16,23 @@ import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/helpers/image_helper.dart';
 import 'package:gaza_go/platform/helpers/location_helper.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/request/get_treasure_request_model.dart';
+import 'package:gaza_go/platform/models/treasure_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
+import 'package:gaza_go/platform/services/treasure_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Trans;
-import 'package:easy_localization/easy_localization.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:health/health.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:simple_animations/animation_builder/custom_animation_builder.dart';
@@ -1045,6 +1044,7 @@ mixin ActivityMixin {
 
   Future<void> fetchExerciseTreasures() async {
     final req = GetTreasureRequestModel(
+      userId: userState.value.state?.id ?? -1,
       userExerciseId: userState.value.exercise?.id ?? -1,
       userLat: currentLocation.value.latitude,
       userLng: currentLocation.value.longitude,

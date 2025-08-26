@@ -4,6 +4,7 @@ import 'package:gaza_go/platform/middleware/dio_middleware.dart';
 
 class TreasureApi {
   static Future<Response> getTreasureByExerciseId({
+    required num userId,
     required num userExerciseId,
     required num userLat,
     required num userLng,
@@ -11,6 +12,7 @@ class TreasureApi {
     return await Api.client(
       serviceUrl: ServiceUrl.treasureService,
       showLoading: false,
-    ).get('/?userExerciseId=$userExerciseId&userLat=$userLat&userLng=$userLng');
+    ).get(
+        '/?userId=$userId&userExerciseId=$userExerciseId&userLat=$userLat&userLng=$userLng');
   }
 }
