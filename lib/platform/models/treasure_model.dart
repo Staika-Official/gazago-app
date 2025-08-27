@@ -13,7 +13,7 @@ class TreasureModel {
   final int amount;
   final String treasureSymbol;
   final dynamic claimedBy;
-  final dynamic claimedTime;
+  final DateTime? claimedTime;
   final String? iconUrl;
   final int userExerciseId;
   final String distributionMode;
