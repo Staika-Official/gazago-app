@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/models/treasure_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -30,6 +31,7 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
   RxBool dataGetLoading = RxBool(false);
   Rx<ArchiveDetailItemModel> selectedItem = Rx(ArchiveDetailItemModel());
   RxList<LatLng> locations = RxList.empty();
+  var rewards = <TreasureModel>[].obs;
 
   @override
   void onInit() async {
@@ -196,6 +198,27 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
       coordinates.add(coordinate);
     }
     locations.addAll(coordinates);
+  }
+
+  /// Fetch list collected treasure of this session
+  /// TODO: call api later
+  void fetchListReward() {
+    rewards.add(
+      TreasureModel(
+        id: 1,
+        type: TreasureType.event,
+        status: TreasureStatus.claimed,
+        name: "ALOO",
+        nameEn: "ALOO",
+        amount: 100,
+        distributionMode: TreasureDistributionMode.random,
+        latitude: 1,
+        longitude: 1,
+        treasureSymbol: "TIK",
+        userExerciseId: 1,
+        iconUrl: null,
+      ),
+    );
   }
 
   @override
