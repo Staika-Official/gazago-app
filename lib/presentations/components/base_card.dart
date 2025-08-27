@@ -19,7 +19,7 @@ class BaseCard extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius ?? 0),
+        borderRadius: BorderRadius.circular(borderRadius),
         color: backgroundColor,
       ),
       child: child,
