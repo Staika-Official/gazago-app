@@ -88,58 +88,48 @@ enum ToastV2Type { error, success }
 
 void showToastV2({
   required String message,
-  SvgPicture? icon,
   ToastV2Type type = ToastV2Type.success,
 }) {
-  ScaffoldMessenger.of(Get.context!).clearSnackBars();
-  ScaffoldMessenger.of(Get.context!).showSnackBar(
-    SnackBar(
-      content: UnconstrainedBox(
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 16,
+  Get.showSnackbar(
+    GetSnackBar(
+      messageText: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 16,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: () {
+                switch (type) {
+                  case ToastV2Type.error:
+                    return AppColorData.regular().colorIconWarning;
+                  case ToastV2Type.success:
+                    return AppColorData.regular().colorPointGreen;
+                }
+              }(),
+            ),
+            alignment: Alignment.center,
+            child: StyledText(
+              message,
+              fontSize: 16,
+              fontWeight: 500,
+              color: () {
+                switch (type) {
+                  case ToastV2Type.error:
+                    return const Color(0xff440000);
+                  case ToastV2Type.success:
+                    return const Color(0xff003B22);
+                }
+              }(),
+            ),
           ),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: () {
-              switch (type) {
-                case ToastV2Type.error:
-                  return AppColorData.regular().colorIconWarning;
-                case ToastV2Type.success:
-                  return AppColorData.regular().colorPointGreen;
-              }
-            }(),
-          ),
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (icon != null) ...[
-                icon,
-                const SizedBox(width: 4),
-              ],
-              StyledText(
-                message,
-                fontSize: 16,
-                fontWeight: 500,
-                color: () {
-                  switch (type) {
-                    case ToastV2Type.error:
-                      return const Color(0xff440000);
-                    case ToastV2Type.success:
-                      return const Color(0xff003B22);
-                  }
-                }(),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
-      elevation: 0,
       duration: 2.seconds,
       backgroundColor: Colors.transparent,
-      behavior: SnackBarBehavior.floating,
     ),
   );
 }

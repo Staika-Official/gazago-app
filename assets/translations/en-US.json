@@ -985,5 +985,4 @@
     "collect" : "Collect",
     "treasure_collected": "Treasure collected!",
     "cannot_pickup_in_cooldown": "Cannot pickup in cooldown",
-    "cannot_pick_over_daily_limit": "Cannot pick over daily limit"
   }

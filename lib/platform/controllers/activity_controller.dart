@@ -31,11 +31,13 @@ import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/promotion_ad_model.dart';
+import 'package:gaza_go/platform/models/request/pick_up_treasure_request_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/models/treasure_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
+import 'package:gaza_go/platform/services/treasure_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -1529,21 +1531,15 @@ class ActivityController extends SuperController
   /// only work if the treasure can be picked up + exercise is ongoing
   /// which mean the treasure is within 10m
   void onPickupTreasure(TreasureModel treasure) {
+    debugPrint("CLICK TREASURE: ${treasure.latitude} ${treasure.longitude}");
+
+    // if highlighted
     if (_currentHighlightedTreasuresId.contains(treasure.id) &&
         exerciseState.value == ExerciseState.ongoing) {
       /// check cool down timer
       if (_pickupCoolDownTimer?.isActive == true) {
         showToastV2(
           message: 'cannot_pickup_in_cooldown'.tr(),
-          type: ToastV2Type.error,
-        );
-        return;
-      }
-
-      /// TODO: check daily limit here too
-      if (false) {
-        showToastV2(
-          message: 'cannot_pick_over_daily_limit'.tr(),
           type: ToastV2Type.error,
         );
         return;
@@ -1556,11 +1552,7 @@ class ActivityController extends SuperController
         PickUpTreasureBottomSheet(
           treasureModel: treasure,
           onPickUp: () {
-            /// call api pick
-            showToastV2(message: 'treasure_collected'.tr());
-
-            /// if success then start timer
-            _startCooldownTimer(kPickupCoolDownTime.toInt());
+            callAPIPickupTreasure(treasure.id);
           },
         ),
       );
@@ -1582,13 +1574,60 @@ class ActivityController extends SuperController
     );
   }
 
-  void initCoolDownTimerIfNeeded(DateTime lastClaimTime) {
-    final now = DateTime.now();
-    final secondsLeft = now.difference(lastClaimTime).inSeconds;
-
-    if (secondsLeft > 0) {
-      _startCooldownTimer(secondsLeft);
+  void initCoolDownTimerIfNeeded(DateTime? lastClaimTime) {
+    void cancelCoolDownTimer() {
+      coolDownTimeLeft.value = 0;
+      _pickupCoolDownTimer?.cancel();
     }
+
+    final now = DateTime.now();
+
+    if (lastClaimTime == null) {
+      cancelCoolDownTimer();
+      return;
+    }
+
+    final secondsDifferent = now.difference(lastClaimTime).inSeconds;
+
+    if (secondsDifferent < kPickupCoolDownTime.toInt()) {
+      final secondsLeft = kPickupCoolDownTime.toInt() - secondsDifferent;
+      _startCooldownTimer(secondsLeft);
+    } else {
+      cancelCoolDownTimer();
+    }
+  }
+
+  Future<void> callAPIPickupTreasure(int treasureId) async {
+    final req = PickUpTreasureRequestModel(
+      userId: userState.value.state?.userId ?? -1,
+      userExerciseId: userState.value.exercise?.id ?? -1,
+      userLat: currentLocation.value.latitude,
+      userLng: currentLocation.value.longitude,
+      treasureId: treasureId,
+    );
+    await TreasureService.pickUpTreasure(
+      req: req,
+      successCallback: (newTreasure) {
+        showToastV2(message: 'treasure_collected'.tr());
+
+        /// if success then start timer
+        _startCooldownTimer(kPickupCoolDownTime.toInt());
+
+        /// hide the collected treasure
+        listTreasureOfSession
+            .removeWhere((element) => element.id == newTreasure.id);
+        listClaimedTreasureIdOfSession.add(newTreasure.id);
+        removeMarkerById(newTreasure.id);
+      },
+      errorCallback: (error) {
+        if (error?.errorMessage != null) {
+          showToastV2(
+            message: error!.errorMessage!,
+            type: ToastV2Type.error,
+          );
+        }
+      },
+    );
   }
 
   @override

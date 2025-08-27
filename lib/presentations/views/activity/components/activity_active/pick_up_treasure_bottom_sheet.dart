@@ -42,17 +42,24 @@ class PickUpTreasureBottomSheet extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
-          iconCoinTik24,
+          treasureModel.iconUrl.isNullOrBlank == true
+              ? iconCoinTik24
+              : Image.network(
+                  treasureModel.iconUrl!,
+                  width: 128,
+                  height: 128,
+                ),
           const SizedBox(height: 24),
           UnconstrainedBox(
             child: BaseCard(
+              backgroundColor: AppColorData.regular().colorBgPrimary,
               borderRadius: 8,
               padding: const EdgeInsets.symmetric(
                 vertical: 12,
                 horizontal: 16,
               ),
               child: Text(
-                "100 TIK",
+                "${treasureModel.amount} ${treasureModel.treasureSymbol}",
                 style: AppTextStyleData.regular().koBodySemiboldLg.copyWith(
                       color: AppColorData.regular().colorPointPink,
                     ),
@@ -66,6 +73,8 @@ class PickUpTreasureBottomSheet extends StatelessWidget {
                 child: GazagoButton(
                   buttonColor: Colors.transparent,
                   buttonText: 'cancel'.tr(),
+                  textColor:
+                      AppColorData.regular().colorTextInteractiveSecondary,
                   onTap: Get.back,
                 ),
               ),

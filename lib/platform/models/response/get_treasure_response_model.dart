@@ -8,7 +8,7 @@ class GetTreasureResponseModel {
   final List<TreasureModel> treasures;
   final int cooldownDuration;
   final int minPickupDistance;
-  final DateTime lastClaimTime;
+  final DateTime? lastClaimTime;
 
   GetTreasureResponseModel({
     required this.treasures,
