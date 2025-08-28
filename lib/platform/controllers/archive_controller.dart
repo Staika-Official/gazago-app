@@ -87,7 +87,8 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
       dataGetLoading.value = false;
       if (archive != null) {
         selectedItem.value = archive;
-        final targetDate = Jiffy.parse(archive.endedDate!);
+        final targetDate =
+            Jiffy.parse(archive.endedDate ?? DateTime.now().toString());
         selectedItem.value.isTwoMonthAgo = targetDate.isBefore(twoMonthAgo);
         if (targetDate.isBefore(twoMonthAgo)) {
           locations.value = RxList.empty();
@@ -219,7 +220,7 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
 
       final req = GetExerciseRewardRequestModel(
         userId: selectedItem.value.userId ?? -1,
-        userExerciseId: 1,
+        userExerciseId: selectedItem.value.id ?? -1,
         page: rewardPage,
       );
 

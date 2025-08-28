@@ -17,7 +17,8 @@ class RewardTabContent extends StatefulWidget {
   State<RewardTabContent> createState() => _RewardTabContentState();
 }
 
-class _RewardTabContentState extends State<RewardTabContent> {
+class _RewardTabContentState extends State<RewardTabContent>
+    with AutomaticKeepAliveClientMixin {
   final controller = Get.find<ArchiveController>();
   final ScrollController _scrollController = ScrollController();
 
@@ -41,7 +42,11 @@ class _RewardTabContentState extends State<RewardTabContent> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 16,
