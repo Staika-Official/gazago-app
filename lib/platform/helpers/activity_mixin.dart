@@ -27,8 +27,10 @@ import 'package:gaza_go/platform/models/treasure_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
+import 'package:gaza_go/platform/services/treasure_geofencing_service.dart';
 import 'package:gaza_go/platform/services/treasure_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
+import 'package:gaza_go/platform/services/activity_gps_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart' hide Trans;
@@ -72,6 +74,7 @@ mixin ActivityMixin {
   final Health health = Health();
   final RxDouble realTimeSpeed = RxDouble(0);
   final RxDouble gpsSpeed = RxDouble(0);
+  final RxDouble smoothedSpeed = RxDouble(0); // For UI color stability
   final RxBool lowStaminaNotified = RxBool(false);
   final RxBool stoppedExercising = RxBool(false);
   final RxBool zeroStaminaNotified = RxBool(false);
@@ -118,10 +121,13 @@ mixin ActivityMixin {
     Color color = Colors.white;
     switch (exerciseState.value) {
       case ExerciseState.ongoing:
+        // Use smoothedSpeed for more stable color changes
+        double speedForColor =
+            smoothedSpeed.value > 0 ? smoothedSpeed.value : realTimeSpeed.value;
         if ((userState.value.exercise!.type! == ExerciseType.hiking.name
-                ? realTimeSpeed.value < 0.7
-                : realTimeSpeed.value < 1) ||
-            realTimeSpeed.value > 7) {
+                ? speedForColor < 0.7
+                : speedForColor < 1) ||
+            speedForColor > 7) {
           color = AppColorData.regular().colorTextWarning;
         } else {
           color = AppColorData.regular().colorTextSuccess;
@@ -308,6 +314,12 @@ mixin ActivityMixin {
     exerciseTime.value = 0;
     exerciseDistance.value = 0;
     pedestrianStatus.value = 'STOPPED';
+
+    // Reset speed values
+    realTimeSpeed.value = 0;
+    gpsSpeed.value = 0;
+    smoothedSpeed.value = 0;
+
     HiveStore.initializeExerciseCoordinates();
     HiveStore.save(key: HiveKey.lastUpdatedStepCount.name, value: 0);
   }
@@ -555,6 +567,10 @@ mixin ActivityMixin {
           HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
           initExerciseStats();
           initStream();
+
+          // Start enhanced GPS tracking with ActivityGPSService
+          _startEnhancedGPSTracking();
+
           startPeriodicUpdate();
           fetchExerciseTreasures();
         },
@@ -594,6 +610,10 @@ mixin ActivityMixin {
     coordinates.addAll(await parseCoordinates(userState.value.exercise!.id));
 
     initStream();
+
+    // Start enhanced GPS tracking for continued exercise
+    _startEnhancedGPSTracking();
+
     activityMixinThr
         .throttle(() => updateExercise(source: source, wasPaused: true));
     startPeriodicUpdate();
@@ -910,6 +930,10 @@ mixin ActivityMixin {
             resetVariables();
             resetTimer();
             resetSubscriptions();
+
+            // Stop enhanced GPS tracking and treasure geofencing
+            _stopEnhancedGPSTracking();
+
             if ([
               'showEndExerciseAlert',
               'showEndADExerciseAlert',
@@ -965,6 +989,10 @@ mixin ActivityMixin {
     resetVariables();
     resetTimer();
     resetSubscriptions();
+
+    // Stop enhanced GPS tracking and treasure geofencing
+    _stopEnhancedGPSTracking();
+
     Get.until((route) => route.isFirst);
   }
 
@@ -1157,5 +1185,110 @@ mixin ActivityMixin {
     }
 
     return markers;
+  }
+
+  /// Start enhanced GPS tracking with ActivityGPSService
+  Future<void> _startEnhancedGPSTracking() async {
+    try {
+      // Get ActivityGPSService instance
+      final activityGPSService = Get.isRegistered<ActivityGPSService>()
+          ? Get.find<ActivityGPSService>()
+          : Get.put(ActivityGPSService(), permanent: true);
+
+      // Start GPS tracking
+      final started = await activityGPSService.startTracking();
+      if (started) {
+        print('Enhanced GPS tracking started successfully');
+
+        // Listen to GPS location updates (ActivityGPSService processes them internally)
+        GPS.locationStream.listen((location) {
+          _handleEnhancedLocationUpdate(location);
+        });
+      } else {
+        print(
+            'Failed to start enhanced GPS tracking, falling back to standard GPS');
+      }
+    } catch (e) {
+      print('Error starting enhanced GPS tracking: $e');
+    }
+  }
+
+  /// Handle enhanced location updates from ActivityGPSService
+  void _handleEnhancedLocationUpdate(LocationModel location) {
+    try {
+      // Update current location
+      currentLocation.value = location;
+
+      // Update coordinates for map display
+      final newCoord = LatLng(location.latitude, location.longitude);
+      if (coordinates.isEmpty ||
+          coordinates.last.latitude != location.latitude ||
+          coordinates.last.longitude != location.longitude) {
+        coordinates.add(newCoord);
+      }
+
+      // Update exercise data if ongoing
+      if (exerciseState.value == ExerciseState.ongoing) {
+        exerciseData.add(UserExerciseModel(
+          altitude: location.altitude,
+          speed: location.speedKmh,
+          steps: exerciseSteps.value,
+          locationUpdateTime: DateTime.now(),
+          lastLatitude: location.latitude,
+          lastLongitude: location.longitude,
+        ));
+      }
+
+      // Update real-time speed and distance from ActivityGPSService
+      try {
+        final activityGPS = Get.find<ActivityGPSService>();
+        exerciseDistance.value = activityGPS.totalDistance.value;
+        gpsSpeed.value = activityGPS.currentSpeed.value;
+
+        // Update realTimeSpeed for main UI display with smoothing to prevent flickering
+        double newSpeed = activityGPS.currentSpeed.value;
+
+        // Always update realTimeSpeed for accurate display
+        realTimeSpeed.value = newSpeed;
+
+        // Update smoothedSpeed with more conservative logic for color stability
+        if ((newSpeed - smoothedSpeed.value).abs() > 1.0 ||
+            smoothedSpeed.value == 0) {
+          // Only update smoothedSpeed if speed change is significant (> 1.0 km/h) or first time
+          smoothedSpeed.value = newSpeed;
+          print(
+              'Speed updated: realTime=${realTimeSpeed.value.toStringAsFixed(1)}, smoothed=${smoothedSpeed.value.toStringAsFixed(1)}');
+        }
+      } catch (e) {
+        // Fallback to original speed calculation if ActivityGPSService not available
+        gpsSpeed.value = location.speedKmh;
+        // Don't override realTimeSpeed here, let calRealtimeSpeed() handle it
+      }
+    } catch (e) {
+      print('Error handling enhanced location update: $e');
+    }
+  }
+
+  /// Stop enhanced GPS tracking and treasure geofencing
+  Future<void> _stopEnhancedGPSTracking() async {
+    try {
+      // Stop ActivityGPSService
+      if (Get.isRegistered<ActivityGPSService>()) {
+        final activityGPS = Get.find<ActivityGPSService>();
+        await activityGPS.stopTracking();
+        print('ActivityGPSService stopped');
+      }
+
+      // Stop TreasureGeofencingService
+      if (Get.isRegistered<TreasureGeofencingService>()) {
+        final treasureGeofencing = Get.find<TreasureGeofencingService>();
+        await treasureGeofencing.stopMonitoring();
+        print('TreasureGeofencingService stopped');
+      }
+
+      print('Enhanced GPS tracking stopped successfully');
+    } catch (e) {
+      print('Error stopping enhanced GPS tracking: $e');
+    }
   }
 }

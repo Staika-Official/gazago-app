@@ -40,6 +40,8 @@ import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
+import 'package:gaza_go/platform/services/activity_gps_service.dart';
+import 'package:gaza_go/platform/services/treasure_geofencing_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
@@ -88,6 +90,10 @@ class ActivityController extends SuperController
   }
 
   GlobalKey webViewKey = GlobalKey();
+
+  // GPS Services
+  late final ActivityGPSService _activityGPSService;
+  late final TreasureGeofencingService _treasureGeofencingService;
 
   // final RxDouble currentSliderValue = RxDouble(0);
   // final RxInt remainDurability = RxInt(0);
@@ -192,6 +198,9 @@ class ActivityController extends SuperController
   }
 
   Future<void> initializeController() async {
+    // Initialize GPS services
+    _initializeGPSServices();
+
     await getUserState().then((_) async {
       hasPermission.value = await checkAvailabilities();
       if (hasPermission.value) {
@@ -222,6 +231,25 @@ class ActivityController extends SuperController
     });
 
     // await initPlatformState();
+  }
+
+  /// Initialize GPS services for enhanced activity tracking
+  void _initializeGPSServices() {
+    try {
+      // Initialize ActivityGPSService
+      _activityGPSService = Get.isRegistered<ActivityGPSService>()
+          ? Get.find<ActivityGPSService>()
+          : Get.put(ActivityGPSService(), permanent: true);
+
+      // Initialize TreasureGeofencingService
+      _treasureGeofencingService = Get.isRegistered<TreasureGeofencingService>()
+          ? Get.find<TreasureGeofencingService>()
+          : Get.put(TreasureGeofencingService(), permanent: true);
+
+      print('GPS services initialized successfully');
+    } catch (e) {
+      print('Error initializing GPS services: $e');
+    }
   }
 
   void showLocalNotificationLowGps() {

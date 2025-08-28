@@ -272,6 +272,7 @@ enum NotificationType {
   durabilityLow,
   durabilityDepleted,
   gpsLow,
+  treasure,
   normal,
 }
 
@@ -290,6 +291,8 @@ extension NotificationId on NotificationType {
         return 3;
       case NotificationType.gpsLow:
         return 4;
+      case NotificationType.treasure:
+        return 6;
       case NotificationType.normal:
         return 5;
     }

@@ -11,9 +11,7 @@ import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
-import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
-import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart' hide Trans;
@@ -161,7 +159,7 @@ class ArchiveDetail extends StatelessWidget {
                           child: iconArchiveDistanceDetail,
                         ),
                         Text(
-                            '${formatDecimalPlaces(convertMetersToKm(controller.selectedItem.value.rewardDistance!), 3, isAutoDecimal: true)} km',
+                            '${formatDecimalPlaces(convertMetersToKm(controller.selectedItem.value.distance ?? controller.selectedItem.value.rewardDistance ?? 0), 3, isAutoDecimal: true)} km',
                             style: AppTextStyleData.regular()
                                 .koBodyMediumLg
                                 .copyWith(

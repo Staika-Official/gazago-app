@@ -7,6 +7,8 @@ import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/services/activity_gps_service.dart';
+
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -658,13 +660,33 @@ class ActivityActive extends StatelessWidget {
                             ),
                             Positioned(
                               top: -28.sp,
-                              left: calculateGaugePosition(
-                                  constraints, controller.realTimeSpeed.value),
-                              // left: calculateGaugePosition(constraints, 16),
-                              child: GaugeCursor(
-                                color: controller.exerciseStateGaugeColor.value,
-                                speed: controller.realTimeSpeed.value,
-                              ),
+                              left: calculateGaugePosition(constraints, () {
+                                // Try to get speed from ActivityGPSService first, fallback to realTimeSpeed
+                                try {
+                                  final activityGPS =
+                                      Get.find<ActivityGPSService>();
+                                  return activityGPS.currentSpeed.value;
+                                } catch (e) {
+                                  return controller.realTimeSpeed.value;
+                                }
+                              }()),
+                              child: Obx(() {
+                                // Get display speed with same fallback logic
+                                double displaySpeed = 0.0;
+                                try {
+                                  final activityGPS =
+                                      Get.find<ActivityGPSService>();
+                                  displaySpeed = activityGPS.currentSpeed.value;
+                                } catch (e) {
+                                  displaySpeed = controller.realTimeSpeed.value;
+                                }
+
+                                return GaugeCursor(
+                                  color:
+                                      controller.exerciseStateGaugeColor.value,
+                                  speed: displaySpeed,
+                                );
+                              }),
                             ),
                             Positioned(
                               bottom: -30.sp,
@@ -780,16 +802,31 @@ class ActivityActive extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      '${formatDecimalPlaces(controller.rewardDistance.value, 2)}km',
-                                      style: AppTextStyleData.regular()
-                                          .enBodyMediumLg
-                                          .copyWith(
-                                            color: AppColorData.regular()
-                                                .colorTextPrimary,
-                                            height: 1.5,
-                                          ),
-                                    ),
+                                    Obx(() {
+                                      // Try to get distance from ActivityGPSService first, fallback to totalDistance
+                                      double displayDistance = 0.0;
+                                      try {
+                                        final activityGPS =
+                                            Get.find<ActivityGPSService>();
+                                        displayDistance =
+                                            activityGPS.distanceKilometers;
+                                      } catch (e) {
+                                        // Fallback to totalDistance if ActivityGPSService not available
+                                        displayDistance =
+                                            controller.totalDistance.value;
+                                      }
+
+                                      return Text(
+                                        '${formatDecimalPlaces(displayDistance, 2)}km',
+                                        style: AppTextStyleData.regular()
+                                            .enBodyMediumLg
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorTextPrimary,
+                                              height: 1.5,
+                                            ),
+                                      );
+                                    }),
                                     Padding(
                                       padding: EdgeInsets.only(
                                           left: 1.0.sp, top: 2.sp),

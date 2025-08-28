@@ -18,11 +18,21 @@ class ActivityActiveMiniMapSection extends StatefulWidget {
 class _ActivityActiveMiniMapSectionState
     extends State<ActivityActiveMiniMapSection> {
   final controller = Get.find<ActivityController>();
+  GoogleMapController? mapController;
 
   @override
   void dispose() {
     controller.challengeMapControllers.removeLast();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen to coordinate changes for real-time map updates
+    ever(controller.coordinates, (_) {
+      _updateMapPath();
+    });
   }
 
   @override
@@ -49,7 +59,8 @@ class _ActivityActiveMiniMapSectionState
                     polylines: Set.of(controller.drawingPolylines),
                     polygons: Set.of(controller.drawingPolygons),
                     circles: Set.of(controller.drawingCircles),
-                    myLocationEnabled: true,
+                    myLocationEnabled:
+                        true, // Enable default user location marker (blue)
                     mapToolbarEnabled: false,
                     minMaxZoomPreference: const MinMaxZoomPreference(8, 20),
                     mapType: MapType.normal,
@@ -69,8 +80,10 @@ class _ActivityActiveMiniMapSectionState
                         () => EagerGestureRecognizer(),
                       ),
                     },
-                    onMapCreated: (mapController) {
-                      controller.challengeMapControllers.add(mapController);
+                    onMapCreated: (googleMapController) {
+                      mapController = googleMapController;
+                      controller.challengeMapControllers
+                          .add(googleMapController);
                       // mapController
                       //     .setLocationTrackingMode(NLocationTrackingMode.follow);
                       controller.addOverlayAll(
@@ -83,15 +96,8 @@ class _ActivityActiveMiniMapSectionState
                         },
                       );
 
-                      if (controller.coordinates.length >= 10) {
-                        controller.addOverlay(Polyline(
-                          polylineId: const PolylineId('path'),
-                          width: 3,
-                          color: Colors.red,
-                          points: controller.coordinates,
-                          // outlineColor: Colors.white,
-                        ));
-                      }
+                      // Enhanced path visualization
+                      _addEnhancedPathVisualization();
                     },
                   ),
                 ),
@@ -119,5 +125,38 @@ class _ActivityActiveMiniMapSectionState
         ),
       ),
     );
+  }
+
+  /// Add enhanced path visualization similar to GPS debug page
+  void _addEnhancedPathVisualization() {
+    if (controller.coordinates.length >= 2) {
+      // Main path polyline only - use default myLocation marker for user position
+      controller.addOverlay(Polyline(
+        polylineId: const PolylineId('main_path'),
+        width: 4,
+        color: Colors.blue,
+        points: controller.coordinates,
+        patterns: const [], // Solid line
+      ));
+    }
+  }
+
+  /// Update map path in real-time
+  void _updateMapPath() {
+    if (mapController != null && controller.coordinates.length >= 2) {
+      // Clear existing path overlays only (myLocation marker is handled by Google Maps)
+      controller.drawingPolylines
+          .removeWhere((polyline) => polyline.polylineId.value == 'main_path');
+
+      // Add updated path
+      _addEnhancedPathVisualization();
+
+      // Move camera to current location
+      if (controller.coordinates.isNotEmpty) {
+        mapController!.animateCamera(
+          CameraUpdate.newLatLng(controller.coordinates.last),
+        );
+      }
+    }
   }
 }
