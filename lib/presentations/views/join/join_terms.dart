@@ -138,7 +138,7 @@ class JoinTerms extends StatelessWidget {
                         );
                       }),
                       Text(
-                        '_is'.tr(),
+                        'is'.tr(),
                         style: AppTextStyleData.regular()
                             .koHeadingSemiboldMd
                             .copyWith(

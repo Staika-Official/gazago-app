@@ -23,7 +23,7 @@ class ArchiveDetail extends StatelessWidget {
       length: 2,
       initialIndex: 0,
       child: DefaultContainer(
-        titleText: LocaleKeys.exercise_record_detail.tr(),
+        titleText: 'exercise_record_detail'.tr(),
         trailingChild: InkWell(
           child: IconButton(
             onPressed: () =>
@@ -52,10 +52,10 @@ class ArchiveDetail extends StatelessWidget {
                       ),
               tabs: [
                 Tab(
-                  text: LocaleKeys.exercise_details.tr(),
+                  text: 'exercise_details'.tr(),
                 ),
                 Tab(
-                  text: LocaleKeys.rewards.tr(),
+                  text: 'rewards'.tr(),
                 ),
               ],
             ),

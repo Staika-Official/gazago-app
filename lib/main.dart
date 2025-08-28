@@ -27,6 +27,7 @@ import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'generated/codegen_loader.g.dart';
 
 import 'constants/routes.dart';
 
@@ -158,6 +159,7 @@ void main() async {
     await checkInspectionNotice();
 
     runApp(EasyLocalization(
+        assetLoader: const CodegenLoader(),
         supportedLocales: supportedLocales,
         path: 'assets/translations',
         fallbackLocale: const Locale('en', 'US'),

@@ -62,8 +62,7 @@ class _RewardTabContentState extends State<RewardTabContent> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 60.sp),
                   child: Text(
-                    LocaleKeys.no_treasure_was_collected_during_this_exercise
-                        .tr(),
+                    'no_treasure_was_collected_during_this_exercise'.tr(),
                     textAlign: TextAlign.center,
                     style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                           color: AppColorData.regular().colorTextPrimary,

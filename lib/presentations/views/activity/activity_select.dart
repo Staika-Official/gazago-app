@@ -360,7 +360,7 @@ class ActivitySelect extends StatelessWidget {
                     //                   const Padding(
                     //                     padding: EdgeInsets.only(top: 9),
                     //                     child: StyledText(
-                    //                       '_100_famous_mountains_challenge'.tr(),
+                    //                       '100_famous_mountains_challenge'.tr(),
                     //                       color: Colors.white,
                     //                       fontSize: 19,
                     //                       fontWeight: 600,
