@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:gaza_go/generated/codegen_loader.g.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/models/treasure_model.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
@@ -18,6 +19,26 @@ class RewardTabContent extends StatefulWidget {
 
 class _RewardTabContentState extends State<RewardTabContent> {
   final controller = Get.find<ArchiveController>();
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.fetchRewards(refresh: true);
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        controller.fetchRewards();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +49,10 @@ class _RewardTabContentState extends State<RewardTabContent> {
       ),
       child: Obx(
         () {
+          if (controller.rewards.isEmpty && controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
           if (controller.rewards.isEmpty) {
             return Column(
               children: [
@@ -37,7 +62,8 @@ class _RewardTabContentState extends State<RewardTabContent> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 60.sp),
                   child: Text(
-                    'no_treasure_was_collected_during_this_exercise'.tr(),
+                    LocaleKeys.no_treasure_was_collected_during_this_exercise
+                        .tr(),
                     textAlign: TextAlign.center,
                     style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                           color: AppColorData.regular().colorTextPrimary,
@@ -47,14 +73,23 @@ class _RewardTabContentState extends State<RewardTabContent> {
               ],
             );
           }
+
           return AlignedGridView.count(
+            controller: _scrollController,
             crossAxisCount: 2,
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
             physics: const BouncingScrollPhysics(),
-            itemCount: controller.rewards.length,
-            itemBuilder: (context, index) =>
-                _RewardItem(controller.rewards[index]),
+            itemCount: controller.rewards.length + 1,
+            itemBuilder: (context, index) {
+              if (index < controller.rewards.length) {
+                return _RewardItem(controller.rewards[index]);
+              } else {
+                return Obx(() => controller.isLoading.value
+                    ? const Center(child: CircularProgressIndicator())
+                    : const SizedBox.shrink());
+              }
+            },
           );
         },
       ),

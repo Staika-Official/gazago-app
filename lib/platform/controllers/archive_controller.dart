@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/request/get_exercise_reward_request_model.dart';
 import 'package:gaza_go/platform/models/treasure_model.dart';
+import 'package:gaza_go/platform/services/treasure_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -31,7 +31,12 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
   RxBool dataGetLoading = RxBool(false);
   Rx<ArchiveDetailItemModel> selectedItem = Rx(ArchiveDetailItemModel());
   RxList<LatLng> locations = RxList.empty();
-  var rewards = <TreasureModel>[].obs;
+
+  /// reward tab content fields
+  RxList<TreasureModel> rewards = <TreasureModel>[].obs;
+  var rewardPage = 1;
+  var totalPages = 1;
+  var isLoading = false.obs;
 
   @override
   void onInit() async {
@@ -200,25 +205,36 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
     locations.addAll(coordinates);
   }
 
-  /// Fetch list collected treasure of this session
-  /// TODO: call api later
-  void fetchListReward() {
-    rewards.add(
-      TreasureModel(
-        id: 1,
-        type: TreasureType.event,
-        status: TreasureStatus.claimed,
-        name: "ALOO",
-        nameEn: "ALOO",
-        amount: 100,
-        distributionMode: TreasureDistributionMode.random,
-        latitude: 1,
-        longitude: 1,
-        treasureSymbol: "TIK",
+  Future<void> fetchRewards({bool refresh = false}) async {
+    if (isLoading.value) return;
+    if (!refresh && rewardPage >= totalPages) return;
+
+    isLoading.value = true;
+
+    try {
+      if (refresh) {
+        rewardPage = 1;
+        rewards.clear();
+      }
+
+      final req = GetExerciseRewardRequestModel(
+        userId: selectedItem.value.userId ?? -1,
         userExerciseId: 1,
-        iconUrl: null,
-      ),
-    );
+        page: rewardPage,
+      );
+
+      await TreasureService.getExerciseRewards(
+        req: req,
+        successCallback: (response) {
+          rewards.addAll(response.content);
+          totalPages = response.totalPages;
+          rewardPage++;
+        },
+        errorCallback: (ErrorResponseDataModel? error) {},
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   @override

@@ -30,4 +30,16 @@ class TreasureApi {
     ).post(
         '-claim?userId=$userId&userExerciseId=$userExerciseId&userLat=$userLat&userLng=$userLng&treasureId=$treasureId');
   }
+
+  static getExerciseRewards({
+    required num userId,
+    required num userExerciseId,
+    required num page,
+    required num size,
+  }) async {
+    return await Api.client(
+      serviceUrl: ServiceUrl.treasureService,
+      showLoading: false,
+    ).get('/$userExerciseId?userId=$userId&page=$page&size=$size');
+  }
 }

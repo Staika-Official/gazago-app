@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/platform/apis/treasure.dart';
 import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/request/get_exercise_reward_request_model.dart';
 import 'package:gaza_go/platform/models/request/get_treasure_request_model.dart';
 import 'package:gaza_go/platform/models/request/pick_up_treasure_request_model.dart';
+import 'package:gaza_go/platform/models/response/get_exercise_reward_response_model.dart';
 import 'package:gaza_go/platform/models/response/get_treasure_response_model.dart';
 import 'package:gaza_go/platform/models/treasure_model.dart';
 
@@ -46,6 +48,28 @@ class TreasureService {
     } else {
       errorCallback?.call(
           res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null);
+    }
+  }
+
+  static getExerciseRewards({
+    required GetExerciseRewardRequestModel req,
+    required void Function(GetExerciseRewardResponseModel rewardResponse)
+        successCallback,
+    void Function(ErrorResponseDataModel? error)? errorCallback,
+  }) async {
+    Response res = await TreasureApi.getExerciseRewards(
+      userId: req.userId,
+      userExerciseId: req.userExerciseId,
+      page: req.page,
+      size: req.size,
+    );
+
+    if (res.statusCode == 200) {
+      successCallback(GetExerciseRewardResponseModel.fromJson(res.data));
+    } else {
+      errorCallback?.call(
+        res.data != null ? ErrorResponseDataModel.fromJson(res.data) : null,
+      );
     }
   }
 }
