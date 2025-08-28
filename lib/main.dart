@@ -160,7 +160,7 @@ void main() async {
 
     // Initialize UnifiedGPSManager early in app lifecycle
     print('🌍 Initializing Unified GPS System...');
-    await UnifiedGPSConfig.initialize();
+    UnifiedGPSConfig.initialize();
     // Initialize GPS manager and request permissions
     final gpsPermissionGranted = await GPS.checkAndRequestPermissions();
     if (gpsPermissionGranted) {

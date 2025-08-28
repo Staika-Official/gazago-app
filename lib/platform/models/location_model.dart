@@ -41,8 +41,7 @@ class LocationModel {
       latitude: locationData.latitude ?? 0.0,
       longitude: locationData.longitude ?? 0.0,
       timestamp: DateTime.fromMillisecondsSinceEpoch(
-        locationData.time?.toInt() ?? DateTime.now().millisecondsSinceEpoch
-      ),
+          locationData.time?.toInt() ?? DateTime.now().millisecondsSinceEpoch),
       accuracy: locationData.accuracy ?? 0.0,
       altitude: locationData.altitude ?? 0.0,
       speed: (locationData.speed ?? 0.0).abs(), // Ensure positive speed in m/s
@@ -65,7 +64,8 @@ class LocationModel {
 
   /// Calculate distance between two LocationModel points using Haversine formula
   static double distanceBetween(LocationModel from, LocationModel to) {
-    return _haversineDistance(from.latitude, from.longitude, to.latitude, to.longitude);
+    return _haversineDistance(
+        from.latitude, from.longitude, to.latitude, to.longitude);
   }
 
   /// Calculate speed in km/h
@@ -86,6 +86,12 @@ class LocationModel {
     return distanceBetween(this, other);
   }
 
+  /// Calculate bearing to another location in degrees
+  double bearingTo(LocationModel other) {
+    return _calculateBearing(
+        latitude, longitude, other.latitude, other.longitude);
+  }
+
   /// Check if location has good accuracy (< 20 meters)
   bool get hasGoodAccuracy => accuracy < 20.0;
 
@@ -101,7 +107,7 @@ class LocationModel {
   @override
   String toString() {
     return 'LocationModel(lat: ${latitude.toStringAsFixed(6)}, lng: ${longitude.toStringAsFixed(6)}, '
-           'acc: ${accuracy.toStringAsFixed(1)}m, speed: ${speedKmh.toStringAsFixed(1)}km/h)';
+        'acc: ${accuracy.toStringAsFixed(1)}m, speed: ${speedKmh.toStringAsFixed(1)}km/h)';
   }
 
   @override
@@ -170,19 +176,21 @@ class LocationModel {
 /// Haversine formula to calculate distance between two points on Earth
 double _haversineDistance(double lat1, double lng1, double lat2, double lng2) {
   const double earthRadiusKm = 6371.0;
-  
+
   final double dLat = _degreesToRadians(lat2 - lat1);
   final double dLng = _degreesToRadians(lng2 - lng1);
-  
+
   final double lat1Rad = _degreesToRadians(lat1);
   final double lat2Rad = _degreesToRadians(lat2);
-  
+
   final double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                   Math.sin(dLng / 2) * Math.sin(dLng / 2) * 
-                   Math.cos(lat1Rad) * Math.cos(lat2Rad);
-  
+      Math.sin(dLng / 2) *
+          Math.sin(dLng / 2) *
+          Math.cos(lat1Rad) *
+          Math.cos(lat2Rad);
+
   final double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  
+
   return earthRadiusKm * c * 1000; // Convert to meters
 }
 
@@ -190,3 +198,16 @@ double _degreesToRadians(double degrees) {
   return degrees * (Math.pi / 180);
 }
 
+/// Calculate bearing between two points
+double _calculateBearing(double lat1, double lng1, double lat2, double lng2) {
+  final lat1Rad = _degreesToRadians(lat1);
+  final lat2Rad = _degreesToRadians(lat2);
+  final deltaLng = _degreesToRadians(lng2 - lng1);
+
+  final y = Math.sin(deltaLng) * Math.cos(lat2Rad);
+  final x = Math.cos(lat1Rad) * Math.sin(lat2Rad) -
+      Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(deltaLng);
+
+  final bearing = Math.atan2(y, x);
+  return (bearing * 180 / Math.pi + 360) % 360; // Convert to degrees [0, 360)
+}

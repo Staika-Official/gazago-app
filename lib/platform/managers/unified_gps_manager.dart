@@ -86,7 +86,7 @@ class UnifiedGPSManager extends GetxController {
 
   /// Initialize GPS manager
   Future<void> _initializeManager() async {
-    await UnifiedGPSConfig.initialize();
+    UnifiedGPSConfig.initialize();
     _setupBatteryMonitoring();
     _startPerformanceMonitoring();
   }
@@ -733,7 +733,7 @@ class UnifiedGPSManager extends GetxController {
   }
 
   /// Get current configuration
-  Map<String, dynamic> get config => UnifiedGPSConfig.getAll();
+  Map<String, dynamic> get config => UnifiedGPSConfig.currentConfig;
 
   /// Get comprehensive status
   Map<String, dynamic> getStatus() {
@@ -768,7 +768,7 @@ class UnifiedGPSManager extends GetxController {
 
   /// Force refresh configuration from remote config
   Future<void> refreshConfig() async {
-    await UnifiedGPSConfig.refresh();
+    await UnifiedGPSConfig.loadFromRemoteConfig();
     _updateBatteryStatus();
   }
 
@@ -784,7 +784,7 @@ class UnifiedGPSManager extends GetxController {
 
   /// Enable/disable battery optimization
   void setBatteryOptimization(bool enabled) {
-    UnifiedGPSConfig.set('enable_battery_optimization', enabled);
+    UnifiedGPSConfig.updateConfig({'enable_battery_optimization': enabled});
 
     if (enabled) {
       _updateBatteryStatus();

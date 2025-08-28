@@ -28,7 +28,7 @@ import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/platform/helpers/map_mixin.dart';
 import 'package:gaza_go/platform/helpers/promotion_mixin.dart';
 import 'package:gaza_go/platform/managers/unified_gps_manager.dart';
-import 'package:gaza_go/platform/configs/unified_gps_config.dart';
+import 'package:gaza_go/platform/handlers/location_callback_handler.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
@@ -40,8 +40,6 @@ import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
-import 'package:gaza_go/platform/services/activity_gps_service.dart';
-import 'package:gaza_go/platform/services/treasure_geofencing_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
@@ -91,9 +89,7 @@ class ActivityController extends SuperController
 
   GlobalKey webViewKey = GlobalKey();
 
-  // GPS Services
-  late final ActivityGPSService _activityGPSService;
-  late final TreasureGeofencingService _treasureGeofencingService;
+  // GPS Services - removed unused services
 
   // final RxDouble currentSliderValue = RxDouble(0);
   // final RxInt remainDurability = RxInt(0);
@@ -236,19 +232,17 @@ class ActivityController extends SuperController
   /// Initialize GPS services for enhanced activity tracking
   void _initializeGPSServices() {
     try {
-      // Initialize ActivityGPSService
-      _activityGPSService = Get.isRegistered<ActivityGPSService>()
-          ? Get.find<ActivityGPSService>()
-          : Get.put(ActivityGPSService(), permanent: true);
+      // Initialize UnifiedGPSManager with enhanced configuration
+      UnifiedGPSManager.instance; // This will create singleton instance
 
-      // Initialize TreasureGeofencingService
-      _treasureGeofencingService = Get.isRegistered<TreasureGeofencingService>()
-          ? Get.find<TreasureGeofencingService>()
-          : Get.put(TreasureGeofencingService(), permanent: true);
+      // Load remote configuration for optimal GPS settings
+      UnifiedGPSManager.instance.refreshConfig();
 
-      print('GPS services initialized successfully');
+      print(
+          'Enhanced GPS services (UnifiedGPSManager) initialized successfully');
+      print('GPS Config: ${UnifiedGPSManager.instance.config}');
     } catch (e) {
-      print('Error initializing GPS services: $e');
+      print('Error initializing enhanced GPS services: $e');
     }
   }
 
@@ -1005,107 +999,79 @@ class ActivityController extends SuperController
 
   @override
   void initLocationStream() async {
-    late LocationSettings locationSettings;
-    print('Initializing GPS location stream with Phase 1 & 2 improvements...');
+    print(
+        'Initializing enhanced GPS location stream with UnifiedGPSManager...');
 
-    // Clear GPS filter history when starting new location stream
-    // Use UnifiedGPSManager to clear history
-    GPS.clearHistory();
+    // Clear GPS history when starting new location stream
+    UnifiedGPSManager.instance.clearHistory();
 
-    // Phase 2: Start GPS session (handled automatically by UnifiedGPSManager)
-    print('GPS session will be started by UnifiedGPSManager');
-
-    // Phase 2: Use high-performance GPS configuration for activity tracking
     try {
-      // Force high-performance activity tracking mode
-      final config = UnifiedGPSConfig.getConfigForMode('activity_tracking');
-      UnifiedGPSConfig.updateAll(config);
-
-      // Create location settings based on config
-      if (Platform.isAndroid) {
-        locationSettings = AndroidSettings(
-          accuracy: _mapLocationAccuracy(config['accuracy_quality'] ?? 1),
-          distanceFilter: (config['distance_filter'] ?? 3).toInt(),
-          forceLocationManager: true,
-          intervalDuration: Duration(
-              milliseconds: (config['update_interval'] ?? 1000).toInt()),
-          useMSLAltitude: true,
-        );
-      } else {
-        locationSettings = AppleSettings(
-          accuracy: _mapLocationAccuracy(config['accuracy_quality'] ?? 1),
-          activityType: ActivityType.fitness,
-          distanceFilter: (config['distance_filter'] ?? 3).toDouble(),
-          pauseLocationUpdatesAutomatically: false,
-          showBackgroundLocationIndicator: false,
-        );
+      // Determine activity type from selected exercise type
+      String activityType = 'walking'; // default
+      switch (selectedExerciseType.value) {
+        case ExerciseType.walking:
+          activityType = 'walking';
+          break;
+        case ExerciseType.hiking:
+          activityType = 'hiking'; // Use hiking config
+          break;
+        case ExerciseType.famous:
+          activityType = 'walking'; // Use walking config for famous mountain
+          break;
+        default:
+          activityType = 'walking';
       }
-      print('Using UnifiedGPSManager battery-aware GPS settings');
-      // Battery optimization is handled automatically by UnifiedGPSManager
-    } catch (e) {
-      print('Battery-aware GPS failed, using fallback settings: $e');
-      // Fallback to Phase 1 settings if battery-aware fails
-      if (Platform.isAndroid) {
-        locationSettings = AndroidSettings(
-            accuracy: _mapLocationAccuracy(locationAccuracyQuality),
-            distanceFilter: gpsDistanceFilterMeters.toInt(),
-            forceLocationManager: true,
-            intervalDuration:
-                Duration(seconds: gpsUpdateIntervalSeconds.toInt()),
-            useMSLAltitude: true,
-            //(Optional) Set foreground notification config to keep the app alive
-            //when going to the background
-            foregroundNotificationConfig: ForegroundNotificationConfig(
-              notificationText: 'measuring_exercise_record'.tr(),
-              notificationTitle: 'recording_location'.tr(),
-              enableWakeLock: true,
-            ));
-      } else if (Platform.isIOS) {
-        locationSettings = AppleSettings(
-          accuracy: _mapLocationAccuracy(locationAccuracyQuality),
-          activityType: ActivityType.fitness,
-          distanceFilter: gpsDistanceFilterMeters.toInt(),
-          pauseLocationUpdatesAutomatically: false,
-          // Only set to true if our app will be started up in the background.
-          showBackgroundLocationIndicator: false,
-        );
-      }
-    }
 
-    locationSubscription ??=
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .map((pos) => LocationModel.fromPosition(pos))
-            .listen((LocationModel locationModel) async {
-      // Apply GPS filtering using UnifiedGPSManager
-      LocationModel? filteredLocationModel;
+      print('Starting enhanced GPS tracking for activity: $activityType');
 
-      // Use UnifiedGPSManager to handle position filtering
-      final filteredLocationResult = GPS.instance.filterLocation(locationModel);
+      // Set activity-specific configuration for maximum accuracy
+      await UnifiedGPSManager.instance.setActivityType(activityType);
 
-      if (filteredLocationResult == null) {
+      // Force maximum accuracy mode
+      UnifiedGPSManager.instance.gpsMode.value = 'high_accuracy';
+
+      // Start GPS tracking using UnifiedGPSManager
+      final success = await UnifiedGPSManager.instance
+          .startTracking(activityType: activityType);
+
+      if (!success) {
         print(
-            'GPS position filtered out by UnifiedGPSManager - accuracy: ${locationModel.accuracy}m');
-        // Metrics are handled automatically by UnifiedGPSManager
-        // Fallback using current position
-        try {
-          await _handleGPSFallback(await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.best));
-        } catch (e) {
-          print('Fallback failed: $e');
-        }
+            'Failed to start enhanced GPS tracking, falling back to manual stream');
+        _startFallbackLocationStream();
         return;
-      } else {
-        filteredLocationModel = filteredLocationResult;
       }
 
+      print('Enhanced GPS tracking started successfully');
+
+      // Subscribe to UnifiedGPSManager location stream
+      locationSubscription = UnifiedGPSManager.instance.locationStream.listen(
+          (LocationModel locationModel) async {
+        print('Received enhanced GPS location: ${locationModel.toString()}');
+
+        // Location is already filtered by UnifiedGPSManager with enhanced algorithm
+        // Process the location directly
+        await _processStravaLikeLocation(locationModel);
+      }, onError: (error) {
+        print('Enhanced GPS stream error: $error');
+        _handleGPSError(error);
+      });
+    } catch (e) {
+      print('Failed to initialize enhanced GPS tracking: $e');
+      _startFallbackLocationStream();
+    }
+  }
+
+  /// Process location from Strava-like GPS tracking
+  Future<void> _processStravaLikeLocation(LocationModel locationModel) async {
+    try {
       // Use filtered location model for all subsequent operations
-      currentLocation.value = filteredLocationModel;
-      gpsAccuracySensitive.value = filteredLocationModel.accuracy;
+      currentLocation.value = locationModel;
+      gpsAccuracySensitive.value = locationModel.accuracy;
       isFakeGps.value = false;
 
       print(
-          'GPS position updated - accuracy: ${filteredLocationModel.accuracy}m');
-      print('Filtered position: ${filteredLocationModel.toString()}');
+          'Strava-like GPS position updated - accuracy: ${locationModel.accuracy}m');
+      print('Filtered position: ${locationModel.toString()}');
 
       detectFakeGps();
 
@@ -1116,11 +1082,14 @@ class ActivityController extends SuperController
 
         var logForm = {
           'positionRawDataInfo': '===================================='
-              '\nOriginal - Lat/Lng: ${locationModel.latitude},${locationModel.longitude}, Accuracy: ${locationModel.accuracy}'
-              '\nFiltered - Lat/Lng: ${filteredLocationModel.latitude},${filteredLocationModel.longitude}, Accuracy: ${filteredLocationModel.accuracy}'
+              '\nEnhanced GPS - Lat/Lng: ${locationModel.latitude},${locationModel.longitude}, Accuracy: ${locationModel.accuracy}'
               '\nSteps: ${exerciseSteps.value}'
               '\nLocationUpdateTime: ${DateTime.now()}'
-              '\nGPS Status: ${GPS.getStatus()}'
+              '\nGPS Status: ${UnifiedGPSManager.instance.getStatus()}'
+              '\nGPS Performance Grade: ${UnifiedGPSManager.instance.performanceGrade.value}'
+              '\nGPS Mode: ${UnifiedGPSManager.instance.gpsMode.value}'
+              '\nTotal Distance: ${UnifiedGPSManager.instance.totalDistance.value.toStringAsFixed(1)}m'
+              '\nCurrent Speed: ${UnifiedGPSManager.instance.currentSpeed.value.toStringAsFixed(1)}km/h'
         };
         positionRawData.add(logForm);
         HiveStore.savePositionRawData(value: positionRawData);
@@ -1131,162 +1100,206 @@ class ActivityController extends SuperController
       }
 
       if (exerciseState.value == ExerciseState.ongoing &&
-          filteredLocationModel.accuracy < gpsAccuracy) {
+          locationModel.accuracy < gpsAccuracy) {
         exerciseData.add(UserExerciseModel(
-          altitude: filteredLocationModel.altitude,
-          speed: convertMStoKMH(filteredLocationModel.speed),
-          steps: exerciseSteps.value,
-          locationUpdateTime: DateTime.now(),
+          altitude: locationModel.altitude,
+          lastLatitude: locationModel.latitude,
+          lastLongitude: locationModel.longitude,
+          speed: locationModel.speed,
+          time: 0, // Time will be managed by ActivityMixin
+          locationUpdateTime: locationModel.timestamp,
         ));
 
-        coordinates.add(LatLng(
-            filteredLocationModel.latitude, filteredLocationModel.longitude));
-        if (coordinates.isNotEmpty && coordinates.length > 1) {
-          // Phase 2: Enhanced filterCoordinates with time validation
-          DateTime currentTime = DateTime.now();
-          filterCoordinates(
-              coordinates[coordinates.length - 2], // Previous position
-              LatLng(filteredLocationModel.latitude,
-                  filteredLocationModel.longitude),
-              userState.value.exercise!.id!,
-              lastTime: lastPositionTime,
-              currentTime: currentTime);
+        await processLocationUpdate(locationModel);
+      }
+    } catch (e) {
+      print('Error processing Strava-like location: $e');
+    }
+  }
 
-          // Update last position time for next iteration
-          lastPositionTime = currentTime;
-          exerciseDistance.value = exerciseDistance.value +
-              Geolocator.distanceBetween(
-                  coordinates[coordinates.length - 2].latitude,
-                  coordinates[coordinates.length - 2].longitude,
-                  coordinates.last.latitude,
-                  coordinates.last.longitude);
-        }
+  /// Fallback location stream for when Strava-like GPS fails
+  void _startFallbackLocationStream() async {
+    print('Starting fallback location stream...');
+    // Original geolocator stream implementation as fallback
+    late LocationSettings locationSettings;
 
-        if (coordinates.length >= 10) {
-          addOverlay(Polyline(
-            polylineId: const PolylineId('path'),
-            width: 3,
-            color: Colors.red,
-            points: coordinates,
-            // outlineColor: Colors.white,
+    if (Platform.isAndroid) {
+      locationSettings = AndroidSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 3,
+          forceLocationManager: true,
+          intervalDuration: Duration(milliseconds: 3000),
+          useMSLAltitude: true,
+          foregroundNotificationConfig: ForegroundNotificationConfig(
+            notificationText: 'measuring_exercise_record'.tr(),
+            notificationTitle: 'recording_location'.tr(),
+            enableWakeLock: true,
           ));
+    } else if (Platform.isIOS) {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.high,
+        activityType: ActivityType.fitness,
+        distanceFilter: 3,
+        pauseLocationUpdatesAutomatically: false,
+        showBackgroundLocationIndicator: false,
+      );
+    }
+
+    locationSubscription ??=
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .map((pos) => LocationModel.fromPosition(pos))
+            .listen((LocationModel locationModel) async {
+      await _processStravaLikeLocation(locationModel);
+    });
+  }
+
+  /// Handle GPS error
+  void _handleGPSError(dynamic error) async {
+    print('GPS error occurred: $error');
+    try {
+      await _handleGPSFallback(await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best));
+    } catch (e) {
+      print('Fallback failed: $e');
+    }
+  }
+
+  /// Process location update (handles coordinate tracking, distance calculation, etc.)
+  Future<void> processLocationUpdate(LocationModel locationModel) async {
+    try {
+      // Add coordinates for path tracking
+      coordinates.add(LatLng(locationModel.latitude, locationModel.longitude));
+
+      if (coordinates.isNotEmpty && coordinates.length > 1) {
+        // Enhanced filterCoordinates with time validation
+        DateTime currentTime = DateTime.now();
+        filterCoordinates(
+            coordinates[coordinates.length - 2], // Previous position
+            LatLng(locationModel.latitude, locationModel.longitude),
+            userState.value.exercise!.id!,
+            lastTime: lastPositionTime,
+            currentTime: currentTime);
+
+        // Update last position time for next iteration
+        lastPositionTime = currentTime;
+        exerciseDistance.value = exerciseDistance.value +
+            Geolocator.distanceBetween(
+                coordinates[coordinates.length - 2].latitude,
+                coordinates[coordinates.length - 2].longitude,
+                coordinates.last.latitude,
+                coordinates.last.longitude);
+      }
+
+      if (coordinates.length >= 10) {
+        addOverlay(Polyline(
+          polylineId: const PolylineId('path'),
+          width: 3,
+          color: Colors.red,
+          points: coordinates,
+        ));
+      }
+
+      // Convert LocationModel to Position for treasure comparison
+      Position positionForTreasure = Position(
+        latitude: locationModel.latitude,
+        longitude: locationModel.longitude,
+        timestamp: locationModel.timestamp,
+        accuracy: locationModel.accuracy,
+        altitude: locationModel.altitude,
+        heading: 0.0,
+        speed: locationModel.speed,
+        speedAccuracy: 0.0,
+        altitudeAccuracy: 0.0,
+        headingAccuracy: 0.0,
+      );
+
+      await _compareDistanceWithNearestTreasure(positionForTreasure);
+
+      // Challenge zone detection logic
+      if (_isRequestingChallenges) return; // Prevent concurrent requests
+      _isRequestingChallenges = true;
+
+      try {
+        DateTime now = DateTime.now();
+
+        print('Get.currentRoute : ${Get.currentRoute}');
+        if (Get.currentRoute == '/laboratory/detect_challenge_course') {
+          LatLng target = LatLng(
+            currentLocation.value?.latitude ?? 0,
+            currentLocation.value?.longitude ?? 0,
+          );
+
+          googleMapController?.animateCamera(
+            CameraUpdate.newLatLngZoom(target, 16),
+          );
         }
 
-        // Convert LocationModel to Position for treasure comparison
-        Position positionForTreasure = Position(
-          latitude: filteredLocationModel.latitude,
-          longitude: filteredLocationModel.longitude,
-          timestamp: filteredLocationModel.timestamp,
-          accuracy: filteredLocationModel.accuracy,
-          altitude: filteredLocationModel.altitude,
-          heading: 0.0,
-          speed: filteredLocationModel.speed,
-          speedAccuracy: 0.0,
-          altitudeAccuracy: 0.0,
-          headingAccuracy: 0.0,
-        );
-        await _compareDistanceWithNearestTreasure(positionForTreasure);
-      } else {
-        // HiveStore.save(key: HiveKey.accessToken.name, value: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJramg0MzU3IiwiYXV0aCI6IlJPTEVfQURNSU4sUk9MRV9MT0NBVElPTixST0xFX0xPQ0FUSU9OX1NVUEVSVklTT1IiLCJleHAiOjE3MTg3ODYwNzksInVzZXJJZCI6IjI1NSJ9.rNf30NedosrnS4iPLLgEFR2RCNQSCLsytDqXsM4jLkJB_wKwhC-LQ0PVYnr3gzrDcT031n7cBBWyheYv_Ml9rA');
-        // 첼린지 존 찾기(30초마다 요청)
+        double prevPositionLat = nearChallengeLocation.value != null
+            ? double.tryParse(
+                    nearChallengeLocation.value!.startLat.toString()) ??
+                locationModel.latitude
+            : locationModel.latitude;
+        double prevPositionLng = nearChallengeLocation.value != null
+            ? double.tryParse(
+                    nearChallengeLocation.value!.startLon.toString()) ??
+                locationModel.longitude
+            : locationModel.longitude;
 
-        if (_isRequestingChallenges) return; // Prevent concurrent requests
-        _isRequestingChallenges = true;
-        try {
-          DateTime now = DateTime.now();
+        betweenDistance.value = calculateDistance(prevPositionLat,
+            prevPositionLng, locationModel.latitude, locationModel.longitude);
 
-          // List<String>? prevPosition = HiveStore.load(key: HiveKey.currentPosition.name) != null ? HiveStore.load(key: HiveKey.currentPosition.name).split(',') : null;
+        gpsSpeed.value = convertMStoKMH(locationModel.speed);
 
-          // final cameraUpdate = NCameraUpdate.scrollAndZoomTo(target: LatLng(currentLocation.value.latitude, currentLocation.value.longitude));
+        print('posLat : $prevPositionLat, posLng : $prevPositionLng');
+        print('gpsSpeed : ${gpsSpeed.value}');
+        print('betweenDistance : ${betweenDistance.value}');
+        print('title : ${nearChallengeLocation.value?.firstName}');
+        print('title : ${nearChallengeLocation.value?.endPointName}');
+        print('dis : ${betweenDistance.value}');
+        print(
+            'nearChallengeLocation.value : ${nearChallengeLocation.value?.startLat ?? 'N/A'}');
 
-          print('Get.currentRoute : ${Get.currentRoute}');
-          if (Get.currentRoute == '/laboratory/detect_challenge_course') {
-            LatLng target = LatLng(
-              currentLocation.value?.latitude ?? 0,
-              currentLocation.value?.longitude ?? 0,
-            );
-
-            googleMapController?.animateCamera(
-              CameraUpdate.newLatLngZoom(target, 16),
-            );
-          }
-
-          double prevPositionLat = nearChallengeLocation.value != null
-              ? double.tryParse(
-                      nearChallengeLocation.value!.startLat.toString()) ??
-                  filteredLocationModel.latitude
-              : filteredLocationModel.latitude;
-          double prevPositionLng = nearChallengeLocation.value != null
-              ? double.tryParse(
-                      nearChallengeLocation.value!.startLon.toString()) ??
-                  filteredLocationModel.longitude
-              : filteredLocationModel.longitude;
-
-          betweenDistance.value = calculateDistance(
-              prevPositionLat,
-              prevPositionLng,
-              filteredLocationModel.latitude,
-              filteredLocationModel.longitude);
-
-          gpsSpeed.value = convertMStoKMH(filteredLocationModel.speed);
-          // gpsSpeed.value = betweenDistance.value * 3.6 / 1000;
-          // gpsSpeed.value = calculateDistance( prevL ?? position.latitude, prevG ?? position.longitude, position.latitude, position.longitude);
-          // gpsSpeed.value = position.speed;
-
-          print('posLat : $prevPositionLat, posLng : $prevPositionLng');
-          print('gpsSpeed : ${gpsSpeed.value}');
-          print('betweenDistance : ${betweenDistance.value}');
-          // print('positionspeed : ${position.speed}');
-          // print('realtime speed : ${betweenDistance.value * 3.6 / 1000}');
-          print('title : ${nearChallengeLocation.value?.firstName}');
-          print('title : ${nearChallengeLocation.value?.endPointName}');
-          print('dis : ${betweenDistance.value}');
-          // avoid null-assert here; nearChallengeLocation may be null in edge cases
-          print(
-              'nearChallengeLocation.value : ${nearChallengeLocation.value?.startLat ?? 'N/A'}');
-
-          // 주기적으로 가장 가까운 챌린지 코스 지점 5분마다 재조회
-          if (calcNearCourseTime.value
-              .add(Duration(seconds: 300))
-              .isBefore(now)) {
-            calculateNearByHierarchyCourse(filteredLocationModel.latitude,
-                filteredLocationModel.longitude);
-          }
-
-          if (betweenDistance.value < 1000) {
-            detectDelay.value = 30;
-          } else if (betweenDistance.value < 3000) {
-            detectDelay.value = 60;
-          } else if (betweenDistance.value < 5000) {
-            detectDelay.value = 300;
-          } else {
-            detectDelay.value = 600;
-          }
-          print('detectDelay : ${detectDelay}');
-
-          // print('detectDelay.value : ${detectDelay.value}');
-          if (receiveLocationTime.value
-              .add(Duration(seconds: detectDelay.value))
-              .isBefore(now)) {
-            if (gpsSpeed.value < 12 && betweenDistance.value < 1000) {
-              await findCourses();
-            }
-            receiveLocationTime.value = now;
-          }
-          print('detectDelay : ${detectDelay}');
-        } finally {
-          _isRequestingChallenges = false;
+        // 주기적으로 가장 가까운 챌린지 코스 지점 5분마다 재조회
+        if (calcNearCourseTime.value
+            .add(Duration(seconds: 300))
+            .isBefore(now)) {
+          calculateNearByHierarchyCourse(
+              locationModel.latitude, locationModel.longitude);
         }
+
+        if (betweenDistance.value < 1000) {
+          detectDelay.value = 30;
+        } else if (betweenDistance.value < 3000) {
+          detectDelay.value = 60;
+        } else if (betweenDistance.value < 5000) {
+          detectDelay.value = 300;
+        } else {
+          detectDelay.value = 600;
+        }
+        print('detectDelay : ${detectDelay}');
+
+        if (receiveLocationTime.value
+            .add(Duration(seconds: detectDelay.value))
+            .isBefore(now)) {
+          if (gpsSpeed.value < 12 && betweenDistance.value < 1000) {
+            await findCourses();
+          }
+          receiveLocationTime.value = now;
+        }
+      } finally {
+        _isRequestingChallenges = false;
       }
 
       HiveStore.save(
           key: HiveKey.currentPosition.name,
-          value:
-              '${filteredLocationModel.latitude},${filteredLocationModel.longitude}');
+          value: '${locationModel.latitude},${locationModel.longitude}');
+
       locationThr.throttle(() {
-        detectChallengeZone(filteredLocationModel);
+        detectChallengeZone(locationModel);
       });
-    }, onError: (e) {});
+    } catch (e) {
+      print('Error processing location update: $e');
+    }
   }
 
   void calculateNearByHierarchyCourse(currentLat, currentLon) {
@@ -1427,21 +1440,37 @@ class ActivityController extends SuperController
   Future<void> getCurrentLocation() async {
     try {
       print('Getting current location with UnifiedGPSManager...');
+
+      // First try to get current location from UnifiedGPSManager if available
+      if (UnifiedGPSManager.instance.currentLocation.value != null) {
+        currentLocation.value =
+            UnifiedGPSManager.instance.currentLocation.value;
+        print(
+            'Using cached location from UnifiedGPSManager: ${currentLocation.value}');
+        return;
+      }
+
+      // Fallback to geolocator with enhanced accuracy
       Position location = await Geolocator.getCurrentPosition(
-        desiredAccuracy: _mapLocationAccuracy(locationAccuracyQuality),
-        timeLimit: const Duration(seconds: 10),
+        desiredAccuracy:
+            LocationAccuracy.bestForNavigation, // Use highest accuracy
+        timeLimit:
+            const Duration(seconds: 15), // Longer timeout for better accuracy
       );
 
+      // Convert using enhanced LocationCallbackHandler
+      final locationModel =
+          LocationCallbackHandler.convertToLocationModel(location);
+
       // Apply GPS filtering using UnifiedGPSManager
-      LocationModel? filteredLocationModel;
-      final locationModel = LocationModel.fromPosition(location);
-      filteredLocationModel = GPS.instance.filterLocation(locationModel);
+      LocationModel? filteredLocationModel =
+          UnifiedGPSManager.instance.filterLocation(locationModel);
 
       if (filteredLocationModel == null) {
         print(
             'Initial location filtered out by UnifiedGPSManager - accuracy: ${location.accuracy}m, retrying...');
         // Retry once if filtered out
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 3));
         location = await Geolocator.getCurrentPosition(
           desiredAccuracy: _mapLocationAccuracy(locationAccuracyQuality),
           timeLimit: const Duration(seconds: 10),
@@ -1858,6 +1887,11 @@ class ActivityController extends SuperController
 
   @override
   void onDetached() {
+    // Stop enhanced GPS tracking
+    if (UnifiedGPSManager.instance.isActive.value) {
+      UnifiedGPSManager.instance.stopTracking();
+    }
+
     updateTimer?.cancel();
     updateTimer = null;
     exerciseTimer?.cancel();
@@ -1873,6 +1907,9 @@ class ActivityController extends SuperController
     // adTimer?.cancel();
     // adTimer = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+
+    print(
+        'ActivityController cleanup completed - Enhanced GPS tracking stopped');
   }
 
   @override

@@ -19,7 +19,7 @@ class LocationCallbackHandler {
       'accuracy': position.accuracy,
       'altitude': position.altitude,
       'speed': position.speed,
-      'time': position.timestamp?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch,
+      'time': position.timestamp.millisecondsSinceEpoch,
       'heading': position.heading,
     };
     send?.send(map);
@@ -37,21 +37,71 @@ class LocationCallbackHandler {
     print('*** Background location service disposed ***');
   }
 
-  /// Convert map or Position-like object to LocationModel
-  static LocationModel convertToLocationModel(dynamic data) {
-    if (data is Position) {
-      return LocationModel.fromPosition(data);
+  /// Convert Position or map to LocationModel with data sanitization
+  static LocationModel convertToLocationModel(dynamic position) {
+    if (position is Position) {
+      // Direct Position object
+      final timestamp = position.timestamp;
+      final accuracy = _sanitizeAccuracy(position.accuracy);
+      final speed = _sanitizeSpeed(position.speed);
+      final altitude = _sanitizeAltitude(position.altitude);
+      final bearing = _sanitizeBearing(position.heading);
+
+      return LocationModel(
+        latitude: position.latitude,
+        longitude: position.longitude,
+        timestamp: timestamp,
+        accuracy: accuracy,
+        altitude: altitude,
+        speed: speed,
+        bearing: bearing,
+      );
     }
-    // Expecting a Map sent from isolate
-    final map = data as Map<dynamic, dynamic>;
+
+    // Map from isolate communication
+    final map = position as Map<dynamic, dynamic>;
+    final timestamp = DateTime.fromMillisecondsSinceEpoch(
+        (map['time'] ?? DateTime.now().millisecondsSinceEpoch).toInt());
+    final accuracy = _sanitizeAccuracy(map['accuracy']);
+    final speed = _sanitizeSpeed(map['speed']);
+    final altitude = _sanitizeAltitude(map['altitude']);
+    final bearing = _sanitizeBearing(map['heading']);
+
     return LocationModel(
       latitude: (map['latitude'] ?? 0.0).toDouble(),
       longitude: (map['longitude'] ?? 0.0).toDouble(),
-      accuracy: (map['accuracy'] ?? 0.0).toDouble(),
-      altitude: (map['altitude'] ?? 0.0).toDouble(),
-      speed: (map['speed'] ?? 0.0).toDouble(),
-      timestamp: DateTime.fromMillisecondsSinceEpoch((map['time'] ?? DateTime.now().millisecondsSinceEpoch).toInt()),
-      bearing: (map['heading'] != null) ? (map['heading'] as num).toDouble() : null,
+      timestamp: timestamp,
+      accuracy: accuracy,
+      altitude: altitude,
+      speed: speed,
+      bearing: bearing,
     );
+  }
+
+  /// Sanitize accuracy value
+  static double _sanitizeAccuracy(dynamic a) {
+    final v = (a is num) ? a.toDouble() : double.nan;
+    if (v.isNaN || !v.isFinite || v <= 0) return 9999.0; // Very poor accuracy
+    return v;
+  }
+
+  /// Sanitize speed value (ensure >= 0)
+  static double _sanitizeSpeed(dynamic s) {
+    final v = (s is num) ? s.toDouble() : 0.0;
+    if (!v.isFinite || v < 0) return 0.0;
+    return v;
+  }
+
+  /// Sanitize altitude value
+  static double _sanitizeAltitude(dynamic a) {
+    final v = (a is num) ? a.toDouble() : 0.0;
+    return v.isFinite ? v : 0.0;
+  }
+
+  /// Sanitize bearing value (0-360 degrees or null)
+  static double? _sanitizeBearing(dynamic h) {
+    final v = (h is num) ? h.toDouble() : double.nan;
+    if (v.isNaN || !v.isFinite || v < 0) return null;
+    return v % 360.0;
   }
 }

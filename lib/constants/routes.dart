@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gaza_go/flavors.dart';
 import 'package:gaza_go/platform/controllers/loading_controller.dart';
-import 'package:gaza_go/platform/controllers/referral_controller.dart';
 import 'package:gaza_go/platform/middleware/router_middleware.dart';
 import 'package:gaza_go/presentations/components/in_app_modal_webview.dart';
 import 'package:gaza_go/presentations/views/activity/activity_active.dart';
@@ -27,7 +26,6 @@ import 'package:gaza_go/presentations/views/debugging/position_raw_data_logs.dar
 import 'package:gaza_go/presentations/views/debugging/request_info.dart';
 import 'package:gaza_go/presentations/views/debugging/response_error_logs.dart';
 import 'package:gaza_go/presentations/views/debugging/user_exercise_data_logs.dart';
-import 'package:gaza_go/presentations/views/gps_debug_page.dart';
 import 'package:gaza_go/presentations/views/home.dart';
 import 'package:gaza_go/presentations/views/inventory/index.dart';
 import 'package:gaza_go/presentations/views/inventory/inventory_badge_detail.dart';
@@ -277,7 +275,6 @@ class Routes {
         name: Routes.collectionRewardDetail,
         page: const CollectionRewardDetail()),
     stepPage(name: Routes.referral, page: const ReferralPage()),
-    stepPage(name: Routes.gpsDebug, page: const GPSDebugPage()),
   ];
 }
 
