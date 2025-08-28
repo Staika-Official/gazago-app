@@ -388,7 +388,7 @@ class UnifiedGPSManager extends GetxController {
     }
   }
 
-  /// Apply comprehensive location filtering using unified config - Optimized for initial stability
+  /// Apply comprehensive location filtering using unified config - Enhanced with stationary gating
   LocationModel? _applyLocationFiltering(LocationModel location) {
     try {
       // 1. Accuracy filter - More lenient for initial positions
@@ -402,15 +402,43 @@ class UnifiedGPSManager extends GetxController {
         return null;
       }
 
-      // 2. Speed validation (check for teleportation) - More lenient initially
+      // 2. Distance gating based on accuracy - CRITICAL for stationary filtering
       if (_lastValidLocation != null) {
         final distance = location.distanceTo(_lastValidLocation!);
+
+        // Calculate dynamic minimum distance based on accuracy
+        final minDistanceFixed = UnifiedGPSConfig.minDistanceFixed;
+        final accuracyFactor = UnifiedGPSConfig.minDistanceAccuracyFactor;
+        final dynamicMinDistance = math.max(
+            minDistanceFixed,
+            location.accuracy * accuracyFactor +
+                _lastValidLocation!.accuracy * accuracyFactor);
+
+        // Apply distance gating
+        if (distance < dynamicMinDistance) {
+          return null; // Filter out small movements that are likely noise
+        }
+
+        // 3. Enhanced stationary detection
+        if (UnifiedGPSConfig.stationaryDetectionEnabled &&
+            _isLocationStationary(location, distance)) {
+          return null;
+        }
+
+        // 4. Jump detection based on distance and time
         final timeInterval =
             location.timeDifferenceInSeconds(_lastValidLocation!);
-
-        if (timeInterval > 0) {
+        if (timeInterval > 0 && UnifiedGPSConfig.jumpDetectionEnabled) {
           final speed = (distance / timeInterval) * 3.6; // Convert to km/h
 
+          // Check for jumps within time window
+          if (timeInterval <=
+                  UnifiedGPSConfig.get<double>('jump_detection_time') &&
+              distance > UnifiedGPSConfig.maxJumpDistance) {
+            return null; // Filter out GPS jumps
+          }
+
+          // 5. Speed validation (check for teleportation) - More lenient initially
           double speedThreshold = UnifiedGPSConfig.speedThreshold;
           if (locationHistory.length < 3) {
             // Allow higher speeds initially to prevent filtering out valid positions
@@ -423,7 +451,7 @@ class UnifiedGPSManager extends GetxController {
         }
       }
 
-      // 3. Time interval filter - Reduced for initial positions
+      // 6. Time interval filter - Reduced for initial positions
       if (_lastValidLocation != null) {
         final timeSinceLastUpdate =
             location.timeDifferenceInSeconds(_lastValidLocation!);
@@ -439,7 +467,7 @@ class UnifiedGPSManager extends GetxController {
         }
       }
 
-      // 4. Apply smoothing if enabled - Skip smoothing for first few positions
+      // 7. Apply smoothing if enabled - Skip smoothing for first few positions
       if (UnifiedGPSConfig.smoothingWindow > 1 && locationHistory.length > 3) {
         return _applySmoothingFilter(location);
       }
@@ -450,43 +478,77 @@ class UnifiedGPSManager extends GetxController {
     }
   }
 
+  /// Enhanced stationary detection with multiple criteria
+  bool _isLocationStationary(LocationModel location, double distance) {
+    try {
+      // Check speed threshold
+      if (location.speed >= 0 &&
+          location.speed < UnifiedGPSConfig.stationarySpeedThreshold) {
+        // Check distance threshold
+        if (distance < UnifiedGPSConfig.stationaryDistanceThreshold) {
+          // Check if accuracy is poor when stationary (indicates multipath)
+          if (location.accuracy >
+              UnifiedGPSConfig.stationaryAccuracyThreshold) {
+            return true; // Filter out poor accuracy when stationary
+          }
+
+          // For aggressive filtering, filter even good accuracy when truly stationary
+          if (UnifiedGPSConfig.get<bool>('stationary_filter_aggressive') &&
+              location.speed <
+                  UnifiedGPSConfig.stationarySpeedThreshold * 0.5) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /// Public method for filtering locations (for backward compatibility)
   LocationModel? filterLocation(LocationModel location) {
     return _applyLocationFiltering(location);
   }
 
-  /// Apply smoothing filter using weighted average - Optimized for path accuracy
+  /// Apply smoothing filter using weighted average - Uses config weights
   LocationModel _applySmoothingFilter(LocationModel newLocation) {
     final window =
         math.min<int>(UnifiedGPSConfig.smoothingWindow, locationHistory.length);
     if (window < 2) return newLocation;
 
-    // Reduced smoothing for better path accuracy - prioritize new location
+    // Get smoothing weights from config
+    final newWeight = UnifiedGPSConfig.smoothing_weight_new;
+    final historyWeight = UnifiedGPSConfig.smoothing_weight_history;
+
     double totalWeight = 0;
     double weightedLat = 0;
     double weightedLng = 0;
 
-    // Include recent history with reduced influence
+    // Include recent history with proper recency weighting
     final recentLocations = locationHistory.take(window).toList();
 
     for (int i = 0; i < recentLocations.length; i++) {
       final loc = recentLocations[i];
 
-      // Reduced weight for historical points to minimize over-smoothing
+      // Accuracy weight based on inverse of accuracy
       double accuracyWeight = 1.0 / (loc.accuracy + 1.0);
-      double recencyWeight = (i + 1).toDouble() / recentLocations.length;
 
-      // Reduce historical influence by 50% to preserve path accuracy
-      double finalWeight = (accuracyWeight * recencyWeight) * 0.5;
+      // Fix recency weight: most recent (i=0) should have highest weight
+      double recencyWeight =
+          (recentLocations.length - i).toDouble() / recentLocations.length;
+
+      // Apply history weight from config
+      double finalWeight = (accuracyWeight * recencyWeight) * historyWeight;
 
       weightedLat += loc.latitude * finalWeight;
       weightedLng += loc.longitude * finalWeight;
       totalWeight += finalWeight;
     }
 
-    // Give new location much higher weight to preserve real-time accuracy
-    double newLocationWeight =
-        1.0 / (newLocation.accuracy + 1.0) * 4.0; // Increased from 2.0
+    // Apply new location weight from config
+    double newLocationWeight = (1.0 / (newLocation.accuracy + 1.0)) * newWeight;
     weightedLat += newLocation.latitude * newLocationWeight;
     weightedLng += newLocation.longitude * newLocationWeight;
     totalWeight += newLocationWeight;
@@ -541,15 +603,22 @@ class UnifiedGPSManager extends GetxController {
     }
   }
 
-  /// Update speed and distance calculations
+  /// Update speed and distance calculations with accuracy-based gating
   void _updateSpeedAndDistance(LocationModel location) {
     if (locationHistory.length >= 2) {
       final previousLocation = locationHistory[1];
       final distance = location.distanceTo(previousLocation);
 
-      // Only add significant movements to total distance
-      if (distance > 1.0) {
-        // More than 1 meter
+      // Calculate dynamic minimum distance based on accuracy (same logic as filtering)
+      final minDistanceFixed = UnifiedGPSConfig.minDistanceFixed;
+      final accuracyFactor = UnifiedGPSConfig.minDistanceAccuracyFactor;
+      final dynamicMinDistance = math.max(
+          minDistanceFixed,
+          location.accuracy * accuracyFactor +
+              previousLocation.accuracy * accuracyFactor);
+
+      // Only add distance when movement exceeds accuracy-based threshold
+      if (distance > dynamicMinDistance) {
         totalDistance.value += distance;
       }
     }

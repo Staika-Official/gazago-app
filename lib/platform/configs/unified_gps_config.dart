@@ -29,7 +29,7 @@ class UnifiedGPSConfig {
 
     // === FILTERING & SMOOTHING - URBAN MULTIPATH RESISTANT ===
     'enable_filtering': true, // Enable advanced filtering
-    'max_history_size': 15, // Keep recent history for better filtering
+    'max_history_size': 25, // Increased for better smoothing/kalman context
     'smoothing_window': 2, // MINIMAL smoothing to preserve path accuracy
     'outlier_threshold': 1.8, // STRICTER outlier detection
     'smoothing_weight_new': 0.8, // Reduced weight for new location (80%)
@@ -61,7 +61,7 @@ class UnifiedGPSConfig {
     // === ENHANCED DISTANCE FILTERING - URBAN OPTIMIZED ===
     'min_distance_fixed': 5.0, // Fixed minimum distance - wider for urban noise
     'min_distance_accuracy_factor':
-        0.4, // Reduced factor for urban multipath tolerance
+        0.55, // Balanced factor for urban multipath and stationary noise filtering
 
     // === BACKGROUND TRACKING - FUSED PROVIDER ENABLED ===
     'enable_background_tracking': true,
@@ -366,6 +366,7 @@ class UnifiedGPSConfig {
     switch (mode.toLowerCase()) {
       case 'high_accuracy':
       case 'maximum':
+      case 'high_performance':
         // Urban walking optimized maximum accuracy mode
         baseConfig.addAll({
           'accuracy_threshold': 12.0, // Urban-friendly accuracy threshold
@@ -382,15 +383,32 @@ class UnifiedGPSConfig {
         break;
 
       case 'background':
-        // Background mode - still high accuracy but slightly more conservative
+        // Background mode - relaxed for stability when running in background
         baseConfig.addAll({
-          'accuracy_threshold': 15.0, // Accept 15m accuracy
-          'distance_filter': 3, // 3m distance filter
-          'update_interval': 3000, // 3 second updates
-          'min_time_interval': 2.0, // 2 second minimum interval
-          'smoothing_window': 3, // Light smoothing
-          'max_jump_distance': 25.0, // Moderate jump detection
-          'stationary_accuracy_threshold': 10.0, // Moderate when stationary
+          'accuracy_threshold': 18.0, // More lenient for background
+          'distance_filter': 9, // Wider filter for background stability
+          'update_interval': 3500, // 3.5 second updates for background
+          'min_time_interval': 2.5, // 2.5 second minimum interval
+          'smoothing_window': 3, // More smoothing for background
+          'max_jump_distance': 30.0, // More lenient jump detection
+          'stationary_accuracy_threshold': 15.0, // More lenient when stationary
+          'smoothing_weight_new': 0.7, // Reduced for background stability
+          'smoothing_weight_history': 0.3, // Increased history weight
+        });
+        break;
+
+      case 'power_saving':
+        // Power saving mode - conservative settings
+        baseConfig.addAll({
+          'accuracy_threshold': 25.0, // Very lenient for power saving
+          'distance_filter': 12, // Wide filter for power saving
+          'update_interval': 5000, // 5 second updates for power saving
+          'min_time_interval': 3.0, // 3 second minimum interval
+          'smoothing_window': 4, // Heavy smoothing for power saving
+          'max_jump_distance': 40.0, // Very lenient jump detection
+          'stationary_accuracy_threshold': 20.0, // Very lenient when stationary
+          'smoothing_weight_new': 0.6, // Reduced for power saving
+          'smoothing_weight_history': 0.4, // Heavy history weight
         });
         break;
 

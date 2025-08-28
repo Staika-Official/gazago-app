@@ -1125,10 +1125,10 @@ class ActivityController extends SuperController
 
     if (Platform.isAndroid) {
       locationSettings = AndroidSettings(
-          accuracy: LocationAccuracy.high,
+          accuracy: LocationAccuracy.bestForNavigation,
           distanceFilter: 3,
           forceLocationManager: true,
-          intervalDuration: Duration(milliseconds: 3000),
+          intervalDuration: const Duration(milliseconds: 3000),
           useMSLAltitude: true,
           foregroundNotificationConfig: ForegroundNotificationConfig(
             notificationText: 'measuring_exercise_record'.tr(),
@@ -1137,7 +1137,7 @@ class ActivityController extends SuperController
           ));
     } else if (Platform.isIOS) {
       locationSettings = AppleSettings(
-        accuracy: LocationAccuracy.high,
+        accuracy: LocationAccuracy.bestForNavigation,
         activityType: ActivityType.fitness,
         distanceFilter: 3,
         pauseLocationUpdatesAutomatically: false,
@@ -1261,7 +1261,7 @@ class ActivityController extends SuperController
 
         // 주기적으로 가장 가까운 챌린지 코스 지점 5분마다 재조회
         if (calcNearCourseTime.value
-            .add(Duration(seconds: 300))
+            .add(const Duration(seconds: 300))
             .isBefore(now)) {
           calculateNearByHierarchyCourse(
               locationModel.latitude, locationModel.longitude);
@@ -1477,7 +1477,7 @@ class ActivityController extends SuperController
         );
         final retryLocationModel = LocationModel.fromPosition(location);
         filteredLocationModel =
-            GPS.instance.filterLocation(retryLocationModel) ??
+            UnifiedGPSManager.instance.filterLocation(retryLocationModel) ??
                 retryLocationModel;
       }
 
@@ -1530,7 +1530,7 @@ class ActivityController extends SuperController
         final fallbackLocationModel =
             LocationModel.fromPosition(fallbackPosition);
         final filteredFallback =
-            GPS.instance.filterLocation(fallbackLocationModel);
+            UnifiedGPSManager.instance.filterLocation(fallbackLocationModel);
 
         if (filteredFallback != null) {
           currentLocation.value = filteredFallback;
@@ -1573,7 +1573,7 @@ class ActivityController extends SuperController
       }
 
       // Clear any previous history using UnifiedGPSManager
-      GPS.clearHistory();
+      UnifiedGPSManager.instance.clearHistory();
 
       // Show user feedback about GPS initialization
       showToastPopup('initializing_gps'.tr());
@@ -1591,7 +1591,7 @@ class ActivityController extends SuperController
           // Add to UnifiedGPSManager history for better filtering
           final warmupLocationModel =
               LocationModel.fromPosition(warmupPosition);
-          GPS.instance.filterLocation(warmupLocationModel);
+          UnifiedGPSManager.instance.filterLocation(warmupLocationModel);
 
           // If we get good accuracy, we can break early
           if (warmupPosition.accuracy <= gpsAccuracy) {
