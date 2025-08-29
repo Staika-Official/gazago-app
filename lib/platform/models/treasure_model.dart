@@ -13,11 +13,11 @@ class TreasureModel {
   final int amount;
   final String treasureSymbol;
   final dynamic claimedBy;
-  final dynamic claimedTime;
+  final DateTime? claimedTime;
   final String? iconUrl;
   final int userExerciseId;
-  final String distributionMode;
-  final String status;
+  final TreasureDistributionMode distributionMode;
+  final TreasureStatus status;
   final TreasureType type;
 
   TreasureModel({
@@ -46,6 +46,20 @@ class TreasureModel {
   String get iconPathLocal => type == TreasureType.normal
       ? 'assets/images/activity/ico_treasure_normal.svg'
       : 'assets/images/activity/ico_treasure_event.svg';
+}
+
+enum TreasureDistributionMode {
+  @JsonValue('RANDOM')
+  random,
+  @JsonValue('FIXED')
+  fixed,
+}
+
+enum TreasureStatus {
+  @JsonValue('CREATED')
+  created,
+  @JsonValue('CLAIMED')
+  claimed,
 }
 
 enum TreasureType {

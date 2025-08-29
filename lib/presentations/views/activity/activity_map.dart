@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:gaza_go/presentations/views/activity/components/activity_active/cool_down_widget.dart';
+import 'package:gaza_go/presentations/views/activity/components/activity_active/cool_down_widget_map.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -40,6 +42,7 @@ class _ActivityMapState extends State<ActivityMap> {
             minMaxZoomPreference: const MinMaxZoomPreference(8, 20),
             mapType: MapType.normal,
             indoorViewEnabled: true,
+            mapToolbarEnabled: false,
             myLocationButtonEnabled: false,
             zoomControlsEnabled: false,
             initialCameraPosition: CameraPosition(
@@ -57,8 +60,6 @@ class _ActivityMapState extends State<ActivityMap> {
               ),
             },
             onMapCreated: (mapController) {
-              // mapController
-              //     .setLocationTrackingMode(NLocationTrackingMode.follow);
               controller.challengeMapControllers.add(mapController);
               controller.addOverlayAll(
                 {
@@ -81,33 +82,37 @@ class _ActivityMapState extends State<ActivityMap> {
           );
         }),
         Positioned(
-          top: 0,
+          top: 65.sp,
+          left: 0,
+          right: 0,
+          child: const CoolDownWidgetMap(),
+        ),
+        Positioned(
+          top: 60.sp,
           left: 20.sp,
-          child: SafeArea(
-            child: GestureDetector(
-              onTap: () => Get.back(),
-              child: Container(
-                width: 46.sp,
-                height: 46.sp,
-                margin: EdgeInsets.only(top: 20.sp),
-                decoration: BoxDecoration(
-                    color: popupBgColor,
-                    border: Border.all(
-                        width: 2.sp,
-                        style: BorderStyle.solid,
-                        color: Colors.black),
-                    boxShadow: [
-                      BoxShadow(
-                        offset: Offset(2.sp, 4.sp),
-                        color: Colors.black,
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(14.sp)),
-                child: Icon(
-                  Icons.chevron_left,
-                  color: Colors.white,
-                  size: 30.sp,
+          child: GestureDetector(
+            onTap: Get.back,
+            child: Container(
+              padding: EdgeInsets.all(6.sp),
+              decoration: BoxDecoration(
+                color: popupBgColor,
+                border: Border.all(
+                  width: 2.sp,
+                  style: BorderStyle.solid,
+                  color: Colors.black,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(1.sp, 3.sp),
+                    color: Colors.black,
+                  ),
+                ],
+                borderRadius: BorderRadius.circular(14.sp),
+              ),
+              child: Icon(
+                Icons.chevron_left,
+                color: Colors.white,
+                size: 30.sp,
               ),
             ),
           ),

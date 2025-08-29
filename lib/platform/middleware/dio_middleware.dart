@@ -60,6 +60,7 @@ class Api {
     bool isFile = false,
     bool allowCustomErrorHandler = false,
     bool showLoading = true,
+    bool showToastOnError = true,
   }) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
     // _dio.options.connectTimeout = 2000;
@@ -68,6 +69,7 @@ class Api {
     _dio.options.extra = {
       'allowCustomErrorHandler': allowCustomErrorHandler,
       'showLoading': showLoading,
+      'showToastOnError': showToastOnError,
     };
     _dio.options.headers['Content-Type'] = 'application/json; charset=utf-8';
 
@@ -266,7 +268,9 @@ class Api {
 
         if (errorData.errorMessage != null &&
             !e.requestOptions.extra['allowCustomErrorHandler']) {
-          showToastPopup(errorData.errorMessage!);
+          if (e.requestOptions.extra['showToastOnError'] == true) {
+            showToastPopup(errorData.errorMessage!);
+          }
         }
       } else if ([
         DioExceptionType.connectionTimeout,
@@ -519,8 +523,7 @@ class CurlInterceptor extends Interceptor {
       }
     }
 
-    final curl =
-        "curl -X $method $headers $data '$url'";
+    final curl = "curl -X $method $headers $data '$url'";
 
     print("CURL: $curl");
 
