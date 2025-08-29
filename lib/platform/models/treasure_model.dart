@@ -16,9 +16,9 @@ class TreasureModel {
   final DateTime? claimedTime;
   final String? iconUrl;
   final int? userExerciseId;
-  final TreasureDistributionMode? distributionMode;
-  final TreasureStatus? status;
-  final TreasureType? type;
+  final TreasureDistributionMode distributionMode;
+  final TreasureStatus status;
+  final TreasureType type;
 
   TreasureModel({
     this.id,
@@ -33,9 +33,9 @@ class TreasureModel {
     this.claimedTime,
     this.iconUrl,
     this.userExerciseId,
-    this.distributionMode,
-    this.status,
-    this.type,
+    required this.distributionMode,
+    required this.status,
+    required this.type,
   });
 
   factory TreasureModel.fromJson(Map<String, dynamic> json) =>

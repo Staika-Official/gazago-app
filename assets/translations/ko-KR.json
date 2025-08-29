@@ -992,5 +992,11 @@
     "claimed": "",
     "rewards_x_go_points": "",
     "no_referred_users": "",
+    "you_can_collect_a_treasure": "",
+    "collect" : "",
+    "treasure_collected": "",
+    "cannot_pickup_in_cooldown": "",
+    "exercise_details": "",
+    "rewards": "",
     "no_treasure_was_collected_during_this_exercise": ""
   }

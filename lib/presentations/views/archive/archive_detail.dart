@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/presentations/views/archive/components/archive_detail/detail_tab_content.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/presentations/components/default_container.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/theme/theme.g.dart';
@@ -11,13 +11,11 @@ import 'package:get/get.dart' hide Trans;
 import 'components/archive_detail/name_badge_section.dart';
 import 'components/archive_detail/reward_tab_content.dart';
 
-class ArchiveDetail extends StatelessWidget {
+class ArchiveDetail extends GetView<ArchiveController> {
   const ArchiveDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
-    ArchiveController controller = Get.find();
-
     return DefaultTabController(
       length: 2,
       initialIndex: 0,
