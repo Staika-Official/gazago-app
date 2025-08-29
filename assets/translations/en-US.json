@@ -999,5 +999,7 @@
     "cannot_pickup_in_cooldown": "Cannot pickup in cooldown",
     "exercise_details": "Exercise Details",
     "rewards": "Rewards",
-    "no_treasure_was_collected_during_this_exercise": "No treasure was collected during this exercise!"
+    "no_treasure_was_collected_during_this_exercise": "No treasure was collected during this exercise!",
+    "next_treasure_pickup_available_in": "Next Treasure Pickup Available In",
+    "cooldown_ended": "Cooldown ended!"
   }

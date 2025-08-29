@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
+import 'package:gaza_go/presentations/views/activity/components/activity_active/cool_down_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -121,6 +122,8 @@ class _ActivityActiveMiniMapSectionState
                 ),
               ),
             ),
+            const CoolDownWidget(),
+
           ],
         ),
       ),

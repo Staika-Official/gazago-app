@@ -1,39 +1,68 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/components/base_card.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
-import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/theme/theme.g.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Trans;
 
 class CoolDownWidget extends GetWidget<ActivityController> {
   const CoolDownWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return UnconstrainedBox(
-      child: Obx(
-        () => Visibility.maintain(
-          visible: controller.coolDownTimeLeft.value > 0,
-          child: BaseCard(
-            padding: EdgeInsets.symmetric(vertical: 4.sp, horizontal: 6.sp),
-            borderRadius: AppDoubleData.regular().numberRadius12,
-            backgroundColor: AppColorData.regular().colorBgInteractiveSecondary,
-            child: Row(
-              children: [
-                iconSnowSharp,
-                SizedBox(width: 6.sp),
-                StyledText(
-                  parseIntToHourMinute(
-                    controller.coolDownTimeLeft.value,
-                  ),
-                  fontWeight: 700,
-                  fontSize: 18,
-                  color: AppColorData.regular().colorPointGreen,
+    return Positioned(
+      bottom: 14,
+      left: 0,
+      right: 0,
+      child: UnconstrainedBox(
+        child: Obx(
+          () => Visibility.maintain(
+            visible: controller.coolDownTimeLeft.value > 0,
+            child: SizedBox(
+              width: 180,
+              child: BaseCard(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 6,
+                  horizontal: 8,
                 ),
-              ],
+                borderRadius: AppDoubleData.regular().numberRadiusCircle,
+                backgroundColor: AppColorData.regular().colorBgBrand,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    iconClock,
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text:
+                                  '${'next_treasure_pickup_available_in'.tr()} ',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            TextSpan(
+                              text: parseIntToHourMinute(
+                                controller.coolDownTimeLeft.value,
+                              ),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ],
+                        ),
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
