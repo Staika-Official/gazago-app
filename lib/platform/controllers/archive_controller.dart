@@ -34,7 +34,7 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
 
   /// reward tab content fields
   RxList<TreasureModel> rewards = <TreasureModel>[].obs;
-  var rewardPage = 1;
+  var rewardPage = 0;
   var totalPages = 1;
   var isLoading = false.obs;
 

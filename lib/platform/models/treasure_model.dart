@@ -15,7 +15,7 @@ class TreasureModel {
   final dynamic claimedBy;
   final DateTime? claimedTime;
   final String? iconUrl;
-  final int userExerciseId;
+  final int? userExerciseId;
   final TreasureDistributionMode distributionMode;
   final TreasureStatus status;
   final TreasureType type;
@@ -32,7 +32,7 @@ class TreasureModel {
     this.claimedBy,
     this.claimedTime,
     this.iconUrl,
-    required this.userExerciseId,
+    this.userExerciseId,
     required this.distributionMode,
     required this.status,
     required this.type,

@@ -12,13 +12,11 @@ import 'package:get/get.dart' hide Trans;
 import 'components/archive_detail/name_badge_section.dart';
 import 'components/archive_detail/reward_tab_content.dart';
 
-class ArchiveDetail extends StatelessWidget {
+class ArchiveDetail extends GetView<ArchiveController> {
   const ArchiveDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
-    ArchiveController controller = Get.find();
-
     return DefaultTabController(
       length: 2,
       initialIndex: 0,
