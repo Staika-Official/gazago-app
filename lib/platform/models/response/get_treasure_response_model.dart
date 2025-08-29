@@ -8,11 +8,13 @@ class GetTreasureResponseModel {
   final List<TreasureModel> treasures;
   final int cooldownDuration;
   final int minPickupDistance;
+  final DateTime? lastClaimTime;
 
   GetTreasureResponseModel({
     required this.treasures,
     required this.cooldownDuration,
     required this.minPickupDistance,
+    required this.lastClaimTime,
   });
 
   factory GetTreasureResponseModel.fromJson(Map<String, dynamic> json) =>

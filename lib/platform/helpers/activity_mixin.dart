@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:adjust_sdk/adjust.dart';
 import 'package:adjust_sdk/adjust_event.dart';
 import 'package:easy_localization/easy_localization.dart';
+
 // import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -86,10 +87,12 @@ mixin ActivityMixin {
   RxBool isShowLuckAnimation = RxBool(false);
 
   // treasure of current exercise session
-  final listTreasureOfSession = <TreasureModel>[].obs;
-  final treasureBaseSize = const Size(16, 10);
-  late final treasureZoomSize = treasureBaseSize * 1.5;
-  num minPickupRadius = 0;
+  final listClaimedTreasureIdOfSession = <int>[];
+  var listTreasureOfSession = <TreasureModel>[];
+  final kTreasureBaseSize = const Size(16, 10);
+  late final kTreasureZoomSize = kTreasureBaseSize * 1.5;
+  num kMinPickupRadius = 10;
+  num kPickupCoolDownTime = 5.minutes.inSeconds;
 
   // final assetsAudioPlayer = AssetsAudioPlayer();
 
@@ -901,6 +904,9 @@ mixin ActivityMixin {
     //   );
     // }
 
+    listClaimedTreasureIdOfSession.clear();
+    (this as ActivityController).clearMarkers();
+
     if (globalController.internetConnection.value) {
       // 업데이트 타이머에 의해서 미세한 차이로 운동 종료 요청후 즉시 운동 업데이트 요청이 나가지 않도록 타이머를 우선 스탑한다.
       updateTimer?.cancel();
@@ -1132,7 +1138,7 @@ mixin ActivityMixin {
 
   Future<void> fetchExerciseTreasures() async {
     final req = GetTreasureRequestModel(
-      userId: userState.value.state?.id ?? -1,
+      userId: userState.value.state?.userId ?? -1,
       userExerciseId: userState.value.exercise?.id ?? -1,
       userLat: currentLocation.value?.latitude ?? 0.0,
       userLng: currentLocation.value?.longitude ?? 0.0,
@@ -1141,12 +1147,18 @@ mixin ActivityMixin {
     await TreasureService.getTreasureByExerciseId(
       req: req,
       successCallback: (treasures) async {
-        listTreasureOfSession.value = List.from(treasures.treasures);
-        minPickupRadius = treasures.minPickupDistance;
+        listTreasureOfSession = List.from(treasures.treasures
+            .where((element) =>
+                !listClaimedTreasureIdOfSession.contains(element.id))
+            .toList());
+        kMinPickupRadius = treasures.minPickupDistance;
+        kPickupCoolDownTime = treasures.cooldownDuration; // in seconds
+        (this as ActivityController)
+            .initCoolDownTimerIfNeeded(treasures.lastClaimTime);
         await _initTreasureMarker();
       },
-      errorCallback: () {
-        print("error");
+      errorCallback: (_) {
+        debugPrint("error");
       },
     );
   }
@@ -1154,7 +1166,7 @@ mixin ActivityMixin {
   Future<void> _initTreasureMarker() async {
     final markers = await buildCustomMarkers(
       positions: listTreasureOfSession,
-      markerSize: treasureBaseSize,
+      markerSize: kTreasureBaseSize,
     );
     (this as ActivityController).clearMarkers();
     (this as ActivityController).addOverlayAll(markers);

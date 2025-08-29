@@ -20,6 +20,13 @@ mixin MapMixin {
     }
   }
 
+  void removeMarkerById(int id) {
+    final index = drawingMarkers.indexWhere(
+      (m) => m.markerId.value == id.toString(),
+    );
+    drawingMarkers.removeAt(index);
+  }
+
   void clearOverlays() {
     drawingMarkers.clear();
     drawingPolylines.clear();

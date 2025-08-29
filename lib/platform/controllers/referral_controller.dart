@@ -50,11 +50,11 @@ class ReferralController extends GetxController {
       await FlutterClipboard.copy(myReferralCode.value);
 
       // show toast
-      showToastWithIcon(
-        icon: iconCheckOutlineWhite,
-        message: 'code_copied'.tr(),
-        backgroundColor: bgAlertGreen,
-      );
+      // showToastWithIcon(
+      //   icon: iconCheckOutlineWhite,
+      //   message: 'code_copied'.tr(),
+      //   backgroundColor: bgAlertGreen,
+      // );
     } on ClipboardException catch (e) {
       log('Copy failed: ${e.message}');
     }

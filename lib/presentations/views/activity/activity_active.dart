@@ -16,6 +16,7 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/activity_active_main_button_section.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/activity_active_mini_map_section.dart';
+import 'package:gaza_go/presentations/views/activity/components/activity_active/cool_down_widget.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:lottie/lottie.dart';
@@ -416,21 +417,28 @@ class ActivityActive extends StatelessWidget {
           ],
         );
       }),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Obx(() {
-            return Container(
-              alignment: Alignment.topCenter,
-              child: controller.selectedCourse.value != null
-                  ? Container(
-                      padding: EdgeInsets.only(
-                          left: 16.sp, right: 16.sp, top: 3.sp, bottom: 5.sp),
+          Column(
+            children: [
+              const CoolDownWidget(),
+              Obx(
+                () => Visibility.maintain(
+                  visible: controller.selectedCourse.value != null,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.sp,
+                        vertical: 3.sp,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColorData.regular().colorBgBlack,
                         borderRadius: BorderRadius.circular(50.sp),
                       ),
                       child: Text(
-                        '${controller.selectedCourse.value!.firstName} | ${controller.selectedCourse.value!.secondName}',
+                        '${controller.selectedCourse.value?.firstName} | ${controller.selectedCourse.value?.secondName}',
                         // 'sapaesan_easytechfin_trail'.tr(),
                         style: AppTextStyleData.regular()
                             .koBodyMediumLg
@@ -438,26 +446,23 @@ class ActivityActive extends StatelessWidget {
                                 color: AppColorData.regular().colorTextPrimary,
                                 height: 1.4),
                       ),
-                    )
-                  : Container(),
-            );
-          }),
-          Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Stack(children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 10.0.sp, bottom: 20.sp),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Obx(() {
-                        return Stack(
-                          children: [
-                            if (controller.isShowLuckAnimation.value)
-                              Padding(
-                                padding: EdgeInsets.only(top: 10.0.sp),
-                                child: CustomAnimationBuilder<Movie>(
+                    ),
+                  ),
+                ),
+              ),
+              Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.sp),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Obx(
+                          () => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (controller.isShowLuckAnimation.value)
+                                CustomAnimationBuilder<Movie>(
                                     control: controller.luckLoadControl.value,
                                     tween: luckMovie,
                                     duration: luckMovie.duration,
@@ -478,23 +483,16 @@ class ActivityActive extends StatelessWidget {
                                                       .colorBgTransparcy80,
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          AppDoubleData
-                                                                  .regular()
-                                                              .numberRadius4),
+                                                    AppDoubleData.regular()
+                                                        .numberRadius4,
+                                                  ),
                                                 ),
                                                 child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 8.sp,
-                                                      right: 8.sp,
-                                                      top: 4.sp,
-                                                      bottom: 4.0.sp),
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 8.sp,
+                                                    vertical: 4.sp,
+                                                  ),
                                                   child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
                                                     children: [
                                                       iconActivityLuck,
                                                       Padding(
@@ -519,16 +517,7 @@ class ActivityActive extends StatelessWidget {
                                                               .value.exercise !=
                                                           null)
                                                         Text(
-                                                            '+${controller.userState.value.exercise!.luckApplyRewardGo}',
-                                                            style: AppTextStyleData
-                                                                    .regular()
-                                                                .koBodyMediumMd
-                                                                .copyWith(
-                                                                  color: AppColorData
-                                                                          .regular()
-                                                                      .colorTextPrimary,
-                                                                )),
-                                                      Text(' GO',
+                                                          '+${controller.userState.value.exercise!.luckApplyRewardGo} GO',
                                                           style: AppTextStyleData
                                                                   .regular()
                                                               .koBodyMediumMd
@@ -536,14 +525,15 @@ class ActivityActive extends StatelessWidget {
                                                                 color: AppColorData
                                                                         .regular()
                                                                     .colorTextPrimary,
-                                                              )),
+                                                              ),
+                                                        ),
                                                     ],
                                                   ),
                                                 ),
                                               ),
                                               Padding(
                                                 padding: EdgeInsets.only(
-                                                    left: 25.0.sp),
+                                                    left: 16.sp),
                                                 child: ClipPath(
                                                   clipper: CustomShapeClipper(),
                                                   clipBehavior: Clip.antiAlias,
@@ -559,13 +549,8 @@ class ActivityActive extends StatelessWidget {
                                         );
                                       });
                                     }),
-                              ),
-                            Obx(() {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                    top: 44.0.sp, left: 12.sp, right: 12.sp),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                              Obx(
+                                () => Row(
                                   children: [
                                     SvgPicture.asset(
                                       'assets/images/common/ico_token_go.svg',
@@ -611,27 +596,27 @@ class ActivityActive extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                              );
-                            }),
-                          ],
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-                if (controller.isShowLuckAnimation.value)
-                  Positioned(
-                    left: 0.sp,
-                    top: 0,
-                    child: Lottie.asset(
-                      'assets/lottie/activity_luck.json',
-                      width: 250,
-                      height: 150,
-                      repeat: false,
-                      frameRate: FrameRate.max,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-              ]),
+                  if (controller.isShowLuckAnimation.value)
+                    Positioned(
+                      left: 0.sp,
+                      top: 0,
+                      child: Lottie.asset(
+                        'assets/lottie/activity_luck.json',
+                        width: 250,
+                        height: 150,
+                        repeat: false,
+                        frameRate: FrameRate.max,
+                      ),
+                    ),
+                ],
+              ),
               Padding(
                   padding:
                       EdgeInsets.only(left: 38.0.sp, right: 38.sp, top: 20.sp),
@@ -714,8 +699,8 @@ class ActivityActive extends StatelessWidget {
                                           .copyWith(
                                             color: AppColorData.regular()
                                                 .colorTextTertiary,
-                                            height: 14 / 12,
                                             fontSize: 12.sp,
+                                            height: 14 / 12,
                                             fontWeight: FontWeight.w500,
                                           ),
                                     ),
@@ -728,23 +713,32 @@ class ActivityActive extends StatelessWidget {
                       });
                     }),
                   )),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: 20.sp,
-                  right: 20.sp,
-                  top: 60.sp,
-                  bottom: 30.sp,
-                ),
-                child: LayoutBuilder(builder: (context, constraints) {
-                  return Obx(() {
-                    return Row(
+            ],
+          ),
+          Container(
+            margin: EdgeInsets.only(
+              left: 37.sp,
+              right: 37.sp,
+              top: 20.sp,
+              bottom: 10.sp,
+            ),
+            padding: EdgeInsets.symmetric(
+              vertical: 12.sp,
+              horizontal: 24.sp,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(50.sp),
+            ),
+            child: LayoutBuilder(builder: (context, constraints) {
+              return Obx(() {
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // InkWell(
-                        //     onTap: () {
-                        //       controller.showLuckAnimation();
-                        //     },
-                        //     child: StyledText('press_button'.tr())),
                         SizedBox(
                           width: constraints.maxWidth / 3,
                           child: Column(
@@ -834,6 +828,8 @@ class ActivityActive extends StatelessWidget {
                                         width: 20,
                                         height: 20,
                                         child: IconButton(
+                                          icon: iconActivityInfo,
+                                          splashRadius: 15.sp,
                                           padding: EdgeInsets.zero,
                                           onPressed: () => Get.dialog(
                                             barrierColor:
@@ -905,7 +901,9 @@ class ActivityActive extends StatelessWidget {
                                                                             'valid_distance_criteria'.tr(args: [
                                                                               controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7' : '1'
                                                                             ]),
-                                                                            style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                                                            style: AppTextStyleData.regular()
+                                                                                .koBodyMediumLg
+                                                                                .copyWith(
                                                                                   color: AppColorData.regular().colorTextPrimary,
                                                                                   height: 1.4,
                                                                                 ),
@@ -916,32 +914,28 @@ class ActivityActive extends StatelessWidget {
                                                                   ],
                                                                 ),
                                                               ),
-                                                              Positioned(
-                                                                right: 16.8.sp,
-                                                                top: 16.8.sp,
-                                                                child: InkWell(
-                                                                  onTap: () =>
-                                                                      Get.back(),
-                                                                  child:
-                                                                      iconCloseWhite,
-                                                                ),
-                                                              ),
-                                                            ],
+                                                          Positioned(
+                                                            right: 16.8.sp,
+                                                            top: 16.8.sp,
+                                                            child: InkWell(
+                                                              onTap: () =>
+                                                                  Get.back(),
+                                                              child:
+                                                                  iconCloseWhite,
+                                                            ),
                                                           ),
                                                         ],
                                                       ),
                                                     ],
                                                   ),
-                                                ),
+                                  ]),
                                               ),
                                             ),
                                           ),
-                                          icon: iconActivityInfo,
-                                          splashRadius: 15.sp,
                                         ),
                                       ),
                                     )
-                                  ],
+                                )],
                                 ),
                               )
                             ],
@@ -982,7 +976,7 @@ class ActivityActive extends StatelessWidget {
                           ),
                         )
                       ],
-                    );
+                    )]);
                   });
                 }),
               ),
@@ -1032,38 +1026,12 @@ class ActivityActive extends StatelessWidget {
                       ),
                   ],
                 );
-                // if (controller.userState.value.exercise?.crewBuffLevel != null && controller.userState.value.exercise!.crewBuffLevel != 'NONE') {
-                //   return Padding(
-                //     padding: EdgeInsets.only(
-                //       top: 10.sp,
-                //       bottom: 20.sp,
-                //     ),
-                //     child: Container(
-                //       padding: EdgeInsets.symmetric(vertical: 10.sp, horizontal: 14.sp),
-                //       decoration: BoxDecoration(
-                //         color: speedBlackColor,
-                //         borderRadius: BorderRadius.circular(20),
-                //       ),
-                //       child: StyledText(
-                //         'crew_buff_applied'.tr('${controller.userState.value.exercise!.crewBuffLevel!.replaceAll('LEVEL_', 'Lv')}'),
-                //         fontSize: 16,
-                //         fontWeight: 500,
-                //         lineHeight: 16,
-                //         color: lightGrayColor,
-                //       ),
-                //     ),
-                //   );
-                // } else {
-                //   return const SizedBox();
-                // }
               }),
-              const SizedBox(height: 14),
-              const ActivityActiveMiniMapSection(),
-              const SizedBox(height: 14),
-              const ActivityActiveMainButtonSection(),
-              const SizedBox(height: 20),
-            ],
-          ),
+          const SizedBox(height: 14),
+          const ActivityActiveMiniMapSection(),
+          const SizedBox(height: 14),
+          const ActivityActiveMainButtonSection(),
+          const SizedBox(height: 20),
         ],
       ),
     );

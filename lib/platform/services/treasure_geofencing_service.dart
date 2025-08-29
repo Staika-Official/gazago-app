@@ -114,7 +114,7 @@ class TreasureGeofencingService extends GetxService {
     }
     
     // Skip if treasure is already claimed
-    if (treasure.status?.toLowerCase() == 'claimed') {
+    if (treasure.status?.name.toLowerCase() == 'claimed') {
       return;
     }
 
