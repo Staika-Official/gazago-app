@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/platform/helpers/context_helper.dart';
@@ -42,30 +43,32 @@ class PickUpTreasureBottomSheet extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
-          treasureModel.iconUrl.isNullOrBlank == true
+          (treasureModel.iconUrl == null || treasureModel.iconUrl!.isEmpty)
               ? iconCoinTik24
-              : Image.network(
-                  treasureModel.iconUrl!,
+              : CachedNetworkImage(
+                  imageUrl: treasureModel.iconUrl!,
                   width: 128,
                   height: 128,
                 ),
-          const SizedBox(height: 24),
-          UnconstrainedBox(
-            child: BaseCard(
-              backgroundColor: AppColorData.regular().colorBgPrimary,
-              borderRadius: 8,
-              padding: const EdgeInsets.symmetric(
-                vertical: 12,
-                horizontal: 16,
-              ),
-              child: Text(
-                "${treasureModel.amount} ${treasureModel.treasureSymbol}",
-                style: AppTextStyleData.regular().koBodySemiboldLg.copyWith(
-                      color: AppColorData.regular().colorPointPink,
-                    ),
+          if (treasureModel.amount != null) ...[
+            const SizedBox(height: 24),
+            UnconstrainedBox(
+              child: BaseCard(
+                backgroundColor: AppColorData.regular().colorBgPrimary,
+                borderRadius: 8,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
+                child: Text(
+                  "${treasureModel.amount} ${treasureModel.treasureSymbol}",
+                  style: AppTextStyleData.regular().koBodySemiboldLg.copyWith(
+                        color: AppColorData.regular().colorPointPink,
+                      ),
+                ),
               ),
             ),
-          ),
+          ],
           const SizedBox(height: 32),
           Row(
             children: [
