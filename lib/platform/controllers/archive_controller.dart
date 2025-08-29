@@ -214,7 +214,7 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
 
     try {
       if (refresh) {
-        rewardPage = 1;
+        rewardPage = 0;
         rewards.clear();
       }
 
