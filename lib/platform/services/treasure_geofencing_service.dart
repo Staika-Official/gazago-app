@@ -106,8 +106,15 @@ class TreasureGeofencingService extends GetxService {
   /// Check if user has entered a treasure's geofence
   void _checkTreasureGeofence(
       LocationModel userLocation, TreasureModel treasure) {
+    // Skip if treasure data is incomplete
+    if (treasure.latitude == null || 
+        treasure.longitude == null || 
+        treasure.id == null) {
+      return;
+    }
+    
     // Skip if treasure is already claimed
-    if (treasure.status.toLowerCase() == 'claimed') {
+    if (treasure.status?.toLowerCase() == 'claimed') {
       return;
     }
 
@@ -115,8 +122,8 @@ class TreasureGeofencingService extends GetxService {
     final distance = Geolocator.distanceBetween(
       userLocation.latitude,
       userLocation.longitude,
-      treasure.latitude,
-      treasure.longitude,
+      treasure.latitude!,
+      treasure.longitude!,
     );
 
     // Use server-provided pickup radius or default
@@ -130,13 +137,18 @@ class TreasureGeofencingService extends GetxService {
 
   /// Handle when user enters a treasure geofence
   void _handleTreasureGeofenceEntry(TreasureModel treasure, double distance) {
+    // Skip if treasure id is null
+    if (treasure.id == null) {
+      return;
+    }
+    
     // Check notification cooldown to prevent spam
-    if (_isNotificationOnCooldown(treasure.id)) {
+    if (_isNotificationOnCooldown(treasure.id!)) {
       return;
     }
 
     // Record notification time
-    _lastNotificationTimes[treasure.id] = DateTime.now();
+    _lastNotificationTimes[treasure.id!] = DateTime.now();
 
     // Send treasure notification
     _sendTreasureNotification(treasure, distance);

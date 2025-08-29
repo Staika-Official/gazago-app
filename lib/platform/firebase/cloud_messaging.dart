@@ -95,8 +95,13 @@ void handleMessage() {
     }
 
     if (message.data['notificationKey'] == 'EXPIRED_ITEM') {
-      if (Get.isRegistered<InventoryController>())
+      if (Get.isRegistered<InventoryController>()) {
         Get.find<InventoryController>().refreshController();
+      }
+    }
+
+    if (message.data['notificationKey'] == 'NEARBY_TREASURE_FOUND') {
+      showNearbyTreasureFoundAlert(message.data);
     }
   });
 
@@ -132,6 +137,10 @@ void handleNotification(RemoteMessage message) {
     //   payload: 'NAV-INVENTORY_BADGE',
     // );
     showChallengeBadgeAcquisitionAlert(data);
+  }
+
+  if (message.data['notificationKey'] == 'NEARBY_TREASURE_FOUND') {
+    showNearbyTreasureFoundAlert(message.data);
   }
 }
 

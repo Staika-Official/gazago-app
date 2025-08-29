@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:gaza_go/constants/base_urls.dart';
 import 'package:gaza_go/platform/middleware/dio_middleware.dart';
+import 'package:gaza_go/platform/models/treasure_nearby_request_model.dart';
 
 class TreasureApi {
   static Future<Response> getTreasureByExerciseId({
@@ -14,5 +15,18 @@ class TreasureApi {
       showLoading: false,
     ).get(
         '/?userId=$userId&userExerciseId=$userExerciseId&userLat=$userLat&userLng=$userLng');
+  }
+
+  static Future<Response> checkNearbyTreasuresNotify({
+    required int userId,
+    required TreasureNearbyRequestModel request,
+  }) async {
+    return await Api.client(
+      serviceUrl: ServiceUrl.treasureService,
+      showLoading: false,
+    ).post(
+      '/$userId/check-nearby-treasures-notify',
+      data: request.toJson(),
+    );
   }
 }

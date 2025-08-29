@@ -4,38 +4,38 @@ part 'treasure_model.g.dart';
 
 @JsonSerializable()
 class TreasureModel {
-  final int id;
-  final double latitude;
-  final double longitude;
+  final int? id;
+  final double? latitude;
+  final double? longitude;
   final dynamic location;
-  final String name;
-  final String nameEn;
-  final int amount;
-  final String treasureSymbol;
+  final String? name;
+  final String? nameEn;
+  final int? amount;
+  final String? treasureSymbol;
   final dynamic claimedBy;
   final dynamic claimedTime;
   final String? iconUrl;
-  final int userExerciseId;
-  final String distributionMode;
-  final String status;
-  final TreasureType type;
+  final int? userExerciseId;
+  final String? distributionMode;
+  final String? status;
+  final TreasureType? type;
 
   TreasureModel({
-    required this.id,
-    required this.latitude,
-    required this.longitude,
+    this.id,
+    this.latitude,
+    this.longitude,
     this.location,
-    required this.name,
-    required this.nameEn,
-    required this.amount,
-    required this.treasureSymbol,
+    this.name,
+    this.nameEn,
+    this.amount,
+    this.treasureSymbol,
     this.claimedBy,
     this.claimedTime,
     this.iconUrl,
-    required this.userExerciseId,
-    required this.distributionMode,
-    required this.status,
-    required this.type,
+    this.userExerciseId,
+    this.distributionMode,
+    this.status,
+    this.type,
   });
 
   factory TreasureModel.fromJson(Map<String, dynamic> json) =>
@@ -45,7 +45,9 @@ class TreasureModel {
 
   String get iconPathLocal => type == TreasureType.normal
       ? 'assets/images/activity/ico_treasure_normal.svg'
-      : 'assets/images/activity/ico_treasure_event.svg';
+      : type == TreasureType.event
+          ? 'assets/images/activity/ico_treasure_event.svg'
+          : 'assets/images/activity/ico_treasure_normal.svg';
 }
 
 enum TreasureType {

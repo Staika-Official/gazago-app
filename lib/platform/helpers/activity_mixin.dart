@@ -167,12 +167,12 @@ mixin ActivityMixin {
 
   RxDouble get avgSpeed {
     //보통사람의 걷기 속도는 평균 3~4.5kmH이다. 따라서 3 = 0.8333 m/s 4.5 = 1.25m/s
-    // List<double> speedList = exerciseData.where((data) => data.speed! > 0.833).map((filteredLocation) => filteredLocation.speed!).toList();
+    // List<double> speedList = exerciseData.where((data) => (data.speed ?? 0) > 0.833).map((filteredLocation) => filteredLocation.speed ?? 0).toList();
 
-    // List<double> speedList = exerciseData.where((data) => data.speed! > 0.2 && data.speed! < 15).map((filteredLocation) => filteredLocation.speed!).toList();
+    // List<double> speedList = exerciseData.where((data) => (data.speed ?? 0) > 0.2 && (data.speed ?? 0) < 15).map((filteredLocation) => filteredLocation.speed ?? 0).toList();
     List<double> speedList = exerciseData
-        .where((data) => data.speed! > 0)
-        .map((filteredLocation) => filteredLocation.speed!)
+        .where((data) => (data.speed ?? 0) > 0)
+        .map((filteredLocation) => filteredLocation.speed ?? 0)
         .toList();
     return RxDouble(calculateAvgSpeed(speedList));
   }
@@ -447,7 +447,7 @@ mixin ActivityMixin {
     // Improved initial speed handling - use GPS speed immediately if available
     double speed = 0;
     if (exerciseData.isNotEmpty) {
-      speed = exerciseData.last.speed!;
+      speed = exerciseData.last.speed ?? 0;
 
       // For initial data (first few seconds), use GPS speed directly
       if (exerciseData.length <= 3) {
@@ -467,18 +467,18 @@ mixin ActivityMixin {
     UserExerciseModel? prevData;
     if (exerciseData.length > 1) {
       sortedList = [...exerciseData];
-      sortedList.sort(
-          (a, b) => (b.locationUpdateTime!.compareTo(a.locationUpdateTime!)));
+      sortedList.sort((a, b) => ((b.locationUpdateTime ?? DateTime.fromMillisecondsSinceEpoch(0))
+          .compareTo(a.locationUpdateTime ?? DateTime.fromMillisecondsSinceEpoch(0))));
       prevData = sortedList.firstWhere(
           (sortedData) => (DateTime.now()
                   .subtract(Duration(seconds: stopTimeInterval))
-                  .compareTo(sortedData.locationUpdateTime!) ==
+                  .compareTo(sortedData.locationUpdateTime ?? DateTime.fromMillisecondsSinceEpoch(0)) ==
               1),
           orElse: () => UserExerciseModel(steps: 0));
     }
-    int prevStep = prevData != null ? prevData.steps! : 0;
+    int prevStep = prevData?.steps ?? 0;
     int currentStep = exerciseData.isNotEmpty && exerciseData.length > 2
-        ? exerciseData.last.steps!
+        ? (exerciseData.last.steps ?? 0)
         : 0;
     // int currentStep = 10;
 
@@ -1168,18 +1168,27 @@ mixin ActivityMixin {
     final Set<Marker> markers = {};
 
     for (int i = 0; i < positions.length; i++) {
+      final treasure = positions[i];
+      
+      // Skip treasures with incomplete data
+      if (treasure.id == null || 
+          treasure.latitude == null || 
+          treasure.longitude == null) {
+        continue;
+      }
+      
       final BitmapDescriptor customIcon =
           await ImageHelper.bitmapDescriptorFromSvgAsset(
-        positions[i].iconPathLocal,
+        treasure.iconPathLocal,
         markerSize,
       );
       markers.add(
         Marker(
-          markerId: MarkerId(positions[i].id.toString()),
-          position: LatLng(positions[i].latitude, positions[i].longitude),
+          markerId: MarkerId(treasure.id.toString()),
+          position: LatLng(treasure.latitude!, treasure.longitude!),
           icon: customIcon,
           onTap: () =>
-              (this as ActivityController).onPickupTreasure(positions[i]),
+              (this as ActivityController).onPickupTreasure(treasure),
         ),
       );
     }
@@ -1231,7 +1240,7 @@ mixin ActivityMixin {
       if (exerciseState.value == ExerciseState.ongoing) {
         exerciseData.add(UserExerciseModel(
           altitude: location.altitude,
-          speed: location.speedKmh,
+          speed: location.speed, // store in m/s for consistency
           steps: exerciseSteps.value,
           locationUpdateTime: DateTime.now(),
           lastLatitude: location.latitude,
