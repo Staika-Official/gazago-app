@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gaza_go/presentations/components/bottom_sheet_alert.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
@@ -86,6 +84,9 @@ void showUpdateSnackbar() {
 
 enum ToastV2Type { error, success }
 
+// Global variable to track sticky toast state
+GetSnackBar? _stickyNetworkToast;
+
 void showToastV2({
   required String message,
   ToastV2Type type = ToastV2Type.success,
@@ -112,18 +113,29 @@ void showToastV2({
               }(),
             ),
             alignment: Alignment.center,
-            child: StyledText(
-              message,
-              fontSize: 16,
-              fontWeight: 500,
-              color: () {
-                switch (type) {
-                  case ToastV2Type.error:
-                    return const Color(0xff440000);
-                  case ToastV2Type.success:
-                    return const Color(0xff003B22);
-                }
-              }(),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  () {
+                    switch (type) {
+                      case ToastV2Type.error:
+                        return Icons.cancel;
+                      case ToastV2Type.success:
+                        return Icons.check_circle;
+                    }
+                  }(),
+                  color: Colors.white,
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                StyledText(
+                  message,
+                  fontSize: 16,
+                  fontWeight: 500,
+                  color: Colors.white,
+                ),
+              ],
             ),
           ),
         ],
@@ -132,4 +144,68 @@ void showToastV2({
       backgroundColor: Colors.transparent,
     ),
   );
+}
+
+/// Show sticky network status toast that stays until network is restored
+void showStickyNetworkToast({required bool isConnected}) {
+  if (isConnected) {
+    // Hide sticky toast if exists
+    if (_stickyNetworkToast != null) {
+      Get.closeCurrentSnackbar();
+      _stickyNetworkToast = null;
+    }
+    
+    // Show success toast briefly
+    showToastV2(
+      message: 'network_connected'.tr(),
+      type: ToastV2Type.success,
+    );
+  } else {
+    // Hide any existing sticky toast first
+    if (_stickyNetworkToast != null) {
+      Get.closeCurrentSnackbar();
+    }
+    
+    // Create and show sticky error toast
+    _stickyNetworkToast = GetSnackBar(
+      messageText: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 16,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: AppColorData.regular().colorIconWarning,
+            ),
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.wifi_off,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                StyledText(
+                  'no_internet_connection'.tr(),
+                  fontSize: 16,
+                  fontWeight: 500,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      duration: null, // Infinite duration - stays until manually dismissed
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+    );
+    
+    Get.showSnackbar(_stickyNetworkToast!);
+  }
 }

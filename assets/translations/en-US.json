@@ -993,5 +993,7 @@
     "rewards_x_go_points": "Rewards: {} GO Points",
     "code_copied": "Code copied!",
     "no_referred_users": "No Referred Users",
-    "no_treasure_was_collected_during_this_exercise": "No treasure was collected during this exercise!"
+    "no_treasure_was_collected_during_this_exercise": "No treasure was collected during this exercise!",
+    "no_internet_connection": "Please check your internet connection",
+    "network_connected": "Connected"
   }

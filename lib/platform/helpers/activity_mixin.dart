@@ -296,8 +296,10 @@ mixin ActivityMixin {
             lastLongitude: location.longitude,
           ));
 
-          // Add coordinates
-          coordinates.add(LatLng(location.latitude, location.longitude));
+          // Only add coordinates to route if internet connection is available
+          if (globalController.internetConnection.value) {
+            coordinates.add(LatLng(location.latitude, location.longitude));
+          }
 
           // Update real-time speed
           gpsSpeed.value = location.speed;
@@ -1242,9 +1244,10 @@ mixin ActivityMixin {
 
       // Update coordinates for map display
       final newCoord = LatLng(location.latitude, location.longitude);
-      if (coordinates.isEmpty ||
+      if ((coordinates.isEmpty ||
           coordinates.last.latitude != location.latitude ||
-          coordinates.last.longitude != location.longitude) {
+          coordinates.last.longitude != location.longitude) &&
+          globalController.internetConnection.value) {
         coordinates.add(newCoord);
       }
 
