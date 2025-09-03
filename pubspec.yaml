@@ -296,11 +296,11 @@ flavorizr:
       app:
         name: "가자고-stage"
       android:
-        applicationId: "kr.co.eztechfin.gazaGo.dev"
+        applicationId: "kr.co.eztechfin.gazaGo.prod"
         firebase:
           config: ".firebase/dev/google-services.json"
       ios:
-        bundleId: "kr.co.eztechfin.gazaGo.dev"
+        bundleId: "kr.co.eztechfin.gazaGo.prod"
         firebase:
           config: ".firebase/dev/GoogleService-Info.plist"
     prod:
