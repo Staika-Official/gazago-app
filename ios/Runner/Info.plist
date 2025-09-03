@@ -49,12 +49,12 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FLTEnableImpeller</key>
 	<false/>
+	<key>FacebookAutoLogAppEventsEnabled</key>
+	<true/>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3467340260114612~3194907848</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>FacebookAutoLogAppEventsEnabled</key>
-    <true/>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
