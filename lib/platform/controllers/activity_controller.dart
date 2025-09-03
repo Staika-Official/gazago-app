@@ -77,6 +77,7 @@ class ActivityController extends SuperController
   final Rx<Control> challengeLoadControl = Rx(Control.play);
   RxnInt challengeSelectedIndex = RxnInt(null);
   List<Marker> checkpointMarkers = List.empty(growable: true);
+
   // GPS Services - removed unused services
 
   // final RxDouble currentSliderValue = RxDouble(0);
@@ -111,6 +112,7 @@ class ActivityController extends SuperController
   RxBool isClickedBtn = RxBool(false);
   RxBool isFetchingCourseList = RxBool(true);
   final RxBool isListeningToLocation = RxBool(false);
+
   // if lock, user is centered map, can't zoom and drag
   // if unlock, user can zoom and drag, user not necessarily centered
   var isLockMap = false.obs;
@@ -120,6 +122,7 @@ class ActivityController extends SuperController
   RxnInt isShowGpsAccuracyCount = RxnInt(0);
   DateTime? lastNearbyTreasureCheck;
   DateTime? lastPositionTime;
+
   // ActivityController activityController = Get.isRegistered<ActivityController>() ? Get.find<ActivityController>() : Get.put(ActivityController());
   LoaderController loaderController = Get.isRegistered<LoaderController>()
       ? Get.find<LoaderController>()
@@ -152,6 +155,10 @@ class ActivityController extends SuperController
       Rx(LocationPermission.unableToDetermine);
 
   StreamSubscription<ServiceStatus>? _serviceStatusStream;
+
+  // Added from features: cooldown timer when pick up treasure (for anti-spam)
+  var coolDownTimeLeft = 0.obs; // seconds remaining
+  Timer? _pickupCoolDownTimer; // cooldown timer handle
 
   @override
   void initLocationStream() async {
@@ -308,9 +315,6 @@ class ActivityController extends SuperController
     ]);
   }
 
-// Added from features: cooldown timer when pick up treasure (for anti-spam)
-var coolDownTimeLeft = 0.obs; // seconds remaining
-Timer? _pickupCoolDownTimer; // cooldown timer handle
   void checkNewCollectionStatus() {
     if (HiveStore.load(key: HiveKey.isNewCollection.name) != null &&
         HiveStore.load(key: HiveKey.isNewCollection.name) == true) {
@@ -1095,11 +1099,13 @@ Timer? _pickupCoolDownTimer; // cooldown timer handle
 
   /// Process location update (handles coordinate tracking, distance calculation, etc.)
   Future<void> processLocationUpdate(LocationModel locationModel) async {
-    print('🎯 processLocationUpdate called! accuracy: ${locationModel.accuracy}m, coordinates count: ${coordinates.length}');
+    print(
+        '🎯 processLocationUpdate called! accuracy: ${locationModel.accuracy}m, coordinates count: ${coordinates.length}');
     try {
       // Add coordinates for path tracking
       coordinates.add(LatLng(locationModel.latitude, locationModel.longitude));
-      print('📍 Added coordinate: ${locationModel.latitude}, ${locationModel.longitude}');
+      print(
+          '📍 Added coordinate: ${locationModel.latitude}, ${locationModel.longitude}');
 
       if (coordinates.isNotEmpty && coordinates.length > 1) {
         // Enhanced filterCoordinates with time validation
@@ -1718,7 +1724,8 @@ Timer? _pickupCoolDownTimer; // cooldown timer handle
       // Check if we've been getting poor GPS for a while - use adaptive threshold
       if (gpsAccuracySensitive.value > runtimeMaxGpsAccuracy) {
         // If current GPS is consistently poor, use maxGpsAccuracy (50m) to ensure tracking continues
-        print('Using relaxed GPS threshold due to poor signal: ${maxGpsAccuracy}m');
+        print(
+            'Using relaxed GPS threshold due to poor signal: ${maxGpsAccuracy}m');
         return maxGpsAccuracy; // 50m - very relaxed for poor GPS conditions
       }
       return runtimeMaxGpsAccuracy; // 30m - good balance between accuracy and availability
@@ -1803,26 +1810,30 @@ Timer? _pickupCoolDownTimer; // cooldown timer handle
       }
 
       // Debug GPS accuracy comparison
-      print('GPS Accuracy Check: locationModel.accuracy=${locationModel.accuracy}m, gpsAccuracy=${gpsAccuracy}m, maxGpsAccuracy=${maxGpsAccuracy}m, exerciseState=${exerciseState.value}');
+      print(
+          'GPS Accuracy Check: locationModel.accuracy=${locationModel.accuracy}m, gpsAccuracy=${gpsAccuracy}m, maxGpsAccuracy=${maxGpsAccuracy}m, exerciseState=${exerciseState.value}');
 
       // Use smart accuracy threshold based on exercise state and conditions
       double effectiveAccuracyThreshold = _getEffectiveAccuracyThreshold();
-      
+
       if (exerciseState.value == ExerciseState.ongoing &&
           locationModel.accuracy < effectiveAccuracyThreshold) {
-        print('Processing location update - accuracy check passed with threshold: ${effectiveAccuracyThreshold}m');
+        print(
+            'Processing location update - accuracy check passed with threshold: ${effectiveAccuracyThreshold}m');
         exerciseData.add(UserExerciseModel(
           altitude: locationModel.altitude,
           lastLatitude: locationModel.latitude,
           lastLongitude: locationModel.longitude,
           speed: locationModel.speed,
-          time: 0, // Time will be managed by ActivityMixin
+          // Time will be managed by ActivityMixin
+          time: 0,
           locationUpdateTime: locationModel.timestamp,
         ));
 
         await processLocationUpdate(locationModel);
       } else {
-        print('Location update skipped - exerciseState: ${exerciseState.value}, accuracy: ${locationModel.accuracy}m > threshold: ${effectiveAccuracyThreshold}m');
+        print(
+            'Location update skipped - exerciseState: ${exerciseState.value}, accuracy: ${locationModel.accuracy}m > threshold: ${effectiveAccuracyThreshold}m');
       }
     } catch (e) {
       print('Error processing Strava-like location: $e');
@@ -1967,7 +1978,7 @@ Timer? _pickupCoolDownTimer; // cooldown timer handle
       if (t.latitude == null || t.longitude == null) {
         continue;
       }
-      
+
       final distance = Geolocator.distanceBetween(
         userPosition.latitude,
         userPosition.longitude,
@@ -1999,8 +2010,10 @@ Timer? _pickupCoolDownTimer; // cooldown timer handle
 
     if (isInRange) {
       debugPrint("TREASURE CAN BE PICKED UP: ${nearestTreasures.key}");
-      _currentHighlightedTreasuresId =
-          nearestTreasures.value.map((e) => e.id ?? -1).where((id) => id != -1).toList();
+      _currentHighlightedTreasuresId = nearestTreasures.value
+          .map((e) => e.id ?? -1)
+          .where((id) => id != -1)
+          .toList();
       _updateTreasureZoom(isZoom: true);
     } else {
       // no need to update if no treasure highlighted before
@@ -2028,31 +2041,33 @@ Timer? _pickupCoolDownTimer; // cooldown timer handle
   }
 
   /// Check nearby treasures periodically during exercise
-  Future<void> _checkNearbyTreasuresIfNeeded(LocationModel locationModel) async {
+  Future<void> _checkNearbyTreasuresIfNeeded(
+      LocationModel locationModel) async {
     try {
       // Only check if user is in an active exercise
       if (userState.value.exercise?.id == null) return;
-      
+
       DateTime now = DateTime.now();
-      
+
       // Check if enough time has passed since last check
       if (lastNearbyTreasureCheck != null &&
-          now.difference(lastNearbyTreasureCheck!).inSeconds < nearbyTreasureCheckIntervalSeconds) {
+          now.difference(lastNearbyTreasureCheck!).inSeconds <
+              nearbyTreasureCheckIntervalSeconds) {
         return;
       }
-      
+
       // Update last check time
       lastNearbyTreasureCheck = now;
-      
+
       // Create request model
       TreasureNearbyRequestModel request = TreasureNearbyRequestModel(
         userExerciseId: userState.value.exercise!.id!,
         userLat: locationModel.latitude,
         userLng: locationModel.longitude,
       );
-      
+
       int userId = userState.value.state?.userId ?? 0;
-      
+
       // Call API to check nearby treasures
       await TreasureService.checkNearbyTreasuresNotify(
         userId: userId,
@@ -2079,6 +2094,7 @@ Timer? _pickupCoolDownTimer; // cooldown timer handle
         coolDownTimeLeft--;
         if (coolDownTimeLeft.value == 0) {
           timer.cancel();
+          showToastV2(message: 'cooldown_ended'.tr());
         }
       },
     );

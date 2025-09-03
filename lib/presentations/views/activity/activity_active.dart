@@ -422,7 +422,6 @@ class ActivityActive extends StatelessWidget {
         children: [
           Column(
             children: [
-              const CoolDownWidget(),
               Obx(
                 () => Visibility.maintain(
                   visible: controller.selectedCourse.value != null,

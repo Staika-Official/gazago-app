@@ -992,7 +992,15 @@
     "claimed": "",
     "rewards_x_go_points": "",
     "no_referred_users": "",
-    "no_treasure_was_collected_during_this_exercise": "",
     "no_internet_connection": "인터넷 상태를 확인해주세요",
-    "network_connected": "연결됨"
+    "network_connected": "연결됨",
+    "you_can_collect_a_treasure": "",
+    "collect" : "",
+    "treasure_collected": "",
+    "cannot_pickup_in_cooldown": "",
+    "exercise_details": "",
+    "rewards": "",
+    "no_treasure_was_collected_during_this_exercise": "",
+    "next_treasure_pickup_available_in": "",
+    "cooldown_ended": ""
   }

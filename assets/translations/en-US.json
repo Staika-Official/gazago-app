@@ -993,7 +993,15 @@
     "rewards_x_go_points": "Rewards: {} GO Points",
     "code_copied": "Code copied!",
     "no_referred_users": "No Referred Users",
-    "no_treasure_was_collected_during_this_exercise": "No treasure was collected during this exercise!",
     "no_internet_connection": "Please check your internet connection",
-    "network_connected": "Connected"
+    "network_connected": "Connected",
+    "you_can_collect_a_treasure": "You can collect a treasure!",
+    "collect" : "Collect",
+    "treasure_collected": "Treasure collected!",
+    "cannot_pickup_in_cooldown": "Cannot pickup in cooldown",
+    "exercise_details": "Exercise Details",
+    "rewards": "Rewards",
+    "no_treasure_was_collected_during_this_exercise": "No treasure was collected during this exercise!",
+    "next_treasure_pickup_available_in": "Next Treasure Pickup Available In",
+    "cooldown_ended": "Cooldown ended!"
   }
