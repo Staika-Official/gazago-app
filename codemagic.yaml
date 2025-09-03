@@ -94,35 +94,62 @@ workflows:
           <dict>
               <key>method</key>
               <string>app-store</string>
+              <key>teamID</key>
+              <string>M5SBD2APPJ</string>
               <key>uploadBitcode</key>
               <false/>
               <key>uploadSymbols</key>
               <true/>
               <key>compileBitcode</key>
               <false/>
+              <key>signingStyle</key>
+              <string>automatic</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>kr.co.eztechfin.gazaGo</key>
+                  <string></string>
+              </dict>
           </dict>
           </plist>
           EOF
       
       - name: Build iOS for App Store
         script: |
-          # Try with automatic provisioning first
-          echo "Attempting build with automatic provisioning..."
+          # Use the prod scheme for production build
+          echo "Building iOS app with prod scheme for App Store distribution..."
           flutter build ipa --release --flavor prod --target lib/main_prod.dart --export-options-plist=/tmp/ExportOptions.plist || {
-            echo "Automatic build failed, trying with xcodebuild directly..."
+            echo "Flutter build ipa failed, trying with xcodebuild directly..."
             cd ios
+            
+            # First, clean any previous builds
+            xcodebuild clean -workspace Runner.xcworkspace -scheme prod
+            
+            # Build and archive with explicit scheme
+            echo "Creating archive with prod scheme..."
             xcodebuild -workspace Runner.xcworkspace \
               -scheme prod \
               -configuration Release-prod \
               -destination generic/platform=iOS \
               -archivePath build/Runner.xcarchive \
               -allowProvisioningUpdates \
+              PROVISIONING_PROFILE_SPECIFIER="" \
+              CODE_SIGN_IDENTITY="Apple Distribution" \
+              DEVELOPMENT_TEAM="M5SBD2APPJ" \
               archive
-              
+            
+            # Export IPA from archive
+            echo "Exporting IPA..."
             xcodebuild -exportArchive \
               -archivePath build/Runner.xcarchive \
               -exportPath build/ \
-              -exportOptionsPlist /tmp/ExportOptions.plist
+              -exportOptionsPlist /tmp/ExportOptions.plist \
+              -allowProvisioningUpdates
+              
+            # Move the IPA to Flutter's expected location
+            mkdir -p ../build/ios/ipa/
+            find build -name "*.ipa" -exec cp {} ../build/ios/ipa/ \;
+            
+            cd ..
           }
     
     artifacts:
