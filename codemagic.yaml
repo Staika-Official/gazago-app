@@ -1,5 +1,5 @@
 # Simple Codemagic configuration for iOS build only
-# Basic setup without complex integrations
+# Updated with correct versions, schemes, and bundle identifier
 
 workflows:
   ios-build:
@@ -17,27 +17,64 @@ workflows:
         - pattern: 'develop'
           include: true
           source: true
+        - pattern: 'features'
+          include: true
+          source: true
     
     environment:
-      ios_signing:
-        distribution_type: development
-        bundle_identifier: kr.co.eztechfin.gazaGo.dev
-      
+      # Removed ios_signing for now - using --no-codesign build
       vars:
-        FLUTTER_VERSION: 3.19.6
+        FLUTTER_VERSION: 3.24.4  # Match local Flutter version
+        COCOAPODS_VERSION: 1.16.2  # Match local CocoaPods version
+        XCODE_SCHEME: prod  # Use prod scheme which matches kr.co.eztechfin.gazaGo
       
       flutter: $FLUTTER_VERSION
-      xcode: latest
-      cocoapods: default
+      xcode: 16.4  # Match local Xcode version
+      cocoapods: $COCOAPODS_VERSION
     
     scripts:
       - name: Get Flutter packages
         script: |
           flutter packages pub get
       
-      - name: Build iOS
+      - name: Install and generate design tokens
         script: |
-          flutter build ios --release --no-codesign
+          # Install style-dictionary-figma-flutter globally
+          npm install -g style-dictionary-figma-flutter
+          # Generate theme files from design tokens
+          style-dictionary-figma-flutter
+          # Fix gallery.g.dart - remove _Vector class if it exists
+          if [ -f "lib/theme/gallery.g.dart" ]; then
+            if grep -q "class _Vector extends StatelessWidget" lib/theme/gallery.g.dart; then
+              echo "Fixing gallery.g.dart - removing _Vector class..."
+              # Use sed to remove the _Vector class block
+              sed -i.bak '/^class _Vector extends StatelessWidget {/,/^}$/d' lib/theme/gallery.g.dart
+              echo "_Vector class removed from gallery.g.dart"
+            else
+              echo "No _Vector class found in gallery.g.dart - no fix needed"
+            fi
+          fi
+          # Verify theme files generated successfully
+          if [ -f "lib/theme/theme.g.dart" ]; then
+            echo "Theme files generated successfully"
+            ls -la lib/theme/
+          else
+            echo "Warning: theme.g.dart not found after generation"
+          fi
+      
+      - name: Generate localization files
+        script: |
+          # Generate easy_localization files (modern syntax)
+          dart run easy_localization:generate -S assets/translations -O lib/generated
+          # Generate other code generation files
+          dart run build_runner build --delete-conflicting-outputs
+      
+      - name: Build iOS with no code signing
+        script: |
+          flutter build ios --release --no-codesign --flavor prod --target lib/main_prod.dart
+          # Alternative: build with explicit signing disabled
+          # cd ios
+          # xcodebuild -workspace Runner.xcworkspace -scheme prod -configuration Release-prod -destination generic/platform=iOS CODE_SIGNING_ALLOWED=NO
     
     artifacts:
       - build/ios/ipa/*.ipa
