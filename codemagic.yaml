@@ -1,10 +1,9 @@
-# Codemagic configuration for gazago-app
-# CI/CD pipeline for Flutter app with dev and staging flavors
+# Simple Codemagic configuration for iOS build only
+# Basic setup without complex integrations
 
 workflows:
-  # Development Build Workflow
-  dev-build:
-    name: Dev Build - gazago-app
+  ios-build:
+    name: iOS Build - gazago-app
     instance_type: mac_mini_m1
     max_build_duration: 60
     
@@ -12,179 +11,35 @@ workflows:
       events:
         - push
       branch_patterns:
+        - pattern: 'main'
+          include: true
+          source: true
         - pattern: 'develop'
           include: true
           source: true
-      cancel_previous_builds: true
     
     environment:
-      android_signing:
-        - dev_keystore
       ios_signing:
         distribution_type: development
         bundle_identifier: kr.co.eztechfin.gazaGo.dev
       
       vars:
         FLUTTER_VERSION: 3.19.6
-        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
-        XCODE_SCHEME: "dev"
-        BUNDLE_ID: "kr.co.eztechfin.gazaGo.dev"
-        FLAVOR: "dev"
       
       flutter: $FLUTTER_VERSION
       xcode: latest
       cocoapods: default
     
     scripts:
-      - name: Set up local.properties
-        script: |
-          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
-      
       - name: Get Flutter packages
         script: |
           flutter packages pub get
       
-      - name: Flutter analyze
+      - name: Build iOS
         script: |
-          flutter analyze lib/
-        ignore_failure: true
-      
-      - name: Flutter test
-        script: |
-          flutter test
-        ignore_failure: true
-      
-      - name: Build APK for dev
-        script: |
-          flutter build apk --flavor dev --target lib/main_dev.dart --release
-      
-      - name: Build iOS for dev
-        script: |
-          flutter build ios --flavor dev --target lib/main_dev.dart --release --no-codesign
-          xcodebuild -workspace ios/Runner.xcworkspace -scheme dev -configuration Release-dev -destination generic/platform=iOS -archivePath build/ios/Runner.xcarchive archive
-          xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportPath build/ios/ipa -exportOptionsPlist ios/export_options_dev.plist
+          flutter build ios --release --no-codesign
     
     artifacts:
-      - build/**/outputs/**/*.apk
-      - build/**/outputs/**/mapping.txt
       - build/ios/ipa/*.ipa
+      - build/**/*.app
       - flutter_drive.log
-    
-    publishing:
-      email:
-        recipients:
-          - dev-team@gazago.app
-        notify:
-          success: false
-          failure: true
-      
-      slack:
-        channel: '#dev-builds'
-        notify_on_build_start: false
-        notify:
-          success: true
-          failure: true
-
-  # Staging Build Workflow  
-  staging-build:
-    name: Staging Build - gazago-app
-    instance_type: mac_mini_m1
-    max_build_duration: 60
-    
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: 'staging'
-          include: true
-          source: true
-        - pattern: 'release/*'
-          include: true
-          source: true
-      cancel_previous_builds: true
-    
-    environment:
-      android_signing:
-        - staging_keystore
-      ios_signing:
-        distribution_type: ad_hoc
-        bundle_identifier: kr.co.eztechfin.gazaGo.prod
-      
-      vars:
-        FLUTTER_VERSION: 3.19.6
-        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
-        XCODE_SCHEME: "stage"
-        BUNDLE_ID: "kr.co.eztechfin.gazaGo.prod"
-        FLAVOR: "stage"
-        APP_STORE_CONNECT_ISSUER_ID: "df99493f-d1d9-4ba7-9578-fd43ec6ba7e6"
-        APP_STORE_CONNECT_KEY_IDENTIFIER: "BG43X4956Y"
-      
-      flutter: $FLUTTER_VERSION
-      xcode: latest
-      cocoapods: default
-    
-    scripts:
-      - name: Set up local.properties
-        script: |
-          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
-      
-      - name: Get Flutter packages
-        script: |
-          flutter packages pub get
-      
-      - name: Flutter analyze
-        script: |
-          flutter analyze lib/
-        ignore_failure: false
-      
-      - name: Flutter test
-        script: |
-          flutter test
-        ignore_failure: false
-      
-      - name: Build APK for staging
-        script: |
-          flutter build apk --flavor stage --target lib/main_stage.dart --release
-      
-      - name: Build AAB for staging
-        script: |
-          flutter build appbundle --flavor stage --target lib/main_stage.dart --release
-      
-      - name: Build iOS for staging
-        script: |
-          flutter build ios --flavor stage --target lib/main_stage.dart --release --no-codesign
-          xcodebuild -workspace ios/Runner.xcworkspace -scheme stage -configuration Release-stage -destination generic/platform=iOS -archivePath build/ios/Runner.xcarchive archive
-          xcodebuild -exportArchive -archivePath build/ios/Runner.xcarchive -exportPath build/ios/ipa -exportOptionsPlist ios/export_options_staging.plist
-    
-    artifacts:
-      - build/**/outputs/**/*.apk
-      - build/**/outputs/**/*.aab
-      - build/**/outputs/**/mapping.txt
-      - build/ios/ipa/*.ipa
-      - flutter_drive.log
-    
-    publishing:
-      firebase:
-        firebase_token: $FIREBASE_TOKEN
-        android:
-          app_id: 1:123456789:android:abcd1234  # Replace with your Firebase Android App ID
-          groups:
-            - staging-testers
-        ios:
-          app_id: 1:123456789:ios:abcd1234      # Replace with your Firebase iOS App ID
-          groups:
-            - staging-testers
-      
-      email:
-        recipients:
-          - qa-team@gazago.app
-          - dev-team@gazago.app
-        notify:
-          success: true
-          failure: true
-      
-      slack:
-        channel: '#staging-builds'
-        notify:
-          success: true
-          failure: true
