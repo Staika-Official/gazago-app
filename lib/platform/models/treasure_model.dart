@@ -43,11 +43,32 @@ class TreasureModel {
 
   Map<String, dynamic> toJson() => _$TreasureModelToJson(this);
 
-  String get iconPathLocal => type == TreasureType.normal
-      ? 'assets/images/activity/ico_treasure_normal.svg'
-      : type == TreasureType.event
-          ? 'assets/images/activity/ico_treasure_event.svg'
-          : 'assets/images/activity/ico_treasure_normal.svg';
+  String get iconPathLocal {
+    late String iconPath;
+    switch (distributionMode) {
+      case TreasureDistributionMode.random:
+        switch (type) {
+          case TreasureType.normal:
+            iconPath = 'assets/images/activity/ico_treasure_normal.svg';
+            break;
+          case TreasureType.event:
+            iconPath = 'assets/images/activity/ico_treasure_event.svg';
+            break;
+        }
+        break;
+      case TreasureDistributionMode.fixed:
+        switch (type) {
+          case TreasureType.normal:
+            iconPath = 'assets/images/activity/ico_treasure_normal_fixed.svg';
+            break;
+          case TreasureType.event:
+            iconPath = 'assets/images/activity/ico_treasure_event_fixed.svg';
+            break;
+        }
+        break;
+    }
+    return iconPath;
+  }
 }
 
 enum TreasureDistributionMode {

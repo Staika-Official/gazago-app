@@ -472,12 +472,15 @@ mixin ActivityMixin {
     UserExerciseModel? prevData;
     if (exerciseData.length > 1) {
       sortedList = [...exerciseData];
-      sortedList.sort((a, b) => ((b.locationUpdateTime ?? DateTime.fromMillisecondsSinceEpoch(0))
-          .compareTo(a.locationUpdateTime ?? DateTime.fromMillisecondsSinceEpoch(0))));
+      sortedList.sort((a, b) => ((b.locationUpdateTime ??
+              DateTime.fromMillisecondsSinceEpoch(0))
+          .compareTo(
+              a.locationUpdateTime ?? DateTime.fromMillisecondsSinceEpoch(0))));
       prevData = sortedList.firstWhere(
           (sortedData) => (DateTime.now()
                   .subtract(Duration(seconds: stopTimeInterval))
-                  .compareTo(sortedData.locationUpdateTime ?? DateTime.fromMillisecondsSinceEpoch(0)) ==
+                  .compareTo(sortedData.locationUpdateTime ??
+                      DateTime.fromMillisecondsSinceEpoch(0)) ==
               1),
           orElse: () => UserExerciseModel(steps: 0));
     }
@@ -1183,14 +1186,14 @@ mixin ActivityMixin {
 
     for (int i = 0; i < positions.length; i++) {
       final treasure = positions[i];
-      
+
       // Skip treasures with incomplete data
-      if (treasure.id == null || 
-          treasure.latitude == null || 
+      if (treasure.id == null ||
+          treasure.latitude == null ||
           treasure.longitude == null) {
         continue;
       }
-      
+
       final BitmapDescriptor customIcon =
           await ImageHelper.bitmapDescriptorFromSvgAsset(
         treasure.iconPathLocal,
@@ -1201,8 +1204,7 @@ mixin ActivityMixin {
           markerId: MarkerId(treasure.id.toString()),
           position: LatLng(treasure.latitude!, treasure.longitude!),
           icon: customIcon,
-          onTap: () =>
-              (this as ActivityController).onPickupTreasure(treasure),
+          onTap: () => (this as ActivityController).onPickupTreasure(treasure),
         ),
       );
     }
@@ -1245,8 +1247,8 @@ mixin ActivityMixin {
       // Update coordinates for map display
       final newCoord = LatLng(location.latitude, location.longitude);
       if ((coordinates.isEmpty ||
-          coordinates.last.latitude != location.latitude ||
-          coordinates.last.longitude != location.longitude) &&
+              coordinates.last.latitude != location.latitude ||
+              coordinates.last.longitude != location.longitude) &&
           globalController.internetConnection.value) {
         coordinates.add(newCoord);
       }
@@ -1255,7 +1257,8 @@ mixin ActivityMixin {
       if (exerciseState.value == ExerciseState.ongoing) {
         exerciseData.add(UserExerciseModel(
           altitude: location.altitude,
-          speed: location.speed, // store in m/s for consistency
+          speed: location.speed,
+          // store in m/s for consistency
           steps: exerciseSteps.value,
           locationUpdateTime: DateTime.now(),
           lastLatitude: location.latitude,
