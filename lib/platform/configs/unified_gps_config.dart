@@ -9,7 +9,7 @@ class UnifiedGPSConfig {
     // Optimized for urban walking with multipath resistance
     'accuracy_threshold':
         15.0, // meters - Relaxed for urban multipath tolerance
-    'speed_threshold': 7.0, // km/h - Maximum walking speed as requested
+    'speed_threshold': 40.0, // km/h - Maximum speed threshold updated to 40km/h
     'distance_filter': 6, // meters - Wider threshold to avoid multipath noise
     'update_interval':
         1750, // milliseconds - Balanced for urban walking smoothness
@@ -274,7 +274,7 @@ class UnifiedGPSConfig {
         baseConfig.addAll({
           'distance_filter': 7, // 7m for urban walking multipath tolerance
           'update_interval': 1750, // 1.75 seconds for urban walking
-          'speed_threshold': 7.0, // 7 km/h max walking speed as requested
+          'speed_threshold': 40.0, // 40 km/h max speed for general activities
           'smoothing_window': 2, // Minimal smoothing for accuracy
           'min_time_interval': 1.2, // 1.2 seconds for urban walking
           'accuracy_threshold': 16.0, // Relaxed accuracy for urban multipath

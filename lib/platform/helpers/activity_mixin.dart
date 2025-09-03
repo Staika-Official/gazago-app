@@ -103,7 +103,7 @@ mixin ActivityMixin {
         if (((userState.value.exercise!.type! == ExerciseType.hiking.name
                     ? avgSpeed.value < 0.7
                     : avgSpeed.value < 1) ||
-                avgSpeed.value > 7) ||
+                avgSpeed.value > 40) ||
             stoppedExercising.value) {
           color = AppColorData.regular().colorTextWarning;
         } else {
@@ -130,7 +130,7 @@ mixin ActivityMixin {
         if ((userState.value.exercise!.type! == ExerciseType.hiking.name
                 ? speedForColor < 0.7
                 : speedForColor < 1) ||
-            speedForColor > 7) {
+            speedForColor > 40) {
           color = AppColorData.regular().colorTextWarning;
         } else {
           color = AppColorData.regular().colorTextSuccess;
