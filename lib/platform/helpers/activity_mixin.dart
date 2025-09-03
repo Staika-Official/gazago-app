@@ -871,6 +871,10 @@ mixin ActivityMixin {
     locationModelSubscription = null;
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;
+    
+    // Stop GPS tracking when paused to prevent route drawing during pause
+    _stopEnhancedGPSTracking();
+    
     exerciseState.value = ExerciseState.paused;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     updateExercise(
@@ -1244,13 +1248,16 @@ mixin ActivityMixin {
       // Update current location
       currentLocation.value = location;
 
-      // Update coordinates for map display
-      final newCoord = LatLng(location.latitude, location.longitude);
-      if ((coordinates.isEmpty ||
-              coordinates.last.latitude != location.latitude ||
-              coordinates.last.longitude != location.longitude) &&
-          globalController.internetConnection.value) {
-        coordinates.add(newCoord);
+      // Only update coordinates for map display when exercise is ongoing
+      // This prevents drawing route segments during pause
+      if (exerciseState.value == ExerciseState.ongoing) {
+        final newCoord = LatLng(location.latitude, location.longitude);
+        if ((coordinates.isEmpty ||
+                coordinates.last.latitude != location.latitude ||
+            coordinates.last.longitude != location.longitude) &&
+            globalController.internetConnection.value) {
+          coordinates.add(newCoord);
+        }
       }
 
       // Update exercise data if ongoing

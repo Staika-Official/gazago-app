@@ -1102,10 +1102,14 @@ class ActivityController extends SuperController
     print(
         '🎯 processLocationUpdate called! accuracy: ${locationModel.accuracy}m, coordinates count: ${coordinates.length}');
     try {
-      // Add coordinates for path tracking
-      coordinates.add(LatLng(locationModel.latitude, locationModel.longitude));
-      print(
-          '📍 Added coordinate: ${locationModel.latitude}, ${locationModel.longitude}');
+      // Only add coordinates for path tracking when exercise is ongoing
+      // This prevents drawing route segments during pause
+      if (exerciseState.value == ExerciseState.ongoing) {
+        coordinates.add(LatLng(locationModel.latitude, locationModel.longitude));
+        print('📍 Added coordinate: ${locationModel.latitude}, ${locationModel.longitude}');
+      } else {
+        print('⏸️ Exercise is paused, skipping coordinate addition');
+      }
 
       if (coordinates.isNotEmpty && coordinates.length > 1) {
         // Enhanced filterCoordinates with time validation
@@ -1119,12 +1123,16 @@ class ActivityController extends SuperController
 
         // Update last position time for next iteration
         lastPositionTime = currentTime;
-        exerciseDistance.value = exerciseDistance.value +
-            Geolocator.distanceBetween(
-                coordinates[coordinates.length - 2].latitude,
-                coordinates[coordinates.length - 2].longitude,
-                coordinates.last.latitude,
-                coordinates.last.longitude);
+        
+        // Only calculate distance when exercise is ongoing
+        if (exerciseState.value == ExerciseState.ongoing) {
+          exerciseDistance.value = exerciseDistance.value +
+              Geolocator.distanceBetween(
+                  coordinates[coordinates.length - 2].latitude,
+                  coordinates[coordinates.length - 2].longitude,
+                  coordinates.last.latitude,
+                  coordinates.last.longitude);
+        }
       }
 
       if (coordinates.length >= 10) {
