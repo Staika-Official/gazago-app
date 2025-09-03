@@ -765,7 +765,7 @@ class ActivityHome extends StatelessWidget {
                                                                   .exerciseState
                                                                   .value ==
                                                               state)
-                                                          ? 'continue'.tr()
+                                                          ? 'gazago_continue'.tr()
                                                           : 'start'.tr(),
                                                       style: AppTextStyleData
                                                               .regular()
