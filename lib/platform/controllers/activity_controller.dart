@@ -1680,7 +1680,7 @@ class ActivityController extends SuperController
   /// only work if the treasure can be picked up + exercise is ongoing
   /// which mean the treasure is within 10m
   void onPickupTreasure(TreasureModel treasure) {
-    debugPrint("CLICK TREASURE: ${treasure.latitude} ${treasure.longitude}");
+    debugPrint("CLICK TREASURE: ${treasure.latitude}, ${treasure.longitude}");
 
     // if highlighted
     if (_currentHighlightedTreasuresId.contains(treasure.id) &&

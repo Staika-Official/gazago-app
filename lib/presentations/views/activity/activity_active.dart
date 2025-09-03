@@ -29,10 +29,10 @@ class ActivityActive extends StatelessWidget {
 
   List<Widget> renderGauge(ExerciseType exerciseType, Color color) {
     List<Widget> gaugeList = List.empty(growable: true);
-    for (int i = 0; i < 110; i++) {
+    for (int i = 0; i < 35; i++) {
       // 40km / 0.36 ≈ 110 segments for 40km/h max speed
       Widget? gauge;
-      if (i > (exerciseType == ExerciseType.hiking ? 1 : 2) && i < 110) {
+      if (i > (exerciseType == ExerciseType.hiking ? 1 : 2) && i < 20) {
         // hiking? 0.6 : 1 ~ 40km range for gauge display
         gauge = Container(
           width: 3.sp,

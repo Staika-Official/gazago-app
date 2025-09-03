@@ -113,29 +113,38 @@ void showToastV2({
               }(),
             ),
             alignment: Alignment.center,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  () {
-                    switch (type) {
-                      case ToastV2Type.error:
-                        return Icons.cancel;
-                      case ToastV2Type.success:
-                        return Icons.check_circle;
-                    }
-                  }(),
-                  color: Colors.white,
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                StyledText(
-                  message,
-                  fontSize: 16,
-                  fontWeight: 500,
-                  color: Colors.white,
-                ),
-              ],
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: Get.width * 0.8,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    () {
+                      switch (type) {
+                        case ToastV2Type.error:
+                          return Icons.cancel;
+                        case ToastV2Type.success:
+                          return Icons.check_circle;
+                      }
+                    }(),
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      message,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -154,7 +163,7 @@ void showStickyNetworkToast({required bool isConnected}) {
       Get.closeCurrentSnackbar();
       _stickyNetworkToast = null;
     }
-    
+
     // Show success toast briefly
     showToastV2(
       message: 'network_connected'.tr(),
@@ -165,7 +174,7 @@ void showStickyNetworkToast({required bool isConnected}) {
     if (_stickyNetworkToast != null) {
       Get.closeCurrentSnackbar();
     }
-    
+
     // Create and show sticky error toast
     _stickyNetworkToast = GetSnackBar(
       messageText: Row(
@@ -205,7 +214,7 @@ void showStickyNetworkToast({required bool isConnected}) {
       backgroundColor: Colors.transparent,
       isDismissible: false,
     );
-    
+
     Get.showSnackbar(_stickyNetworkToast!);
   }
 }

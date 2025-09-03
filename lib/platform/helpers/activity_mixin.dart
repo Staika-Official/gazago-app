@@ -14,6 +14,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
+import 'package:gaza_go/platform/handlers/location_callback_handler.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -34,6 +35,7 @@ import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/platform/services/activity_gps_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/theme/theme.g.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:health/health.dart';
@@ -871,10 +873,10 @@ mixin ActivityMixin {
     locationModelSubscription = null;
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;
-    
+
     // Stop GPS tracking when paused to prevent route drawing during pause
     _stopEnhancedGPSTracking();
-    
+
     exerciseState.value = ExerciseState.paused;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
     updateExercise(
@@ -1146,11 +1148,15 @@ mixin ActivityMixin {
   }
 
   Future<void> fetchExerciseTreasures() async {
+    final pos = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    final loc = LocationCallbackHandler.convertToLocationModel(pos);
+
     final req = GetTreasureRequestModel(
       userId: userState.value.state?.userId ?? -1,
       userExerciseId: userState.value.exercise?.id ?? -1,
-      userLat: currentLocation.value?.latitude ?? 0.0,
-      userLng: currentLocation.value?.longitude ?? 0.0,
+      userLat: loc.latitude,
+      userLng: loc.longitude,
     );
 
     await TreasureService.getTreasureByExerciseId(
@@ -1254,7 +1260,7 @@ mixin ActivityMixin {
         final newCoord = LatLng(location.latitude, location.longitude);
         if ((coordinates.isEmpty ||
                 coordinates.last.latitude != location.latitude ||
-            coordinates.last.longitude != location.longitude) &&
+                coordinates.last.longitude != location.longitude) &&
             globalController.internetConnection.value) {
           coordinates.add(newCoord);
         }
