@@ -22,7 +22,9 @@ workflows:
           source: true
     
     environment:
-      # Removed ios_signing for now - using --no-codesign build
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: kr.co.eztechfin.gazaGo
       vars:
         FLUTTER_VERSION: 3.24.4  # Match local Flutter version
         COCOAPODS_VERSION: 1.16.2  # Match local CocoaPods version
@@ -69,14 +71,37 @@ workflows:
           # Generate other code generation files
           dart run build_runner build --delete-conflicting-outputs
       
-      - name: Build iOS with no code signing
+      - name: Create ExportOptions.plist
         script: |
-          flutter build ios --release --no-codesign --flavor prod --target lib/main_prod.dart
-          # Alternative: build with explicit signing disabled
-          # cd ios
-          # xcodebuild -workspace Runner.xcworkspace -scheme prod -configuration Release-prod -destination generic/platform=iOS CODE_SIGNING_ALLOWED=NO
+          cat > /tmp/ExportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>uploadBitcode</key>
+              <false/>
+              <key>uploadSymbols</key>
+              <true/>
+              <key>compileBitcode</key>
+              <false/>
+          </dict>
+          </plist>
+          EOF
+      
+      - name: Build iOS for App Store
+        script: |
+          flutter build ipa --release --flavor prod --target lib/main_prod.dart --export-options-plist=/tmp/ExportOptions.plist
     
     artifacts:
       - build/ios/ipa/*.ipa
       - build/**/*.app
       - flutter_drive.log
+    
+    publishing:
+      app_store_connect:
+        # Use App Store Connect API key configured in Codemagic
+        submit_to_testflight: true
+        # Optional: submit to App Store review
+        # submit_to_app_store: false
