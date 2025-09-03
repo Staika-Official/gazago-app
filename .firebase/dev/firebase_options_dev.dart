@@ -53,7 +53,7 @@ class DefaultFirebaseOptions {
     appId: '1:232716676384:android:b1fdff92f1a418d06f7b45',
     messagingSenderId: '232716676384',
     projectId: 'app-step-dev',
-    storageBucket: 'app-step-dev.appspot.com',
+  storageBucket: 'app-step-dev.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -61,7 +61,7 @@ class DefaultFirebaseOptions {
     appId: '1:232716676384:ios:c851d637fa6d71246f7b45',
     messagingSenderId: '232716676384',
     projectId: 'app-step-dev',
-    storageBucket: 'app-step-dev.appspot.com',
+  storageBucket: 'app-step-dev.firebasestorage.app',
     androidClientId: '232716676384-dcu40b5ttfklj1s8d1kocg3cr8i1uaum.apps.googleusercontent.com',
     iosClientId: '232716676384-5iun8ict73an15rbh40patma4rpgmlfh.apps.googleusercontent.com',
     iosBundleId: 'kr.co.eztechfin.gazaGo.dev',
