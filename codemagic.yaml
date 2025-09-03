@@ -116,6 +116,8 @@ workflows:
         XCODE_SCHEME: "stage"
         BUNDLE_ID: "kr.co.eztechfin.gazaGo.prod"
         FLAVOR: "stage"
+        APP_STORE_CONNECT_ISSUER_ID: "df99493f-d1d9-4ba7-9578-fd43ec6ba7e6"
+        APP_STORE_CONNECT_KEY_IDENTIFIER: "BG43X4956Y"
       
       flutter: $FLUTTER_VERSION
       xcode: latest
