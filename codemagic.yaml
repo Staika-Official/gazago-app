@@ -21,6 +21,9 @@ workflows:
           include: true
           source: true
     
+    integrations:
+      app_store_connect: codemagic-api-key-gazago
+    
     environment:
       ios_signing:
         distribution_type: app_store
@@ -71,6 +74,17 @@ workflows:
           # Generate other code generation files
           dart run build_runner build --delete-conflicting-outputs
       
+      - name: Debug - Check provisioning profiles
+        script: |
+          echo "=== Available provisioning profiles ==="
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ || echo "No profiles in user library"
+          
+          echo "=== Available certificates ==="
+          security find-identity -v -p codesigning || echo "No codesigning identities"
+          
+          echo "=== Keychain list ==="
+          security list-keychains
+      
       - name: Create ExportOptions.plist
         script: |
           cat > /tmp/ExportOptions.plist << EOF
@@ -92,7 +106,24 @@ workflows:
       
       - name: Build iOS for App Store
         script: |
-          flutter build ipa --release --flavor prod --target lib/main_prod.dart --export-options-plist=/tmp/ExportOptions.plist
+          # Try with automatic provisioning first
+          echo "Attempting build with automatic provisioning..."
+          flutter build ipa --release --flavor prod --target lib/main_prod.dart --export-options-plist=/tmp/ExportOptions.plist || {
+            echo "Automatic build failed, trying with xcodebuild directly..."
+            cd ios
+            xcodebuild -workspace Runner.xcworkspace \
+              -scheme prod \
+              -configuration Release-prod \
+              -destination generic/platform=iOS \
+              -archivePath build/Runner.xcarchive \
+              -allowProvisioningUpdates \
+              archive
+              
+            xcodebuild -exportArchive \
+              -archivePath build/Runner.xcarchive \
+              -exportPath build/ \
+              -exportOptionsPlist /tmp/ExportOptions.plist
+          }
     
     artifacts:
       - build/ios/ipa/*.ipa
@@ -101,7 +132,8 @@ workflows:
     
     publishing:
       app_store_connect:
-        # Use App Store Connect API key configured in Codemagic
+        # Inherit App Store Connect API key from Codemagic integrations
+        auth: integration
         submit_to_testflight: true
         # Optional: submit to App Store review
-        # submit_to_app_store: false
+        submit_to_app_store: false
