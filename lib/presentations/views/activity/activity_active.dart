@@ -29,11 +29,11 @@ class ActivityActive extends StatelessWidget {
 
   List<Widget> renderGauge(ExerciseType exerciseType, Color color) {
     List<Widget> gaugeList = List.empty(growable: true);
-    for (int i = 0; i < 35; i++) {
-      //15km / 0.429 = 35
+    for (int i = 0; i < 110; i++) {
+      // 40km / 0.36 ≈ 110 segments for 40km/h max speed
       Widget? gauge;
-      if (i > (exerciseType == ExerciseType.hiking ? 1 : 2) && i < 20) {
-        // hiking? 0.6 : 1 ~ 7km
+      if (i > (exerciseType == ExerciseType.hiking ? 1 : 2) && i < 110) {
+        // hiking? 0.6 : 1 ~ 40km range for gauge display
         gauge = Container(
           width: 3.sp,
           height: 24.sp,
@@ -58,7 +58,7 @@ class ActivityActive extends StatelessWidget {
     int totalBars = 35;
     int validBarsStart = 3; // 3번째 바 (0-indexed, 실제로는 4번째 바)
     int validBarsEnd = 22; // 21번째 바 (0-indexed, 실제로는 22번째 바)
-    double validSpeedRange = 7.0; // 유효 속도 1-7
+    double validSpeedRange = 40.0; // Valid speed range 1-40km/h
 
     // 전체 너비에서 바의 너비를 뺀 나머지 공간 계산
     double spaceLeft = constraints.maxWidth - (totalBars * barWidth);
@@ -402,7 +402,7 @@ class ActivityActive extends StatelessWidget {
                                             ExerciseType.hiking
                                         ? controller.avgSpeed.value < 0.7
                                         : controller.avgSpeed.value < 1) ||
-                                    controller.avgSpeed.value > 7) &&
+                                    controller.avgSpeed.value > 40) &&
                                 controller.exerciseState.value ==
                                     ExerciseState.ongoing ||
                             controller.stoppedExercising.value

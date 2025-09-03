@@ -21,7 +21,7 @@ double gpsDistanceFilterMeters =
 
 // Runtime GPS Configuration - These are the ACTIVE thresholds used by helpers
 double runtimeMaxGpsAccuracy = 30.0; // Runtime accuracy threshold (meters) - relaxed for indoor testing
-double runtimeGpsFilterMaxSpeed = 15.0; // ACTIVE speed threshold used by all GPS helpers (km/h, range 1-15) - increased for walking
+double runtimeGpsFilterMaxSpeed = 40.0; // ACTIVE speed threshold used by all GPS helpers (km/h) - increased to 40km/h business requirement
 int runtimeGpsUpdateInterval = 1000; // Runtime update interval in ms
 
 int stopTimeInterval = 5;
