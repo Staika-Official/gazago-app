@@ -2163,9 +2163,9 @@ class ActivityController extends SuperController
         removeMarkerById(newTreasure.id!);
       },
       errorCallback: (error) {
-        if (error?.detailMessage != null) {
+        if (error?.errorMessage != null) {
           showToastV2(
-            message: error!.detailMessage!,
+            message: error!.errorMessage!,
             type: ToastV2Type.error,
           );
         }
