@@ -1703,7 +1703,7 @@ class ActivityController extends SuperController
         PickUpTreasureBottomSheet(
           treasureModel: treasure,
           onPickUp: () {
-            callAPIPickupTreasure(
+            _callAPIPickupTreasure(
               treasure.id!,
               currentLocation.value!.latitude,
               currentLocation.value!.longitude,
@@ -2137,16 +2137,16 @@ class ActivityController extends SuperController
     }
   }
 
-  Future<void> callAPIPickupTreasure(
+  Future<void> _callAPIPickupTreasure(
     int treasureId,
     double userLat,
-    double lon,
+    double userLng,
   ) async {
     final req = PickUpTreasureRequestModel(
       userId: userState.value.state?.userId ?? -1,
       userExerciseId: userState.value.exercise?.id ?? -1,
       userLat: userLat,
-      userLng: lon,
+      userLng: userLng,
       treasureId: treasureId,
     );
     await TreasureService.pickUpTreasure(
@@ -2164,9 +2164,9 @@ class ActivityController extends SuperController
         removeMarkerById(newTreasure.id!);
       },
       errorCallback: (error) {
-        if (error?.errorMessage != null) {
+        if (error?.detailMessage != null) {
           showToastV2(
-            message: error!.errorMessage!,
+            message: error!.detailMessage!,
             type: ToastV2Type.error,
           );
         }

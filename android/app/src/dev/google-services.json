@@ -39,6 +39,14 @@
           }
         },
         {
+          "client_id": "232716676384-907p8vjjibr0f07p1m1pb6s720q1nd90.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo.dev",
+            "certificate_hash": "9c453099e59e2debca3872afca8e32a4e2095336"
+          }
+        },
+        {
           "client_id": "232716676384-dcu40b5ttfklj1s8d1kocg3cr8i1uaum.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
