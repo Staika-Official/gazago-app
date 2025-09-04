@@ -100,9 +100,7 @@ void handleMessage() {
       }
     }
 
-    if (message.data['notificationKey'] == 'NEARBY_TREASURE_FOUND') {
-      showNearbyTreasureFoundAlert(message.data);
-    }
+    if (message.data['notificationKey'] == 'NEARBY_TREASURE_FOUND') {}
   });
 
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -139,9 +137,7 @@ void handleNotification(RemoteMessage message) {
     showChallengeBadgeAcquisitionAlert(data);
   }
 
-  if (message.data['notificationKey'] == 'NEARBY_TREASURE_FOUND') {
-    showNearbyTreasureFoundAlert(message.data);
-  }
+  if (message.data['notificationKey'] == 'NEARBY_TREASURE_FOUND') {}
 }
 
 //for iOS and web

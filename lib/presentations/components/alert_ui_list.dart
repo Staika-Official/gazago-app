@@ -919,63 +919,6 @@ Future<void> showChallengeBadgeAcquisitionAlert(
   );
 }
 
-Future<void> showNearbyTreasureFoundAlert(Map<String, dynamic> data) async {
-  String treasureTitle = data['title'] ?? 'Nearby Treasure';
-  String message = data['body'] ?? 'You have found a treasure nearby!';
-
-  showAlert(
-    isScrollControlled: true,
-    title: 'Treasure Found!',
-    contentWidget: Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: 30.sp, bottom: 30.sp),
-          child: Icon(
-            Icons.location_on,
-            size: 100.sp,
-            color: skyBlueColor,
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 25.sp, vertical: 14.sp),
-          decoration: BoxDecoration(
-            color: subBg01Color,
-            borderRadius: BorderRadius.circular(11.sp),
-          ),
-          child: StyledText(
-            treasureTitle,
-            fontSize: 18,
-            lineHeight: 24,
-            fontWeight: 600,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 20.sp, bottom: 30.sp),
-          child: StyledText(
-            message,
-            fontSize: 16,
-            lineHeight: 22,
-            fontWeight: 500,
-            textAlign: TextAlign.center,
-            color: lightGrayColor,
-          ),
-        ),
-      ],
-    ),
-    actions: [
-      Expanded(
-        child: GazagoButton(
-          buttonText: 'confirm'.tr(),
-          onTap: () async {
-            Get.back();
-          },
-        ),
-      ),
-    ],
-  );
-}
-
 void showDeleteRecordAlert(ArchiveController controller, int id) {
   showAlert(
     title: 'exercise_record_deletion'.tr(),
