@@ -1159,7 +1159,7 @@ class ActivityController extends SuperController
         headingAccuracy: 0.0,
       );
 
-      await _compareDistanceWithNearestTreasure(positionForTreasure);
+      await compareDistanceWithNearestTreasure(positionForTreasure);
 
       // Challenge zone detection logic
       if (_isRequestingChallenges) return; // Prevent concurrent requests
@@ -1981,7 +1981,7 @@ class ActivityController extends SuperController
   /// compare user location with the nearest treasure
   /// to see if they can pick it up or not
   /// UI purpose: zoom treasure if they can pick it up
-  Future<void> _compareDistanceWithNearestTreasure(
+  Future<void> compareDistanceWithNearestTreasure(
       Position userPosition) async {
     final Map<double, List<TreasureModel>> treasureDistanceMap = {};
 

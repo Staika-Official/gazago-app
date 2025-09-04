@@ -1173,6 +1173,8 @@ mixin ActivityMixin {
         (this as ActivityController)
             .initCoolDownTimerIfNeeded(treasures.lastClaimTime);
         await _initTreasureMarker();
+        await (this as ActivityController)
+            .compareDistanceWithNearestTreasure(pos);
       },
       errorCallback: (_) {
         debugPrint("error");
