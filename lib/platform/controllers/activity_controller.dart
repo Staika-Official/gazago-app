@@ -146,7 +146,6 @@ class ActivityController extends SuperController
   final WalletMasterController walletMasterController = Get.find();
   GlobalKey webViewKey = GlobalKey();
 
-  List<int> _currentHighlightedTreasuresId = [];
   bool _isRequestingChallenges = false;
   final Rx<LocationAccuracyStatus> _locationAccuracyStatus =
       Rx(LocationAccuracyStatus.unknown);
@@ -1685,7 +1684,7 @@ class ActivityController extends SuperController
     debugPrint("CLICK TREASURE: ${treasure.latitude}, ${treasure.longitude}");
 
     // if highlighted
-    if (_currentHighlightedTreasuresId.contains(treasure.id) &&
+    if (currentHighlightedTreasuresId.contains(treasure.id) &&
         exerciseState.value == ExerciseState.ongoing) {
       /// check cool down timer
       if (_pickupCoolDownTimer?.isActive == true) {
@@ -2017,27 +2016,27 @@ class ActivityController extends SuperController
     // if nearest treasure is within pickupRadius (fetch from BE)
     bool isInRange = nearestTreasures.key <= kMinPickupRadius;
 
-    if (_currentHighlightedTreasuresId.isNotEmpty) {
+    if (currentHighlightedTreasuresId.isNotEmpty) {
       await _updateTreasureZoom(isZoom: false);
-      _currentHighlightedTreasuresId.clear();
+      currentHighlightedTreasuresId.clear();
     }
 
     if (isInRange) {
       debugPrint("TREASURE CAN BE PICKED UP: ${nearestTreasures.key}");
-      _currentHighlightedTreasuresId = nearestTreasures.value
+      currentHighlightedTreasuresId = nearestTreasures.value
           .map((e) => e.id ?? -1)
           .where((id) => id != -1)
           .toList();
       _updateTreasureZoom(isZoom: true);
     } else {
       // no need to update if no treasure highlighted before
-      if (_currentHighlightedTreasuresId.isEmpty) {
+      if (currentHighlightedTreasuresId.isEmpty) {
         return;
       }
 
       debugPrint("REMOVE PICKABLE TREASURE: ${nearestTreasures.key}");
       _updateTreasureZoom(isZoom: false);
-      _currentHighlightedTreasuresId.clear();
+      currentHighlightedTreasuresId.clear();
     }
   }
 
@@ -2045,7 +2044,7 @@ class ActivityController extends SuperController
   Future<void> _updateTreasureZoom({required bool isZoom}) async {
     final newMarkers = await buildCustomMarkers(
         positions: listTreasureOfSession
-            .where((t) => _currentHighlightedTreasuresId.contains(t.id))
+            .where((t) => currentHighlightedTreasuresId.contains(t.id))
             .toList(),
         markerSize: isZoom ? kTreasureZoomSize : kTreasureBaseSize);
 

@@ -89,6 +89,7 @@ mixin ActivityMixin {
   RxBool isShowLuckAnimation = RxBool(false);
 
   // treasure of current exercise session
+  List<int> currentHighlightedTreasuresId = [];
   final listClaimedTreasureIdOfSession = <int>[];
   var listTreasureOfSession = <TreasureModel>[];
   final kTreasureBaseSize = const Size(16, 10);
@@ -916,6 +917,7 @@ mixin ActivityMixin {
     // }
 
     listClaimedTreasureIdOfSession.clear();
+    currentHighlightedTreasuresId.clear();
     (this as ActivityController).clearMarkers();
 
     if (globalController.internetConnection.value) {
