@@ -1105,8 +1105,10 @@ class ActivityController extends SuperController
       // Only add coordinates for path tracking when exercise is ongoing
       // This prevents drawing route segments during pause
       if (exerciseState.value == ExerciseState.ongoing) {
-        coordinates.add(LatLng(locationModel.latitude, locationModel.longitude));
-        print('📍 Added coordinate: ${locationModel.latitude}, ${locationModel.longitude}');
+        coordinates
+            .add(LatLng(locationModel.latitude, locationModel.longitude));
+        print(
+            '📍 Added coordinate: ${locationModel.latitude}, ${locationModel.longitude}');
       } else {
         print('⏸️ Exercise is paused, skipping coordinate addition');
       }
@@ -1123,7 +1125,7 @@ class ActivityController extends SuperController
 
         // Update last position time for next iteration
         lastPositionTime = currentTime;
-        
+
         // Only calculate distance when exercise is ongoing
         if (exerciseState.value == ExerciseState.ongoing) {
           exerciseDistance.value = exerciseDistance.value +
@@ -1701,7 +1703,11 @@ class ActivityController extends SuperController
         PickUpTreasureBottomSheet(
           treasureModel: treasure,
           onPickUp: () {
-            callAPIPickupTreasure(treasure.id!);
+            callAPIPickupTreasure(
+              treasure.id!,
+              currentLocation.value!.latitude,
+              currentLocation.value!.longitude,
+            );
           },
         ),
       );
@@ -2131,12 +2137,16 @@ class ActivityController extends SuperController
     }
   }
 
-  Future<void> callAPIPickupTreasure(int treasureId) async {
+  Future<void> callAPIPickupTreasure(
+    int treasureId,
+    double userLat,
+    double lon,
+  ) async {
     final req = PickUpTreasureRequestModel(
       userId: userState.value.state?.userId ?? -1,
       userExerciseId: userState.value.exercise?.id ?? -1,
-      userLat: currentLocation.value!.latitude,
-      userLng: currentLocation.value!.longitude,
+      userLat: userLat,
+      userLng: lon,
       treasureId: treasureId,
     );
     await TreasureService.pickUpTreasure(
