@@ -48,7 +48,6 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/pick_up_treasure_bottom_sheet.dart';
-import 'package:gaza_go/theme/theme.g.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gaza_go/platform/models/location_model.dart';
 import 'package:get/get.dart' hide Trans;
@@ -294,7 +293,30 @@ class ActivityController extends SuperController
         Get.currentRoute != Routes.loading) {
       getUserState(showLoading: true);
     }
-    // TODO: implement onResumed
+    
+    // Listen to network changes to handle polyline gap effect
+    _initNetworkStatusListener();
+  }
+  
+  /// Initialize network status listener for polyline gap management
+  void _initNetworkStatusListener() {
+    // Listen to internet connection changes
+    ever(globalController.internetConnection, (bool isConnected) {
+      _handleNetworkStatusForPolyline(isConnected);
+    });
+  }
+  
+  /// Handle network status changes for polyline rendering
+  void _handleNetworkStatusForPolyline(bool isConnected) {
+    if (exerciseState.value == ExerciseState.ongoing) {
+      if (isConnected) {
+        print('🌐 Network reconnected during exercise - polyline will resume from current position (creating gap effect)');
+        // Don't need to do anything special - coordinates will start being added again
+      } else {
+        print('🚫 Network disconnected during exercise - polyline updates paused (GPS continues tracking)');
+        // Coordinates will stop being added, creating the gap effect
+      }
+    }
   }
 
   RxList<StatModel> get statList {
@@ -1101,13 +1123,17 @@ class ActivityController extends SuperController
     print(
         '🎯 processLocationUpdate called! accuracy: ${locationModel.accuracy}m, coordinates count: ${coordinates.length}');
     try {
-      // Only add coordinates for path tracking when exercise is ongoing
-      // This prevents drawing route segments during pause
+      // Only add coordinates for path tracking when exercise is ongoing AND network is available
+      // This creates the desired "broken line" effect during network outages
       if (exerciseState.value == ExerciseState.ongoing) {
-        coordinates
-            .add(LatLng(locationModel.latitude, locationModel.longitude));
-        print(
-            '📍 Added coordinate: ${locationModel.latitude}, ${locationModel.longitude}');
+        if (globalController.internetConnection.value) {
+          coordinates
+              .add(LatLng(locationModel.latitude, locationModel.longitude));
+          print(
+              '📍 Added coordinate: ${locationModel.latitude}, ${locationModel.longitude} (network available)');
+        } else {
+          print('🌐 Network unavailable - skipping coordinate addition (GPS still tracking user position)');
+        }
       } else {
         print('⏸️ Exercise is paused, skipping coordinate addition');
       }
@@ -1136,14 +1162,16 @@ class ActivityController extends SuperController
         }
       }
 
-      if (coordinates.length >= 10) {
-        addOverlay(Polyline(
-          polylineId: const PolylineId('path'),
-          width: 3,
-          color: Colors.red,
-          points: coordinates,
-        ));
-      }
+      // Legacy polyline rendering removed - now handled by segmented polyline in ActivityActiveMiniMapSection
+      // This prevents conflicting red polyline overlaying the blue segmented polylines
+      // if (coordinates.length >= 10) {
+      //   addOverlay(Polyline(
+      //     polylineId: const PolylineId('path'),
+      //     width: 3,
+      //     color: Colors.red,
+      //     points: coordinates,
+      //   ));
+      // }
 
       // Convert LocationModel to Position for treasure comparison
       Position positionForTreasure = Position(

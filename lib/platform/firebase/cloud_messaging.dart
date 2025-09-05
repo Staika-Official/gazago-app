@@ -25,21 +25,33 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 Future<void> initFcm() async {
   await requestPermission();
 
-  await FirebaseMessaging.instance.getToken().then((fcmToken) async {
+  // Handle FCM token with proper error handling for emulator
+  try {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
     if (fcmToken != null && fcmToken.isNotEmpty) {
       HiveStore.save(key: HiveKey.fcmToken.name, value: fcmToken);
+      Logger().i('FCM Token obtained: ${fcmToken.substring(0, 20)}...');
     }
-  });
+  } catch (e) {
+    // This is normal on emulator - FCM services not available
+    Logger().w('FCM Token error (normal on emulator): $e');
+    // Continue without FCM token - app should still work
+  }
 
-  FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
-    if (fcmToken.isNotEmpty) {
-      HiveStore.save(key: HiveKey.fcmToken.name, value: fcmToken);
-    }
-    Logger().i('refresh fcmToken : $fcmToken');
-    // Note: 이 콜백은 매번 앱이 실행되거나 새로운 토큰이 생성되었을 때 실행된다.
-  }).onError((err) {
-    Logger().e('onTokenRefreshErr $err');
-  });
+  // Setup FCM token refresh listener with error handling
+  try {
+    FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
+      if (fcmToken.isNotEmpty) {
+        HiveStore.save(key: HiveKey.fcmToken.name, value: fcmToken);
+      }
+      Logger().i('refresh fcmToken : $fcmToken');
+      // Note: 이 콜백은 매번 앱이 실행되거나 새로운 토큰이 생성되었을 때 실행된다.
+    }).onError((err) {
+      Logger().e('onTokenRefreshErr $err');
+    });
+  } catch (e) {
+    Logger().w('FCM token refresh listener setup failed (normal on emulator): $e');
+  }
 
   await setForegroundConfig();
   handleMessage();

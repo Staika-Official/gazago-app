@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
+import 'package:gaza_go/platform/helpers/segmented_polyline_helper.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart' hide Trans;
@@ -19,12 +20,11 @@ class DetailTabContent extends StatefulWidget {
   State<DetailTabContent> createState() => _DetailTabContentState();
 }
 
-class _DetailTabContentState extends State<DetailTabContent>
-    with AutomaticKeepAliveClientMixin {
+class _DetailTabContentState extends State<DetailTabContent> with AutomaticKeepAliveClientMixin {
+  final ArchiveController controller = Get.find<ArchiveController>();
+
   @override
   bool get wantKeepAlive => true;
-
-  final controller = Get.find<ArchiveController>();
 
   @override
   Widget build(BuildContext context) {
@@ -134,18 +134,8 @@ class _DetailTabContentState extends State<DetailTabContent>
                           },
                         );
 
-                        controller.addOverlay(Polyline(
-                          polylineId: const PolylineId('detail path'),
-                          width: 4,
-                          color: Colors.red,
-                          points: controller.locations.length > 1
-                              ? controller.locations
-                              : [
-                                  const LatLng(37.5551, 126.9933),
-                                  const LatLng(37.5551, 126.9933)
-                                ],
-                          // outlineColor: Colors.white,
-                        ));
+                        // Add segmented polylines for archive detail instead of continuous red line
+                        _addSegmentedPolylinesForArchive(mapController);
                       },
                     );
                   })
@@ -251,6 +241,50 @@ class _DetailTabContentState extends State<DetailTabContent>
         SizedBox(height: 50.sp),
       ],
     );
+  }
+  
+  /// Add segmented polylines for archive detail map
+  void _addSegmentedPolylinesForArchive(GoogleMapController mapController) {
+    if (controller.locations.length < 2) {
+      // Fallback to default location if no locations
+      controller.addOverlay(const Polyline(
+        polylineId: PolylineId('archive_fallback'),
+        width: 4,
+        color: Colors.blue,
+        points: [
+          LatLng(37.5551, 126.9933),
+          LatLng(37.5551, 126.9933)
+        ],
+      ));
+      return;
+    }
+        
+    // Clear any existing polylines
+    SegmentedPolylineHelper.clearSegmentedPolylines(
+      controller.drawingPolylines.toList(),
+      'archive',
+      debugMode: true,
+    );
+    
+    // Remove cleared polylines from controller
+    controller.drawingPolylines.removeWhere((polyline) => 
+      polyline.polylineId.value.startsWith('archive') ||
+      polyline.polylineId.value.contains('segment') ||
+      polyline.polylineId.value == 'detail_path');
+    
+    // Create segmented polylines from archive locations
+    List<Polyline> segmentedPolylines = SegmentedPolylineHelper.renderSegmentedPolylines(
+      coordinates: controller.locations,
+      polylineIdPrefix: 'archive_segment',
+      color: Colors.blue, // Blue color instead of red
+      width: 4,
+      debugMode: true,
+    );
+    
+    // Add segmented polylines to map
+    for (Polyline polyline in segmentedPolylines) {
+      controller.addOverlay(polyline);
+    }
   }
 
   Widget _buildDivider() {

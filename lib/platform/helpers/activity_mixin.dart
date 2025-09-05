@@ -1258,15 +1258,18 @@ mixin ActivityMixin {
       // Update current location
       currentLocation.value = location;
 
-      // Only update coordinates for map display when exercise is ongoing
-      // This prevents drawing route segments during pause
+      // Only update coordinates for map display when exercise is ongoing AND network is available
+      // This creates the desired "broken line" effect during network outages while GPS still tracks user position
       if (exerciseState.value == ExerciseState.ongoing) {
         final newCoord = LatLng(location.latitude, location.longitude);
-        if ((coordinates.isEmpty ||
-                coordinates.last.latitude != location.latitude ||
-                coordinates.last.longitude != location.longitude) &&
-            globalController.internetConnection.value) {
-          coordinates.add(newCoord);
+        if (coordinates.isEmpty ||
+            coordinates.last.latitude != location.latitude ||
+            coordinates.last.longitude != location.longitude) {
+          
+          // Only add coordinates to polyline when network is available (business requirement)
+          if (globalController.internetConnection.value) {
+            coordinates.add(newCoord);
+          }
         }
       }
 
