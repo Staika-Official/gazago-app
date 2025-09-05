@@ -11,6 +11,7 @@ import 'package:gaza_go/presentations/widgets/custom_user_location_layer.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class ActivityActiveMiniMapSection extends StatefulWidget {
   const ActivityActiveMiniMapSection({super.key});
 
@@ -19,17 +20,18 @@ class ActivityActiveMiniMapSection extends StatefulWidget {
       _ActivityActiveMiniMapSectionState();
 }
 
-class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSection> {
+class _ActivityActiveMiniMapSectionState
+    extends State<ActivityActiveMiniMapSection> {
   final ActivityController controller = Get.find();
   final GlobalController globalController = Get.find();
   GoogleMapController? mapController;
-  
+
   /// Debug print helper to avoid lint warnings
   void _debugPrint(String message) {
     // ignore: avoid_print
     print(message);
   }
-  
+
   // Track segments for gap effect
   List<List<LatLng>> polylineSegments = [];
   List<LatLng> currentSegment = [];
@@ -45,24 +47,24 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
   @override
   void initState() {
     super.initState();
-    
+
     // Listen to location updates from GPS directly for segmented polyline
     ever(controller.currentLocation, (location) {
       if (location != null) {
         _handleGPSLocationUpdate(location);
       }
     });
-    
+
     // Listen to network status changes
     ever(globalController.internetConnection, (bool isConnected) {
       _handleNetworkStatusChange(isConnected);
     });
-    
+
     // Listen to exercise state changes for pause gap effect
     ever(controller.exerciseState, (ExerciseState state) {
       _handleExerciseStateChange(state);
     });
-    
+
     // Initialize states
     wasNetworkAvailable = globalController.internetConnection.value;
   }
@@ -91,7 +93,8 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
                     polylines: Set.of(controller.drawingPolylines),
                     polygons: Set.of(controller.drawingPolygons),
                     circles: Set.of(controller.drawingCircles),
-                    useCustomLocationLayer: true, // Use custom location layer
+                    useCustomLocationLayer: true,
+                    // Use custom location layer
                     mapToolbarEnabled: false,
                     minMaxZoomPreference: const MinMaxZoomPreference(8, 20),
                     mapType: MapType.normal,
@@ -152,7 +155,6 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
               ),
             ),
             const CoolDownWidget(),
-
           ],
         ),
       ),
@@ -160,23 +162,24 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
   }
 
   /// Add segmented path visualization using SegmentedPolylineHelper
-  void _addSegmentedPathVisualization() { 
+  void _addSegmentedPathVisualization() {
     // Clear all existing segmented polylines using helper
     SegmentedPolylineHelper.clearSegmentedPolylines(
       controller.drawingPolylines.toList(),
       'mini_map',
       debugMode: true,
     );
-    
+
     // Remove cleared polylines from controller
-    controller.drawingPolylines.removeWhere((polyline) => 
-      polyline.polylineId.value.startsWith('mini_map') ||
-      polyline.polylineId.value.startsWith('path_segment_') ||
-      polyline.polylineId.value == 'current_segment' ||
-      polyline.polylineId.value.contains('segment'));
-    
+    controller.drawingPolylines.removeWhere((polyline) =>
+        polyline.polylineId.value.startsWith('mini_map') ||
+        polyline.polylineId.value.startsWith('path_segment_') ||
+        polyline.polylineId.value == 'current_segment' ||
+        polyline.polylineId.value.contains('segment'));
+
     // Use SegmentedPolylineHelper to render live segmented polylines
-    List<Polyline> segmentedPolylines = SegmentedPolylineHelper.renderLiveSegmentedPolylines(
+    List<Polyline> segmentedPolylines =
+        SegmentedPolylineHelper.renderLiveSegmentedPolylines(
       completedSegments: polylineSegments,
       currentSegment: currentSegment,
       polylineIdPrefix: 'mini_map_live',
@@ -184,7 +187,7 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
       width: 4,
       debugMode: true,
     );
-    
+
     // Add all segmented polylines to the map
     for (Polyline polyline in segmentedPolylines) {
       controller.addOverlay(polyline);
@@ -196,7 +199,7 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
     if (mapController == null) {
       return;
     }
-    
+
     // Extract LatLng from location (can be LocationModel or direct coordinates)
     LatLng newCoordinate;
     if (location is LatLng) {
@@ -205,25 +208,26 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
       // Assume LocationModel with latitude/longitude properties
       newCoordinate = LatLng(location.latitude, location.longitude);
     }
-    
+
     bool isNetworkAvailable = globalController.internetConnection.value;
-    bool isExerciseOngoing = controller.exerciseState.value == ExerciseState.ongoing;
-    
+    bool isExerciseOngoing =
+        controller.exerciseState.value == ExerciseState.ongoing;
+
     // Handle network state changes
     if (isNetworkAvailable != wasNetworkAvailable) {
       _handleNetworkStateChange(isNetworkAvailable);
       wasNetworkAvailable = isNetworkAvailable;
     }
-    
+
     // Only add coordinates to segments when BOTH network is available AND exercise is ongoing
     // This creates gap effect for both network loss and pause
     if (isNetworkAvailable && isExerciseOngoing) {
       // Check if this is actually a new coordinate
-      if (currentSegment.isEmpty || 
-          (currentSegment.last.latitude != newCoordinate.latitude || 
-           currentSegment.last.longitude != newCoordinate.longitude)) {
+      if (currentSegment.isEmpty ||
+          (currentSegment.last.latitude != newCoordinate.latitude ||
+              currentSegment.last.longitude != newCoordinate.longitude)) {
         currentSegment.add(newCoordinate);
-        
+
         // Update visualization
         _addSegmentedPathVisualization();
       }
@@ -233,7 +237,7 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
       CameraUpdate.newLatLng(newCoordinate),
     );
   }
-  
+
   /// Handle network state changes for proper segmentation
   void _handleNetworkStateChange(bool isNetworkAvailable) {
     if (!isNetworkAvailable && wasNetworkAvailable) {
@@ -242,7 +246,7 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
         polylineSegments.add(List.from(currentSegment));
         segmentCounter++;
         currentSegment.clear();
-        
+
         // Update visualization to show completed segments
         _addSegmentedPathVisualization();
       } else {
@@ -253,27 +257,25 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
       currentSegment.clear(); // Ensure clean start
     }
   }
-  
+
   /// Handle network status changes - called from initState listener
   void _handleNetworkStatusChange(bool isConnected) {
-    
     // Trigger network state change if different from current state
     if (isConnected != wasNetworkAvailable) {
       _handleNetworkStateChange(isConnected);
       wasNetworkAvailable = isConnected;
     }
   }
-  
+
   /// Handle exercise state changes for pause gap effect
   void _handleExerciseStateChange(ExerciseState state) {
-    
     if (state == ExerciseState.paused) {
       // Exercise paused - finalize current segment (similar to network loss)
       if (currentSegment.length >= 2) {
         polylineSegments.add(List.from(currentSegment));
         segmentCounter++;
         currentSegment.clear();
-        
+
         // Update visualization to show completed segments
         _addSegmentedPathVisualization();
       } else {
@@ -290,10 +292,11 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
       _addSegmentedPathVisualization(); // Clear polylines from map
     }
   }
-  
+
   /// Get current segment count (for debugging)
-  int get totalSegments => polylineSegments.length + (currentSegment.length >= 2 ? 1 : 0);
-  
+  int get totalSegments =>
+      polylineSegments.length + (currentSegment.length >= 2 ? 1 : 0);
+
   /// Get total points in all segments (for debugging)
   int get totalSegmentPoints {
     int total = currentSegment.length;
@@ -302,5 +305,4 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
     }
     return total;
   }
-  
 }
