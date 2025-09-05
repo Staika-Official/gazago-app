@@ -5,6 +5,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/platform/helpers/segmented_polyline_helper.dart';
+import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/cool_down_widget.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:get/get.dart';
@@ -147,10 +148,7 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
                     color: const Color(0xFF1D2626).withOpacity(0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
-                    Icons.zoom_out_map,
-                    color: Colors.white,
-                  ),
+                  child: iconZoomOut,
                 ),
               ),
             ),
