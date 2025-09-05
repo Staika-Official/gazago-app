@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/cool_down_widget_map.dart';
+import 'package:gaza_go/presentations/widgets/custom_user_location_layer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -210,12 +211,12 @@ class _ActivityMapState extends State<ActivityMap> {
     return Stack(
       children: [
         Obx(() {
-          return GoogleMap(
+          return EnhancedGoogleMap(
             markers: Set.of(controller.drawingMarkers),
             polylines: Set.of(controller.drawingPolylines),
             polygons: Set.of(controller.drawingPolygons),
             circles: Set.of(controller.drawingCircles),
-            myLocationEnabled: true,
+            useCustomLocationLayer: true,  // Enable custom location layer
             padding: EdgeInsets.only(top: 100.sp),
             minMaxZoomPreference: const MinMaxZoomPreference(8, 20),
             mapType: MapType.normal,

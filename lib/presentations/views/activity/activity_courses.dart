@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gaza_go/presentations/widgets/custom_user_location_layer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -106,11 +107,12 @@ class _ActivityChallengeCoursesState extends State<ActivityChallengeCourses> {
           alignment: Alignment.topCenter,
           children: [
             Obx(
-              () => GoogleMap(
+              () => EnhancedGoogleMap(
                 markers: Set.of(controller.drawingMarkers),
                 polylines: Set.of(controller.drawingPolylines),
                 polygons: Set.of(controller.drawingPolygons),
                 circles: Set.of(controller.drawingCircles),
+                useCustomLocationLayer: true,
                 mapType: MapType.normal,
                 initialCameraPosition: CameraPosition(
                   target: LatLng(

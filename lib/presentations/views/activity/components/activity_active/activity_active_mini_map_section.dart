@@ -7,6 +7,7 @@ import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/platform/helpers/segmented_polyline_helper.dart';
 import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/cool_down_widget.dart';
+import 'package:gaza_go/presentations/widgets/custom_user_location_layer.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -85,19 +86,17 @@ class _ActivityActiveMiniMapSectionState extends State<ActivityActiveMiniMapSect
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Obx(
-                  () => GoogleMap(
+                  () => EnhancedGoogleMap(
                     markers: Set.of(controller.drawingMarkers),
                     polylines: Set.of(controller.drawingPolylines),
                     polygons: Set.of(controller.drawingPolygons),
                     circles: Set.of(controller.drawingCircles),
-                    myLocationEnabled:
-                        true, // Enable default user location marker (blue)
+                    useCustomLocationLayer: true, // Use custom location layer
                     mapToolbarEnabled: false,
                     minMaxZoomPreference: const MinMaxZoomPreference(8, 20),
                     mapType: MapType.normal,
                     indoorViewEnabled: true,
                     myLocationButtonEnabled: false,
-                    buildingsEnabled: false,
                     zoomControlsEnabled: false,
                     initialCameraPosition: CameraPosition(
                       target: LatLng(

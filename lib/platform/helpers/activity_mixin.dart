@@ -97,6 +97,18 @@ mixin ActivityMixin {
   num kMinPickupRadius = 10;
   num kPickupCoolDownTime = 5.minutes.inSeconds;
 
+  // Circle synchronization state management
+  static const CircleId _pickupCircleId = CircleId('pickup_radius');
+  LatLng? _lastCircleCenter;
+  DateTime? _lastCircleUpdateAt;
+  Timer? _circleUpdateDebounce;
+
+  // Circle update thresholds (tunable)
+  static const int kCircleUpdateDebounceMs = 16; // ~60fps for smooth updates
+  static const double kStationarySpeedThresholdMs = 0.5; // m/s
+  static const double kJitterDistanceMeters = 0.5; // More sensitive to movement
+  static const int kHardRefreshIntervalMs = 100; // More frequent updates
+
   // final assetsAudioPlayer = AssetsAudioPlayer();
 
   Rx<Color> get exerciseStateTextColor {
@@ -919,6 +931,7 @@ mixin ActivityMixin {
     listClaimedTreasureIdOfSession.clear();
     currentHighlightedTreasuresId.clear();
     (this as ActivityController).clearMarkers();
+    (this as ActivityController).clearCircles();
 
     if (globalController.internetConnection.value) {
       // 업데이트 타이머에 의해서 미세한 차이로 운동 종료 요청후 즉시 운동 업데이트 요청이 나가지 않도록 타이머를 우선 스탑한다.
@@ -1026,6 +1039,15 @@ mixin ActivityMixin {
     exerciseData.value = List.empty(growable: true);
     coordinates.value = List.empty(growable: true);
     Get.find<ActivityController>().selectedCourse.value = null;
+
+    // Reset treasure and circle state
+    listTreasureOfSession.clear();
+    currentHighlightedTreasuresId.clear();
+    listClaimedTreasureIdOfSession.clear();
+    _lastCircleCenter = null;
+    _lastCircleUpdateAt = null;
+    _circleUpdateDebounce?.cancel();
+    _circleUpdateDebounce = null;
   }
 
   void resetTimer() {
@@ -1172,7 +1194,20 @@ mixin ActivityMixin {
         kPickupCoolDownTime = treasures.cooldownDuration; // in seconds
         (this as ActivityController)
             .initCoolDownTimerIfNeeded(treasures.lastClaimTime);
+
+        final myLocationMarker =
+            (this as ActivityController).getMyLocationMarker();
+        (this as ActivityController).clearOverlays();
         await _initTreasureMarker();
+        drawTreasureVisibilityCircle(isUpdate: false);
+
+        // redraw my location blue dot at after draw treasure
+        if (myLocationMarker.length == 2) {
+          (this as ActivityController).addOverlay(myLocationMarker.first);
+          (this as ActivityController)
+              .updateOrInsertCircle(myLocationMarker.last);
+        }
+
         await (this as ActivityController)
             .compareDistanceWithNearestTreasure(pos);
       },
@@ -1258,6 +1293,13 @@ mixin ActivityMixin {
       // Update current location
       currentLocation.value = location;
 
+      // Update treasure visibility circle immediately for real-time sync
+      if (exerciseState.value == ExerciseState.ongoing &&
+          listTreasureOfSession.isNotEmpty) {
+        // For immediate updates, skip debounce and update directly
+        _performCircleUpdateImmediate(location);
+      }
+
       // Only update coordinates for map display when exercise is ongoing AND network is available
       // This creates the desired "broken line" effect during network outages while GPS still tracks user position
       if (exerciseState.value == ExerciseState.ongoing) {
@@ -1265,7 +1307,6 @@ mixin ActivityMixin {
         if (coordinates.isEmpty ||
             coordinates.last.latitude != location.latitude ||
             coordinates.last.longitude != location.longitude) {
-          
           // Only add coordinates to polyline when network is available (business requirement)
           if (globalController.internetConnection.value) {
             coordinates.add(newCoord);
@@ -1333,9 +1374,187 @@ mixin ActivityMixin {
         print('TreasureGeofencingService stopped');
       }
 
+      // Clean up circle update timer
+      _circleUpdateDebounce?.cancel();
+      _circleUpdateDebounce = null;
+
       print('Enhanced GPS tracking stopped successfully');
     } catch (e) {
       print('Error stopping enhanced GPS tracking: $e');
     }
+  }
+
+  Future<void> drawTreasureVisibilityCircle({required bool isUpdate}) async {
+    // Get center from current location (synchronized with dot) or fallback to GPS
+    LatLng? center = _getDisplayLatLng();
+
+    if (center == null) {
+      // Fallback to getCurrentPosition if location not available
+      try {
+        final pos = await Geolocator.getCurrentPosition();
+        center = LatLng(pos.latitude, pos.longitude);
+      } catch (e) {
+        print('Cannot draw treasure circle: no location available - $e');
+        return;
+      }
+    }
+
+    // Remember initial state for sync
+    _lastCircleCenter = center;
+    _lastCircleUpdateAt = DateTime.now();
+
+    // Build circle with synchronized center
+    final circle = Circle(
+      circleId: _pickupCircleId,
+      center: center,
+      radius: kMinPickupRadius.toDouble(),
+      fillColor: const Color(0xff0E79F3).withOpacity(0.15),
+      strokeColor: Colors.transparent,
+      strokeWidth: 0,
+    );
+
+    if (isUpdate) {
+      (this as ActivityController).updateOrInsertCircle(circle);
+    } else {
+      (this as ActivityController).updateOrInsertCircle(circle);
+    }
+
+    print(
+        'Treasure visibility circle drawn at: ${center.latitude}, ${center.longitude}');
+  }
+
+  /// Helper: Get the display LatLng from currentLocation
+  LatLng? _getDisplayLatLng() {
+    final loc = currentLocation.value;
+    if (loc == null) {
+      // Fallback to last coordinate if available
+      if (coordinates.isNotEmpty) {
+        return coordinates.last;
+      }
+      return null;
+    }
+    return LatLng(loc.latitude, loc.longitude);
+  }
+
+  /// Helper: Calculate distance between two LatLng points in meters
+  double _distanceMeters(LatLng a, LatLng b) {
+    return Geolocator.distanceBetween(
+      a.latitude,
+      a.longitude,
+      b.latitude,
+      b.longitude,
+    );
+  }
+
+  /// Helper: Check if speed indicates stationary status
+  bool _isStationary(double speedMs) {
+    return speedMs < kStationarySpeedThresholdMs;
+  }
+
+  /// Schedule debounced circle update
+  void _scheduleCircleUpdate(LocationModel location) {
+    // Cancel any existing debounce timer
+    _circleUpdateDebounce?.cancel();
+
+    // Schedule new update after debounce period
+    _circleUpdateDebounce = Timer(
+      const Duration(milliseconds: kCircleUpdateDebounceMs),
+      () => _performCircleUpdate(location),
+    );
+  }
+
+  /// Perform the actual circle update with jitter control
+  void _performCircleUpdate(LocationModel location) {
+    final newCenter = LatLng(location.latitude, location.longitude);
+    final now = DateTime.now();
+
+    // Check if we should skip this update due to jitter
+    if (_lastCircleCenter != null && _lastCircleUpdateAt != null) {
+      final timeSinceLastUpdate =
+          now.difference(_lastCircleUpdateAt!).inMilliseconds;
+      final distanceMoved = _distanceMeters(newCenter, _lastCircleCenter!);
+
+      // Determine jitter threshold based on movement state
+      double effectiveJitterThreshold = kJitterDistanceMeters;
+      if (_isStationary(location.speed)) {
+        // Use slightly larger threshold when stationary to reduce wobble
+        effectiveJitterThreshold = kJitterDistanceMeters * 1.5;
+      }
+
+      // Skip update if movement is too small and not enough time has passed
+      if (distanceMoved < effectiveJitterThreshold &&
+          timeSinceLastUpdate < kHardRefreshIntervalMs) {
+        return;
+      }
+
+      // Handle poor GPS accuracy
+      if (location.accuracy > 50 &&
+          timeSinceLastUpdate < kHardRefreshIntervalMs) {
+        // Throttle updates during poor GPS conditions
+        return;
+      }
+    }
+
+    // Update state
+    _lastCircleCenter = newCenter;
+    _lastCircleUpdateAt = now;
+
+    // Build and update circle
+    final circle = Circle(
+      circleId: _pickupCircleId,
+      center: newCenter,
+      radius: kMinPickupRadius.toDouble(),
+      fillColor: const Color(0xff0E79F3).withOpacity(0.15),
+      strokeColor: Colors.transparent,
+      strokeWidth: 0,
+    );
+
+    // Use updateOrInsertCircle for smooth updates
+    (this as ActivityController).updateOrInsertCircle(circle);
+  }
+
+  /// Perform immediate circle update for real-time synchronization
+  /// This bypasses debouncing and most jitter controls for instant response
+  void _performCircleUpdateImmediate(LocationModel location) {
+    final newCenter = LatLng(location.latitude, location.longitude);
+    final now = DateTime.now();
+
+    // Only apply minimal jitter control for stationary users
+    if (_lastCircleCenter != null && _isStationary(location.speed)) {
+      final distanceMoved = _distanceMeters(newCenter, _lastCircleCenter!);
+      // Only skip if movement is truly negligible (< 0.3m for stationary)
+      if (distanceMoved < 0.3) {
+        return;
+      }
+    }
+
+    // Update state
+    _lastCircleCenter = newCenter;
+    _lastCircleUpdateAt = now;
+
+    // Build circle with exact same position as location
+    final circle = Circle(
+      circleId: _pickupCircleId,
+      center: newCenter,
+      radius: kMinPickupRadius.toDouble(),
+      fillColor: const Color(0xff0E79F3).withOpacity(0.15),
+      strokeColor: Colors.transparent,
+      strokeWidth: 0,
+    );
+
+    // Immediate update without batching
+    (this as ActivityController).updateOrInsertCircle(circle);
+  }
+
+  /// Update treasure visibility circle with debouncing and jitter control
+  Future<void> updateTreasureVisibilityCircle() async {
+    // Use current location for immediate update
+    final loc = currentLocation.value;
+    if (loc == null) {
+      return;
+    }
+
+    // Schedule debounced update to prevent flickering
+    _scheduleCircleUpdate(loc);
   }
 }

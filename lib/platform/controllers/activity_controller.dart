@@ -293,11 +293,11 @@ class ActivityController extends SuperController
         Get.currentRoute != Routes.loading) {
       getUserState(showLoading: true);
     }
-    
+
     // Listen to network changes to handle polyline gap effect
     _initNetworkStatusListener();
   }
-  
+
   /// Initialize network status listener for polyline gap management
   void _initNetworkStatusListener() {
     // Listen to internet connection changes
@@ -305,15 +305,17 @@ class ActivityController extends SuperController
       _handleNetworkStatusForPolyline(isConnected);
     });
   }
-  
+
   /// Handle network status changes for polyline rendering
   void _handleNetworkStatusForPolyline(bool isConnected) {
     if (exerciseState.value == ExerciseState.ongoing) {
       if (isConnected) {
-        print('🌐 Network reconnected during exercise - polyline will resume from current position (creating gap effect)');
+        print(
+            '🌐 Network reconnected during exercise - polyline will resume from current position (creating gap effect)');
         // Don't need to do anything special - coordinates will start being added again
       } else {
-        print('🚫 Network disconnected during exercise - polyline updates paused (GPS continues tracking)');
+        print(
+            '🚫 Network disconnected during exercise - polyline updates paused (GPS continues tracking)');
         // Coordinates will stop being added, creating the gap effect
       }
     }
@@ -1132,7 +1134,8 @@ class ActivityController extends SuperController
           print(
               '📍 Added coordinate: ${locationModel.latitude}, ${locationModel.longitude} (network available)');
         } else {
-          print('🌐 Network unavailable - skipping coordinate addition (GPS still tracking user position)');
+          print(
+              '🌐 Network unavailable - skipping coordinate addition (GPS still tracking user position)');
         }
       } else {
         print('⏸️ Exercise is paused, skipping coordinate addition');
@@ -1186,6 +1189,9 @@ class ActivityController extends SuperController
         altitudeAccuracy: 0.0,
         headingAccuracy: 0.0,
       );
+
+      // Circle update is now handled in _handleEnhancedLocationUpdate for perfect sync
+      drawTreasureVisibilityCircle(isUpdate: true);
 
       await compareDistanceWithNearestTreasure(positionForTreasure);
 
@@ -2009,8 +2015,7 @@ class ActivityController extends SuperController
   /// compare user location with the nearest treasure
   /// to see if they can pick it up or not
   /// UI purpose: zoom treasure if they can pick it up
-  Future<void> compareDistanceWithNearestTreasure(
-      Position userPosition) async {
+  Future<void> compareDistanceWithNearestTreasure(Position userPosition) async {
     final Map<double, List<TreasureModel>> treasureDistanceMap = {};
 
     /// calculate all distance of treasures
@@ -2039,33 +2044,28 @@ class ActivityController extends SuperController
     }
 
     /// get nearest treasures
-    var nearestTreasures =
-        treasureDistanceMap.entries.reduce((a, b) => a.key < b.key ? a : b);
-    // if nearest treasure is within pickupRadius (fetch from BE)
-    bool isInRange = nearestTreasures.key <= kMinPickupRadius;
+
+    List<TreasureModel> nearestTreasures = [];
+    treasureDistanceMap.forEach(
+      (key, value) {
+        if (key <= kMinPickupRadius) {
+          nearestTreasures.addAll(value);
+        }
+      },
+    );
 
     if (currentHighlightedTreasuresId.isNotEmpty) {
+      debugPrint("REMOVE PICKABLE TREASURE: ${nearestTreasures.length}");
       await _updateTreasureZoom(isZoom: false);
       currentHighlightedTreasuresId.clear();
     }
 
-    if (isInRange) {
-      debugPrint("TREASURE CAN BE PICKED UP: ${nearestTreasures.key}");
-      currentHighlightedTreasuresId = nearestTreasures.value
-          .map((e) => e.id ?? -1)
-          .where((id) => id != -1)
-          .toList();
-      _updateTreasureZoom(isZoom: true);
-    } else {
-      // no need to update if no treasure highlighted before
-      if (currentHighlightedTreasuresId.isEmpty) {
-        return;
-      }
-
-      debugPrint("REMOVE PICKABLE TREASURE: ${nearestTreasures.key}");
-      _updateTreasureZoom(isZoom: false);
-      currentHighlightedTreasuresId.clear();
-    }
+    debugPrint("TREASURE CAN BE PICKED UP: ${nearestTreasures.length}");
+    currentHighlightedTreasuresId = nearestTreasures
+        .map((e) => e.id ?? -1)
+        .where((id) => id != -1)
+        .toList();
+    _updateTreasureZoom(isZoom: true);
   }
 
   /// sub-method to update UI for nearest treasure marker
