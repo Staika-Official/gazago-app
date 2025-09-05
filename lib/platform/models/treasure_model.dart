@@ -83,6 +83,8 @@ enum TreasureStatus {
   created,
   @JsonValue('CLAIMED')
   claimed,
+  @JsonValue('DELETED')
+  deleted,
 }
 
 enum TreasureType {
