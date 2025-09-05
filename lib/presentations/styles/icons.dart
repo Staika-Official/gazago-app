@@ -122,6 +122,7 @@ SvgPicture iconActivityLuck = SvgPicture.asset('assets/images/activity/ico_activ
 SvgPicture iconZoomOut = SvgPicture.asset('assets/images/activity/ico_zoom_out.svg', width: 16.sp, height: 16.sp);
 SvgPicture iconCoinTik24 = SvgPicture.asset('assets/images/activity/ico_coin_tik_24.svg');
 SvgPicture iconClock = SvgPicture.asset('assets/images/activity/ico_clock.svg');
+SvgPicture iconRewardEmpty = SvgPicture.asset('assets/images/activity/ico_reward_empty.svg');
 // archive
 SvgPicture iconArchiveDetailBadge = SvgPicture.asset('assets/images/archive/ico_archive_detail_badge.svg', width: 15.sp, height: 20.sp);
 SvgPicture iconWasteBasket = SvgPicture.asset('assets/images/common/ico_wastebasket.svg', width: 32.sp, height: 32.sp);
@@ -229,3 +230,4 @@ SvgPicture iconCompanyChallengeShare = SvgPicture.asset('assets/images/challenge
 
 //collections
 SvgPicture iconNew = SvgPicture.asset('assets/images/collection/ico_new.svg', width: 18.sp, height: 18.sp);
+SvgPicture circleAnimBg = SvgPicture.asset('assets/images/circle_anim_bg.svg');

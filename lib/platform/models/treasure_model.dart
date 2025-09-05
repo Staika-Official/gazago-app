@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'treasure_model.g.dart';
@@ -10,7 +11,7 @@ class TreasureModel {
   final dynamic location;
   final String? name;
   final String? nameEn;
-  final int? amount;
+  final int amount;
   final String? treasureSymbol;
   final dynamic claimedBy;
   final DateTime? claimedTime;
@@ -27,7 +28,7 @@ class TreasureModel {
     this.location,
     this.name,
     this.nameEn,
-    this.amount,
+    this.amount = 0,
     this.treasureSymbol,
     this.claimedBy,
     this.claimedTime,
@@ -91,5 +92,14 @@ enum TreasureType {
   @JsonValue('NORMAL')
   normal,
   @JsonValue('EVENT')
-  event,
+  event;
+
+  String getTypeForBottomSheet() {
+    switch (this) {
+      case TreasureType.normal:
+        return 'normal_treasure'.tr();
+      case TreasureType.event:
+        return 'event_treasure'.tr();
+    }
+  }
 }

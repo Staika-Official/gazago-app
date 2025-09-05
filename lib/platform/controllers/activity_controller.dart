@@ -48,6 +48,7 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/pick_up_treasure_bottom_sheet.dart';
+import 'package:gaza_go/presentations/views/activity/components/activity_active/pick_up_treasure_result_overlay.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gaza_go/platform/models/location_model.dart';
 import 'package:get/get.dart' hide Trans;
@@ -293,11 +294,11 @@ class ActivityController extends SuperController
         Get.currentRoute != Routes.loading) {
       getUserState(showLoading: true);
     }
-    
+
     // Listen to network changes to handle polyline gap effect
     _initNetworkStatusListener();
   }
-  
+
   /// Initialize network status listener for polyline gap management
   void _initNetworkStatusListener() {
     // Listen to internet connection changes
@@ -305,15 +306,17 @@ class ActivityController extends SuperController
       _handleNetworkStatusForPolyline(isConnected);
     });
   }
-  
+
   /// Handle network status changes for polyline rendering
   void _handleNetworkStatusForPolyline(bool isConnected) {
     if (exerciseState.value == ExerciseState.ongoing) {
       if (isConnected) {
-        print('🌐 Network reconnected during exercise - polyline will resume from current position (creating gap effect)');
+        print(
+            '🌐 Network reconnected during exercise - polyline will resume from current position (creating gap effect)');
         // Don't need to do anything special - coordinates will start being added again
       } else {
-        print('🚫 Network disconnected during exercise - polyline updates paused (GPS continues tracking)');
+        print(
+            '🚫 Network disconnected during exercise - polyline updates paused (GPS continues tracking)');
         // Coordinates will stop being added, creating the gap effect
       }
     }
@@ -1132,7 +1135,8 @@ class ActivityController extends SuperController
           print(
               '📍 Added coordinate: ${locationModel.latitude}, ${locationModel.longitude} (network available)');
         } else {
-          print('🌐 Network unavailable - skipping coordinate addition (GPS still tracking user position)');
+          print(
+              '🌐 Network unavailable - skipping coordinate addition (GPS still tracking user position)');
         }
       } else {
         print('⏸️ Exercise is paused, skipping coordinate addition');
@@ -2009,8 +2013,7 @@ class ActivityController extends SuperController
   /// compare user location with the nearest treasure
   /// to see if they can pick it up or not
   /// UI purpose: zoom treasure if they can pick it up
-  Future<void> compareDistanceWithNearestTreasure(
-      Position userPosition) async {
+  Future<void> compareDistanceWithNearestTreasure(Position userPosition) async {
     final Map<double, List<TreasureModel>> treasureDistanceMap = {};
 
     /// calculate all distance of treasures
@@ -2113,7 +2116,11 @@ class ActivityController extends SuperController
       await TreasureService.checkNearbyTreasuresNotify(
         userId: userId,
         req: request,
-        successCallback: () {
+        successCallback: (visibleTreasures) {
+          listTreasureOfSession = List.from(visibleTreasures
+              .where((element) =>
+                  !listClaimedTreasureIdOfSession.contains(element.id))
+              .toList());
           print('Nearby treasures notification sent successfully');
         },
         errorCallback: () {
@@ -2179,7 +2186,7 @@ class ActivityController extends SuperController
     await TreasureService.pickUpTreasure(
       req: req,
       successCallback: (newTreasure) {
-        showToastV2(message: 'treasure_collected'.tr());
+        Get.dialog(PickUpTreasureResultOverlay(treasureModel: newTreasure));
 
         /// if success then start timer
         _startCooldownTimer(kPickupCoolDownTime.toInt());

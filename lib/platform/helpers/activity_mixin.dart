@@ -1265,7 +1265,6 @@ mixin ActivityMixin {
         if (coordinates.isEmpty ||
             coordinates.last.latitude != location.latitude ||
             coordinates.last.longitude != location.longitude) {
-          
           // Only add coordinates to polyline when network is available (business requirement)
           if (globalController.internetConnection.value) {
             coordinates.add(newCoord);
