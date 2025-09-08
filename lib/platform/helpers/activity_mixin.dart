@@ -1200,7 +1200,7 @@ mixin ActivityMixin {
         final myLocationMarker =
             (this as ActivityController).getMyLocationMarker();
         (this as ActivityController).clearOverlays();
-        await _initTreasureMarker();
+        await initTreasureMarker();
         drawTreasureVisibilityCircle(isUpdate: false);
 
         // redraw my location blue dot at after draw treasure
@@ -1219,7 +1219,7 @@ mixin ActivityMixin {
     );
   }
 
-  Future<void> _initTreasureMarker() async {
+  Future<void> initTreasureMarker() async {
     final markers = await buildCustomMarkers(
       positions: listTreasureOfSession,
       markerSize: kTreasureBaseSize,

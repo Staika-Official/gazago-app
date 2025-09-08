@@ -2119,6 +2119,7 @@ class ActivityController extends SuperController
               .where((element) =>
                   !listClaimedTreasureIdOfSession.contains(element.id))
               .toList());
+          initTreasureMarker();
           print('Nearby treasures notification sent successfully');
         },
         errorCallback: () {
