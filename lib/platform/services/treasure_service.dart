@@ -77,7 +77,7 @@ class TreasureService {
   static Future<void> checkNearbyTreasuresNotify({
     required int userId,
     required TreasureNearbyRequestModel req,
-    void Function()? successCallback,
+    void Function(List<TreasureModel>)? successCallback,
     void Function()? errorCallback,
   }) async {
     try {
@@ -87,8 +87,9 @@ class TreasureService {
       );
 
       if (res.statusCode == 200) {
-        print('Nearby treasures check completed successfully');
-        successCallback?.call();
+        final listVisibleTreasure = List<TreasureModel>.from(
+            res.data.map((e) => TreasureModel.fromJson(e)));
+        successCallback?.call(listVisibleTreasure);
       } else {
         print('Nearby treasures check failed with status: ${res.statusCode}');
         errorCallback?.call();

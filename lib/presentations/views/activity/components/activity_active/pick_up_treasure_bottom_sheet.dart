@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/platform/helpers/context_helper.dart';
 import 'package:gaza_go/platform/models/treasure_model.dart';
 import 'package:gaza_go/presentations/components/base_card.dart';
@@ -43,32 +44,27 @@ class PickUpTreasureBottomSheet extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
-          (treasureModel.iconUrl == null || treasureModel.iconUrl!.isEmpty)
-              ? iconCoinTik24
-              : CachedNetworkImage(
-                  imageUrl: treasureModel.iconUrl!,
-                  width: 128,
-                  height: 128,
-                ),
-          if (treasureModel.amount != null) ...[
-            const SizedBox(height: 24),
-            UnconstrainedBox(
-              child: BaseCard(
-                backgroundColor: AppColorData.regular().colorBgPrimary,
-                borderRadius: 8,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 16,
-                ),
-                child: Text(
-                  "${treasureModel.amount} ${treasureModel.treasureSymbol}",
-                  style: AppTextStyleData.regular().koBodySemiboldLg.copyWith(
-                        color: AppColorData.regular().colorPointPink,
-                      ),
-                ),
+          SvgPicture.asset(
+            treasureModel.iconPathLocal,
+            width: 153,
+          ),
+          const SizedBox(height: 24),
+          UnconstrainedBox(
+            child: BaseCard(
+              backgroundColor: AppColorData.regular().colorBgPrimary,
+              borderRadius: 8,
+              padding: const EdgeInsets.symmetric(
+                vertical: 12,
+                horizontal: 16,
+              ),
+              child: Text(
+                treasureModel.type.getTypeForBottomSheet(),
+                style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                      color: AppColorData.regular().colorPointCyan,
+                    ),
               ),
             ),
-          ],
+          ),
           const SizedBox(height: 32),
           Row(
             children: [

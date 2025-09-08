@@ -48,6 +48,7 @@ import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/pick_up_treasure_bottom_sheet.dart';
+import 'package:gaza_go/presentations/views/activity/components/activity_active/pick_up_treasure_result_overlay.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gaza_go/platform/models/location_model.dart';
 import 'package:get/get.dart' hide Trans;
@@ -2113,7 +2114,11 @@ class ActivityController extends SuperController
       await TreasureService.checkNearbyTreasuresNotify(
         userId: userId,
         req: request,
-        successCallback: () {
+        successCallback: (visibleTreasures) {
+          listTreasureOfSession = List.from(visibleTreasures
+              .where((element) =>
+                  !listClaimedTreasureIdOfSession.contains(element.id))
+              .toList());
           print('Nearby treasures notification sent successfully');
         },
         errorCallback: () {
@@ -2179,7 +2184,7 @@ class ActivityController extends SuperController
     await TreasureService.pickUpTreasure(
       req: req,
       successCallback: (newTreasure) {
-        showToastV2(message: 'treasure_collected'.tr());
+        Get.dialog(PickUpTreasureResultOverlay(treasureModel: newTreasure));
 
         /// if success then start timer
         _startCooldownTimer(kPickupCoolDownTime.toInt());
