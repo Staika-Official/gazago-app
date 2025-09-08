@@ -95,6 +95,7 @@ mixin ActivityMixin {
   final kTreasureBaseSize = const Size(16, 10);
   late final kTreasureZoomSize = kTreasureBaseSize * 1.5;
   num kMinPickupRadius = 10;
+  num kTreasureVisibleRadius = 10;
   num kPickupCoolDownTime = 5.minutes.inSeconds;
 
   // Circle synchronization state management
@@ -1191,6 +1192,7 @@ mixin ActivityMixin {
                 !listClaimedTreasureIdOfSession.contains(element.id))
             .toList());
         kMinPickupRadius = treasures.minPickupDistance;
+        kTreasureVisibleRadius = treasures.visibleRadius;
         kPickupCoolDownTime = treasures.cooldownDuration; // in seconds
         (this as ActivityController)
             .initCoolDownTimerIfNeeded(treasures.lastClaimTime);
@@ -1407,7 +1409,7 @@ mixin ActivityMixin {
     final circle = Circle(
       circleId: _pickupCircleId,
       center: center,
-      radius: kMinPickupRadius.toDouble(),
+      radius: kTreasureVisibleRadius.toDouble(),
       fillColor: const Color(0xff0E79F3).withOpacity(0.15),
       strokeColor: Colors.transparent,
       strokeWidth: 0,
@@ -1503,7 +1505,7 @@ mixin ActivityMixin {
     final circle = Circle(
       circleId: _pickupCircleId,
       center: newCenter,
-      radius: kMinPickupRadius.toDouble(),
+      radius: kTreasureVisibleRadius.toDouble(),
       fillColor: const Color(0xff0E79F3).withOpacity(0.15),
       strokeColor: Colors.transparent,
       strokeWidth: 0,
@@ -1536,7 +1538,7 @@ mixin ActivityMixin {
     final circle = Circle(
       circleId: _pickupCircleId,
       center: newCenter,
-      radius: kMinPickupRadius.toDouble(),
+      radius: kTreasureVisibleRadius.toDouble(),
       fillColor: const Color(0xff0E79F3).withOpacity(0.15),
       strokeColor: Colors.transparent,
       strokeWidth: 0,

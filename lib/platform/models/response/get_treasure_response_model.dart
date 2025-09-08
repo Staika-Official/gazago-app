@@ -8,12 +8,14 @@ class GetTreasureResponseModel {
   final List<TreasureModel> treasures;
   final int cooldownDuration;
   final int minPickupDistance;
+  final int visibleRadius;
   final DateTime? lastClaimTime;
 
   GetTreasureResponseModel({
     required this.treasures,
     required this.cooldownDuration,
     required this.minPickupDistance,
+    required this.visibleRadius,
     required this.lastClaimTime,
   });
 
