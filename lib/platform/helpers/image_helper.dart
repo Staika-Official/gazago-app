@@ -5,18 +5,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ImageHelper {
-  static final Map<String, BitmapDescriptor> _cachedImages = {};
-
   static Future<BitmapDescriptor> bitmapDescriptorFromSvgAsset(
     String assetName,
     Size size,
   ) async {
-    final cacheKey = '${assetName}_${size.width}x${size.height}';
-
-    if (_cachedImages.containsKey(cacheKey)) {
-      return _cachedImages[cacheKey]!;
-    }
-
     final pictureInfo = await vg.loadPicture(SvgAssetLoader(assetName), null);
 
     double devicePixelRatio =
@@ -41,8 +33,6 @@ class ImageHelper {
     final bytes = (await image.toByteData(format: ImageByteFormat.png))!;
 
     final bitmap = BitmapDescriptor.bytes(bytes.buffer.asUint8List());
-
-    _cachedImages[cacheKey] = bitmap;
 
     return bitmap;
   }
