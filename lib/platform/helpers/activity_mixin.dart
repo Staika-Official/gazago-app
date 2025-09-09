@@ -92,7 +92,7 @@ mixin ActivityMixin {
   List<int> currentHighlightedTreasuresId = [];
   final listClaimedTreasureIdOfSession = <int>[];
   var listTreasureOfSession = <TreasureModel>[];
-  final kTreasureBaseSize = const Size(16, 10);
+  final kTreasureBaseSize = const Size(12, 12);
   late final kTreasureZoomSize = kTreasureBaseSize * 1.5;
   num kMinPickupRadius = 10;
   num kTreasureVisibleRadius = 10;
@@ -1249,6 +1249,7 @@ mixin ActivityMixin {
           await ImageHelper.bitmapDescriptorFromSvgAsset(
         treasure.iconPathLocal,
         markerSize,
+        treasure.id!,
       );
       markers.add(
         Marker(

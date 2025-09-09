@@ -1194,8 +1194,6 @@ class ActivityController extends SuperController
       // Circle update is now handled in _handleEnhancedLocationUpdate for perfect sync
       drawTreasureVisibilityCircle(isUpdate: true);
 
-      await compareDistanceWithNearestTreasure(positionForTreasure);
-
       // Challenge zone detection logic
       if (_isRequestingChallenges) return; // Prevent concurrent requests
       _isRequestingChallenges = true;
@@ -1232,7 +1230,11 @@ class ActivityController extends SuperController
         gpsSpeed.value = convertMStoKMH(locationModel.speed);
 
         // Check nearby treasures periodically during exercise
-        await _checkNearbyTreasuresIfNeeded(locationModel);
+        _checkNearbyTreasuresIfNeeded(locationModel).whenComplete(
+          () {
+            compareDistanceWithNearestTreasure(positionForTreasure);
+          },
+        );
 
         print('posLat : $prevPositionLat, posLng : $prevPositionLng');
         print('gpsSpeed : ${gpsSpeed.value}');
@@ -2047,16 +2049,18 @@ class ActivityController extends SuperController
     /// get nearest treasures
 
     List<TreasureModel> nearestTreasures = [];
-    treasureDistanceMap.forEach(
-      (key, value) {
-        if (key <= kMinPickupRadius) {
-          nearestTreasures.addAll(value);
+    for (var entry in treasureDistanceMap.entries) {
+      if (entry.key <= kMinPickupRadius) {
+        if (nearestTreasures.length >= 15) {
+          break;
         }
-      },
-    );
+        nearestTreasures.addAll(entry.value);
+      }
+    }
 
     if (currentHighlightedTreasuresId.isNotEmpty) {
       debugPrint("REMOVE PICKABLE TREASURE: ${nearestTreasures.length}");
+
       await _updateTreasureZoom(isZoom: false);
       currentHighlightedTreasuresId.clear();
     }
@@ -2066,7 +2070,7 @@ class ActivityController extends SuperController
         .map((e) => e.id ?? -1)
         .where((id) => id != -1)
         .toList();
-    _updateTreasureZoom(isZoom: true);
+    await _updateTreasureZoom(isZoom: true);
   }
 
   /// sub-method to update UI for nearest treasure marker
@@ -2119,7 +2123,6 @@ class ActivityController extends SuperController
               .where((element) =>
                   !listClaimedTreasureIdOfSession.contains(element.id))
               .toList());
-          initTreasureMarker();
           print('Nearby treasures notification sent successfully');
         },
         errorCallback: () {
@@ -2170,11 +2173,15 @@ class ActivityController extends SuperController
     }
   }
 
+  final pickupLoading = false.obs;
+
   Future<void> _callAPIPickupTreasure(
     int treasureId,
     double userLat,
     double userLng,
   ) async {
+    if (pickupLoading.isTrue) return;
+
     final req = PickUpTreasureRequestModel(
       userId: userState.value.state?.userId ?? -1,
       userExerciseId: userState.value.exercise?.id ?? -1,
@@ -2182,9 +2189,11 @@ class ActivityController extends SuperController
       userLng: userLng,
       treasureId: treasureId,
     );
+    pickupLoading.value = true;
     await TreasureService.pickUpTreasure(
       req: req,
       successCallback: (newTreasure) {
+        Get.back();
         Get.dialog(PickUpTreasureResultOverlay(treasureModel: newTreasure));
 
         /// if success then start timer
@@ -2197,6 +2206,7 @@ class ActivityController extends SuperController
         removeMarkerById(newTreasure.id!);
       },
       errorCallback: (error) {
+        Get.back();
         if (error?.errorMessage != null) {
           showToastV2(
             message: error!.errorMessage!,
@@ -2205,5 +2215,6 @@ class ActivityController extends SuperController
         }
       },
     );
+    pickupLoading.value = false;
   }
 }

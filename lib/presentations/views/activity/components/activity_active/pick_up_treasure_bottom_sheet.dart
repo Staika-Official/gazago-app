@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/context_helper.dart';
 import 'package:gaza_go/platform/models/treasure_model.dart';
 import 'package:gaza_go/presentations/components/base_card.dart';
@@ -79,13 +80,15 @@ class PickUpTreasureBottomSheet extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: GazagoButton(
-                  buttonColor: AppColorData.regular().colorBgInteractivePrimary,
-                  buttonText: 'collect'.tr(),
-                  onTap: () {
-                    Get.back();
-                    onPickUp?.call();
-                  },
+                child: Obx(
+                  () => GazagoButton(
+                    buttonColor:
+                        AppColorData.regular().colorBgInteractivePrimary,
+                    buttonText: 'collect'.tr(),
+                    onTap: onPickUp,
+                    disableButton:
+                        Get.find<ActivityController>().pickupLoading.isTrue,
+                  ),
                 ),
               ),
             ],

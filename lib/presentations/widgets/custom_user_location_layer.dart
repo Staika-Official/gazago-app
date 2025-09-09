@@ -67,6 +67,7 @@ class _CustomUserLocationLayerState extends State<CustomUserLocationLayer> {
     return ImageHelper.bitmapDescriptorFromSvgAsset(
       "assets/images/activity/ico_map_my_dot.svg",
       const Size.square(5),
+      -1,
     );
   }
 
