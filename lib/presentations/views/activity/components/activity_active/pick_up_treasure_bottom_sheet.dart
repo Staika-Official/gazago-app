@@ -50,22 +50,23 @@ class PickUpTreasureBottomSheet extends StatelessWidget {
             width: 153,
           ),
           const SizedBox(height: 24),
-          UnconstrainedBox(
-            child: BaseCard(
-              backgroundColor: AppColorData.regular().colorBgPrimary,
-              borderRadius: 8,
-              padding: const EdgeInsets.symmetric(
-                vertical: 12,
-                horizontal: 16,
-              ),
-              child: Text(
-                treasureModel.type.getTypeForBottomSheet(),
-                style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
-                      color: AppColorData.regular().colorPointCyan,
-                    ),
+          if (treasureModel.type != null)
+            UnconstrainedBox(
+              child: BaseCard(
+                backgroundColor: AppColorData.regular().colorBgPrimary,
+                borderRadius: 8,
+                padding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
+                child: Text(
+                  treasureModel.type!.getTypeForBottomSheet(),
+                  style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                        color: AppColorData.regular().colorPointCyan,
+                      ),
+                ),
               ),
             ),
-          ),
           const SizedBox(height: 32),
           Row(
             children: [

@@ -19,7 +19,7 @@ class TreasureModel {
   final int? userExerciseId;
   final TreasureDistributionMode distributionMode;
   final TreasureStatus status;
-  final TreasureType type;
+  final TreasureType? type;
 
   TreasureModel({
     this.id,
@@ -36,7 +36,7 @@ class TreasureModel {
     this.userExerciseId,
     required this.distributionMode,
     required this.status,
-    required this.type,
+    this.type,
   });
 
   factory TreasureModel.fromJson(Map<String, dynamic> json) =>
@@ -55,6 +55,9 @@ class TreasureModel {
           case TreasureType.event:
             iconPath = 'assets/images/activity/ico_treasure_event.svg';
             break;
+          case null:
+            iconPath = 'assets/images/activity/ico_treasure_normal.svg';
+            break;
         }
         break;
       case TreasureDistributionMode.fixed:
@@ -64,6 +67,9 @@ class TreasureModel {
             break;
           case TreasureType.event:
             iconPath = 'assets/images/activity/ico_treasure_event_fixed.svg';
+            break;
+          case null:
+            iconPath = 'assets/images/activity/ico_treasure_normal_fixed.svg';
             break;
         }
         break;

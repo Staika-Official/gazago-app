@@ -1197,7 +1197,8 @@ mixin ActivityMixin {
         kTreasureVisibleRadius = treasures.visibleRadius;
         kPickupCoolDownTime = treasures.cooldownDuration; // in seconds
         // Initialize cooldown timer if needed
-        (this as ActivityController).initCoolDownTimerIfNeeded(treasures.lastClaimTime);
+        (this as ActivityController)
+            .initCoolDownTimerIfNeeded(treasures.lastClaimTime);
 
         final myLocationMarker =
             (this as ActivityController).getMyLocationMarker();
@@ -1214,7 +1215,10 @@ mixin ActivityMixin {
 
         // Use LatLng version with fetched location coordinates
         await (this as ActivityController)
-            .compareDistanceWithNearestTreasureLatLng(loc.latitude, loc.longitude);
+            .compareDistanceWithNearestTreasure(LatLng(
+          loc.latitude,
+          loc.longitude,
+        ));
       },
       errorCallback: (_) {
         print("error fetching exercise treasures");

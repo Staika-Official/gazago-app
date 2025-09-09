@@ -28,22 +28,27 @@ import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/platform/helpers/map_mixin.dart';
 import 'package:gaza_go/platform/helpers/promotion_mixin.dart';
 import 'package:gaza_go/platform/managers/unified_gps_manager.dart';
+import 'package:gaza_go/platform/handlers/location_callback_handler.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
 import 'package:gaza_go/platform/models/current_user_state_model.dart';
 import 'package:gaza_go/platform/models/promotion_ad_model.dart';
+import 'package:gaza_go/platform/models/request/pick_up_treasure_request_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/models/treasure_model.dart';
+import 'package:gaza_go/platform/models/treasure_nearby_request_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
+import 'package:gaza_go/platform/services/treasure_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
 import 'package:gaza_go/presentations/views/activity/activity_loading.dart';
 import 'package:gaza_go/presentations/views/activity/activity_select.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/pick_up_treasure_bottom_sheet.dart';
+import 'package:gaza_go/presentations/views/activity/components/activity_active/pick_up_treasure_result_overlay.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gaza_go/platform/models/location_model.dart';
 import 'package:get/get.dart' hide Trans;
@@ -153,7 +158,7 @@ class ActivityController extends SuperController
   // Added from features: cooldown timer when pick up treasure (for anti-spam)
   var coolDownTimeLeft = 0.obs; // seconds remaining
   Timer? _pickupCoolDownTimer; // cooldown timer handle
-  
+
   // Treasure pickup loading state
   final pickupLoading = false.obs;
 
@@ -1228,9 +1233,16 @@ class ActivityController extends SuperController
         gpsSpeed.value = convertMStoKMH(locationModel.speed);
 
         // Check nearby treasures periodically during exercise
-        await _checkNearbyTreasuresIfNeeded(LatLng(locationModel.latitude, locationModel.longitude));
-
-        await compareDistanceWithNearestTreasure(positionForTreasure);
+        _checkNearbyTreasuresIfNeeded(locationModel).whenComplete(
+          () {
+            compareDistanceWithNearestTreasure(
+              LatLng(
+                locationModel.latitude,
+                locationModel.longitude,
+              ),
+            );
+          },
+        );
 
         print('posLat : $prevPositionLat, posLng : $prevPositionLng');
         print('gpsSpeed : ${gpsSpeed.value}');
@@ -1431,17 +1443,16 @@ class ActivityController extends SuperController
         return;
       }
 
-      // Ensure tracking is started for better accuracy if not active
       if (!UnifiedGPSManager.instance.isActive.value) {
         await UnifiedGPSManager.instance.startTracking(activityType: 'walking');
       }
 
-      // Request current location via manager API (already filtered/converted)
       final loc = await GPS.getCurrentLocation();
       if (loc != null) {
         currentLocation.value = loc;
         isListeningToLocation.value = true;
-        print('Location acquired via UnifiedGPSManager with accuracy: ${loc.accuracy}m');
+        print(
+            'Location acquired via UnifiedGPSManager with accuracy: ${loc.accuracy}m');
       } else {
         print('UnifiedGPSManager.getCurrentLocation returned null');
         showToastPopup('location_info_unavailable'.tr());
@@ -1709,7 +1720,9 @@ class ActivityController extends SuperController
           treasureModel: treasure,
           onPickUp: () {
             _callAPIPickupTreasure(
-              treasure.id.toString(),
+              treasure.id!,
+              currentLocation.value!.latitude,
+              currentLocation.value!.longitude,
             );
           },
         ),
@@ -1860,15 +1873,15 @@ class ActivityController extends SuperController
   /// Fallback location stream for when Strava-like GPS fails
   void _startFallbackLocationStream() async {
     print('Starting fallback location stream via UnifiedGPSManager...');
-    
+
     // Track fallback usage
     UnifiedGPSManager.instance.fallbackUsageCount.value++;
     UnifiedGPSManager.instance.lastGpsSource.value = 'fallback';
 
     // Ensure UnifiedGPSManager tracking is active
     if (!UnifiedGPSManager.instance.isActive.value) {
-      final started =
-          await UnifiedGPSManager.instance.startTracking(activityType: 'walking');
+      final started = await UnifiedGPSManager.instance
+          .startTracking(activityType: 'walking');
       if (!started) {
         print('Unable to start UnifiedGPSManager in fallback');
         return;
@@ -1891,7 +1904,7 @@ class ActivityController extends SuperController
       // Track fallback usage
       UnifiedGPSManager.instance.fallbackUsageCount.value++;
       UnifiedGPSManager.instance.lastGpsSource.value = 'fallback';
-      
+
       final fallbackLoc = await GPS.getCurrentLocation();
       if (fallbackLoc != null) {
         await _handleGPSFallback(fallbackLoc);
@@ -1908,7 +1921,6 @@ class ActivityController extends SuperController
     try {
       print(
           'Attempting GPS fallback - original accuracy: ${originalLocation.accuracy}m');
-
       // Fallback is handled automatically by UnifiedGPSManager
       print('Fallback will be handled by UnifiedGPSManager');
 
@@ -1942,7 +1954,8 @@ class ActivityController extends SuperController
         // Use original as last resort
         currentLocation.value = originalLocation;
         gpsAccuracySensitive.value = originalLocation.accuracy;
-        print('Using original location as last resort: accuracy ${originalLocation.accuracy}m');
+        print(
+            'Using original location as last resort: accuracy ${originalLocation.accuracy}m');
       }
     } catch (e) {
       print('GPS fallback failed: $e');
@@ -1972,16 +1985,7 @@ class ActivityController extends SuperController
   /// compare user location with the nearest treasure
   /// to see if they can pick it up or not
   /// UI purpose: zoom treasure if they can pick it up
-  Future<void> compareDistanceWithNearestTreasure(Position userPosition) async {
-    // Preserve legacy API; route to lat/lng version
-    await compareDistanceWithNearestTreasureLatLng(
-      userPosition.latitude,
-      userPosition.longitude,
-    );
-  }
-
-  Future<void> compareDistanceWithNearestTreasureLatLng(
-      double userLat, double userLng) async {
+  Future<void> compareDistanceWithNearestTreasure(LatLng userLatLng) async {
     final Map<double, List<TreasureModel>> treasureDistanceMap = {};
 
     /// calculate all distance of treasures
@@ -1992,8 +1996,8 @@ class ActivityController extends SuperController
       }
 
       final distance = Geolocator.distanceBetween(
-        userLat,
-        userLng,
+        userLatLng.latitude,
+        userLatLng.longitude,
         t.latitude!,
         t.longitude!,
       );
@@ -2005,12 +2009,11 @@ class ActivityController extends SuperController
       }
     }
 
-    if (treasureDistanceMap.isEmpty) return;
+    if (treasureDistanceMap.isEmpty) {
+      return;
+    }
 
-    /// get shortest distance and identify pickable treasures
-    final shortest = treasureDistanceMap.keys.reduce((a, b) => a < b ? a : b);
-
-    // Enhanced treasure pickup logic (from updated upstream)
+    /// get nearest treasures
     List<TreasureModel> nearestTreasures = [];
     for (var entry in treasureDistanceMap.entries) {
       if (entry.key <= kMinPickupRadius) {
@@ -2034,16 +2037,6 @@ class ActivityController extends SuperController
         .where((id) => id != -1)
         .toList();
     await _updateTreasureZoom(isZoom: true);
-
-    // Additional animation for nearest treasure (from stashed changes)
-    final treasures = treasureDistanceMap[shortest]!;
-    for (final t in treasures) {
-      print('Should animate to treasure: ${t.id} at distance: ${shortest.toStringAsFixed(1)}m');
-      // Optional: animate to treasure if it's very close
-      if (shortest <= kMinPickupRadius) {
-        await animateToTreasure(t);
-      }
-    }
   }
 
   /// sub-method to update UI for nearest treasure marker
@@ -2058,8 +2051,101 @@ class ActivityController extends SuperController
       updateMarkerById(element);
     }
   }
-  
-  /// Initialize cooldown timer if needed (restored method)
+
+  /// Check nearby treasures periodically during exercise
+  Future<void> _checkNearbyTreasuresIfNeeded(
+      LocationModel locationModel) async {
+    try {
+      // Only check if user is in an active exercise
+      if (userState.value.exercise?.id == null) return;
+
+      DateTime now = DateTime.now();
+
+      // Check if enough time has passed since last check
+      if (lastNearbyTreasureCheck != null &&
+          now.difference(lastNearbyTreasureCheck!).inSeconds <
+              nearbyTreasureCheckIntervalSeconds) {
+        return;
+      }
+
+      // Update last check time
+      lastNearbyTreasureCheck = now;
+
+      // Create request model
+      TreasureNearbyRequestModel request = TreasureNearbyRequestModel(
+        userExerciseId: userState.value.exercise!.id!,
+        userLat: locationModel.latitude,
+        userLng: locationModel.longitude,
+      );
+
+      int userId = userState.value.state?.userId ?? 0;
+
+      // Call API to check nearby treasures
+      await TreasureService.checkNearbyTreasuresNotify(
+        userId: userId,
+        req: request,
+        successCallback: (visibleTreasures) async {
+          final newList = visibleTreasures
+              .where((e) => !listClaimedTreasureIdOfSession.contains(e.id))
+              .toList();
+
+          final List<TreasureModel> oldItemsRemoved = [];
+          final List<TreasureModel> newItemsAdded = [];
+
+          listTreasureOfSession.removeWhere((oldItem) {
+            final shouldRemove =
+                !newList.any((newItem) => newItem.id == oldItem.id);
+            if (shouldRemove) {
+              oldItemsRemoved.add(oldItem);
+            }
+            return shouldRemove;
+          });
+
+          for (final newItem in newList) {
+            final exists = listTreasureOfSession
+                .any((oldItem) => oldItem.id == newItem.id);
+            if (!exists) {
+              listTreasureOfSession.add(newItem);
+              newItemsAdded.add(newItem);
+            }
+          }
+
+          for (var item in oldItemsRemoved) {
+            removeMarkerById(item.id!);
+          }
+
+          final newMarker = await buildCustomMarkers(
+            positions: newItemsAdded,
+            markerSize: kTreasureBaseSize,
+          );
+          addOverlayAll(newMarker);
+          print('Nearby treasures notification sent successfully');
+        },
+        errorCallback: () {
+          print('Failed to send nearby treasures notification');
+        },
+      );
+    } catch (e) {
+      print('Error checking nearby treasures: $e');
+    }
+  }
+
+  /// method to active the cool down if user picked a treasure
+  void _startCooldownTimer(int timeLeft) {
+    coolDownTimeLeft.value = timeLeft;
+    _pickupCoolDownTimer?.cancel();
+    _pickupCoolDownTimer = Timer.periodic(
+      1.seconds,
+      (timer) {
+        coolDownTimeLeft--;
+        if (coolDownTimeLeft.value == 0) {
+          timer.cancel();
+          showToastV2(message: 'cooldown_ended'.tr());
+        }
+      },
+    );
+  }
+
   void initCoolDownTimerIfNeeded(DateTime? lastClaimTime) {
     void cancelCoolDownTimer() {
       coolDownTimeLeft.value = 0;
@@ -2082,66 +2168,47 @@ class ActivityController extends SuperController
       cancelCoolDownTimer();
     }
   }
-  
-  /// Start cooldown timer (restored method)
-  void _startCooldownTimer(int timeLeft) {
-    coolDownTimeLeft.value = timeLeft;
-    _pickupCoolDownTimer?.cancel();
-    _pickupCoolDownTimer = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        coolDownTimeLeft.value--;
-        if (coolDownTimeLeft.value <= 0) {
-          timer.cancel();
-          showToastPopup('cooldown_ended'.tr());
+
+  Future<void> _callAPIPickupTreasure(
+    int treasureId,
+    double userLat,
+    double userLng,
+  ) async {
+    if (pickupLoading.isTrue) return;
+
+    final req = PickUpTreasureRequestModel(
+      userId: userState.value.state?.userId ?? -1,
+      userExerciseId: userState.value.exercise?.id ?? -1,
+      userLat: userLat,
+      userLng: userLng,
+      treasureId: treasureId,
+    );
+    pickupLoading.value = true;
+    await TreasureService.pickUpTreasure(
+      req: req,
+      successCallback: (newTreasure) {
+        Get.back();
+        Get.dialog(PickUpTreasureResultOverlay(treasureModel: newTreasure));
+
+        /// if success then start timer
+        _startCooldownTimer(kPickupCoolDownTime.toInt());
+
+        /// hide the collected treasure
+        listTreasureOfSession
+            .removeWhere((element) => element.id == newTreasure.id);
+        listClaimedTreasureIdOfSession.add(newTreasure.id!);
+        removeMarkerById(newTreasure.id!);
+      },
+      errorCallback: (error) {
+        Get.back();
+        if (error?.errorMessage != null) {
+          showToastV2(
+            message: error!.errorMessage!,
+            type: ToastV2Type.error,
+          );
         }
       },
     );
-  }
-  
-  /// Animate to specific treasure (placeholder - needs implementation based on map controller)
-  Future<void> animateToTreasure(TreasureModel treasure) async {
-    if (treasure.latitude == null || treasure.longitude == null) return;
-    
-    final target = LatLng(treasure.latitude!, treasure.longitude!);
-    
-    // Animate to treasure location using available map controllers
-    for (var controller in challengeMapControllers) {
-      await controller.animateCamera(
-        CameraUpdate.newLatLngZoom(target, 17.0), // Zoom level for treasure
-      );
-    }
-    
-    print('Animated to treasure ${treasure.id} at ${treasure.latitude}, ${treasure.longitude}');
-  }
-  
-  /// Update marker by ID (placeholder - needs implementation based on your marker system)
-  @override
-  void updateMarkerById(Marker marker) {
-    // This should be implemented based on your map marker management system
-    // For now, just log the action
-    print('Should update marker: ${marker.markerId.value}');
-  }
-  
-  /// Remove marker by ID (placeholder - needs implementation based on your marker system)
-  @override
-  void removeMarkerById(int treasureId) {
-    // This should be implemented based on your map marker management system
-    // For now, just log the action
-    print('Should remove marker for treasure: $treasureId');
-  }
-
-  /// Check nearby treasures if needed  
-  Future<void> _checkNearbyTreasuresIfNeeded(LatLng currentPosition) async {
-    // Implementation for checking nearby treasures
-    print('Checking nearby treasures at: ${currentPosition.latitude}, ${currentPosition.longitude}');
-    // Add your treasure checking logic here
-  }
-
-  /// Call API to pick up treasure
-  Future<void> _callAPIPickupTreasure(String treasureId) async {
-    // Implementation for treasure pickup API call
-    print('Calling API to pickup treasure: $treasureId');
-    // Add your treasure pickup API logic here
+    pickupLoading.value = false;
   }
 }
