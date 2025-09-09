@@ -43,6 +43,11 @@ class UnifiedGPSManager extends GetxController {
   final RxDouble totalDistance = 0.0.obs;
   final RxDouble currentSpeed = 0.0.obs;
   final RxString performanceGrade = 'A'.obs;
+  
+  // GPS Source Tracking
+  final RxInt fallbackUsageCount = 0.obs;
+  final RxInt jumpDetectionCount = 0.obs;
+  final RxString lastGpsSource = 'unified'.obs; // 'unified', 'fallback', 'direct'
 
   // Battery Status
   final RxInt batteryLevel = 100.obs;
@@ -139,6 +144,7 @@ class UnifiedGPSManager extends GetxController {
   Future<bool> checkAndRequestPermissions() async {
     return await _checkPermissions();
   }
+
 
   /// Check and request permissions for background location
   Future<bool> _checkPermissions() async {
@@ -362,6 +368,9 @@ class UnifiedGPSManager extends GetxController {
   /// Handle new location data
   void _handleLocationUpdate(LocationModel locationModel) {
     try {
+      // Track GPS source
+      lastGpsSource.value = 'unified';
+      
       // Update current location
       _currentLocation = locationModel;
       currentLocation.value = locationModel;
@@ -375,6 +384,7 @@ class UnifiedGPSManager extends GetxController {
         filteredLocation = _applyLocationFiltering(locationModel);
         if (filteredLocation == null) {
           filteredPositions.value++;
+          print('GPS: Location filtered out - accuracy: ${locationModel.accuracy}m, source: ${lastGpsSource.value}');
           return;
         }
       } else {
@@ -383,6 +393,9 @@ class UnifiedGPSManager extends GetxController {
 
       // Process valid location
       _processValidLocation(filteredLocation);
+      
+      // Log successful processing
+      print('GPS: Location processed - accuracy: ${filteredLocation.accuracy}m, source: ${lastGpsSource.value}');
     } catch (e) {
       _handleLocationError(e);
     }
@@ -435,6 +448,8 @@ class UnifiedGPSManager extends GetxController {
           if (timeInterval <=
                   UnifiedGPSConfig.get<double>('jump_detection_time') &&
               distance > UnifiedGPSConfig.maxJumpDistance) {
+            jumpDetectionCount.value++;
+            print('GPS: Jump detected and filtered - distance: ${distance.toStringAsFixed(1)}m in ${timeInterval.toStringAsFixed(1)}s');
             return null; // Filter out GPS jumps
           }
 
@@ -519,8 +534,8 @@ class UnifiedGPSManager extends GetxController {
     if (window < 2) return newLocation;
 
     // Get smoothing weights from config
-    final newWeight = UnifiedGPSConfig.smoothing_weight_new;
-    final historyWeight = UnifiedGPSConfig.smoothing_weight_history;
+    final newWeight = UnifiedGPSConfig.smoothingWeightNew;
+    final historyWeight = UnifiedGPSConfig.smoothingWeightHistory;
 
     double totalWeight = 0;
     double weightedLat = 0;
@@ -665,6 +680,9 @@ class UnifiedGPSManager extends GetxController {
     averageAccuracy.value = 0.0;
     totalDistance.value = 0.0;
     currentSpeed.value = 0.0;
+    fallbackUsageCount.value = 0;
+    jumpDetectionCount.value = 0;
+    lastGpsSource.value = 'unified';
     _accuracyHistory.clear();
     _speedHistory.clear();
     locationHistory.clear();
@@ -750,6 +768,9 @@ class UnifiedGPSManager extends GetxController {
       'performance_grade': performanceGrade.value,
       'gps_mode': gpsMode.value,
       'battery_level': batteryLevel.value,
+      'fallback_usage_count': fallbackUsageCount.value,
+      'jump_detection_count': jumpDetectionCount.value,
+      'last_gps_source': lastGpsSource.value,
       'config_validation': UnifiedGPSConfig.validateConfig(),
     };
 
@@ -849,6 +870,26 @@ class UnifiedGPSManager extends GetxController {
     if (isActive.value) {
       await _configureLocationSettings();
     }
+  }
+  
+  /// Debug helper: Print comprehensive GPS status (for troubleshooting)
+  void printDebugStatus() {
+    print('=== UnifiedGPS Debug Status ===');
+    print('Active: ${isActive.value}');
+    print('Permission: ${hasPermission.value}');
+    print('GPS Mode: ${gpsMode.value}');
+    print('Current Location: ${currentLocation.value?.toString() ?? "null"}');
+    print('Performance Grade: ${performanceGrade.value}');
+    print('Total Positions: ${totalPositions.value}');
+    print('Filtered Positions: ${filteredPositions.value}');
+    print('Jump Detection Count: ${jumpDetectionCount.value}');
+    print('Fallback Usage Count: ${fallbackUsageCount.value}');
+    print('Last GPS Source: ${lastGpsSource.value}');
+    print('Average Accuracy: ${averageAccuracy.value.toStringAsFixed(1)}m');
+    print('Current Speed: ${currentSpeed.value.toStringAsFixed(1)} km/h');
+    print('Total Distance: ${totalDistance.value.toStringAsFixed(1)}m');
+    print('Battery Level: ${batteryLevel.value}%');
+    print('==============================');
   }
 
   /// Enable/disable battery optimization

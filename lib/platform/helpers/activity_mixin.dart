@@ -14,7 +14,6 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
-import 'package:gaza_go/platform/handlers/location_callback_handler.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -1173,9 +1172,12 @@ mixin ActivityMixin {
   }
 
   Future<void> fetchExerciseTreasures() async {
-    final pos = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    final loc = LocationCallbackHandler.convertToLocationModel(pos);
+    // Use manager's current location or get fresh one
+    final loc = GPS.currentLocation ?? await GPS.getCurrentLocation();
+    if (loc == null) {
+      print('fetchExerciseTreasures: Unable to get location from GPS manager');
+      return;
+    }
 
     final req = GetTreasureRequestModel(
       userId: userState.value.state?.userId ?? -1,
@@ -1194,8 +1196,8 @@ mixin ActivityMixin {
         kMinPickupRadius = treasures.minPickupDistance;
         kTreasureVisibleRadius = treasures.visibleRadius;
         kPickupCoolDownTime = treasures.cooldownDuration; // in seconds
-        (this as ActivityController)
-            .initCoolDownTimerIfNeeded(treasures.lastClaimTime);
+        // Initialize cooldown timer if needed
+        (this as ActivityController).initCoolDownTimerIfNeeded(treasures.lastClaimTime);
 
         final myLocationMarker =
             (this as ActivityController).getMyLocationMarker();
@@ -1210,11 +1212,12 @@ mixin ActivityMixin {
               .updateOrInsertCircle(myLocationMarker.last);
         }
 
+        // Use LatLng version with fetched location coordinates
         await (this as ActivityController)
-            .compareDistanceWithNearestTreasure(pos);
+            .compareDistanceWithNearestTreasureLatLng(loc.latitude, loc.longitude);
       },
       errorCallback: (_) {
-        debugPrint("error");
+        print("error fetching exercise treasures");
       },
     );
   }
@@ -1392,12 +1395,17 @@ mixin ActivityMixin {
     LatLng? center = _getDisplayLatLng();
 
     if (center == null) {
-      // Fallback to getCurrentPosition if location not available
+      // Fallback to GPS manager if location not available
       try {
-        final pos = await Geolocator.getCurrentPosition();
-        center = LatLng(pos.latitude, pos.longitude);
+        final loc = await GPS.getCurrentLocation();
+        if (loc != null) {
+          center = LatLng(loc.latitude, loc.longitude);
+        } else {
+          print('Cannot draw treasure circle: GPS manager returned null');
+          return;
+        }
       } catch (e) {
-        print('Cannot draw treasure circle: no location available - $e');
+        print('Cannot draw treasure circle: GPS manager error - $e');
         return;
       }
     }

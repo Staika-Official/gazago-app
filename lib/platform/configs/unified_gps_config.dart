@@ -6,26 +6,26 @@ import 'package:gaza_go/platform/firebase/remote_config.dart';
 class UnifiedGPSConfig {
   static final Map<String, dynamic> _defaultConfig = {
     // === URBAN WALKING OPTIMIZED SETTINGS ===
-    // Optimized for urban walking with multipath resistance
+    // Optimized for weak GPS signals in urban environments - Faster updates for less delay
     'accuracy_threshold':
-        15.0, // meters - Relaxed for urban multipath tolerance
-    'speed_threshold': 40.0, // km/h - Maximum speed threshold updated to 40km/h
-    'distance_filter': 6, // meters - Wider threshold to avoid multipath noise
+        25.0, // meters - Balanced threshold for urban environments
+    'speed_threshold': 50.0, // km/h - Higher speed threshold to avoid false rejections
+    'distance_filter': 2, // meters - Reduced for better sensitivity to movement
     'update_interval':
-        1750, // milliseconds - Balanced for urban walking smoothness
-    'min_time_interval': 1.2, // seconds - Balanced update timing
+        900, // milliseconds - Faster updates to reduce delay (was 1200)
+    'min_time_interval': 0.6, // seconds - Faster response (was 0.8)
 
     // === STATIONARY DETECTION (FIX FOR STANDING STILL JUMPING) ===
-    'stationary_detection_enabled': true, // Enable stationary detection
+    'stationary_detection_enabled': true, // Re-enabled with lenient settings
     'stationary_speed_threshold':
-        0.5, // m/s - if speed < 0.5 m/s consider stationary
+        0.5, // m/s - Less sensitive to allow small movements in urban areas
     'stationary_distance_threshold':
-        1.0, // meters - if distance < 1m consider stationary
+        2.0, // meters - Allow more movement tolerance in urban areas
     'stationary_time_threshold':
-        5.0, // seconds - must be stationary for 5s before filtering
+        8.0, // seconds - Longer time before considering stationary to reduce filtering
     'stationary_accuracy_threshold':
-        8.0, // meters - when stationary, only accept very accurate positions
-    'stationary_filter_aggressive': true, // Aggressively filter when stationary
+        20.0, // meters - More lenient accuracy when stationary to accept weaker signals
+    'stationary_filter_aggressive': false, // Less aggressive filtering for urban environments
 
     // === FILTERING & SMOOTHING - URBAN MULTIPATH RESISTANT ===
     'enable_filtering': true, // Enable advanced filtering
@@ -37,17 +37,17 @@ class UnifiedGPSConfig {
 
     // === JUMP DETECTION - URBAN WALKING OPTIMIZED ===
     'jump_detection_enabled': true,
-    'max_jump_distance': 28.0, // meters - Urban walking jump threshold
-    'jump_detection_time': 5.0, // seconds - 5 second window for jump detection
-    'consecutive_jump_limit': 2, // max 2 consecutive jumps before GPS reset
+    'max_jump_distance': 35.0, // meters - Reasonable jump threshold for urban walking
+    'jump_detection_time': 10.0, // seconds - Wide window to catch jumps
+    'consecutive_jump_limit': 2, // Standard tolerance for consecutive jumps
 
     // === GPS ACCURACY ENFORCEMENT ===
     'force_high_accuracy': true, // Force bestForNavigation accuracy
-    'reject_low_accuracy': true, // Reject positions with poor accuracy
-    'accuracy_improvement_wait': 3.0, // Wait 3s for accuracy improvement
+    'reject_low_accuracy': false, // Accept positions with poorer accuracy in urban environments
+    'accuracy_improvement_wait': 5.0, // Wait longer for accuracy improvement
     'gps_warmup_enabled':
         true, // Enable GPS warm-up for better initial accuracy
-    'gps_warmup_duration': 10.0, // 10 second warm-up period
+    'gps_warmup_duration': 15.0, // Longer warm-up period for better initial accuracy
 
     // === BATTERY OPTIMIZATION - DISABLED ===
     'enable_battery_optimization': false, // FORCE GPS at maximum performance
@@ -59,9 +59,9 @@ class UnifiedGPSConfig {
     'android_wait_for_accurate': true, // Wait for accurate location on Android
 
     // === ENHANCED DISTANCE FILTERING - URBAN OPTIMIZED ===
-    'min_distance_fixed': 5.0, // Fixed minimum distance - wider for urban noise
+    'min_distance_fixed': 1.0, // Reasonable minimum distance to avoid noise (was 0.5)
     'min_distance_accuracy_factor':
-        0.55, // Balanced factor for urban multipath and stationary noise filtering
+        0.08, // Lower factor to reduce over-filtering (was 0.1)
 
     // === BACKGROUND TRACKING - FUSED PROVIDER ENABLED ===
     'enable_background_tracking': true,
@@ -270,21 +270,23 @@ class UnifiedGPSConfig {
     switch (activity.toLowerCase()) {
       case 'walking':
       case 'walk':
-        // Walking: Urban optimized with multipath resistance
+        // Walking: Optimized for urban environments with faster updates to reduce delay
         baseConfig.addAll({
-          'distance_filter': 7, // 7m for urban walking multipath tolerance
-          'update_interval': 1750, // 1.75 seconds for urban walking
-          'speed_threshold': 40.0, // 40 km/h max speed for general activities
+          'distance_filter': 2, // Very sensitive to movement
+          'update_interval': 900, // Faster updates for less delay (was 1200)
+          'speed_threshold': 50.0, // Higher threshold to avoid false rejections
           'smoothing_window': 2, // Minimal smoothing for accuracy
-          'min_time_interval': 1.2, // 1.2 seconds for urban walking
-          'accuracy_threshold': 16.0, // Relaxed accuracy for urban multipath
+          'min_time_interval': 0.6, // Faster response timing (was 0.8)
+          'accuracy_threshold': 25.0, // Accept moderate accuracy for walking
           'stationary_detection_enabled': true, // Enhanced stationary detection
-          'stationary_speed_threshold': 0.4, // Balanced stationary detection
+          'stationary_speed_threshold': 0.5, // Less sensitive for urban noise
           'stationary_distance_threshold':
-              1.2, // Slightly wider distance when stationary
-          'max_jump_distance': 28.0, // Urban walking jump threshold
-          'smoothing_weight_new': 0.75, // Reduced new weight for urban
-          'smoothing_weight_history': 0.25, // Increased history weight
+              2.0, // More tolerance for urban movement
+          'max_jump_distance': 35.0, // Reasonable jump detection for urban walking
+          'smoothing_weight_new': 0.8, // Balanced for responsiveness
+          'smoothing_weight_history': 0.2, // Balanced history weight
+          'min_distance_fixed': 1.0, // Reasonable distance detection (was 2.0)
+          'min_distance_accuracy_factor': 0.08, // Lower to reduce filtering (was 0.1)
         });
         break;
 
@@ -367,18 +369,20 @@ class UnifiedGPSConfig {
       case 'high_accuracy':
       case 'maximum':
       case 'high_performance':
-        // Urban walking optimized maximum accuracy mode
+        // High accuracy mode optimized for fast response and reduced delay
         baseConfig.addAll({
           'accuracy_threshold': 12.0, // Urban-friendly accuracy threshold
-          'distance_filter': 5, // Urban multipath resistant distance filter
-          'update_interval': 1500, // 1.5 second updates for urban
-          'min_time_interval': 1.0, // 1 second minimum interval
+          'distance_filter': 3, // Sensitive distance filter for fast response (was 5)
+          'update_interval': 1000, // Faster updates for high accuracy (was 1500)
+          'min_time_interval': 0.7, // Faster minimum interval (was 1.0)
           'smoothing_window': 2, // Light smoothing for urban multipath
           'max_jump_distance': 25.0, // Urban jump detection
           'stationary_accuracy_threshold':
               10.0, // Urban-friendly when stationary
           'smoothing_weight_new': 0.8, // Balanced for urban multipath
           'smoothing_weight_history': 0.2, // Increased history consideration
+          'min_distance_fixed': 1.0, // Reasonable filtering
+          'min_distance_accuracy_factor': 0.08, // Lower to reduce over-filtering
         });
         break;
 
@@ -415,16 +419,16 @@ class UnifiedGPSConfig {
       case 'balanced':
       case 'activity_tracking':
       default:
-        // Urban walking balanced mode (default)
+        // Urban walking balanced mode (default) - Very lenient for weak signals
         baseConfig.addAll({
-          'accuracy_threshold': 15.0, // Urban-friendly accuracy
-          'distance_filter': 6, // Urban multipath resistant
-          'update_interval': 1750, // Balanced urban walking updates
-          'min_time_interval': 1.2, // Balanced minimum interval
+          'accuracy_threshold': 20.0, // Accept moderate accuracy for balanced mode
+          'distance_filter': 4, // More sensitive to movement
+          'update_interval': 1500, // Faster updates
+          'min_time_interval': 0.8, // Shorter minimum interval
           'smoothing_window': 2, // Minimal smoothing
-          'max_jump_distance': 28.0, // Urban walking jump detection
+          'max_jump_distance': 45.0, // More lenient jump detection
           'stationary_accuracy_threshold':
-              12.0, // Urban-friendly when stationary
+              25.0, // More lenient when stationary
           'smoothing_weight_new': 0.8, // Balanced for urban multipath
           'smoothing_weight_history': 0.2, // History consideration
         });
@@ -476,8 +480,8 @@ class UnifiedGPSConfig {
   static double get minDistanceFixed => get<double>('min_distance_fixed');
   static double get minDistanceAccuracyFactor =>
       get<double>('min_distance_accuracy_factor');
-  static double get smoothing_weight_new => get<double>('smoothing_weight_new');
-  static double get smoothing_weight_history =>
+  static double get smoothingWeightNew => get<double>('smoothing_weight_new');
+  static double get smoothingWeightHistory =>
       get<double>('smoothing_weight_history');
 
   // Alias for backward compatibility
