@@ -195,7 +195,7 @@ class Preferences extends StatelessWidget {
                 },
               ),
               PreferenceItem(
-                title: 'FAQ',
+                title: 'faq'.tr(),
                 // onTap: () => Get.toNamed(Routes.preferenceBoard, arguments: {'boardType': 'FAQ'}),
                 onTap: () {
                   Adjust.trackEvent(AdjustEvent('bkeekw'));
@@ -204,12 +204,21 @@ class Preferences extends StatelessWidget {
                 },
               ),
               PreferenceItem(
-                title: 'How to GO',
+                title: 'how_to_go'.tr(),
                 onTap: () {
                   Adjust.trackEvent(AdjustEvent('tbldgc'));
                   Get.toNamed(Routes.webView,
                       arguments: {'linkUrl': 'how_to_go_url'.tr()});
                 },
+              ),
+              Container(
+                width: double.infinity,
+                height: 6.sp,
+                color: const Color(0xFF23232D),
+              ),
+              PreferenceItem(
+                title: 'referral'.tr(),
+                onTap: () => Get.toNamed(Routes.referral),
               ),
               Container(
                 width: double.infinity,
