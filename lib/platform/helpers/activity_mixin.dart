@@ -596,7 +596,7 @@ mixin ActivityMixin {
 
           startPeriodicUpdate();
           fetchExerciseTreasures();
-          
+
           // Start nearby treasure timer for 5-second API checks
           (this as ActivityController).startNearbyTreasureTimer();
         },
@@ -643,8 +643,7 @@ mixin ActivityMixin {
     activityMixinThr
         .throttle(() => updateExercise(source: source, wasPaused: true));
     startPeriodicUpdate();
-    fetchExerciseTreasures();
-    
+
     // Start nearby treasure timer for continued exercise
     (this as ActivityController).startNearbyTreasureTimer();
   }
@@ -895,7 +894,7 @@ mixin ActivityMixin {
 
     // Stop GPS tracking when paused to prevent route drawing during pause
     _stopEnhancedGPSTracking();
-    
+
     // Stop nearby treasure timer when paused
     (this as ActivityController).stopNearbyTreasureTimer();
 
@@ -974,7 +973,7 @@ mixin ActivityMixin {
 
             // Stop enhanced GPS tracking and treasure geofencing
             _stopEnhancedGPSTracking();
-            
+
             // Stop nearby treasure timer when exercise ends
             (this as ActivityController).stopNearbyTreasureTimer();
 
@@ -1036,7 +1035,7 @@ mixin ActivityMixin {
 
     // Stop enhanced GPS tracking and treasure geofencing
     _stopEnhancedGPSTracking();
-    
+
     // Stop nearby treasure timer when exercise ends locally
     (this as ActivityController).stopNearbyTreasureTimer();
 
@@ -1110,10 +1109,10 @@ mixin ActivityMixin {
     resetVariables();
     resetTimer();
     resetSubscriptions();
-    
+
     // Stop nearby treasure timer for already finished exercise
     (this as ActivityController).stopNearbyTreasureTimer();
-    
+
     Get.until((route) => route.isFirst);
   }
 
