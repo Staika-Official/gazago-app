@@ -1,6 +1,6 @@
 class BaseUrl {
   // static const String dev = 'http://10.0.2.2:8080';
-  static const String dev = 'https://api-gazago.sotatek.works';
+  static const String dev = 'https://api-qc-gazago.sotatek.works';
   // static const String dev = 'http://ci-ext.staika.io:8081';
   static const String stage = 'https://api.stage.staika.io';
   static const String prod = 'https://api.staika.io';

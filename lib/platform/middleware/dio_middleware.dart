@@ -41,7 +41,6 @@ class Api {
         onError: (DioException e, ErrorInterceptorHandler handler) =>
             _onErrorInterceptor(e, handler),
       ),
-      CurlInterceptor(),
       // LogInterceptor(
       //   error: true,
       //   request: true,
@@ -135,41 +134,7 @@ class Api {
       }
     }
 
-    if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
-      List requestLogs = HiveStore.load(key: HiveKey.requestLogs.name) ?? [];
-      dynamic logForm;
-      if (options.data != null &&
-          options.headers['Content-Type'] != null &&
-          options.headers['Content-Type'].contains('multipart')) {
-        final Map optData = json.decode(json.encode(options.data));
-        if (optData["locations"] != null) {
-          optData["locations"] = null;
-        }
-        logForm = {
-          'logInfo': '==================================================='
-              '\nREQUEST'
-              '\nTime: ${DateTime.now()}'
-              '\nMethods: ${options.method}'
-              '\nPath: ${options.baseUrl + options.path}'
-              '\nQueries: ${(options.queryParameters)}'
-              '\nData: ${jsonEncode(optData)}',
-          'path': options.baseUrl + options.path,
-        };
-      } else {
-        logForm = {
-          'logInfo': '==================================================='
-              '\nREQUEST'
-              '\nTime: ${DateTime.now()}'
-              '\nMethods: ${options.method}'
-              '\nPath: ${options.baseUrl + options.path}'
-              '\nQueries: ${(options.queryParameters)}',
-          'path': options.baseUrl + options.path,
-        };
-      }
-
-      requestLogs.add(logForm);
-      HiveStore.save(key: HiveKey.requestLogs.name, value: requestLogs);
-    }
+    final curl = _buildCurl(options);
 
     _logger.i(
       '------------->'
@@ -178,9 +143,10 @@ class Api {
       '\nHeader Content-Type: ${options.headers['Content-Type']}'
       '\nHeader Accept-Language: ${options.headers['Accept-Language']}'
       '\nHeader Authorization: ${options.headers['Authorization']}'
-      '\nPath: ${options.baseUrl + options.path}'
-      '\nQueries: ${(options.queryParameters)}'
-      '\nData: ${options.headers['Content-Type'] != null && options.headers['Content-Type'].contains('multipart') ? 'multipart data!' : jsonEncode(options.data)}',
+      '\nPath: ${options.uri}'
+      '\nQueries: ${options.queryParameters}'
+      '\nData: ${options.headers['Content-Type'] != null && options.headers['Content-Type'].contains('multipart') ? 'multipart data!' : jsonEncode(options.data)}'
+      '\nCURL: $curl',
     );
 
     handler.next(options);
@@ -500,11 +466,8 @@ class Api {
     if (getx.Get.currentRoute != Routes.login)
       getx.Get.offAllNamed(Routes.login);
   }
-}
 
-class CurlInterceptor extends Interceptor {
-  @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+  static String _buildCurl(RequestOptions options) {
     final method = options.method;
     final url = options.uri.toString();
 
@@ -513,20 +476,16 @@ class CurlInterceptor extends Interceptor {
         .map((e) => "-H '${e.key}: ${e.value}'")
         .join(' ');
 
-    // Data (body)
+    // Data
     String data = '';
     if (options.data != null) {
       if (options.data is Map || options.data is List) {
-        data = "-d '${options.data}'";
+        data = "-d '${jsonEncode(options.data)}'";
       } else {
         data = "-d '${options.data.toString()}'";
       }
     }
 
-    final curl = "curl -X $method $headers $data '$url'";
-
-    print("CURL: $curl");
-
-    super.onRequest(options, handler);
+    return "curl -X $method $headers $data '$url'";
   }
 }
