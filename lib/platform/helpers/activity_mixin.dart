@@ -1185,7 +1185,8 @@ mixin ActivityMixin {
       userLat: loc.latitude,
       userLng: loc.longitude,
     );
-
+    final loaderController = (this as ActivityController).loaderController;
+    loaderController.isLoading.value = true;
     await TreasureService.getTreasureByExerciseId(
       req: req,
       successCallback: (treasures) async {
@@ -1219,8 +1220,10 @@ mixin ActivityMixin {
           loc.latitude,
           loc.longitude,
         ));
+        loaderController.isLoading.value = false;
       },
       errorCallback: (_) {
+        loaderController.isLoading.value = false;
         print("error fetching exercise treasures");
       },
     );
