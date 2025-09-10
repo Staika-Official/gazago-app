@@ -28,7 +28,6 @@ import 'package:gaza_go/platform/helpers/map_helper.dart';
 import 'package:gaza_go/platform/helpers/map_mixin.dart';
 import 'package:gaza_go/platform/helpers/promotion_mixin.dart';
 import 'package:gaza_go/platform/managers/unified_gps_manager.dart';
-import 'package:gaza_go/platform/handlers/location_callback_handler.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
 import 'package:gaza_go/platform/models/challenge_hierarchy_model.dart';
 import 'package:gaza_go/platform/models/challenge_model.dart';
@@ -134,8 +133,8 @@ class ActivityController extends SuperController
   RxList nearChallengeAllLocation = RxList.empty();
   Rxn<ChallengeCourseModel> nearChallengeLocation = Rxn(null);
   final int nearbyTreasureCheckIntervalSeconds = 5; // Check every 5 seconds
-  // Nearby treasure check variables
   Timer? nearbyTreasureTimer;
+  bool _isCheckingNearbyTreasures = false;
 
   Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
   final Rx<ExerciseType> selectedExerciseType = Rx(ExerciseType.walking);
@@ -1180,20 +1179,6 @@ class ActivityController extends SuperController
       //   ));
       // }
 
-      // Convert LocationModel to Position for treasure comparison
-      Position positionForTreasure = Position(
-        latitude: locationModel.latitude,
-        longitude: locationModel.longitude,
-        timestamp: locationModel.timestamp,
-        accuracy: locationModel.accuracy,
-        altitude: locationModel.altitude,
-        heading: 0.0,
-        speed: locationModel.speed,
-        speedAccuracy: 0.0,
-        altitudeAccuracy: 0.0,
-        headingAccuracy: 0.0,
-      );
-
       // Circle update is now handled in _handleEnhancedLocationUpdate for perfect sync
       drawTreasureVisibilityCircle(isUpdate: true);
 
@@ -1232,16 +1217,11 @@ class ActivityController extends SuperController
 
         gpsSpeed.value = convertMStoKMH(locationModel.speed);
 
-        // Check nearby treasures periodically during exercise
-        _checkNearbyTreasuresIfNeeded(locationModel).whenComplete(
-          () {
-            compareDistanceWithNearestTreasure(
-              LatLng(
-                locationModel.latitude,
-                locationModel.longitude,
-              ),
-            );
-          },
+        compareDistanceWithNearestTreasure(
+          LatLng(
+            locationModel.latitude,
+            locationModel.longitude,
+          ),
         );
 
         print('posLat : $prevPositionLat, posLng : $prevPositionLng');
@@ -1297,12 +1277,8 @@ class ActivityController extends SuperController
   }
 
   void calculateNearByHierarchyCourse(currentLat, currentLon) {
-    print('555555');
-
     nearChallengeLocation.value = findNearestCourse(currentLat, currentLon,
         nearChallengeAllLocation.expand((c) => c.course).toList());
-    print('nearChallengeLocation.value');
-    print(nearChallengeLocation.value);
     nearChallengeLocation.refresh();
   }
 
@@ -1321,7 +1297,6 @@ class ActivityController extends SuperController
   }
 
   Future<void> getChallengesNearByHierarchy() async {
-    print('3333333333');
     // Ensure we have a valid current location before requesting nearby challenges
     final loc = currentLocation.value;
     if (loc == null) return;
@@ -2052,30 +2027,63 @@ class ActivityController extends SuperController
     }
   }
 
-  /// Check nearby treasures periodically during exercise
-  Future<void> _checkNearbyTreasuresIfNeeded(
-      LocationModel locationModel) async {
+  /// Start nearby treasure check timer - Fixed 5 second interval
+  void startNearbyTreasureTimer() {
+    // Cancel existing timer if any
+    stopNearbyTreasureTimer();
+
+    debugPrint(
+        'Starting nearby treasure timer (${nearbyTreasureCheckIntervalSeconds}s interval)');
+
+    nearbyTreasureTimer = Timer.periodic(
+      Duration(seconds: nearbyTreasureCheckIntervalSeconds),
+      (_) => _performNearbyTreasureCheck(),
+    );
+  }
+
+  /// Stop nearby treasure check timer
+  void stopNearbyTreasureTimer() {
+    if (nearbyTreasureTimer?.isActive == true) {
+      debugPrint('Stopping nearby treasure timer');
+      nearbyTreasureTimer?.cancel();
+    }
+    nearbyTreasureTimer = null;
+    _isCheckingNearbyTreasures = false;
+  }
+
+  /// Perform nearby treasure check with fixed timer (called every 5s)
+  Future<void> _performNearbyTreasureCheck() async {
+    // Prevent overlapping API calls
+    if (_isCheckingNearbyTreasures) {
+      debugPrint(
+          'Nearby treasure check already in progress, skipping this tick');
+      return;
+    }
+
+    // Only check if user is in an active exercise
+    if (userState.value.exercise?.id == null) {
+      debugPrint('No active exercise, skipping nearby treasure check');
+      return;
+    }
+
+    // Need current location for API call
+    final currentLoc = currentLocation.value;
+    if (currentLoc == null) {
+      debugPrint(
+          'No current location available, skipping nearby treasure check');
+      return;
+    }
+
+    _isCheckingNearbyTreasures = true;
+    final startedAt = DateTime.now();
+    debugPrint('Call time: ${startedAt.toIso8601String()}');
+
     try {
-      // Only check if user is in an active exercise
-      if (userState.value.exercise?.id == null) return;
-
-      DateTime now = DateTime.now();
-
-      // Check if enough time has passed since last check
-      if (lastNearbyTreasureCheck != null &&
-          now.difference(lastNearbyTreasureCheck!).inSeconds <
-              nearbyTreasureCheckIntervalSeconds) {
-        return;
-      }
-
-      // Update last check time
-      lastNearbyTreasureCheck = now;
-
       // Create request model
       TreasureNearbyRequestModel request = TreasureNearbyRequestModel(
         userExerciseId: userState.value.exercise!.id!,
-        userLat: locationModel.latitude,
-        userLng: locationModel.longitude,
+        userLat: currentLoc.latitude,
+        userLng: currentLoc.longitude,
       );
 
       int userId = userState.value.state?.userId ?? 0;
@@ -2119,14 +2127,26 @@ class ActivityController extends SuperController
             markerSize: kTreasureBaseSize,
           );
           addOverlayAll(newMarker);
-          print('Nearby treasures notification sent successfully');
+
+          final finishedAt = DateTime.now();
+          final duration = finishedAt.difference(startedAt).inMilliseconds;
+          debugPrint(
+              'Nearby treasure API completed successfully (${duration}ms)');
+          debugPrint(
+              'Found ${visibleTreasures.length} total, ${newItemsAdded.length} new treasures');
         },
         errorCallback: () {
-          print('Failed to send nearby treasures notification');
+          final finishedAt = DateTime.now();
+          final duration = finishedAt.difference(startedAt).inMilliseconds;
+          debugPrint('Nearby treasure API failed (${duration}ms)');
         },
       );
     } catch (e) {
-      print('Error checking nearby treasures: $e');
+      final finishedAt = DateTime.now();
+      final duration = finishedAt.difference(startedAt).inMilliseconds;
+      debugPrint('Error in nearby treasure check (${duration}ms): $e');
+    } finally {
+      _isCheckingNearbyTreasures = false;
     }
   }
 

@@ -596,6 +596,9 @@ mixin ActivityMixin {
 
           startPeriodicUpdate();
           fetchExerciseTreasures();
+          
+          // Start nearby treasure timer for 5-second API checks
+          (this as ActivityController).startNearbyTreasureTimer();
         },
         errorCallback: (String? statusMessage) {
           showToastPopup(statusMessage ?? 'exercise_start_failed'.tr());
@@ -641,6 +644,9 @@ mixin ActivityMixin {
         .throttle(() => updateExercise(source: source, wasPaused: true));
     startPeriodicUpdate();
     fetchExerciseTreasures();
+    
+    // Start nearby treasure timer for continued exercise
+    (this as ActivityController).startNearbyTreasureTimer();
   }
 
   Future<RxList<LatLng>> parseCoordinates(int? exerciseId) async {
@@ -889,6 +895,9 @@ mixin ActivityMixin {
 
     // Stop GPS tracking when paused to prevent route drawing during pause
     _stopEnhancedGPSTracking();
+    
+    // Stop nearby treasure timer when paused
+    (this as ActivityController).stopNearbyTreasureTimer();
 
     exerciseState.value = ExerciseState.paused;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
@@ -965,6 +974,9 @@ mixin ActivityMixin {
 
             // Stop enhanced GPS tracking and treasure geofencing
             _stopEnhancedGPSTracking();
+            
+            // Stop nearby treasure timer when exercise ends
+            (this as ActivityController).stopNearbyTreasureTimer();
 
             if ([
               'showEndExerciseAlert',
@@ -1024,6 +1036,9 @@ mixin ActivityMixin {
 
     // Stop enhanced GPS tracking and treasure geofencing
     _stopEnhancedGPSTracking();
+    
+    // Stop nearby treasure timer when exercise ends locally
+    (this as ActivityController).stopNearbyTreasureTimer();
 
     Get.until((route) => route.isFirst);
   }
@@ -1095,6 +1110,10 @@ mixin ActivityMixin {
     resetVariables();
     resetTimer();
     resetSubscriptions();
+    
+    // Stop nearby treasure timer for already finished exercise
+    (this as ActivityController).stopNearbyTreasureTimer();
+    
     Get.until((route) => route.isFirst);
   }
 
