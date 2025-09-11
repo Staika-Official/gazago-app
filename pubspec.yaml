@@ -17,7 +17,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.4.1+340
+version: 1.5.0+350
 
 environment:
   sdk: '>=2.18.0 <3.0.0'
@@ -73,8 +73,8 @@ dependencies:
   google_sign_in: ^6.2.1
   sign_in_with_apple: ^6.1.0
   uuid: ^3.0.6
-  flutter_naver_map: ^1.2.2+flutter3.22
-  geolocator: 12.0.0
+  flutter_naver_map: ^1.3.2
+  battery_plus: ^6.0.1
   pedometer: ^4.0.1
   permission_handler: ^11.3.1
   flutter_svg_provider: ^1.0.4
@@ -140,6 +140,9 @@ dependencies:
   google_maps_flutter: ^2.10.1
   google_maps_flutter_platform_interface: ^2.11.1
   easy_localization: ^3.0.7+1
+  clipboard: ^2.0.2
+  flutter_background_service: ^5.0.9
+  geolocator: 12.0.0
 
 
 dependency_overrides:
@@ -195,6 +198,7 @@ flutter:
     - assets/images/maintenance/
     - assets/images/challenges/
     - assets/images/collection/
+    - assets/images/referral/
     - assets/lottie/
     - assets/audio/
     - assets/design/
@@ -292,11 +296,11 @@ flavorizr:
       app:
         name: "가자고-stage"
       android:
-        applicationId: "kr.co.eztechfin.gazaGo.dev"
+        applicationId: "kr.co.eztechfin.gazaGo.prod"
         firebase:
           config: ".firebase/dev/google-services.json"
       ios:
-        bundleId: "kr.co.eztechfin.gazaGo.dev"
+        bundleId: "kr.co.eztechfin.gazaGo.prod"
         firebase:
           config: ".firebase/dev/GoogleService-Info.plist"
     prod:
