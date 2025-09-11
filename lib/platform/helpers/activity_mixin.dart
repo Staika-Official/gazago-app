@@ -599,10 +599,12 @@ mixin ActivityMixin {
           // Start enhanced GPS tracking with ActivityGPSService
           _startEnhancedGPSTracking();
           startPeriodicUpdate();
-          fetchExerciseTreasures();
-
-          // Start nearby treasure timer for 5-second API checks
-          (this as ActivityController).startNearbyTreasureTimer();
+          fetchExerciseTreasures().whenComplete(
+            () {
+              // Start nearby treasure timer for 5-second API checks
+              (this as ActivityController).startNearbyTreasureTimer();
+            },
+          );
         },
         errorCallback: (String? statusMessage) {
           showToastPopup(statusMessage ?? 'exercise_start_failed'.tr());
@@ -644,15 +646,21 @@ mixin ActivityMixin {
     // Start enhanced GPS tracking for continued exercise
     _startEnhancedGPSTracking();
     if (!isExerciseInitOnce) {
-      fetchExerciseTreasures();
+      fetchExerciseTreasures().whenComplete(
+        () {
+          (this as ActivityController).startNearbyTreasureTimer();
+        },
+      );
     }
 
     activityMixinThr
         .throttle(() => updateExercise(source: source, wasPaused: true));
     startPeriodicUpdate();
 
-    // Start nearby treasure timer for continued exercise
-    (this as ActivityController).startNearbyTreasureTimer();
+    if (isExerciseInitOnce) {
+      // Start nearby treasure timer for continued exercise
+      (this as ActivityController).startNearbyTreasureTimer();
+    }
   }
 
   Future<RxList<LatLng>> parseCoordinates(int? exerciseId) async {
