@@ -14,6 +14,7 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/archive_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/firebase/cloud_messaging.dart';
+import 'package:gaza_go/platform/handlers/location_callback_handler.dart';
 import 'package:gaza_go/platform/helpers/activity_helper.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
@@ -110,6 +111,9 @@ mixin ActivityMixin {
   static const int kHardRefreshIntervalMs = 100; // More frequent updates
 
   // final assetsAudioPlayer = AssetsAudioPlayer();
+
+  // this field to keep track if this session is pause then resume or resume when re-open app
+  bool isExerciseInitOnce = false;
 
   Rx<Color> get exerciseStateTextColor {
     Color color = Colors.white;
@@ -584,6 +588,7 @@ mixin ActivityMixin {
         ),
         Platform.operatingSystem,
         successCallback: (UserExerciseModel userExerciseData) {
+          isExerciseInitOnce = true;
           userState.update((state) => state!.exercise = userExerciseData);
           exerciseState.value = ExerciseState.ongoing;
           HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
@@ -593,7 +598,6 @@ mixin ActivityMixin {
 
           // Start enhanced GPS tracking with ActivityGPSService
           _startEnhancedGPSTracking();
-
           startPeriodicUpdate();
           fetchExerciseTreasures();
 
@@ -639,6 +643,9 @@ mixin ActivityMixin {
 
     // Start enhanced GPS tracking for continued exercise
     _startEnhancedGPSTracking();
+    if (!isExerciseInitOnce) {
+      fetchExerciseTreasures();
+    }
 
     activityMixinThr
         .throttle(() => updateExercise(source: source, wasPaused: true));
@@ -951,6 +958,7 @@ mixin ActivityMixin {
         userExerciseData.value,
         source: source,
         successCallback: (CurrentUserStateModel newUserState) async {
+          isExerciseInitOnce = false;
           initLuckAnimation();
           userState.update(
             (state) {
@@ -1191,11 +1199,9 @@ mixin ActivityMixin {
 
   Future<void> fetchExerciseTreasures() async {
     // Use manager's current location or get fresh one
-    final loc = GPS.currentLocation ?? await GPS.getCurrentLocation();
-    if (loc == null) {
-      print('fetchExerciseTreasures: Unable to get location from GPS manager');
-      return;
-    }
+    final pos = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    final loc = LocationCallbackHandler.convertToLocationModel(pos);
 
     final req = GetTreasureRequestModel(
       userId: userState.value.state?.userId ?? -1,
