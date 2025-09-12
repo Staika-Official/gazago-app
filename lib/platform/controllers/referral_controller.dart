@@ -3,58 +3,116 @@ import 'dart:developer';
 import 'package:clipboard/clipboard.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
-import 'package:gaza_go/platform/models/referral_history_model.dart';
+import 'package:gaza_go/platform/helpers/preference_mixin.dart';
+import 'package:gaza_go/platform/models/referee_model.dart';
+import 'package:gaza_go/platform/models/user_account_model.dart';
+import 'package:gaza_go/platform/services/referral_service.dart';
+import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:get/get.dart' hide Trans;
 
-class ReferralController extends GetxController {
+class ReferralController extends GetxController with PreferenceMixin {
   var isLoading = true.obs;
   var myReferralCode = ''.obs;
   var canCopyCode = false.obs;
-  var historyList = <ReferralHistoryModel>[].obs;
+  var refereesList = <RefereeModel>[].obs;
+  var refereesLoading = false.obs;
+
+  // Pagination state
+  var currentPage = 0.obs;
+  var totalPages = 0.obs;
+  var hasMoreData = true.obs;
+  var isLoadingMore = false.obs;
+  var pageSize = 10;
+
+  @override
+  void onInit() async {
+    await getProfileInfo();
+    await init();
+
+    super.onInit();
+  }
 
   Future<void> init() async {
     isLoading.value = true;
     await Future.wait([
       _fetchMyReferralCode(),
-      _fetchReferralHistory(),
+      _fetchReferees(),
     ]);
     isLoading.value = false;
   }
 
   Future<void> _fetchMyReferralCode() async {
-    // fake api call
-    await Future.delayed(2.seconds);
-    myReferralCode.value = _generateReferralCode();
-    canCopyCode.value = true;
-  }
-
-  /// Generate 8-character uppercase alphanumeric referral code as per spec
-  String _generateReferralCode() {
-    // For demo purposes, using a fixed code. In real app, this would come from API
-    // Format: exactly 8 characters, uppercase alphanumeric (A-Z, 0-9)
-    return '1X6E1DKL'; // Example from spec: exactly 8 characters
-  }
-
-  Future<void> _fetchReferralHistory() async {
-    await Future.delayed(2.seconds);
-    
-    // Mock realistic referral history data
-    final mockNames = [
-      'Alice Johnson', 'Bob Smith', 'Charlie Brown', 'Diana Prince',
-      'Edward Wilson', 'Fiona Davis', 'George Miller', 'Helen Clark',
-      'Ian Thompson', 'Julia Adams', 'Kevin Lee', 'Laura Garcia',
-      'Michael Chen', 'Nancy White', 'Oliver Martinez'
-    ];
-    
-    historyList.value = List.generate(
-      mockNames.length,
-      (index) => ReferralHistoryModel(
-        id: index,
-        name: mockNames[index],
-        points: 10, // Fixed 10 Gem as per spec
-        isClaimed: true, // All show as "Claimed" status
-      ),
+    await UaaService.getAccountInfo(
+      successCallback: (UserAccountModel account) {
+        myReferralCode.value = account.userCode ?? '';
+        canCopyCode.value = true;
+      },
+      errorCallback: (error) {
+        showToastPopup('Không thể lấy referral code');
+        canCopyCode.value = false;
+      },
     );
+  }
+
+  Future<void> _fetchReferees({int? page, int? size}) async {
+    final requestPage = page ?? currentPage.value;
+    final requestSize = size ?? pageSize;
+
+    if (profile.value.id <= 0) {
+      refereesLoading.value = false;
+      return;
+    }
+
+    if (requestPage == 0) {
+      refereesLoading.value = true;
+    } else {
+      isLoadingMore.value = true;
+    }
+
+    await ReferralService.getReferees(
+      profile.value.id.toString(),
+      page: requestPage,
+      size: requestSize,
+      successCallback: (RefereeResponseModel response) {
+        currentPage.value = response.meta.page;
+        totalPages.value = response.meta.totalPages;
+        hasMoreData.value = response.meta.hasNext;
+
+        if (requestPage == 0) {
+          refereesList.value = response.data;
+          refereesLoading.value = false;
+        } else {
+          refereesList.addAll(response.data);
+          isLoadingMore.value = false;
+        }
+      },
+      errorCallback: (error) {
+        showToastPopup('Không thể tải danh sách referees');
+
+        if (requestPage == 0) {
+          refereesLoading.value = false;
+        } else {
+          isLoadingMore.value = false;
+        }
+      },
+    );
+  }
+
+  /// Load more referees (next page)
+  Future<void> loadMoreReferees() async {
+    if (!hasMoreData.value || isLoadingMore.value) {
+      return;
+    }
+
+    final nextPage = currentPage.value + 1;
+    await _fetchReferees(page: nextPage);
+  }
+
+  /// Refresh referees list (reload from page 0)
+  Future<void> refreshReferees() async {
+    currentPage.value = 0;
+    hasMoreData.value = true;
+    await _fetchReferees(page: 0);
   }
 
   Future<void> onCodeCopied() async {
@@ -84,27 +142,21 @@ class ReferralController extends GetxController {
 
   Future<bool> redeemReferralCode(String code) async {
     // TODO: Implement API call to redeem referral code
-    // For now, simulate API call with delay
-    await Future.delayed(1.seconds);
 
-    // Validate code format: exactly 8 characters, uppercase alphanumeric
+    // Validate code format first
     if (!_isValidReferralCodeFormat(code)) {
       return false;
     }
 
-    // Mock validation with 8-character test codes
-    final validTestCodes = ['ABCD1234', 'TEST2025', '1X6E1DKL'];
-    if (validTestCodes.contains(code)) {
-      return true;
-    }
+    // Gọi server API để redeem code
+    // await ReferralService.redeemCode(code, ...)
 
-    return false;
+    // Placeholder - chầm implement API
+    return true;
   }
 
-  /// Validate referral code format: exactly 8 characters, uppercase alphanumeric
+  /// Validate referral code format
   bool _isValidReferralCodeFormat(String code) {
-    if (code.length != 8) return false;
-    final regex = RegExp(r'^[A-Z0-9]{8}$');
-    return regex.hasMatch(code);
+    return code.isNotEmpty && code.trim().isNotEmpty;
   }
 }
