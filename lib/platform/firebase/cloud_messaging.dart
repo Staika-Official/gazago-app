@@ -113,6 +113,11 @@ void handleMessage() {
     }
 
     if (message.data['notificationKey'] == 'NEARBY_TREASURE_FOUND') {}
+
+    if (message.data['notificationKey'] == 'TREASURE_COOLDOWN_DONE') {
+      // Treasure cooldown has ended, user can pickup treasures again
+      // No additional action needed - just show notification
+    }
   });
 
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -150,6 +155,12 @@ void handleNotification(RemoteMessage message) {
   }
 
   if (message.data['notificationKey'] == 'NEARBY_TREASURE_FOUND') {}
+
+  if (message.data['notificationKey'] == 'TREASURE_COOLDOWN_DONE') {
+    // Navigate to activity screen when user taps cooldown notification
+    Get.until((route) => route.isFirst);
+    Get.find<HomeMenuController>().selectMenu(2); // Activity tab
+  }
 }
 
 //for iOS and web
