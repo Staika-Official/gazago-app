@@ -2089,7 +2089,7 @@ class ActivityController extends SuperController
       int userId = userState.value.state?.userId ?? 0;
 
       // Call API to check nearby treasures
-      await TreasureService.checkNearbyTreasuresNotify(
+      TreasureService.checkNearbyTreasuresNotify(
         userId: userId,
         req: request,
         successCallback: (visibleTreasures) async {
