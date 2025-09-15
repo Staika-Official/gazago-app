@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/referral_controller.dart';
+import 'package:gaza_go/platform/services/referral_service.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
@@ -47,12 +48,60 @@ class RedeemCodeButton extends GetWidget<ReferralController> {
 class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
   const RedeemCodeBottomSheet({super.key});
 
+  Future<void> _handleReferralCodeSubmission(
+      String code,
+      TextEditingController codeController,
+      RxBool hasError,
+      RxString errorMessage,
+      RxBool isSubmitting) async {
+    // Set loading state
+    isSubmitting.value = true;
+
+    try {
+      // Call referral service directly with custom error handling
+      await ReferralService.redeemReferralCode(
+        controller.profile.value.id.toString(),
+        code,
+        successCallback: () {
+          // Clear input and close dialog on success
+          codeController.clear();
+          Get.back();
+          // Show success overlay dialog
+          OverlayDialog.showSuccess(
+            title: 'awesome'.tr(),
+            description: 'referral_redeem_success'.tr(),
+          );
+          // Refresh referees list
+          controller.refreshReferees();
+        },
+        errorCallback: (String errorMsg, bool isCodeNotFound) {
+          if (isCodeNotFound) {
+            // Show error in current dialog, don't close
+            hasError.value = true;
+            errorMessage.value = errorMsg;
+          } else {
+            // Close dialog and show overlay for other errors
+            Get.back();
+            OverlayDialog.showFailure(
+              title: 'failed'.tr(),
+              description: errorMsg,
+            );
+          }
+        },
+      );
+    } finally {
+      // Always reset loading state
+      isSubmitting.value = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final TextEditingController codeController = TextEditingController();
     final RxString errorMessage = ''.obs;
     final RxBool hasError = false.obs;
     final RxBool hasText = false.obs;
+    final RxBool isSubmitting = false.obs;
 
     return AnimatedPadding(
       padding: const EdgeInsets.only(bottom: 0),
@@ -195,14 +244,19 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                     errorMessage.value = '';
                                   }
 
-                                  // Validate length immediately (8 characters as per spec)
-                                  if (value.length != 8 && value.isNotEmpty) {
-                                    hasError.value = true;
-                                    errorMessage.value =
-                                        'code_must_be_8_characters'.tr();
-                                  } else if (value.length == 8) {
-                                    hasError.value = false;
-                                    errorMessage.value = '';
+                                  // Validate format immediately (exactly 8 characters)
+                                  if (value.isNotEmpty) {
+                                    final upperValue = value.toUpperCase();
+                                    if (upperValue.length != 8) {
+                                      hasError.value = true;
+                                      errorMessage.value = 'code_must_be_8_characters'.tr();
+                                    } else if (!RegExp(r'^[A-Z0-9]{8}$').hasMatch(upperValue)) {
+                                      hasError.value = true;
+                                      errorMessage.value = 'invalid_code_format'.tr();
+                                    } else {
+                                      hasError.value = false;
+                                      errorMessage.value = '';
+                                    }
                                   }
                                 },
                               ),
@@ -251,7 +305,9 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                     children: [
                       // Submit button
                       Obx(() {
-                        final canSubmit = hasText.value && !hasError.value;
+                        final canSubmit = hasText.value &&
+                            !hasError.value &&
+                            !isSubmitting.value;
                         return Container(
                           height: 56,
                           decoration: BoxDecoration(
@@ -272,6 +328,8 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                       final code = codeController.text
                                           .trim()
                                           .toUpperCase();
+
+                                      // Basic validation
                                       if (code.isEmpty) {
                                         hasError.value = true;
                                         errorMessage.value =
@@ -279,11 +337,11 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                         return;
                                       }
 
+                                      // Validate exactly 8 characters
                                       if (code.length != 8) {
                                         hasError.value = true;
                                         errorMessage.value =
-                                            'code_must_be_exactly_8_characters'
-                                                .tr();
+                                            'code_must_be_exactly_8_characters'.tr();
                                         return;
                                       }
 
@@ -296,76 +354,33 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                         return;
                                       }
 
-                                      // Close bottom sheet first
-                                      Get.back();
-
-                                      // Check for test codes (8-character format)
-                                      if (code == 'ABCD1234') {
-                                        // Show success dialog
-                                        OverlayDialog.showSuccess(
-                                          title: 'success'.tr(),
-                                          description:
-                                              'success_redeemed_code'.tr(),
-                                        );
-                                      } else if (code == 'TEST2025') {
-                                        // Show success dialog
-                                        OverlayDialog.showSuccess(
-                                          title: 'success'.tr(),
-                                          description:
-                                              'referral_code_redeemed_successfully'
-                                                  .tr(),
-                                        );
-                                      } else if (code == 'EXPIRED1') {
-                                        // Show failure dialog
-                                        OverlayDialog.showFailure(
-                                          title: 'failed'.tr(),
-                                          description:
-                                              'referral_code_reached_limit'
-                                                  .tr(),
-                                        );
-                                      } else {
-                                        // For other codes, use the original controller logic
-                                        try {
-                                          final success = await controller
-                                              .redeemReferralCode(code);
-
-                                          if (success) {
-                                            // Show success dialog
-                                            OverlayDialog.showSuccess(
-                                              title: 'success'.tr(),
-                                              description:
-                                                  'referral_code_redeemed_successfully'
-                                                      .tr(),
-                                            );
-                                          } else {
-                                            // Show failure dialog
-                                            OverlayDialog.showFailure(
-                                              title: 'failed'.tr(),
-                                              description:
-                                                  'invalid_referral_code_try_again'
-                                                      .tr(),
-                                            );
-                                          }
-                                        } catch (e) {
-                                          // Show failure dialog for errors
-                                          OverlayDialog.showFailure(
-                                            title: 'failed'.tr(),
-                                            description:
-                                                'error_occurred_try_again'.tr(),
-                                          );
-                                        }
-                                      }
+                                      // Call API for all codes (no more mock/test cases)
+                                      await _handleReferralCodeSubmission(
+                                          code,
+                                          codeController,
+                                          hasError,
+                                          errorMessage,
+                                          isSubmitting);
                                     }
                                   : null,
                               borderRadius: BorderRadius.circular(8.sp),
                               child: Center(
-                                child: StyledText(
-                                  'submit'.tr(),
-                                  fontSize: 18,
-                                  lineHeight: 18,
-                                  fontWeight: 500,
-                                  color: Colors.black,
-                                ),
+                                child: isSubmitting.value
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.black,
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : StyledText(
+                                        'submit'.tr(),
+                                        fontSize: 18,
+                                        lineHeight: 18,
+                                        fontWeight: 500,
+                                        color: Colors.black,
+                                      ),
                               ),
                             ),
                           ),

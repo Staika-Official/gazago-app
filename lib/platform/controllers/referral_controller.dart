@@ -1,9 +1,11 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/preference_mixin.dart';
+import 'package:gaza_go/presentations/components/overlay_dialog.dart';
 import 'package:gaza_go/platform/models/referee_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/referral_service.dart';
@@ -16,6 +18,10 @@ class ReferralController extends GetxController with PreferenceMixin {
   var canCopyCode = false.obs;
   var refereesList = <RefereeModel>[].obs;
   var refereesLoading = false.obs;
+  var isRedeemingReferralCode = false.obs;
+  
+  // Add TextEditingController for referral code input
+  late TextEditingController referralCodeController;
 
   // Pagination state
   var currentPage = 0.obs;
@@ -26,10 +32,17 @@ class ReferralController extends GetxController with PreferenceMixin {
 
   @override
   void onInit() async {
+    referralCodeController = TextEditingController();
     await getProfileInfo();
     await init();
 
     super.onInit();
+  }
+  
+  @override
+  void onClose() {
+    referralCodeController.dispose();
+    super.onClose();
   }
 
   Future<void> init() async {
@@ -141,22 +154,54 @@ class ReferralController extends GetxController with PreferenceMixin {
   }
 
   Future<bool> redeemReferralCode(String code) async {
-    // TODO: Implement API call to redeem referral code
-
     // Validate code format first
     if (!_isValidReferralCodeFormat(code)) {
+      // For invalid format, show error directly in the dialog (not overlay)
+      showToastPopup('invalid_code_format'.tr());
       return false;
     }
 
-    // Gọi server API để redeem code
-    // await ReferralService.redeemCode(code, ...)
+    // Check if user profile is available
+    if (profile.value.id <= 0) {
+      showToastPopup('user_info_not_found'.tr());
+      return false;
+    }
 
-    // Placeholder - chầm implement API
-    return true;
+    isRedeemingReferralCode.value = true;
+    bool success = false;
+
+    await ReferralService.redeemReferralCode(
+      profile.value.id.toString(),
+      code.trim(),
+      successCallback: () {
+        success = true;
+        // Clear input field
+        referralCodeController.clear();
+        // Refresh referees list to show updated data
+        refreshReferees();
+        // Show success dialog
+        OverlayDialog.showSuccess(
+          title: 'awesome'.tr(),
+          description: 'referral_redeem_success'.tr(),
+        );
+      },
+      errorCallback: (String errorMessage, bool isCodeNotFound) {
+        success = false;
+        // Note: Error handling is now done in UI layer (RedeemCodeBottomSheet)
+        // This callback is kept for backward compatibility but does nothing
+        // to avoid duplicate error dialogs
+      },
+    );
+
+    isRedeemingReferralCode.value = false;
+    return success;
   }
 
   /// Validate referral code format
   bool _isValidReferralCodeFormat(String code) {
-    return code.isNotEmpty && code.trim().isNotEmpty;
+    final trimmedCode = code.trim().toUpperCase();
+    // Validation: exactly 8 characters, alphanumeric only
+    return trimmedCode.length == 8 && 
+           RegExp(r'^[A-Z0-9]{8}$').hasMatch(trimmedCode);
   }
 }

@@ -6,12 +6,10 @@ import 'package:adjust_sdk/adjust_event.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:gaza_go/constants/config.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/flavors.dart';
-import 'package:gaza_go/platform/firebase/remote_config.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
 import 'package:gaza_go/platform/models/access_token_model.dart';
@@ -26,7 +24,6 @@ import 'package:get/get.dart' hide Trans;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -145,8 +142,42 @@ class LoginController extends GetxController {
         HiveStore.save(
             key: HiveKey.certified.name,
             value: user.authorities!.contains('ROLE_CERTIFIED_USER'));
+
+        // Handle referral code if present in account info
+        if (user.userCode != null && user.userCode!.isNotEmpty) {
+          _handleReferralCodeFromAccount(user.userCode!, user.id.toString());
+        }
       },
     );
+  }
+
+  /// Handle referral code received from account API after login
+  void _handleReferralCodeFromAccount(
+      String referralCode, String userId) async {
+    try {
+      // Check if we already processed this referral code to avoid duplicate processing
+      String? lastProcessedCode =
+          HiveStore.loadString(key: 'last_processed_referral_code');
+      if (lastProcessedCode == referralCode) {
+        return; // Already processed this code
+      }
+
+      // Patch the referral code to user-info API
+      await UaaService.modifyAccountInfo(
+        {'referralCode': referralCode},
+        successCallback: (UserAccountModel updatedUser) {
+          // Save that we processed this referral code
+          HiveStore.save(
+              key: 'last_processed_referral_code', value: referralCode);
+          print('Referral code patched successfully: $referralCode');
+        },
+        errorCallback: (error) {
+          print('Failed to patch referral code: $error');
+        },
+      );
+    } catch (e) {
+      print('Error handling referral code: $e');
+    }
   }
 
   // Future<void> getUserInfo() async {
@@ -217,10 +248,10 @@ class LoginController extends GetxController {
       platform: Platform.isAndroid ? 'Android' : 'iOS',
       deviceModel: Platform.isAndroid
           ? androidDeviceInfo!.model
-          : iosDeviceInfo!.utsname.machine!,
+          : iosDeviceInfo!.utsname.machine,
       osVersion: Platform.isAndroid
           ? androidDeviceInfo!.version.sdkInt.toString()
-          : iosDeviceInfo!.systemVersion!,
+          : iosDeviceInfo!.systemVersion,
       providerEnv:
           appliedEndpoint != null && appliedEndpoint!['activateStageMode']
               ? 'STAGE'

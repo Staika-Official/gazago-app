@@ -9,4 +9,14 @@ class ReferralApi {
       showLoading: false,
     ).get('/user-referral/$userId/referees?page=$page&size=$size');
   }
+
+  // API GET /services/gazago/api/user-referral/{userId}/redeem/{referralCode}
+  static Future<Response> redeemReferralCode(String userId, String referralCode) async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: true,
+      allowCustomErrorHandler: true,
+      showToastOnError: false, // Disable auto error toast
+    ).get('/user-referral/$userId/redeem/$referralCode');
+  }
 }
