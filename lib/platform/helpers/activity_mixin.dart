@@ -569,7 +569,9 @@ mixin ActivityMixin {
               HiveStore.loadString(key: HiveKey.profileImageUrl.name),
           type: exerciseType.value == ExerciseType.walking.value
               ? ExerciseType.walking.value
-              : ExerciseType.hiking.value,
+              : exerciseType.value == ExerciseType.treasureHunting.value
+                  ? ExerciseType.treasureHunting.value
+                  : ExerciseType.hiking.value,
           steps: 0,
           speed: 0,
           distance: 0,
@@ -599,12 +601,16 @@ mixin ActivityMixin {
           // Start enhanced GPS tracking with ActivityGPSService
           _startEnhancedGPSTracking();
           startPeriodicUpdate();
-          fetchExerciseTreasures().whenComplete(
-            () {
-              // Start nearby treasure timer for 5-second API checks
-              (this as ActivityController).startNearbyTreasureTimer();
-            },
-          );
+          
+          // Only start treasure hunting features for treasure hunting mode
+          if (exerciseType == ExerciseType.treasureHunting) {
+            fetchExerciseTreasures().whenComplete(
+              () {
+                // Start nearby treasure timer for 5-second API checks
+                (this as ActivityController).startNearbyTreasureTimer();
+              },
+            );
+          }
         },
         errorCallback: (String? statusMessage) {
           showToastPopup(statusMessage ?? 'exercise_start_failed'.tr());
@@ -645,7 +651,11 @@ mixin ActivityMixin {
 
     // Start enhanced GPS tracking for continued exercise
     _startEnhancedGPSTracking();
-    if (!isExerciseInitOnce) {
+    
+    // Only start treasure hunting features if current exercise is treasure hunting mode
+    bool isTreasureHuntingMode = (this as ActivityController).selectedExerciseType.value == ExerciseType.treasureHunting;
+    
+    if (!isExerciseInitOnce && isTreasureHuntingMode) {
       fetchExerciseTreasures().whenComplete(
         () {
           (this as ActivityController).startNearbyTreasureTimer();
@@ -657,7 +667,7 @@ mixin ActivityMixin {
         .throttle(() => updateExercise(source: source, wasPaused: true));
     startPeriodicUpdate();
 
-    if (isExerciseInitOnce) {
+    if (isExerciseInitOnce && isTreasureHuntingMode) {
       // Start nearby treasure timer for continued exercise
       (this as ActivityController).startNearbyTreasureTimer();
     }

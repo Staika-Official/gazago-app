@@ -292,6 +292,92 @@ class ActivitySelect extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 10.0.sp),
+                      child: Ink(
+                        width: 302.sp,
+                        height: 118.sp,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          color: const Color(0xffFFD700),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.25),
+                              offset: Offset(0, 0),
+                              blurRadius: 4,
+                              spreadRadius: 4,
+                            )
+                          ],
+                        ),
+                        child: InkWell(
+                          onTap: () =>
+                              controller.selectExerciseType(ExerciseType.treasureHunting),
+                          borderRadius: BorderRadius.circular(14),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 26.sp, vertical: 24.sp),
+                            child: Row(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(74),
+                                  child: SvgPicture.asset(
+                                    'assets/images/activity/ico_activity_type_treasure_hunting.svg',
+                                    width: 74.sp,
+                                    height: 74.sp,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 22.sp),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 9.sp, vertical: 4.sp),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(9.sp),
+                                          color: const Color(0xff0E2627),
+                                        ),
+                                        child: StyledText(
+                                          'general'.tr(),
+                                          color: const Color(0xffFFD700),
+                                          fontSize: 10,
+                                          fontWeight: 600,
+                                          lineHeight: 10,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 9),
+                                        child: StyledText(
+                                          'treasure_hunting'.tr(),
+                                          color: Colors.black,
+                                          fontSize: 19,
+                                          fontWeight: 600,
+                                          lineHeight: 19,
+                                          letterSpacing: -0.3,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10),
+                                        child: StyledText(
+                                          'treasure_hunt_description'.tr(),
+                                          color: Colors.black,
+                                          fontSize: 11,
+                                          fontWeight: 600,
+                                          lineHeight: 11,
+                                          letterSpacing: 0.3,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0.sp),
                       child: const Divider(
                         color: Color(0xff363841),
                         thickness: 2,

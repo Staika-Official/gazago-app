@@ -1,0 +1,22 @@
+<svg width="74" height="74" viewBox="0 0 74 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 1171276873">
+<g id="mk">
+<path id="Ellipse 1652" d="M74 37C74 57.4345 57.4345 74 37 74C16.5655 74 0 57.4345 0 37C0 16.5655 16.5655 0 37 0C57.4345 0 74 16.5655 74 37Z" fill="#0E2627"/>
+</g>
+<g id="treasure">
+<!-- Treasure chest icon -->
+<path d="M37 18C42.5229 18 47 22.4771 47 28V56C47 61.5229 42.5229 66 37 66C31.4771 66 27 61.5229 27 56V28C27 22.4771 31.4771 18 37 18Z" fill="#FFD700"/>
+<path d="M24 28H50V34H24V28Z" fill="#8B4513"/>
+<path d="M24 40H50V46H24V40Z" fill="#8B4513"/>
+<path d="M24 52H50V58H24V52Z" fill="#8B4513"/>
+<circle cx="37" cy="43" r="3" fill="#8B4513"/>
+<!-- Lock/keyhole -->
+<circle cx="37" cy="43" r="1.5" fill="#654321"/>
+<!-- Sparkles around the treasure -->
+<path d="M18 22L20 25L23 22L20 19L18 22Z" fill="#FFD700"/>
+<path d="M51 22L53 25L56 22L53 19L51 22Z" fill="#FFD700"/>
+<path d="M18 52L20 55L23 52L20 49L18 52Z" fill="#FFD700"/>
+<path d="M51 52L53 55L56 52L53 49L51 52Z" fill="#FFD700"/>
+</g>
+</g>
+</svg>
