@@ -2184,39 +2184,44 @@ class ActivityController extends SuperController
   ) async {
     if (pickupLoading.isTrue) return;
 
-    final req = PickUpTreasureRequestModel(
-      userId: userState.value.state?.userId ?? -1,
-      userExerciseId: userState.value.exercise?.id ?? -1,
-      userLat: userLat,
-      userLng: userLng,
-      treasureId: treasureId,
-    );
-    pickupLoading.value = true;
-    await TreasureService.pickUpTreasure(
-      req: req,
-      successCallback: (newTreasure) {
-        bsKey.currentState?.closeBottomSheet();
-        Get.dialog(PickUpTreasureResultOverlay(treasureModel: newTreasure));
+    try {
+      final req = PickUpTreasureRequestModel(
+        userId: userState.value.state?.userId ?? -1,
+        userExerciseId: userState.value.exercise?.id ?? -1,
+        userLat: userLat,
+        userLng: userLng,
+        treasureId: treasureId,
+      );
+      pickupLoading.value = true;
+      await TreasureService.pickUpTreasure(
+        req: req,
+        successCallback: (newTreasure) {
+          bsKey.currentState?.closeBottomSheet();
+          Get.dialog(PickUpTreasureResultOverlay(treasureModel: newTreasure));
 
-        /// if success then start timer
-        _startCooldownTimer(kPickupCoolDownTime.toInt());
+          /// if success then start timer
+          _startCooldownTimer(kPickupCoolDownTime.toInt());
 
-        /// hide the collected treasure
-        listTreasureOfSession
-            .removeWhere((element) => element.id == newTreasure.id);
-        listClaimedTreasureIdOfSession.add(newTreasure.id!);
-        removeMarkerById(newTreasure.id!);
-      },
-      errorCallback: (error) {
-        bsKey.currentState?.closeBottomSheet();
-        if (error?.errorMessage != null) {
-          showToastV2(
-            message: error!.errorMessage!,
-            type: ToastV2Type.error,
-          );
-        }
-      },
-    );
-    pickupLoading.value = false;
+          /// hide the collected treasure
+          listTreasureOfSession
+              .removeWhere((element) => element.id == newTreasure.id);
+          listClaimedTreasureIdOfSession.add(newTreasure.id!);
+          removeMarkerById(newTreasure.id!);
+        },
+        errorCallback: (error) {
+          bsKey.currentState?.closeBottomSheet();
+          if (error?.errorMessage != null) {
+            showToastV2(
+              message: error!.errorMessage!,
+              type: ToastV2Type.error,
+            );
+          }
+        },
+      );
+    } catch (e) {
+      pickupLoading.value = false;
+    } finally {
+      pickupLoading.value = false;
+    }
   }
 }
