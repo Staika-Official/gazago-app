@@ -1028,8 +1028,10 @@
   "referees_exceeds_maximum": "최대 추천 인원을\n초과했습니다.",
   "referral_redeem_success": "추천 코드가\n성공적으로 사용되었습니다!",
   "referral_redeem_failed": "추천 코드 사용에\n실패했습니다",
-    "rewards_colon": "보상: ",
-    "gem_unit": "젬",
-    "faq": "FAQ",
-    "how_to_go": "How to GO"
+  "rewards_colon": "보상: ",
+  "gem_unit": "젬",
+  "faq": "FAQ",
+  "how_to_go": "How to GO",
+  "you_are_moving_to_fast_please_slow_down": "",
+  "violating_exercise_fairness_will_be_penalized": ""
   }

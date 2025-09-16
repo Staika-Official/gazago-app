@@ -287,6 +287,7 @@ class UnifiedGPSConfig {
           'smoothing_weight_history': 0.2, // Balanced history weight
           'min_distance_fixed': 1.0, // Reasonable distance detection (was 2.0)
           'min_distance_accuracy_factor': 0.08, // Lower to reduce filtering (was 0.1)
+          'jump_detection_enabled': true,
         });
         break;
 

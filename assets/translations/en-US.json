@@ -1029,8 +1029,10 @@
   "referees_exceeds_maximum": "Maximum number of\nreferees exceeded.",
   "referral_redeem_success": "Referral code redeemed\nsuccessfully!",
   "referral_redeem_failed": "Failed to redeem\nreferral code",
-    "rewards_colon": "Rewards: ",
-    "gem_unit": "Gem",
-    "faq": "FAQ",
-    "how_to_go": "How to GO"
+  "rewards_colon": "Rewards: ",
+  "gem_unit": "Gem",
+  "faq": "FAQ",
+  "how_to_go": "How to GO",
+  "you_are_moving_to_fast_please_slow_down": "You are moving too fast.\nPlease slow down.",
+  "violating_exercise_fairness_will_be_penalized": "Violating exercise fairness will be penalized"
   }

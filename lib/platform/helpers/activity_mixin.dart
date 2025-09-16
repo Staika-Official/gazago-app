@@ -34,6 +34,7 @@ import 'package:gaza_go/platform/services/treasure_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/platform/services/activity_gps_service.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
+import 'package:gaza_go/presentations/views/activity/components/activity_active/exceed_speed_limit_warning_dialog.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Trans;
@@ -74,6 +75,7 @@ mixin ActivityMixin {
   StreamSubscription<LocationModel>? locationModelSubscription;
   StreamSubscription<StepCount>? stepSubscription;
   StreamSubscription<PedestrianStatus>? pedestrianStatusSubscription;
+  StreamSubscription<bool>? exceedSpeedLimitSubscription;
   final Health health = Health();
   final RxDouble realTimeSpeed = RxDouble(0);
   final RxDouble gpsSpeed = RxDouble(0);
@@ -114,6 +116,7 @@ mixin ActivityMixin {
 
   // this field to keep track if this session is pause then resume or resume when re-open app
   bool isExerciseInitOnce = false;
+  DateTime? _lastTimeShowSpeedExceedWarning;
 
   Rx<Color> get exerciseStateTextColor {
     Color color = Colors.white;
@@ -601,9 +604,16 @@ mixin ActivityMixin {
           // Start enhanced GPS tracking with ActivityGPSService
           _startEnhancedGPSTracking();
           startPeriodicUpdate();
-          
+
           // Only start treasure hunting features for treasure hunting mode
           if (exerciseType == ExerciseType.treasureHunting) {
+            exceedSpeedLimitSubscription = GPS.isExceedSpeedLimit.listen(
+              (isExceedSpeedLimit) {
+                if (isExceedSpeedLimit) {
+                  _showExceedSpeedLimitWarningBottomSheet();
+                }
+              },
+            );
             fetchExerciseTreasures().whenComplete(
               () {
                 // Start nearby treasure timer for 5-second API checks
@@ -651,11 +661,20 @@ mixin ActivityMixin {
 
     // Start enhanced GPS tracking for continued exercise
     _startEnhancedGPSTracking();
-    
+
     // Only start treasure hunting features if current exercise is treasure hunting mode
-    bool isTreasureHuntingMode = (this as ActivityController).selectedExerciseType.value == ExerciseType.treasureHunting;
-    
+    bool isTreasureHuntingMode =
+        (this as ActivityController).selectedExerciseType.value ==
+            ExerciseType.treasureHunting;
+
     if (!isExerciseInitOnce && isTreasureHuntingMode) {
+      exceedSpeedLimitSubscription = GPS.isExceedSpeedLimit.listen(
+        (isExceedSpeedLimit) {
+          if (isExceedSpeedLimit) {
+            _showExceedSpeedLimitWarningBottomSheet();
+          }
+        },
+      );
       fetchExerciseTreasures().whenComplete(
         () {
           (this as ActivityController).startNearbyTreasureTimer();
@@ -1111,6 +1130,8 @@ mixin ActivityMixin {
     HiveStore.initializeExerciseCoordinates();
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;
+    exceedSpeedLimitSubscription?.cancel();
+    exceedSpeedLimitSubscription = null;
   }
 
   void moveToExerciseDetail(int exerciseId) {
@@ -1616,5 +1637,16 @@ mixin ActivityMixin {
 
     // Schedule debounced update to prevent flickering
     _scheduleCircleUpdate(loc);
+  }
+
+  void _showExceedSpeedLimitWarningBottomSheet() {
+    if (_lastTimeShowSpeedExceedWarning == null ||
+        DateTime.now()
+            .difference(_lastTimeShowSpeedExceedWarning!)
+            .inMinutes
+            .isGreaterThan(2)) {
+      Get.dialog(const IsExceedSpeedLimitWarningDialog());
+      _lastTimeShowSpeedExceedWarning = DateTime.now();
+    }
   }
 }
