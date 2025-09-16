@@ -19,7 +19,7 @@ class ReferralController extends GetxController with PreferenceMixin {
   var refereesList = <RefereeModel>[].obs;
   var refereesLoading = false.obs;
   var isRedeemingReferralCode = false.obs;
-  
+
   // Add TextEditingController for referral code input
   late TextEditingController referralCodeController;
 
@@ -38,7 +38,7 @@ class ReferralController extends GetxController with PreferenceMixin {
 
     super.onInit();
   }
-  
+
   @override
   void onClose() {
     referralCodeController.dispose();
@@ -61,7 +61,6 @@ class ReferralController extends GetxController with PreferenceMixin {
         canCopyCode.value = true;
       },
       errorCallback: (error) {
-        showToastPopup('Không thể lấy referral code');
         canCopyCode.value = false;
       },
     );
@@ -100,8 +99,6 @@ class ReferralController extends GetxController with PreferenceMixin {
         }
       },
       errorCallback: (error) {
-        showToastPopup('Không thể tải danh sách referees');
-
         if (requestPage == 0) {
           refereesLoading.value = false;
         } else {
@@ -201,7 +198,7 @@ class ReferralController extends GetxController with PreferenceMixin {
   bool _isValidReferralCodeFormat(String code) {
     final trimmedCode = code.trim().toUpperCase();
     // Validation: exactly 8 characters, alphanumeric only
-    return trimmedCode.length == 8 && 
-           RegExp(r'^[A-Z0-9]{8}$').hasMatch(trimmedCode);
+    return trimmedCode.length == 8 &&
+        RegExp(r'^[A-Z0-9]{8}$').hasMatch(trimmedCode);
   }
 }

@@ -11,7 +11,7 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart' hide Trans;
 
-class PickUpTreasureBottomSheet extends StatelessWidget {
+class PickUpTreasureBottomSheet extends StatefulWidget {
   const PickUpTreasureBottomSheet({
     super.key,
     this.onPickUp,
@@ -20,6 +20,16 @@ class PickUpTreasureBottomSheet extends StatelessWidget {
 
   final Function()? onPickUp;
   final TreasureModel treasureModel;
+
+  @override
+  State<PickUpTreasureBottomSheet> createState() =>
+      PickUpTreasureBottomSheetState();
+}
+
+class PickUpTreasureBottomSheetState extends State<PickUpTreasureBottomSheet> {
+  void closeBottomSheet() {
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +56,11 @@ class PickUpTreasureBottomSheet extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           SvgPicture.asset(
-            treasureModel.iconPathLocal,
+            widget.treasureModel.iconPathLocal,
             width: 153,
           ),
           const SizedBox(height: 24),
-          if (treasureModel.type != null)
+          if (widget.treasureModel.type != null)
             UnconstrainedBox(
               child: BaseCard(
                 backgroundColor: AppColorData.regular().colorBgPrimary,
@@ -60,7 +70,7 @@ class PickUpTreasureBottomSheet extends StatelessWidget {
                   horizontal: 16,
                 ),
                 child: Text(
-                  treasureModel.type!.getTypeForBottomSheet(),
+                  widget.treasureModel.type!.getTypeForBottomSheet(),
                   style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
                         color: AppColorData.regular().colorPointCyan,
                       ),
@@ -86,7 +96,7 @@ class PickUpTreasureBottomSheet extends StatelessWidget {
                     buttonColor:
                         AppColorData.regular().colorBgInteractivePrimary,
                     buttonText: 'collect'.tr(),
-                    onTap: onPickUp,
+                    onTap: widget.onPickUp,
                     disableButton:
                         Get.find<ActivityController>().pickupLoading.isTrue,
                   ),

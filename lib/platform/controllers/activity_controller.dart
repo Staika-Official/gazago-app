@@ -1672,6 +1672,9 @@ class ActivityController extends SuperController
   /// method to handle when user pick up a treasure
   /// only work if the treasure can be picked up + exercise is ongoing
   /// which mean the treasure is within 10m
+  final GlobalKey<PickUpTreasureBottomSheetState> bsKey =
+      GlobalKey<PickUpTreasureBottomSheetState>();
+
   void onPickupTreasure(TreasureModel treasure) {
     debugPrint("CLICK TREASURE: ${treasure.latitude}, ${treasure.longitude}");
 
@@ -1692,6 +1695,7 @@ class ActivityController extends SuperController
       Get.bottomSheet(
         isScrollControlled: true,
         PickUpTreasureBottomSheet(
+          key: bsKey,
           treasureModel: treasure,
           onPickUp: () {
             _callAPIPickupTreasure(
@@ -1702,22 +1706,6 @@ class ActivityController extends SuperController
           },
         ),
       );
-    }
-  }
-
-  // Helper to map integer quality to LocationAccuracy
-  LocationAccuracy _mapLocationAccuracy(int quality) {
-    switch (quality) {
-      case 0:
-        return LocationAccuracy.bestForNavigation;
-      case 1:
-        return LocationAccuracy.high;
-      case 2:
-        return LocationAccuracy.medium;
-      case 3:
-        return LocationAccuracy.low;
-      default:
-        return LocationAccuracy.best;
     }
   }
 
@@ -2207,7 +2195,7 @@ class ActivityController extends SuperController
     await TreasureService.pickUpTreasure(
       req: req,
       successCallback: (newTreasure) {
-        Get.back();
+        bsKey.currentState?.closeBottomSheet();
         Get.dialog(PickUpTreasureResultOverlay(treasureModel: newTreasure));
 
         /// if success then start timer
@@ -2220,7 +2208,7 @@ class ActivityController extends SuperController
         removeMarkerById(newTreasure.id!);
       },
       errorCallback: (error) {
-        Get.back();
+        bsKey.currentState?.closeBottomSheet();
         if (error?.errorMessage != null) {
           showToastV2(
             message: error!.errorMessage!,
