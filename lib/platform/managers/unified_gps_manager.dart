@@ -266,8 +266,6 @@ class UnifiedGPSManager extends GetxController {
 
   Future<void> _startPositionStream() async {
     try {
-      final config = UnifiedGPSConfig.getConfigForMode(gpsMode.value);
-
       // Validate critical config values with safe type conversion
       final rawDistanceFilter = config['distance_filter'];
       final rawUpdateInterval = config['update_interval'];
@@ -289,7 +287,7 @@ class UnifiedGPSManager extends GetxController {
           accuracy: _getLocationAccuracy(gpsMode.value),
           distanceFilter: distanceFilter,
           forceLocationManager: false,
-          intervalDuration: Duration(milliseconds: updateInterval),
+          intervalDuration: updateInterval.milliseconds,
           foregroundNotificationConfig: const ForegroundNotificationConfig(
             notificationText:
                 "Gaza Go is tracking your activity in the background",
