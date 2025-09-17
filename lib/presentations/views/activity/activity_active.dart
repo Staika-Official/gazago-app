@@ -4,9 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
+import 'package:gaza_go/platform/configs/unified_gps_config.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/managers/unified_gps_manager.dart';
 import 'package:gaza_go/platform/services/activity_gps_service.dart';
 
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -678,7 +680,7 @@ class ActivityActive extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Text(
-                                    '${controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7' : '1'}-7',
+                                    '${controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7' : '1'}-${UnifiedGPSConfig.speedThreshold.toInt()}',
                                     style: AppTextStyleData.regular()
                                         .enBodySemiboldMd
                                         .copyWith(
