@@ -18,22 +18,24 @@ class ActivityActiveMainButtonSection extends GetWidget<ActivityController> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            /// Map button
-            CircularButton(
-              radius: 48,
-              color: Colors.white,
-              onTap: () async {
-                controller.isLockMap.value = true;
-                controller
-                    .showExerciseMap()
-                    .whenComplete(() => controller.isLockMap.toggle());
-              },
-              padding: const EdgeInsets.all(8),
-              child: SvgPicture.asset(
-                'assets/images/activity/ico_exercise_location.svg',
+            /// Map button - only for treasure hunting mode
+            if (controller.selectedExerciseType.value == ExerciseType.treasureHunting) ...[
+              CircularButton(
+                radius: 48,
+                color: Colors.white,
+                onTap: () async {
+                  controller.isLockMap.value = true;
+                  controller
+                      .showExerciseMap()
+                      .whenComplete(() => controller.isLockMap.toggle());
+                },
+                padding: const EdgeInsets.all(8),
+                child: SvgPicture.asset(
+                  'assets/images/activity/ico_exercise_location.svg',
+                ),
               ),
-            ),
-            const SizedBox(width: 16),
+              const SizedBox(width: 16),
+            ],
 
             /// play - stop button
             [ExerciseState.ongoing]

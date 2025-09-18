@@ -1237,6 +1237,16 @@ mixin ActivityMixin {
   }
 
   Future<void> fetchExerciseTreasures() async {
+    // Only fetch treasures in treasure hunting mode
+    bool isTreasureHuntingMode =
+        (this as ActivityController).selectedExerciseType.value ==
+            ExerciseType.treasureHunting;
+
+    if (!isTreasureHuntingMode) {
+      print('Not in treasure hunting mode, skipping fetchExerciseTreasures');
+      return;
+    }
+
     // Use manager's current location or get fresh one
     final pos = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -1461,6 +1471,14 @@ mixin ActivityMixin {
   }
 
   Future<void> drawTreasureVisibilityCircle({required bool isUpdate}) async {
+    // Only draw treasure visibility circle in treasure hunting mode
+    if ((this as ActivityController).selectedExerciseType.value !=
+        ExerciseType.treasureHunting) {
+      print(
+          'Not in treasure hunting mode, skipping treasure visibility circle');
+      return;
+    }
+
     // Get center from current location (synchronized with dot) or fallback to GPS
     LatLng? center = _getDisplayLatLng();
 

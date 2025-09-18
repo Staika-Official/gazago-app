@@ -8,7 +8,6 @@ import 'package:gaza_go/platform/configs/unified_gps_config.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
-import 'package:gaza_go/platform/managers/unified_gps_manager.dart';
 import 'package:gaza_go/platform/services/activity_gps_service.dart';
 
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -18,7 +17,6 @@ import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/activity_active_main_button_section.dart';
 import 'package:gaza_go/presentations/views/activity/components/activity_active/activity_active_mini_map_section.dart';
-import 'package:gaza_go/presentations/views/activity/components/activity_active/cool_down_widget.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:lottie/lottie.dart';
@@ -733,96 +731,92 @@ class ActivityActive extends StatelessWidget {
             ),
             child: LayoutBuilder(builder: (context, constraints) {
               return Obx(() {
-                return Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: constraints.maxWidth / 3,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                  width: 28.sp,
-                                  height: 28.sp,
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        SvgPicture.asset(
-                                            'assets/images/activity/ico_time.svg',
-                                            width: 21.sp,
-                                            height: 24.5.sp)
-                                      ])),
-                              Padding(
-                                padding: EdgeInsets.only(top: 0.sp),
-                                child: Text(
-                                  formatSeconds(controller.exerciseTime.value),
-                                  style: AppTextStyleData.regular()
-                                      .enBodyMediumLg
-                                      .copyWith(
-                                        color: AppColorData.regular()
-                                            .colorTextPrimary,
-                                        height: 1.5,
-                                      ),
-                                ),
-                              )
-                            ],
-                          ),
+                return Stack(clipBehavior: Clip.none, children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: constraints.maxWidth / 3,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                                width: 28.sp,
+                                height: 28.sp,
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                          'assets/images/activity/ico_time.svg',
+                                          width: 21.sp,
+                                          height: 24.5.sp)
+                                    ])),
+                            Padding(
+                              padding: EdgeInsets.only(top: 0.sp),
+                              child: Text(
+                                formatSeconds(controller.exerciseTime.value),
+                                style: AppTextStyleData.regular()
+                                    .enBodyMediumLg
+                                    .copyWith(
+                                      color: AppColorData.regular()
+                                          .colorTextPrimary,
+                                      height: 1.5,
+                                    ),
+                              ),
+                            )
+                          ],
                         ),
-                        SizedBox(
-                          width: constraints.maxWidth / 3,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                  width: 28.sp,
-                                  height: 28.sp,
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset(
-                                            'assets/images/activity/ico_distance.svg',
-                                            width: 22.8.sp,
-                                            height: 20.6.sp)
-                                      ])),
-                              Padding(
-                                padding: EdgeInsets.only(top: 0.sp),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Obx(() {
-                                      // Try to get distance from ActivityGPSService first, fallback to totalDistance
-                                      double displayDistance = 0.0;
-                                      try {
-                                        final activityGPS =
-                                            Get.find<ActivityGPSService>();
-                                        displayDistance =
-                                            activityGPS.distanceKilometers;
-                                      } catch (e) {
-                                        // Fallback to totalDistance if ActivityGPSService not available
-                                        displayDistance =
-                                            controller.totalDistance.value;
-                                      }
+                      ),
+                      SizedBox(
+                        width: constraints.maxWidth / 3,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                                width: 28.sp,
+                                height: 28.sp,
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                          'assets/images/activity/ico_distance.svg',
+                                          width: 22.8.sp,
+                                          height: 20.6.sp)
+                                    ])),
+                            Padding(
+                              padding: EdgeInsets.only(top: 0.sp),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Obx(() {
+                                    // Try to get distance from ActivityGPSService first, fallback to totalDistance
+                                    double displayDistance = 0.0;
+                                    try {
+                                      final activityGPS =
+                                          Get.find<ActivityGPSService>();
+                                      displayDistance =
+                                          activityGPS.distanceKilometers;
+                                    } catch (e) {
+                                      // Fallback to totalDistance if ActivityGPSService not available
+                                      displayDistance =
+                                          controller.totalDistance.value;
+                                    }
 
-                                      return Text(
-                                        '${formatDecimalPlaces(displayDistance, 2)}km',
-                                        style: AppTextStyleData.regular()
-                                            .enBodyMediumLg
-                                            .copyWith(
-                                              color: AppColorData.regular()
-                                                  .colorTextPrimary,
-                                              height: 1.5,
-                                            ),
-                                      );
-                                    }),
-                                    Padding(
+                                    return Text(
+                                      '${formatDecimalPlaces(displayDistance, 2)}km',
+                                      style: AppTextStyleData.regular()
+                                          .enBodyMediumLg
+                                          .copyWith(
+                                            color: AppColorData.regular()
+                                                .colorTextPrimary,
+                                            height: 1.5,
+                                          ),
+                                    );
+                                  }),
+                                  Padding(
                                       padding: EdgeInsets.only(
                                           left: 1.0.sp, top: 2.sp),
                                       child: SizedBox(
@@ -842,194 +836,194 @@ class ActivityActive extends StatelessWidget {
                                                     horizontal: 25.0.sp),
                                                 child: Center(
                                                   child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Stack(
-                                                        children: [
-                                                          Stack(
-                                                            children: [
-                                                              Container(
-                                                                width: double
-                                                                    .infinity,
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        top: 40
-                                                                            .sp,
-                                                                        left: 20
-                                                                            .sp,
-                                                                        right: 20
-                                                                            .sp,
-                                                                        bottom:
-                                                                            32.sp),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color:
-                                                                      popupBgColor,
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                          AppDoubleData.regular()
-                                                                              .numberRadius20),
-                                                                ),
-                                                                child: Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Text(
-                                                                      'valid_distance_guide'
-                                                                          .tr(),
-                                                                      style: AppTextStyleData
-                                                                              .regular()
-                                                                          .koHeadingSemiboldSm
-                                                                          .copyWith(
-                                                                            color:
-                                                                                AppColorData.regular().colorTextPrimary,
-                                                                            height:
-                                                                                1.4,
-                                                                          ),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: EdgeInsets.only(
-                                                                          top: 8
-                                                                              .sp),
-                                                                      child:
-                                                                          Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Text(
-                                                                            'valid_distance_criteria'.tr(args: [
-                                                                              controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7' : '1'
-                                                                            ]),
-                                                                            style: AppTextStyleData.regular()
-                                                                                .koBodyMediumLg
-                                                                                .copyWith(
-                                                                                  color: AppColorData.regular().colorTextPrimary,
-                                                                                  height: 1.4,
-                                                                                ),
-                                                                          ),
-                                                                        ],
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Stack(
+                                                          children: [
+                                                            Stack(
+                                                              children: [
+                                                                Container(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  padding: EdgeInsets.only(
+                                                                      top:
+                                                                          40.sp,
+                                                                      left:
+                                                                          20.sp,
+                                                                      right:
+                                                                          20.sp,
+                                                                      bottom: 32
+                                                                          .sp),
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color:
+                                                                        popupBgColor,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            AppDoubleData.regular().numberRadius20),
+                                                                  ),
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Text(
+                                                                        'valid_distance_guide'
+                                                                            .tr(),
+                                                                        style: AppTextStyleData.regular()
+                                                                            .koHeadingSemiboldSm
+                                                                            .copyWith(
+                                                                              color: AppColorData.regular().colorTextPrimary,
+                                                                              height: 1.4,
+                                                                            ),
                                                                       ),
-                                                                    ),
-                                                                  ],
+                                                                      Padding(
+                                                                        padding:
+                                                                            EdgeInsets.only(top: 8.sp),
+                                                                        child:
+                                                                            Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                              'valid_distance_criteria'.tr(args: [
+                                                                                controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7' : '1'
+                                                                              ]),
+                                                                              style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                                                                                    color: AppColorData.regular().colorTextPrimary,
+                                                                                    height: 1.4,
+                                                                                  ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                          Positioned(
-                                                            right: 16.8.sp,
-                                                            top: 16.8.sp,
-                                                            child: InkWell(
-                                                              onTap: () =>
-                                                                  Get.back(),
-                                                              child:
-                                                                  iconCloseWhite,
+                                                                Positioned(
+                                                                  right:
+                                                                      16.8.sp,
+                                                                  top: 16.8.sp,
+                                                                  child:
+                                                                      InkWell(
+                                                                    onTap: () =>
+                                                                        Get.back(),
+                                                                    child:
+                                                                        iconCloseWhite,
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                  ]),
+                                                          ],
+                                                        ),
+                                                      ]),
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                )],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: constraints.maxWidth / 3,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                  width: 28.sp,
-                                  height: 28.sp,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                          'assets/images/activity/ico_step.svg',
-                                          width: 21.4.sp,
-                                          height: 23.7.sp),
-                                    ],
-                                  )),
-                              Padding(
-                                padding: EdgeInsets.only(top: 0.sp),
-                                child: Text(
-                                  controller.exerciseSteps.value.toString(),
-                                  style: AppTextStyleData.regular()
-                                      .enBodyMediumLg
-                                      .copyWith(
-                                        color: AppColorData.regular()
-                                            .colorTextPrimary,
-                                        height: 1.5,
-                                      ),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    )]);
-                  });
-                }),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: 18.4.sp,
-                  right: 13.6.sp,
-                ),
-                child: Obx(() {
-                  return Column(
-                    children: [
-                      ...renderStatList(controller, context),
-                    ],
-                  );
-                }),
-              ),
-              Obx(() {
-                return Column(
-                  children: [
-                    if (controller.userState.value.exercise != null &&
-                        controller.userState.value.exercise!.crewBuffLevel! !=
-                            'NONE')
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 10.sp,
-                          bottom: 30.sp,
-                        ),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.sp, horizontal: 14.sp),
-                          decoration: BoxDecoration(
-                            color: speedBlackColor,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: StyledText(
-                            'crew_buff_applied'.tr(args: [
-                              controller
-                                  .userState.value.exercise!.crewBuffLevel!
-                                  .replaceAll('LEVEL_', 'Lv')
-                            ]),
-                            fontSize: 16,
-                            fontWeight: 500,
-                            lineHeight: 16,
-                            color: lightGrayColor,
-                          ),
+                                      ))
+                                ],
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                  ],
-                );
-              }),
+                      SizedBox(
+                        width: constraints.maxWidth / 3,
+                        child: Column(
+                          children: [
+                            SizedBox(
+                                width: 28.sp,
+                                height: 28.sp,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                        'assets/images/activity/ico_step.svg',
+                                        width: 21.4.sp,
+                                        height: 23.7.sp),
+                                  ],
+                                )),
+                            Padding(
+                              padding: EdgeInsets.only(top: 0.sp),
+                              child: Text(
+                                controller.exerciseSteps.value.toString(),
+                                style: AppTextStyleData.regular()
+                                    .enBodyMediumLg
+                                    .copyWith(
+                                      color: AppColorData.regular()
+                                          .colorTextPrimary,
+                                      height: 1.5,
+                                    ),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+                ]);
+              });
+            }),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: 18.4.sp,
+              right: 13.6.sp,
+            ),
+            child: Obx(() {
+              return Column(
+                children: [
+                  ...renderStatList(controller, context),
+                ],
+              );
+            }),
+          ),
+          Visibility(
+            visible: (controller.selectedExerciseType.value !=
+                ExerciseType.treasureHunting),
+            child: const Spacer(),
+          ),
+          Obx(() {
+            return Column(
+              children: [
+                if (controller.userState.value.exercise != null &&
+                    controller.userState.value.exercise!.crewBuffLevel! !=
+                        'NONE')
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 10.sp,
+                      bottom: 30.sp,
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 10.sp, horizontal: 14.sp),
+                      decoration: BoxDecoration(
+                        color: speedBlackColor,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: StyledText(
+                        'crew_buff_applied'.tr(args: [
+                          controller.userState.value.exercise!.crewBuffLevel!
+                              .replaceAll('LEVEL_', 'Lv')
+                        ]),
+                        fontSize: 16,
+                        fontWeight: 500,
+                        lineHeight: 16,
+                        color: lightGrayColor,
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          }),
           const SizedBox(height: 14),
-          const ActivityActiveMiniMapSection(),
+          if (controller.selectedExerciseType.value ==
+              ExerciseType.treasureHunting)
+            const ActivityActiveMiniMapSection(),
           const SizedBox(height: 14),
           const ActivityActiveMainButtonSection(),
           const SizedBox(height: 20),

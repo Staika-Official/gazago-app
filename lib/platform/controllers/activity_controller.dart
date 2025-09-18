@@ -1959,6 +1959,10 @@ class ActivityController extends SuperController
   /// to see if they can pick it up or not
   /// UI purpose: zoom treasure if they can pick it up
   Future<void> compareDistanceWithNearestTreasure(LatLng userLatLng) async {
+    if (selectedExerciseType.value != ExerciseType.treasureHunting) {
+      return;
+    }
+
     final Map<double, List<TreasureModel>> treasureDistanceMap = {};
 
     /// calculate all distance of treasures
@@ -2051,6 +2055,13 @@ class ActivityController extends SuperController
 
   /// Perform nearby treasure check with fixed timer (called every 5s)
   Future<void> _performNearbyTreasureCheck() async {
+    // Only perform treasure check in treasure hunting mode
+    if (selectedExerciseType.value != ExerciseType.treasureHunting) {
+      debugPrint(
+          'Not in treasure hunting mode, skipping nearby treasure check');
+      return;
+    }
+
     // Prevent overlapping API calls
     if (_isCheckingNearbyTreasures) {
       debugPrint(
