@@ -10,6 +10,7 @@ import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart' hide Trans;
 
 class ActivitySelect extends StatelessWidget {
@@ -290,88 +291,105 @@ class ActivitySelect extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10.0.sp),
-                      child: Ink(
-                        width: 302.sp,
-                        height: 118.sp,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
-                          color: const Color(0xffFFD700),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromRGBO(0, 0, 0, 0.25),
-                              offset: Offset(0, 0),
-                              blurRadius: 4,
-                              spreadRadius: 4,
-                            )
-                          ],
+                    SizedBox(height: AppDoubleData.regular().numberSpacing16),
+                    Ink(
+                      width: 302.sp,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          AppDoubleData.regular().numberRadius12,
                         ),
-                        child: InkWell(
-                          onTap: () =>
-                              controller.selectExerciseType(ExerciseType.treasureHunting),
-                          borderRadius: BorderRadius.circular(14),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 26.sp, vertical: 24.sp),
-                            child: Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(74),
-                                  child: SvgPicture.asset(
-                                    'assets/images/activity/ico_activity_type_treasure_hunting.svg',
-                                    width: 74.sp,
-                                    height: 74.sp,
-                                  ),
+                        border: Border.all(
+                          color: AppColorData.regular().colorBorderBlack,
+                          width: 2,
+                        ),
+                        color: AppColorData.regular().colorBgTertiary,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.25),
+                            offset: Offset(0, 0),
+                            blurRadius: 4,
+                            spreadRadius: 4,
+                          )
+                        ],
+                      ),
+                      child: InkWell(
+                        onTap: () => controller
+                            .selectExerciseType(ExerciseType.treasureHunting),
+                        borderRadius: BorderRadius.circular(
+                          AppDoubleData.regular().numberRadius12,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(
+                            AppDoubleData.regular().numberSpacing20,
+                          ),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/activity/ico_activity_type_treasure_hunting.svg',
+                                width: 64,
+                                height: 64,
+                              ),
+                              const SizedBox(width: 22),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 9.sp,
+                                        vertical: 4.sp,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            AppDoubleData.regular()
+                                                .numberRadiusCircle),
+                                        color: AppColorData.regular()
+                                            .colorBgPrimary,
+                                      ),
+                                      child: Text(
+                                        'treasure_hunting_badge'.tr(),
+                                        style: AppTextStyleData.regular()
+                                            .koCaptionSemiboldMd
+                                            .copyWith(
+                                              color: AppColorData.regular()
+                                                  .colorPointCyan,
+                                            ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'treasure_hunting'.tr(),
+                                      style: AppTextStyleData.regular()
+                                          .koHeadingSemiboldSm
+                                          .copyWith(
+                                            color: AppColorData.regular()
+                                                .colorTextPrimary,
+                                          ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      'treasure_hunt_description'.tr(),
+                                      style: AppTextStyleData.regular()
+                                          .koBodyMediumSm
+                                          .copyWith(
+                                            color: AppColorData.regular()
+                                                .colorTextPrimary,
+                                          ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      "${formatDateUntilDay(DateTime.now().toString())}~${formatDateUntilDay(DateTime.now().toString())}",
+                                      style: AppTextStyleData.regular()
+                                          .koCaptionSemiboldMd
+                                          .copyWith(
+                                            color: AppColorData.regular()
+                                                .colorTextTertiary,
+                                          ),
+                                    ),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 22.sp),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 9.sp, vertical: 4.sp),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(9.sp),
-                                          color: const Color(0xff0E2627),
-                                        ),
-                                        child: StyledText(
-                                          'general'.tr(),
-                                          color: const Color(0xffFFD700),
-                                          fontSize: 10,
-                                          fontWeight: 600,
-                                          lineHeight: 10,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 9),
-                                        child: StyledText(
-                                          'treasure_hunting'.tr(),
-                                          color: Colors.black,
-                                          fontSize: 19,
-                                          fontWeight: 600,
-                                          lineHeight: 19,
-                                          letterSpacing: -0.3,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 10),
-                                        child: StyledText(
-                                          'treasure_hunt_description'.tr(),
-                                          color: Colors.black,
-                                          fontSize: 11,
-                                          fontWeight: 600,
-                                          lineHeight: 11,
-                                          letterSpacing: 0.3,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
