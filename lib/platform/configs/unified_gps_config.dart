@@ -273,7 +273,7 @@ class UnifiedGPSConfig {
         // Walking: Optimized for urban environments with faster updates to reduce delay
         baseConfig.addAll({
           'distance_filter': 2, // Very sensitive to movement
-          'update_interval': 900, // Faster updates for less delay (was 1200)
+          'update_interval': 2000,
           'speed_threshold': 50.0, // Higher threshold to avoid false rejections
           'smoothing_window': 2, // Minimal smoothing for accuracy
           'min_time_interval': 0.6, // Faster response timing (was 0.8)
