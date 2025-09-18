@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,9 +6,9 @@ import 'package:gaza_go/platform/helpers/context_helper.dart';
 import 'package:gaza_go/platform/models/treasure_model.dart';
 import 'package:gaza_go/presentations/components/base_card.dart';
 import 'package:gaza_go/presentations/components/gazago_button.dart';
-import 'package:gaza_go/presentations/styles/icons.dart';
 import 'package:gaza_go/theme/theme.g.dart';
 import 'package:get/get.dart' hide Trans;
+import 'package:throttling/throttling.dart';
 
 class PickUpTreasureBottomSheet extends StatefulWidget {
   const PickUpTreasureBottomSheet({
@@ -27,6 +26,8 @@ class PickUpTreasureBottomSheet extends StatefulWidget {
 }
 
 class PickUpTreasureBottomSheetState extends State<PickUpTreasureBottomSheet> {
+  final Throttling _collectThrottling = Throttling(duration: 1.seconds);
+
   void closeBottomSheet() {
     Navigator.of(context).pop();
   }
@@ -96,7 +97,10 @@ class PickUpTreasureBottomSheetState extends State<PickUpTreasureBottomSheet> {
                     buttonColor:
                         AppColorData.regular().colorBgInteractivePrimary,
                     buttonText: 'collect'.tr(),
-                    onTap: widget.onPickUp,
+                    onTap: () {
+                      _collectThrottling
+                          .throttle(() => widget.onPickUp?.call());
+                    },
                     disableButton:
                         Get.find<ActivityController>().pickupLoading.isTrue,
                   ),

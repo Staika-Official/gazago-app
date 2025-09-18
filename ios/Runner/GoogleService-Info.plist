@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>232716676384-5iun8ict73an15rbh40patma4rpgmlfh.apps.googleusercontent.com</string>
+	<string>321889905131-22r952df5n2g5i3qehb6dgcg5o4188dt.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.232716676384-5iun8ict73an15rbh40patma4rpgmlfh</string>
+	<string>com.googleusercontent.apps.321889905131-22r952df5n2g5i3qehb6dgcg5o4188dt</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>232716676384-5giv1u5kkis42383904rmbrvsh4ukm23.apps.googleusercontent.com</string>
+	<string>321889905131-5400t3phnaanpkv72otpghrqhg14g8bv.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDFXvYaMdfv-xPxCQpXnD30o66pGmxfKFo</string>
+	<string>AIzaSyA0fw8oOZhK1DIRpQMCFaWvBA4D8L-bXIc</string>
 	<key>GCM_SENDER_ID</key>
-	<string>232716676384</string>
+	<string>321889905131</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>kr.co.eztechfin.gazaGo.dev</string>
+	<string>kr.co.eztechfin.gazaGo</string>
 	<key>PROJECT_ID</key>
-	<string>app-step-dev</string>
+	<string>app-step-prod</string>
 	<key>STORAGE_BUCKET</key>
-	<string>app-step-dev.appspot.com</string>
+	<string>app-step-prod.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,8 +31,10 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:232716676384:ios:c851d637fa6d71246f7b45</string>
+	<string>1:321889905131:ios:fcd56d852edb7bc40a11ae</string>
 	<key>DATABASE_URL</key>
-	<string>https://app-step-dev-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+	<string>https://app-step-prod-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+	<key>ADMOB_APP_ID</key>
+	<string>ca-app-pub-3467340260114612~3194907848</string>
 </dict>
 </plist>

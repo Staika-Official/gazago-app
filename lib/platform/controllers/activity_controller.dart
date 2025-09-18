@@ -2182,8 +2182,6 @@ class ActivityController extends SuperController
     double userLat,
     double userLng,
   ) async {
-    if (pickupLoading.isTrue) return;
-
     try {
       final req = PickUpTreasureRequestModel(
         userId: userState.value.state?.userId ?? -1,
