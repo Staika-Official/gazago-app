@@ -982,11 +982,6 @@ class ActivityActive extends StatelessWidget {
               );
             }),
           ),
-          Visibility(
-            visible: (controller.selectedExerciseType.value !=
-                ExerciseType.treasureHunting),
-            child: const Spacer(),
-          ),
           Obx(() {
             return Column(
               children: [

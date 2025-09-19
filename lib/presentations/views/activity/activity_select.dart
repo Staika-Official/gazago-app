@@ -292,6 +292,13 @@ class ActivitySelect extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: AppDoubleData.regular().numberSpacing16),
+                    Divider(
+                      color: AppColorData.regular().colorBorderTertiary,
+                      thickness: 2,
+                      indent: 80,
+                      endIndent: 80,
+                    ),
+                    SizedBox(height: AppDoubleData.regular().numberSpacing12),
                     Ink(
                       width: 302.sp,
                       decoration: BoxDecoration(
@@ -392,15 +399,6 @@ class ActivitySelect extends StatelessWidget {
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10.0.sp),
-                      child: const Divider(
-                        color: Color(0xff363841),
-                        thickness: 2,
-                        indent: 80,
-                        endIndent: 80,
                       ),
                     ),
                     // Padding(

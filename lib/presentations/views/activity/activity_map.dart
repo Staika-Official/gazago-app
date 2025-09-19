@@ -23,71 +23,72 @@ class ActivityMap extends StatefulWidget {
 class _ActivityMapState extends State<ActivityMap> {
   ActivityController controller = Get.find();
   GlobalController globalController = Get.find();
-  
+
   /// Debug print helper to avoid lint warnings
   void _debugPrint(String message) {
     // ignore: avoid_print
     print(message);
   }
-  
+
   // Track segments for gap effect - SAME LOGIC AS MINI MAP
   List<List<LatLng>> polylineSegments = [];
   List<LatLng> currentSegment = [];
   bool wasNetworkAvailable = true;
   int segmentCounter = 0;
-  
+
   // Track segmented polylines for fullscreen map
   List<Polyline> segmentedPolylines = [];
 
   @override
   void initState() {
     super.initState();
-    
+
     // SAME LOGIC AS MINI MAP - Listen to location updates from GPS directly for segmented polyline
     ever(controller.currentLocation, (location) {
       if (location != null) {
         _handleGPSLocationUpdate(location);
       }
     });
-    
+
     // Listen to network status changes
     ever(globalController.internetConnection, (bool isConnected) {
       _handleNetworkStatusChange(isConnected);
     });
-    
+
     // Listen to exercise state changes for pause gap effect
     ever(controller.exerciseState, (ExerciseState state) {
       _handleExerciseStateChange(state);
     });
-    
+
     // Initialize states
     wasNetworkAvailable = globalController.internetConnection.value;
   }
-  
+
   @override
   void dispose() {
     controller.challengeMapControllers.removeLast();
     super.dispose();
   }
-  
+
   /// Add segmented path visualization using SegmentedPolylineHelper - SAME LOGIC AS MINI MAP
-  void _addSegmentedPathVisualization() {     
+  void _addSegmentedPathVisualization() {
     // Clear all existing segmented polylines using helper
     SegmentedPolylineHelper.clearSegmentedPolylines(
       controller.drawingPolylines.toList(),
       'fullscreen_map',
       debugMode: true,
     );
-    
+
     // Remove cleared polylines from controller
-    controller.drawingPolylines.removeWhere((polyline) => 
-      polyline.polylineId.value.startsWith('fullscreen_map') ||
-      polyline.polylineId.value.startsWith('path_segment_') ||
-      polyline.polylineId.value == 'current_segment' ||
-      polyline.polylineId.value.contains('segment'));
-    
+    controller.drawingPolylines.removeWhere((polyline) =>
+        polyline.polylineId.value.startsWith('fullscreen_map') ||
+        polyline.polylineId.value.startsWith('path_segment_') ||
+        polyline.polylineId.value == 'current_segment' ||
+        polyline.polylineId.value.contains('segment'));
+
     // Use SegmentedPolylineHelper to render live segmented polylines
-    List<Polyline> segmentedPolylines = SegmentedPolylineHelper.renderLiveSegmentedPolylines(
+    List<Polyline> segmentedPolylines =
+        SegmentedPolylineHelper.renderLiveSegmentedPolylines(
       completedSegments: polylineSegments,
       currentSegment: currentSegment,
       polylineIdPrefix: 'fullscreen_map_live',
@@ -95,13 +96,13 @@ class _ActivityMapState extends State<ActivityMap> {
       width: 4,
       debugMode: true,
     );
-    
+
     // Add all segmented polylines to the map
     for (Polyline polyline in segmentedPolylines) {
       controller.addOverlay(polyline);
-    } 
+    }
   }
-  
+
   /// Handle GPS location updates for segmented polyline (independent of controller.coordinates) - SAME LOGIC AS MINI MAP
   void _handleGPSLocationUpdate(dynamic location) {
     // Extract LatLng from location (can be LocationModel or direct coordinates)
@@ -112,31 +113,32 @@ class _ActivityMapState extends State<ActivityMap> {
       // Assume LocationModel with latitude/longitude properties
       newCoordinate = LatLng(location.latitude, location.longitude);
     }
-    
+
     bool isNetworkAvailable = globalController.internetConnection.value;
-    bool isExerciseOngoing = controller.exerciseState.value == ExerciseState.ongoing;
-    
+    bool isExerciseOngoing =
+        controller.exerciseState.value == ExerciseState.ongoing;
+
     // Handle network state changes
     if (isNetworkAvailable != wasNetworkAvailable) {
       _handleNetworkStateChange(isNetworkAvailable);
       wasNetworkAvailable = isNetworkAvailable;
     }
-    
+
     // Only add coordinates to segments when BOTH network is available AND exercise is ongoing
     // This creates gap effect for both network loss and pause
     if (isNetworkAvailable && isExerciseOngoing) {
       // Check if this is actually a new coordinate
-      if (currentSegment.isEmpty || 
-          (currentSegment.last.latitude != newCoordinate.latitude || 
-           currentSegment.last.longitude != newCoordinate.longitude)) {
+      if (currentSegment.isEmpty ||
+          (currentSegment.last.latitude != newCoordinate.latitude ||
+              currentSegment.last.longitude != newCoordinate.longitude)) {
         currentSegment.add(newCoordinate);
-        
+
         // Update visualization
         _addSegmentedPathVisualization();
       }
-    } 
+    }
   }
-  
+
   /// Handle network state changes for proper segmentation - SAME LOGIC AS MINI MAP
   void _handleNetworkStateChange(bool isNetworkAvailable) {
     if (!isNetworkAvailable && wasNetworkAvailable) {
@@ -145,7 +147,7 @@ class _ActivityMapState extends State<ActivityMap> {
         polylineSegments.add(List.from(currentSegment));
         segmentCounter++;
         currentSegment.clear();
-        
+
         // Update visualization to show completed segments
         _addSegmentedPathVisualization();
       } else {
@@ -156,27 +158,27 @@ class _ActivityMapState extends State<ActivityMap> {
       currentSegment.clear(); // Ensure clean start
     }
   }
-  
+
   /// Handle network status changes - called from initState listener - SAME LOGIC AS MINI MAP
-  void _handleNetworkStatusChange(bool isConnected) {    
+  void _handleNetworkStatusChange(bool isConnected) {
     // Trigger network state change if different from current state
     if (isConnected != wasNetworkAvailable) {
       _handleNetworkStateChange(isConnected);
       wasNetworkAvailable = isConnected;
     }
   }
-  
+
   /// Handle exercise state changes for pause gap effect - SAME LOGIC AS MINI MAP
   void _handleExerciseStateChange(ExerciseState state) {
     _debugPrint('🏋️ Exercise state changed: ${state.toString()}');
-    
+
     if (state == ExerciseState.paused) {
       // Exercise paused - finalize current segment (similar to network loss)
       if (currentSegment.length >= 2) {
         polylineSegments.add(List.from(currentSegment));
         segmentCounter++;
         currentSegment.clear();
-        
+
         // Update visualization to show completed segments
         _addSegmentedPathVisualization();
       } else {
@@ -193,10 +195,11 @@ class _ActivityMapState extends State<ActivityMap> {
       _addSegmentedPathVisualization(); // Clear polylines from map
     }
   }
-  
+
   /// Get current segment count (for debugging) - SAME AS MINI MAP
-  int get totalSegments => polylineSegments.length + (currentSegment.length >= 2 ? 1 : 0);
-  
+  int get totalSegments =>
+      polylineSegments.length + (currentSegment.length >= 2 ? 1 : 0);
+
   /// Get total points in all segments (for debugging) - SAME AS MINI MAP
   int get totalSegmentPoints {
     int total = currentSegment.length;
@@ -216,7 +219,8 @@ class _ActivityMapState extends State<ActivityMap> {
             polylines: Set.of(controller.drawingPolylines),
             polygons: Set.of(controller.drawingPolygons),
             circles: Set.of(controller.drawingCircles),
-            useCustomLocationLayer: true,  // Enable custom location layer
+            useCustomLocationLayer: true,
+            // Enable custom location layer
             padding: EdgeInsets.only(top: 100.sp),
             minMaxZoomPreference: const MinMaxZoomPreference(8, 20),
             mapType: MapType.normal,
@@ -225,10 +229,8 @@ class _ActivityMapState extends State<ActivityMap> {
             myLocationButtonEnabled: false,
             zoomControlsEnabled: false,
             initialCameraPosition: CameraPosition(
-              target: LatLng(
-                controller.currentLocation.value?.latitude ?? 31.5,
-                controller.currentLocation.value?.longitude ?? 34.4
-              ),
+              target: LatLng(controller.currentLocation.value?.latitude ?? 31.5,
+                  controller.currentLocation.value?.longitude ?? 34.4),
               zoom: 17,
             ),
             zoomGesturesEnabled: controller.isLockMap.isFalse,
@@ -250,18 +252,20 @@ class _ActivityMapState extends State<ActivityMap> {
                     ...renderMarkers(controller.selectedCourse.value),
                 },
               );
-              
+
               // Enhanced segmented path visualization
               _addSegmentedPathVisualization();
             },
           );
         }),
-        Positioned(
-          top: 65.sp,
-          left: 0,
-          right: 0,
-          child: const CoolDownWidgetMap(),
-        ),
+        if (controller.selectedExerciseType.value ==
+            ExerciseType.treasureHunting)
+          Positioned(
+            top: 65.sp,
+            left: 0,
+            right: 0,
+            child: const CoolDownWidgetMap(),
+          ),
         Positioned(
           top: 60.sp,
           left: 20.sp,
