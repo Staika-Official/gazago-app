@@ -2183,6 +2183,12 @@ class ActivityController extends SuperController
     double userLng,
   ) async {
     try {
+      if (globalController.internetConnection.isFalse) {
+        showToastV2(
+            message: 'no_internet_connection'.tr(), type: ToastV2Type.error);
+        return;
+      }
+
       final req = PickUpTreasureRequestModel(
         userId: userState.value.state?.userId ?? -1,
         userExerciseId: userState.value.exercise?.id ?? -1,
