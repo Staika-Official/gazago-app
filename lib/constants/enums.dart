@@ -10,6 +10,7 @@ enum ExerciseType {
   famous,
   hiking,
   walking,
+  treasureHunting,
 }
 
 enum Nationality { local, foreigner, none }
@@ -23,6 +24,8 @@ extension ExerciseTypeValue on ExerciseType {
         return 'WALKING';
       case ExerciseType.famous:
         return 'FAMOUS_MOUNTAIN_100';
+      case ExerciseType.treasureHunting:
+        return 'TREASURE_HUNTING';
     }
   }
 }

@@ -287,6 +287,7 @@ class UnifiedGPSConfig {
           'smoothing_weight_history': 0.2, // Balanced history weight
           'min_distance_fixed': 1.0, // Reasonable distance detection (was 2.0)
           'min_distance_accuracy_factor': 0.08, // Lower to reduce filtering (was 0.1)
+          'jump_detection_enabled': true,
         });
         break;
 
@@ -338,6 +339,28 @@ class UnifiedGPSConfig {
           'stationary_speed_threshold':
               1.0, // 1 m/s threshold for cycling stops
           'max_jump_distance': 40.0, // Higher jump detection for cycling speeds
+        });
+        break;
+
+      case 'treasure_hunting':
+        // Walking: Optimized for urban environments with faster updates to reduce delay
+        baseConfig.addAll({
+          'distance_filter': 2, // Very sensitive to movement
+          'update_interval': 1000,
+          'speed_threshold': 14.0,
+          'smoothing_window': 2, // Minimal smoothing for accuracy
+          'min_time_interval': 0.6, // Faster response timing (was 0.8)
+          'accuracy_threshold': 25.0, // Accept moderate accuracy for walking
+          'stationary_detection_enabled': true, // Enhanced stationary detection
+          'stationary_speed_threshold': 0.5, // Less sensitive for urban noise
+          'stationary_distance_threshold':
+          2.0, // More tolerance for urban movement
+          'max_jump_distance': 35.0, // Reasonable jump detection for urban walking
+          'smoothing_weight_new': 0.8, // Balanced for responsiveness
+          'smoothing_weight_history': 0.2, // Balanced history weight
+          'min_distance_fixed': 1.0, // Reasonable distance detection (was 2.0)
+          'min_distance_accuracy_factor': 0.08, // Lower to reduce filtering (was 0.1)
+          'jump_detection_enabled': true,
         });
         break;
 

@@ -138,6 +138,28 @@ class ActivityController extends SuperController
 
   Rx<DateTime> receiveLocationTime = Rx(DateTime.now());
   final Rx<ExerciseType> selectedExerciseType = Rx(ExerciseType.walking);
+
+  String get activityType {
+    String activityType = 'walking'; // default
+    switch (selectedExerciseType.value) {
+      case ExerciseType.walking:
+        activityType = 'walking';
+        break;
+      case ExerciseType.hiking:
+        activityType = 'hiking'; // Use hiking config
+        break;
+      case ExerciseType.famous:
+        activityType = 'walking'; // Use walking config for famous mountain
+        break;
+      case ExerciseType.treasureHunting:
+        activityType = 'treasure_hunting';
+        break;
+      default:
+        activityType = 'walking';
+    }
+    return activityType;
+  }
+
   BitmapDescriptor? startMarker;
   final Throttling thr =
       Throttling(duration: const Duration(milliseconds: 500));
@@ -171,20 +193,6 @@ class ActivityController extends SuperController
 
     try {
       // Determine activity type from selected exercise type
-      String activityType = 'walking'; // default
-      switch (selectedExerciseType.value) {
-        case ExerciseType.walking:
-          activityType = 'walking';
-          break;
-        case ExerciseType.hiking:
-          activityType = 'hiking'; // Use hiking config
-          break;
-        case ExerciseType.famous:
-          activityType = 'walking'; // Use walking config for famous mountain
-          break;
-        default:
-          activityType = 'walking';
-      }
 
       print('Starting enhanced GPS tracking for activity: $activityType');
 
@@ -1419,7 +1427,8 @@ class ActivityController extends SuperController
       }
 
       if (!UnifiedGPSManager.instance.isActive.value) {
-        await UnifiedGPSManager.instance.startTracking(activityType: 'walking');
+        await UnifiedGPSManager.instance
+            .startTracking(activityType: activityType);
       }
 
       final loc = await GPS.getCurrentLocation();
@@ -1457,7 +1466,8 @@ class ActivityController extends SuperController
 
       // Ensure tracking is active for better satellite lock
       if (!UnifiedGPSManager.instance.isActive.value) {
-        await UnifiedGPSManager.instance.startTracking(activityType: 'walking');
+        await UnifiedGPSManager.instance
+            .startTracking(activityType: activityType);
       }
 
       // Show user feedback about GPS initialization
@@ -1844,7 +1854,7 @@ class ActivityController extends SuperController
     // Ensure UnifiedGPSManager tracking is active
     if (!UnifiedGPSManager.instance.isActive.value) {
       final started = await UnifiedGPSManager.instance
-          .startTracking(activityType: 'walking');
+          .startTracking(activityType: activityType);
       if (!started) {
         print('Unable to start UnifiedGPSManager in fallback');
         return;
@@ -1949,6 +1959,10 @@ class ActivityController extends SuperController
   /// to see if they can pick it up or not
   /// UI purpose: zoom treasure if they can pick it up
   Future<void> compareDistanceWithNearestTreasure(LatLng userLatLng) async {
+    if (selectedExerciseType.value != ExerciseType.treasureHunting) {
+      return;
+    }
+
     final Map<double, List<TreasureModel>> treasureDistanceMap = {};
 
     /// calculate all distance of treasures
@@ -2041,6 +2055,13 @@ class ActivityController extends SuperController
 
   /// Perform nearby treasure check with fixed timer (called every 5s)
   Future<void> _performNearbyTreasureCheck() async {
+    // Only perform treasure check in treasure hunting mode
+    if (selectedExerciseType.value != ExerciseType.treasureHunting) {
+      debugPrint(
+          'Not in treasure hunting mode, skipping nearby treasure check');
+      return;
+    }
+
     // Prevent overlapping API calls
     if (_isCheckingNearbyTreasures) {
       debugPrint(

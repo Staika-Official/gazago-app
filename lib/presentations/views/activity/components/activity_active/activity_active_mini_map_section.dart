@@ -26,12 +26,6 @@ class _ActivityActiveMiniMapSectionState
   final GlobalController globalController = Get.find();
   GoogleMapController? mapController;
 
-  /// Debug print helper to avoid lint warnings
-  void _debugPrint(String message) {
-    // ignore: avoid_print
-    print(message);
-  }
-
   // Track segments for gap effect
   List<List<LatLng>> polylineSegments = [];
   List<LatLng> currentSegment = [];
@@ -40,7 +34,11 @@ class _ActivityActiveMiniMapSectionState
 
   @override
   void dispose() {
-    controller.challengeMapControllers.removeLast();
+    // Only remove controller if it was added (treasure hunting mode only)
+    if (mapController != null &&
+        controller.challengeMapControllers.isNotEmpty) {
+      controller.challengeMapControllers.removeLast();
+    }
     super.dispose();
   }
 

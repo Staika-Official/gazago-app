@@ -15,6 +15,7 @@ import 'package:gaza_go/platform/handlers/location_callback_handler.dart';
 /// Uses the geolocator package for foreground/background tracking
 class UnifiedGPSManager extends GetxController {
   static UnifiedGPSManager? _instance;
+
   static UnifiedGPSManager get instance {
     _instance ??= Get.put(UnifiedGPSManager(), permanent: true);
     return _instance!;
@@ -43,11 +44,12 @@ class UnifiedGPSManager extends GetxController {
   final RxDouble totalDistance = 0.0.obs;
   final RxDouble currentSpeed = 0.0.obs;
   final RxString performanceGrade = 'A'.obs;
-  
+
   // GPS Source Tracking
   final RxInt fallbackUsageCount = 0.obs;
   final RxInt jumpDetectionCount = 0.obs;
-  final RxString lastGpsSource = 'unified'.obs; // 'unified', 'fallback', 'direct'
+  final RxString lastGpsSource =
+      'unified'.obs; // 'unified', 'fallback', 'direct'
 
   // Battery Status
   final RxInt batteryLevel = 100.obs;
@@ -57,6 +59,11 @@ class UnifiedGPSManager extends GetxController {
   StreamSubscription<BatteryState>? _batterySubscription;
   final StreamController<LocationModel> _locationStreamController =
       StreamController<LocationModel>.broadcast();
+  final StreamController<bool> _isExceedSpeedLimitStreamController =
+      StreamController<bool>.broadcast();
+
+  Stream<bool> get isExceedSpeedLimitStream =>
+      _isExceedSpeedLimitStreamController.stream;
 
   // Internal state
   LocationModel? _currentLocation;
@@ -78,6 +85,7 @@ class UnifiedGPSManager extends GetxController {
     _batterySubscription?.cancel();
     _performanceTimer?.cancel();
     _locationStreamController.close();
+    _isExceedSpeedLimitStreamController.close();
 
     // Clean up isolate port
     if (_port != null) {
@@ -144,7 +152,6 @@ class UnifiedGPSManager extends GetxController {
   Future<bool> checkAndRequestPermissions() async {
     return await _checkPermissions();
   }
-
 
   /// Check and request permissions for background location
   Future<bool> _checkPermissions() async {
@@ -368,7 +375,7 @@ class UnifiedGPSManager extends GetxController {
     try {
       // Track GPS source
       lastGpsSource.value = 'unified';
-      
+
       // Update current location
       _currentLocation = locationModel;
       currentLocation.value = locationModel;
@@ -382,7 +389,8 @@ class UnifiedGPSManager extends GetxController {
         filteredLocation = _applyLocationFiltering(locationModel);
         if (filteredLocation == null) {
           filteredPositions.value++;
-          print('GPS: Location filtered out - accuracy: ${locationModel.accuracy}m, source: ${lastGpsSource.value}');
+          print(
+              'GPS: Location filtered out - accuracy: ${locationModel.accuracy}m, source: ${lastGpsSource.value}');
           return;
         }
       } else {
@@ -391,9 +399,10 @@ class UnifiedGPSManager extends GetxController {
 
       // Process valid location
       _processValidLocation(filteredLocation);
-      
+
       // Log successful processing
-      print('GPS: Location processed - accuracy: ${filteredLocation.accuracy}m, source: ${lastGpsSource.value}');
+      print(
+          'GPS: Location processed - accuracy: ${filteredLocation.accuracy}m, source: ${lastGpsSource.value}');
     } catch (e) {
       _handleLocationError(e);
     }
@@ -442,12 +451,17 @@ class UnifiedGPSManager extends GetxController {
         if (timeInterval > 0 && UnifiedGPSConfig.jumpDetectionEnabled) {
           final speed = (distance / timeInterval) * 3.6; // Convert to km/h
 
+          if (speed > UnifiedGPSConfig.speedThreshold) {
+            _isExceedSpeedLimitStreamController.add(true);
+          }
+
           // Check for jumps within time window
           if (timeInterval <=
                   UnifiedGPSConfig.get<double>('jump_detection_time') &&
               distance > UnifiedGPSConfig.maxJumpDistance) {
             jumpDetectionCount.value++;
-            print('GPS: Jump detected and filtered - distance: ${distance.toStringAsFixed(1)}m in ${timeInterval.toStringAsFixed(1)}s');
+            print(
+                'GPS: Jump detected and filtered - distance: ${distance.toStringAsFixed(1)}m in ${timeInterval.toStringAsFixed(1)}s');
             return null; // Filter out GPS jumps
           }
 
@@ -869,7 +883,7 @@ class UnifiedGPSManager extends GetxController {
       await _configureLocationSettings();
     }
   }
-  
+
   /// Debug helper: Print comprehensive GPS status (for troubleshooting)
   void printDebugStatus() {
     print('=== UnifiedGPS Debug Status ===');
@@ -911,30 +925,51 @@ class GPS {
 
   static Future<bool> startTracking({String? activityType}) =>
       instance.startTracking(activityType: activityType);
+
   static Future<void> stopTracking() => instance.stopTracking();
+
   static Future<LocationModel?> getCurrentLocation() =>
       instance.getCurrentLocation();
+
   static Stream<LocationModel> get locationStream => instance.locationStream;
+
   static Map<String, dynamic> getStatus() => instance.getStatus();
+
   static void clearHistory() => instance.clearHistory();
+
   static void updateConfig(Map<String, dynamic> config) =>
       instance.updateConfig(config);
+
   static Map<String, dynamic> get config => instance.config;
+
   static Future<void> refreshConfig() => instance.refreshConfig();
+
   static Future<void> setActivityType(String activityType) =>
       instance.setActivityType(activityType);
+
   static void setBatteryOptimization(bool enabled) =>
       instance.setBatteryOptimization(enabled);
+
   static Future<bool> checkAndRequestPermissions() =>
       instance.checkAndRequestPermissions();
 
+  static Stream<bool> get isExceedSpeedLimit =>
+      instance.isExceedSpeedLimitStream;
+
   // Quick access to status
   static bool get isActive => instance.isActive.value;
+
   static bool get hasPermission => instance.hasPermission.value;
+
   static LocationModel? get currentLocation => instance.currentLocation.value;
+
   static String get performanceGrade => instance.performanceGrade.value;
+
   static String get gpsMode => instance.gpsMode.value;
+
   static int get batteryLevel => instance.batteryLevel.value;
+
   static double get totalDistance => instance.totalDistance.value;
+
   static double get currentSpeed => instance.currentSpeed.value;
 }
