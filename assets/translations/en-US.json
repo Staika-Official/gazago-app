@@ -22,6 +22,7 @@
   "move_to_open_area": "Please move to an open outdoor area.",
   "restart_phone_for_gps": "If GPS reception is consistently poor, please restart your phone and try again.",
   "gps_signal_weak": "Weak GPS signal.",
+  "gps_signal_required": "GPS signal is required to start exercise. Please wait for GPS to be ready.",
   "exercise_record_failed": "Exercise recording failed.",
   "stamina_recharged": "Stamina has been recharged.",
   "recharge_failed": "Recharge request failed.",
@@ -1034,5 +1035,11 @@
   "faq": "FAQ",
   "how_to_go": "How to GO",
   "you_are_moving_to_fast_please_slow_down": "You are moving too fast.\nPlease slow down.",
-  "violating_exercise_fairness_will_be_penalized": "Violating exercise fairness will be penalized"
-  }
+  "violating_exercise_fairness_will_be_penalized": "Violating exercise fairness will be penalized",
+  "initializing_gps": "Initializing GPS...",
+  "gps_ready": "GPS ready",
+  "gps_warmup_failed": "GPS warmup failed",
+  "gps_initialization_failed": "GPS initialization failed",
+  "acquiring_gps_signal": "Acquiring GPS signal...",
+  "ready": "Ready!"
+}

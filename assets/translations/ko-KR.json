@@ -683,7 +683,7 @@
   "collection": "컬렉션",
   "collect_materials_get_reward": "재료를 모아\n리워드 받기!",
   "restart_app_if_problem_persists": "지속적으로 문제가 발생한다면 앱을 재시작해주세요",
-  "preparing": "준비중..",
+  "preparing": "준비 중...",
   "gazago_continue": "계속",
   "start": "시작",
   "exercise_record_detail": "운동기록 상세",
@@ -1032,6 +1032,12 @@
   "gem_unit": "젬",
   "faq": "FAQ",
   "how_to_go": "How to GO",
-  "you_are_moving_to_fast_please_slow_down": "",
-  "violating_exercise_fairness_will_be_penalized": ""
-  }
+  "you_are_moving_to_fast_please_slow_down": "너무 빨리 움직이고 있습니다.\n속도를 늦춰주세요.",
+  "violating_exercise_fairness_will_be_penalized": "운동 공정성 위반 시 불이익을 받습니다",
+  "initializing_gps": "GPS 초기화 중...",
+  "gps_ready": "GPS 준비 완료",
+  "gps_warmup_failed": "GPS 준비 실패",
+  "gps_initialization_failed": "GPS 초기화 실패",
+  "acquiring_gps_signal": "GPS 신호 수신 중...",
+  "ready": "준비 완료!"
+}

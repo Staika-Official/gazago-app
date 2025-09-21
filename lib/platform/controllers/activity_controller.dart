@@ -77,8 +77,6 @@ class ActivityController extends SuperController
   RxnInt challengeSelectedIndex = RxnInt(null);
   List<Marker> checkpointMarkers = List.empty(growable: true);
 
-  // GPS Services - removed unused services
-
   // final RxDouble currentSliderValue = RxDouble(0);
   // final RxInt remainDurability = RxInt(0);
   // final RxInt repairDurability = RxInt(0);
@@ -299,6 +297,9 @@ class ActivityController extends SuperController
   void onResumed() {
     print('onResumed activity');
     checkNewCollectionStatus();
+
+    // Reset GPS ready state when app resumes via UnifiedGPSManager
+    UnifiedGPSManager.instance.isReady.value = false;
 
     if (Get.currentRoute != Routes.login &&
         Get.currentRoute != Routes.loading) {
@@ -821,7 +822,8 @@ class ActivityController extends SuperController
     bool systemReady = await checkAvailabilities();
     if (systemReady) {
       if (!isListeningToLocation.value) {
-        initializeActivity();
+        print('Initializing activity and GPS...');
+        await initializeActivity();
       }
       if (globalController.internetConnection.value) {
         bool hasSeenFairPlayAlert =
@@ -1016,11 +1018,30 @@ class ActivityController extends SuperController
     loadingTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) {
+        // Minimum 3 seconds loading + wait for GPS ready
         if (loadingTime.value >= 3) {
-          exerciseStartThr
-              .throttle(() => startExercise(exerciseType, challenge));
-          timer.cancel();
-          loadingTimer = null;
+          // Check if GPS is ready using UnifiedGPSManager
+          if (UnifiedGPSManager.instance.isReady.value &&
+              UnifiedGPSManager.instance.currentLocation.value != null &&
+              !isInvalidCoordinates(
+                  UnifiedGPSManager.instance.currentLocation.value!)) {
+            print('GPS ready, starting exercise...');
+            exerciseStartThr
+                .throttle(() => startExercise(exerciseType, challenge));
+            timer.cancel();
+            loadingTimer = null;
+          } else if (loadingTime.value >= 15) {
+            // Timeout after 15 seconds
+            print('GPS not ready after timeout, starting exercise anyway...');
+            exerciseStartThr
+                .throttle(() => startExercise(exerciseType, challenge));
+            timer.cancel();
+            loadingTimer = null;
+          } else {
+            print('Waiting for GPS ready... (${loadingTime.value}s)');
+            loadingTime.value++;
+            activityLoadControl = Control.playFromStart;
+          }
         } else {
           loadingTime.value++;
           activityLoadControl = Control.playFromStart;
@@ -1431,7 +1452,7 @@ class ActivityController extends SuperController
             .startTracking(activityType: activityType);
       }
 
-      final loc = await GPS.getCurrentLocation();
+      final loc = UnifiedGPSManager.instance.currentLocation.value;
       if (loc != null) {
         currentLocation.value = loc;
         isListeningToLocation.value = true;
@@ -1447,8 +1468,8 @@ class ActivityController extends SuperController
     }
   }
 
-  /// Phase 2: GPS Warm-up process to improve initial accuracy
-  Future<void> initializeGPSWithWarmup() async {
+  /// Phase 2: GPS Warm-up process to improve initial accuracy (using UnifiedGPSManager)
+  Future<bool> initializeGPSWithWarmup() async {
     try {
       print('Starting GPS warm-up process (UnifiedGPSManager)...');
 
@@ -1458,57 +1479,17 @@ class ActivityController extends SuperController
           true;
       if (!warmupEnabled) {
         print('GPS warm-up disabled via remote config');
-        return;
+        return false;
       }
 
-      // Clear any previous history using UnifiedGPSManager
-      UnifiedGPSManager.instance.clearHistory();
+      // Use UnifiedGPSManager's warm-up process
+      final success = await UnifiedGPSManager.instance.initializeWithWarmup();
 
-      // Ensure tracking is active for better satellite lock
-      if (!UnifiedGPSManager.instance.isActive.value) {
-        await UnifiedGPSManager.instance
-            .startTracking(activityType: activityType);
-      }
-
-      // Show user feedback about GPS initialization
-      showToastPopup('initializing_gps'.tr());
-
-      // Warm-up by sampling manager-provided current location multiple times
-      for (int i = 0; i < 3; i++) {
-        try {
-          final warmupLoc = await GPS.getCurrentLocation();
-          if (warmupLoc != null) {
-            print('GPS warm-up ${i + 1}/3: accuracy ${warmupLoc.accuracy}m');
-
-            // Feed into filter/history path
-            UnifiedGPSManager.instance.filterLocation(warmupLoc);
-
-            // Break early if accuracy is already good
-            if (warmupLoc.accuracy <= gpsAccuracy) {
-              print('GPS warm-up completed successfully with good accuracy');
-              showToastPopup('gps_ready'.tr());
-              break;
-            }
-          }
-
-          // Wait between attempts
-          if (i < 2) {
-            await Future.delayed(const Duration(seconds: 3));
-          }
-        } catch (e) {
-          print('GPS warm-up attempt ${i + 1} failed: $e');
-          if (i == 2) {
-            // Last attempt failed
-            showToastPopup('gps_warmup_failed'.tr());
-          }
-        }
-      }
-
-      // Final check - get current location after warm-up
-      await getCurrentLocation();
+      return success;
     } catch (e) {
       print('GPS warm-up process failed: $e');
       showToastPopup('gps_initialization_failed'.tr());
+      return false;
     }
   }
 
@@ -2248,5 +2229,12 @@ class ActivityController extends SuperController
     } finally {
       pickupLoading.value = false;
     }
+  }
+
+  // GPS Helper Methods (using UnifiedGPSManager)
+
+  /// Check if coordinates are invalid (null, 0.0, 0.0, or very inaccurate)
+  bool isInvalidCoordinates(LocationModel location) {
+    return location.latitude == 0.0 && location.longitude == 0.0;
   }
 }

@@ -558,6 +558,27 @@ mixin ActivityMixin {
       return;
     }
 
+    // GPS Location Validation - Prevent (0.0, 0.0) coordinates
+    ActivityController activityController = this as ActivityController;
+    if (!UnifiedGPSManager.instance.isReady.value || 
+        currentLocation.value == null || 
+        activityController.isInvalidCoordinates(currentLocation.value!)) {
+      print('GPS not ready, attempting to get location one more time...');
+      
+      // Try to get location one more time
+      await activityController.getCurrentLocation();
+      
+      // Final validation
+      if (currentLocation.value == null || 
+          activityController.isInvalidCoordinates(currentLocation.value!)) {
+        print('GPS signal still invalid, cannot start exercise');
+        showToastPopup('gps_signal_required'.tr());
+        return;
+      } else {
+        print('GPS signal acquired on retry, proceeding with exercise start');
+      }
+    }
+
     // if (globalController.connectivityResult.value != ConnectivityResult.none) {
     if (globalController.internetConnection.value) {
       await ActivityService.fetchStartUserExercises(
@@ -578,13 +599,13 @@ mixin ActivityMixin {
           steps: 0,
           speed: 0,
           distance: 0,
-          altitude: currentLocation.value?.altitude ?? 0.0,
+          altitude: currentLocation.value!.altitude,
           time: 0,
           startPoint: course != null
               ? course.firstName
-              : '${currentLocation.value?.longitude ?? 0.0}, ${currentLocation.value?.latitude ?? 0.0}',
-          lastLongitude: currentLocation.value?.longitude ?? 0.0,
-          lastLatitude: currentLocation.value?.latitude ?? 0.0,
+              : '${currentLocation.value!.longitude}, ${currentLocation.value!.latitude}',
+          lastLongitude: currentLocation.value!.longitude,
+          lastLatitude: currentLocation.value!.latitude,
           challengeId: course?.challengeId,
           challengeCourseId: course?.id,
           locationUpdateTime: DateTime.now(),

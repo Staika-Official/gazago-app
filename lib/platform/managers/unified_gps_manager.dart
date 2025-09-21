@@ -51,6 +51,10 @@ class UnifiedGPSManager extends GetxController {
   final RxString lastGpsSource =
       'unified'.obs; // 'unified', 'fallback', 'direct'
 
+  // GPS Ready State Detection
+  final RxBool isReady = false.obs;
+  final RxBool isInitializing = false.obs;
+
   // Battery Status
   final RxInt batteryLevel = 100.obs;
   final RxString gpsMode = 'balanced'.obs;
@@ -598,6 +602,9 @@ class UnifiedGPSManager extends GetxController {
       locationHistory.removeLast();
     }
 
+    // Update ready state
+    _updateReadyState(location);
+
     // Update metrics
     _updateLocationMetrics(location);
 
@@ -917,6 +924,124 @@ class UnifiedGPSManager extends GetxController {
       }
     }
   }
+
+  // GPS Ready State Management Methods
+  
+  /// Check if GPS is ready with valid coordinates
+  bool isGPSReady() {
+    if (currentLocation.value == null) return false;
+    
+    final loc = currentLocation.value!;
+    // Check for invalid coordinates (0.0, 0.0)
+    if (loc.latitude == 0.0 && loc.longitude == 0.0) return false;
+    
+    // Check accuracy threshold
+    if (loc.accuracy > UnifiedGPSConfig.accuracyThreshold * 2) return false; // Allow 2x threshold for ready state
+    
+    return true;
+  }
+  
+  /// Wait for GPS to be ready with timeout
+  Future<bool> waitForGPSReady({int timeoutSeconds = 15}) async {
+    if (isGPSReady()) {
+      isReady.value = true;
+      return true;
+    }
+
+    print('Waiting for GPS to be ready (timeout: ${timeoutSeconds}s)...');
+    
+    Completer<bool> completer = Completer<bool>();
+    
+    // Set up timeout
+    Timer timeoutTimer = Timer(Duration(seconds: timeoutSeconds), () {
+      if (!completer.isCompleted) {
+        print('GPS ready timeout after ${timeoutSeconds}s');
+        completer.complete(false);
+      }
+    });
+
+    // Listen for location stream updates
+    late StreamSubscription<LocationModel> subscription;
+    subscription = locationStream.listen((location) {
+      if (isGPSReady() && !completer.isCompleted) {
+        print('GPS is now ready: lat=${location.latitude}, lng=${location.longitude}, accuracy=${location.accuracy}m');
+        subscription.cancel();
+        timeoutTimer.cancel();
+        isReady.value = true;
+        completer.complete(true);
+      }
+    });
+
+    return completer.future;
+  }
+  
+  /// Initialize GPS with warm-up process
+  Future<bool> initializeWithWarmup({String? activityType, int warmupAttempts = 3}) async {
+    try {
+      print('Starting GPS initialization with warm-up...');
+      isInitializing.value = true;
+      isReady.value = false;
+      
+      // Start tracking first
+      if (!await startTracking(activityType: activityType)) {
+        isInitializing.value = false;
+        return false;
+      }
+      
+      // Warm-up by getting current location multiple times
+      bool validLocationFound = false;
+      for (int i = 0; i < warmupAttempts; i++) {
+        try {
+          final warmupLoc = await getCurrentLocation();
+          if (warmupLoc != null && !_isInvalidCoordinates(warmupLoc)) {
+            print('GPS warm-up ${i + 1}/${warmupAttempts}: lat=${warmupLoc.latitude}, lng=${warmupLoc.longitude}, accuracy=${warmupLoc.accuracy}m');
+            
+            if (warmupLoc.accuracy <= UnifiedGPSConfig.accuracyThreshold * 1.5) {
+              print('Valid GPS location found during warm-up');
+              isReady.value = true;
+              validLocationFound = true;
+              break;
+            }
+          }
+          
+          // Wait between attempts
+          if (i < warmupAttempts - 1) {
+            await Future.delayed(const Duration(seconds: 2));
+          }
+        } catch (e) {
+          print('GPS warm-up attempt ${i + 1} failed: $e');
+        }
+      }
+      
+      isInitializing.value = false;
+      print('GPS warm-up completed, valid location found: $validLocationFound');
+      
+      return validLocationFound;
+    } catch (e) {
+      print('GPS initialization with warm-up failed: $e');
+      isInitializing.value = false;
+      return false;
+    }
+  }
+  
+  /// Check if coordinates are invalid (0.0, 0.0)
+  bool _isInvalidCoordinates(LocationModel location) {
+    return location.latitude == 0.0 && location.longitude == 0.0;
+  }
+  
+  /// Update ready state when location changes
+  void _updateReadyState(LocationModel location) {
+    final wasReady = isReady.value;
+    final nowReady = isGPSReady();
+    
+    if (!wasReady && nowReady) {
+      print('GPS became ready: lat=${location.latitude}, lng=${location.longitude}, accuracy=${location.accuracy}m');
+      isReady.value = true;
+    } else if (wasReady && !nowReady) {
+      print('GPS lost ready state - poor signal or invalid coordinates');
+      isReady.value = false;
+    }
+  }
 }
 
 /// Helper class for easy access to GPS functionality
@@ -972,4 +1097,17 @@ class GPS {
   static double get totalDistance => instance.totalDistance.value;
 
   static double get currentSpeed => instance.currentSpeed.value;
+
+  // GPS Ready State Methods
+  static bool isGPSReady() => instance.isGPSReady();
+  
+  static Future<bool> waitForGPSReady({int timeoutSeconds = 15}) => 
+      instance.waitForGPSReady(timeoutSeconds: timeoutSeconds);
+      
+  static Future<bool> initializeWithWarmup({String? activityType, int warmupAttempts = 3}) =>
+      instance.initializeWithWarmup(activityType: activityType, warmupAttempts: warmupAttempts);
+      
+  static bool get isReady => instance.isReady.value;
+  
+  static bool get isInitializing => instance.isInitializing.value;
 }
