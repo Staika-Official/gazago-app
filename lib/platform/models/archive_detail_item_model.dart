@@ -26,6 +26,7 @@ class ArchiveDetailItemModel {
   String? badgeImageUrl;
   double? spendDurability;
   double? spendStamina;
+  double? availableStamina;
   String? title;
   String? firstName;
   String? secondName;
@@ -63,6 +64,7 @@ class ArchiveDetailItemModel {
     this.badgeImageUrl,
     this.spendDurability,
     this.spendStamina,
+    this.availableStamina,
     this.title,
     this.firstName,
     this.secondName,
@@ -79,7 +81,8 @@ class ArchiveDetailItemModel {
     this.isTwoMonthAgo,
   });
 
-  factory ArchiveDetailItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveDetailItemModelFromJson(json);
+  factory ArchiveDetailItemModel.fromJson(Map<String, dynamic> json) =>
+      _$ArchiveDetailItemModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ArchiveDetailItemModelToJson(this);
 }

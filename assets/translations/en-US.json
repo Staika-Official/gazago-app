@@ -698,6 +698,7 @@
   "lucky_effect_2": "Lucky Effect",
   "times": " times",
   "stamina_used": "Stamina Used",
+  "available_user_stamina": "Available Stamina",
   "durability_used": "Durability Used",
   "badges_obtained": "Badges Obtained",
   "challenge_failed": "Challenge Failed",

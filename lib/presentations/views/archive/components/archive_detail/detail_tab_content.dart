@@ -20,7 +20,8 @@ class DetailTabContent extends StatefulWidget {
   State<DetailTabContent> createState() => _DetailTabContentState();
 }
 
-class _DetailTabContentState extends State<DetailTabContent> with AutomaticKeepAliveClientMixin {
+class _DetailTabContentState extends State<DetailTabContent>
+    with AutomaticKeepAliveClientMixin {
   final ArchiveController controller = Get.find<ArchiveController>();
 
   @override
@@ -192,6 +193,11 @@ class _DetailTabContentState extends State<DetailTabContent> with AutomaticKeepA
           secondPostFix: controller.selectedItem.value.spendStamina.toString(),
         ),
         _buildRowInfo(
+          title: 'available_user_stamina'.tr(),
+          secondPostFix:
+              controller.selectedItem.value.availableStamina?.toString(),
+        ),
+        _buildRowInfo(
           title: 'durability_used'.tr(),
           secondPostFix:
               controller.selectedItem.value.spendDurability.toString(),
@@ -242,7 +248,7 @@ class _DetailTabContentState extends State<DetailTabContent> with AutomaticKeepA
       ],
     );
   }
-  
+
   /// Add segmented polylines for archive detail map
   void _addSegmentedPolylinesForArchive(GoogleMapController mapController) {
     if (controller.locations.length < 2) {
@@ -251,36 +257,34 @@ class _DetailTabContentState extends State<DetailTabContent> with AutomaticKeepA
         polylineId: PolylineId('archive_fallback'),
         width: 4,
         color: Colors.blue,
-        points: [
-          LatLng(37.5551, 126.9933),
-          LatLng(37.5551, 126.9933)
-        ],
+        points: [LatLng(37.5551, 126.9933), LatLng(37.5551, 126.9933)],
       ));
       return;
     }
-        
+
     // Clear any existing polylines
     SegmentedPolylineHelper.clearSegmentedPolylines(
       controller.drawingPolylines.toList(),
       'archive',
       debugMode: true,
     );
-    
+
     // Remove cleared polylines from controller
-    controller.drawingPolylines.removeWhere((polyline) => 
-      polyline.polylineId.value.startsWith('archive') ||
-      polyline.polylineId.value.contains('segment') ||
-      polyline.polylineId.value == 'detail_path');
-    
+    controller.drawingPolylines.removeWhere((polyline) =>
+        polyline.polylineId.value.startsWith('archive') ||
+        polyline.polylineId.value.contains('segment') ||
+        polyline.polylineId.value == 'detail_path');
+
     // Create segmented polylines from archive locations
-    List<Polyline> segmentedPolylines = SegmentedPolylineHelper.renderSegmentedPolylines(
+    List<Polyline> segmentedPolylines =
+        SegmentedPolylineHelper.renderSegmentedPolylines(
       coordinates: controller.locations,
       polylineIdPrefix: 'archive_segment',
       color: Colors.blue, // Blue color instead of red
       width: 4,
       debugMode: true,
     );
-    
+
     // Add segmented polylines to map
     for (Polyline polyline in segmentedPolylines) {
       controller.addOverlay(polyline);
