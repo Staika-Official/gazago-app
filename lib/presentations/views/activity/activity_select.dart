@@ -297,7 +297,7 @@ class ActivitySelect extends StatelessWidget {
                         height: 118.sp,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
-                          color: const Color(0xffFFD700),
+                          color: popupBgColor,
                           boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(0, 0, 0, 0.25),
@@ -308,26 +308,39 @@ class ActivitySelect extends StatelessWidget {
                           ],
                         ),
                         child: InkWell(
-                          onTap: () =>
-                              controller.selectExerciseType(ExerciseType.treasureHunting),
+                          onTap: () => controller
+                              .selectExerciseType(ExerciseType.treasureHunting),
                           borderRadius: BorderRadius.circular(14),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 26.sp, vertical: 24.sp),
                             child: Row(
                               children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(74),
-                                  child: SvgPicture.asset(
-                                    'assets/images/activity/ico_activity_type_treasure_hunting.svg',
-                                    width: 74.sp,
-                                    height: 74.sp,
+                                Container(
+                                  width: 74.sp,
+                                  height: 74.sp,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: const Color(0xff0EE6F3),
+                                      width: 3,
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(14.sp),
+                                    child: SvgPicture.asset(
+                                      'assets/images/activity/ico_treasure_event.svg',
+                                      width: 20.sp,
+                                      height: 22.sp,
+                                      fit: BoxFit.contain,
+                                    ),
                                   ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(left: 22.sp),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Container(
                                         padding: EdgeInsets.symmetric(
@@ -338,8 +351,8 @@ class ActivitySelect extends StatelessWidget {
                                           color: const Color(0xff0E2627),
                                         ),
                                         child: StyledText(
-                                          'general'.tr(),
-                                          color: const Color(0xffFFD700),
+                                          'treasure_hunting_challenge'.tr(),
+                                          color: const Color(0xff0EE6F3),
                                           fontSize: 10,
                                           fontWeight: 600,
                                           lineHeight: 10,
@@ -348,8 +361,8 @@ class ActivitySelect extends StatelessWidget {
                                       Padding(
                                         padding: const EdgeInsets.only(top: 9),
                                         child: StyledText(
-                                          'treasure_hunting'.tr(),
-                                          color: Colors.black,
+                                          'treasure_hunting_title'.tr(),
+                                          color: Colors.white,
                                           fontSize: 19,
                                           fontWeight: 600,
                                           lineHeight: 19,
@@ -359,8 +372,8 @@ class ActivitySelect extends StatelessWidget {
                                       Padding(
                                         padding: const EdgeInsets.only(top: 10),
                                         child: StyledText(
-                                          'treasure_hunt_description'.tr(),
-                                          color: Colors.black,
+                                          'treasure_hunting_subtitle'.tr(),
+                                          color: Colors.white,
                                           fontSize: 11,
                                           fontWeight: 600,
                                           lineHeight: 11,
