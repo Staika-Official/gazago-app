@@ -45,6 +45,7 @@ import 'package:simple_animations/animation_builder/custom_animation_builder.dar
 import 'package:throttling/throttling.dart';
 import 'package:uuid/uuid.dart';
 import 'package:gaza_go/platform/models/location_model.dart';
+import 'package:rxdart/rxdart.dart' hide Rx;
 
 mixin ActivityMixin {
   GlobalController globalController = Get.find();
@@ -117,6 +118,11 @@ mixin ActivityMixin {
   // this field to keep track if this session is pause then resume or resume when re-open app
   bool isExerciseInitOnce = false;
   DateTime? _lastTimeShowSpeedExceedWarning;
+
+  // Speed warning dialog control variables
+  final RxBool isSpeedWarningDialogShowing = RxBool(false);
+  DateTime? _lastSpeedWarningShownAt;
+  static const int kSpeedWarningCooldownMs = 5000; // 5 seconds cooldown
 
   Rx<Color> get exerciseStateTextColor {
     Color color = Colors.white;
@@ -560,16 +566,16 @@ mixin ActivityMixin {
 
     // GPS Location Validation - Prevent (0.0, 0.0) coordinates
     ActivityController activityController = this as ActivityController;
-    if (!UnifiedGPSManager.instance.isReady.value || 
-        currentLocation.value == null || 
+    if (!UnifiedGPSManager.instance.isReady.value ||
+        currentLocation.value == null ||
         activityController.isInvalidCoordinates(currentLocation.value!)) {
       print('GPS not ready, attempting to get location one more time...');
-      
+
       // Try to get location one more time
       await activityController.getCurrentLocation();
-      
+
       // Final validation
-      if (currentLocation.value == null || 
+      if (currentLocation.value == null ||
           activityController.isInvalidCoordinates(currentLocation.value!)) {
         print('GPS signal still invalid, cannot start exercise');
         showToastPopup('gps_signal_required'.tr());
@@ -628,9 +634,12 @@ mixin ActivityMixin {
 
           // Only start treasure hunting features for treasure hunting mode
           if (exerciseType == ExerciseType.treasureHunting) {
-            exceedSpeedLimitSubscription = GPS.isExceedSpeedLimit.listen(
+            exceedSpeedLimitSubscription = GPS.isExceedSpeedLimit
+                .debounceTime(const Duration(milliseconds: 500))
+                .distinct()
+                .listen(
               (isExceedSpeedLimit) {
-                if (isExceedSpeedLimit) {
+                if (isExceedSpeedLimit && !isSpeedWarningDialogShowing.value) {
                   _showExceedSpeedLimitWarningBottomSheet();
                 }
               },
@@ -689,9 +698,12 @@ mixin ActivityMixin {
             ExerciseType.treasureHunting;
 
     if (!isExerciseInitOnce && isTreasureHuntingMode) {
-      exceedSpeedLimitSubscription = GPS.isExceedSpeedLimit.listen(
+      exceedSpeedLimitSubscription = GPS.isExceedSpeedLimit
+          .debounceTime(const Duration(milliseconds: 500))
+          .distinct()
+          .listen(
         (isExceedSpeedLimit) {
-          if (isExceedSpeedLimit) {
+          if (isExceedSpeedLimit && !isSpeedWarningDialogShowing.value) {
             _showExceedSpeedLimitWarningBottomSheet();
           }
         },
@@ -957,6 +969,11 @@ mixin ActivityMixin {
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;
 
+    // Cancel exceed speed limit subscription and reset dialog state
+    exceedSpeedLimitSubscription?.cancel();
+    exceedSpeedLimitSubscription = null;
+    isSpeedWarningDialogShowing.value = false;
+
     // Stop GPS tracking when paused to prevent route drawing during pause
     _stopEnhancedGPSTracking();
 
@@ -1128,6 +1145,11 @@ mixin ActivityMixin {
     _lastCircleUpdateAt = null;
     _circleUpdateDebounce?.cancel();
     _circleUpdateDebounce = null;
+
+    // Reset speed warning dialog state
+    isSpeedWarningDialogShowing.value = false;
+    _lastSpeedWarningShownAt = null;
+    _lastTimeShowSpeedExceedWarning = null;
   }
 
   void resetTimer() {
@@ -1679,13 +1701,34 @@ mixin ActivityMixin {
   }
 
   void _showExceedSpeedLimitWarningBottomSheet() {
-    if (_lastTimeShowSpeedExceedWarning == null ||
-        DateTime.now()
-            .difference(_lastTimeShowSpeedExceedWarning!)
-            .inMinutes
-            .isGreaterThan(2)) {
-      Get.dialog(const IsExceedSpeedLimitWarningDialog());
-      _lastTimeShowSpeedExceedWarning = DateTime.now();
+    if (isSpeedWarningDialogShowing.value) {
+      return;
     }
+
+    if (_lastSpeedWarningShownAt != null) {
+      final timeSinceLastWarning =
+          DateTime.now().difference(_lastSpeedWarningShownAt!).inMilliseconds;
+      if (timeSinceLastWarning < kSpeedWarningCooldownMs) {
+        return;
+      }
+    }
+
+    if (_lastTimeShowSpeedExceedWarning != null &&
+        DateTime.now().difference(_lastTimeShowSpeedExceedWarning!).inMinutes <=
+            2) {
+      return;
+    }
+
+    // Set flag và timestamp
+    isSpeedWarningDialogShowing.value = true;
+    _lastSpeedWarningShownAt = DateTime.now();
+    _lastTimeShowSpeedExceedWarning = DateTime.now();
+
+    Get.dialog(
+      const IsExceedSpeedLimitWarningDialog(),
+      barrierDismissible: false,
+    ).then((_) {
+      isSpeedWarningDialogShowing.value = false;
+    });
   }
 }

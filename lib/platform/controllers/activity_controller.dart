@@ -245,6 +245,10 @@ class ActivityController extends SuperController
     gpsAccuracyTimer = null;
     nearbyTreasureTimer?.cancel();
     nearbyTreasureTimer = null;
+    
+    // Reset speed warning dialog state when controller closes
+    isSpeedWarningDialogShowing.value = false;
+    
     super.onClose();
   }
 
@@ -265,11 +269,16 @@ class ActivityController extends SuperController
     locationSubscription = null;
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;
+    exceedSpeedLimitSubscription?.cancel();
+    exceedSpeedLimitSubscription = null;
     _serviceStatusStream?.cancel();
     _serviceStatusStream = null;
     // adTimer?.cancel();
     // adTimer = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+    
+    // Reset speed warning dialog state when detached
+    isSpeedWarningDialogShowing.value = false;
 
     print(
         'ActivityController cleanup completed - Enhanced GPS tracking stopped');
@@ -291,6 +300,9 @@ class ActivityController extends SuperController
     // adLoadTimerStop();
     initLuckAnimation();
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
+    
+    // Reset speed warning dialog state when app is paused
+    isSpeedWarningDialogShowing.value = false;
   }
 
   @override
