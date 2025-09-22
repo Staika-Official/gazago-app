@@ -124,6 +124,9 @@ mixin ActivityMixin {
   DateTime? _lastSpeedWarningShownAt;
   static const int kSpeedWarningCooldownMs = 5000; // 5 seconds cooldown
 
+  // End exercise guard to prevent concurrent calls
+  bool _isEndingExercise = false;
+
   Rx<Color> get exerciseStateTextColor {
     Color color = Colors.white;
     switch (exerciseState.value) {
@@ -334,9 +337,7 @@ mixin ActivityMixin {
           calRealtimeSpeed();
         }
       },
-      onError: (error) {
-        print('Location stream error: $error');
-      },
+      onError: (error) {},
     );
   }
 
@@ -569,21 +570,20 @@ mixin ActivityMixin {
     if (!UnifiedGPSManager.instance.isReady.value ||
         currentLocation.value == null ||
         activityController.isInvalidCoordinates(currentLocation.value!)) {
-      print('GPS not ready, attempting to get location one more time...');
-
       // Try to get location one more time
       await activityController.getCurrentLocation();
 
       // Final validation
       if (currentLocation.value == null ||
           activityController.isInvalidCoordinates(currentLocation.value!)) {
-        print('GPS signal still invalid, cannot start exercise');
         showToastPopup('gps_signal_required'.tr());
         return;
-      } else {
-        print('GPS signal acquired on retry, proceeding with exercise start');
-      }
+      } else {}
     }
+
+    // 💾 SAVE EXERCISE TYPE TO PERSISTENT STORAGE IMMEDIATELY
+    // This ensures we have exercise type saved even if API fails
+    HiveStore.saveExerciseType(exerciseType);
 
     // if (globalController.connectivityResult.value != ConnectivityResult.none) {
     if (globalController.internetConnection.value) {
@@ -663,6 +663,16 @@ mixin ActivityMixin {
 
   void continueExerciseFromDialog() {
     if (globalController.internetConnection.value) {
+      // Ensure exercise type is restored before navigation
+      ExerciseType? savedExerciseType = HiveStore.loadExerciseType();
+      if (savedExerciseType != null) {
+        (this as ActivityController).selectedExerciseType.value =
+            savedExerciseType;
+      } else {
+        (this as ActivityController).selectedExerciseType.value =
+            ExerciseType.walking;
+      }
+
       Get.back();
       Get.toNamed(Routes.activityActive);
       continueExercise(source: 'pendingExerciseDialog');
@@ -692,7 +702,22 @@ mixin ActivityMixin {
     // Start enhanced GPS tracking for continued exercise
     _startEnhancedGPSTracking();
 
-    // Only start treasure hunting features if current exercise is treasure hunting mode
+    // 🔄 CRITICAL: Load and restore exercise type FIRST
+    // This ensures we have the correct exercise type before checking treasure hunting features
+    ExerciseType? savedExerciseType = HiveStore.loadExerciseType();
+    if (savedExerciseType != null) {
+      (this as ActivityController).selectedExerciseType.value =
+          savedExerciseType;
+
+      // 🎯 Set correct GPS activity type based on restored exercise type
+      String activityType = (this as ActivityController).activityType;
+      await UnifiedGPSManager.instance.setActivityType(activityType);
+    } else {
+      (this as ActivityController).selectedExerciseType.value =
+          ExerciseType.walking;
+    }
+
+    // NOW check treasure hunting mode with restored type
     bool isTreasureHuntingMode =
         (this as ActivityController).selectedExerciseType.value ==
             ExerciseType.treasureHunting;
@@ -1001,6 +1026,13 @@ mixin ActivityMixin {
       return;
     }
 
+    // GUARD: Prevent concurrent endExercise calls
+    if (_isEndingExercise) {
+      return;
+    }
+
+    _isEndingExercise = true;
+
     bool adjustFirstEndedExerciseEvent =
         HiveStore.load(key: HiveKey.adjustFirstEndedExerciseEvent.name) ??
             false;
@@ -1045,6 +1077,7 @@ mixin ActivityMixin {
 
           if (newUserState.exercise!.state == 'ENDED') {
             exerciseState.value = ExerciseState.ready;
+
             HiveStore.deleteMultipleKeys(keys: [
               HiveKey.userState.name,
               HiveKey.endExerciseRequested.name,
@@ -1060,13 +1093,26 @@ mixin ActivityMixin {
             // Stop nearby treasure timer when exercise ends
             (this as ActivityController).stopNearbyTreasureTimer();
 
-            if ([
+            // Handle navigation FIRST before clearing exercise type
+            bool shouldNavigateToDetail = [
               'showEndExerciseAlert',
               'showEndADExerciseAlert',
               'pendingExerciseDialog'
-            ].any((src) => src == source)) {
+            ].any((src) => src == source);
+
+            if (shouldNavigateToDetail) {
               moveToExerciseDetail(userState.value.exercise!.id!);
             }
+
+            // DELAY exercise type cleanup to avoid navigation conflicts
+            Future.delayed(const Duration(milliseconds: 100), () {
+              HiveStore.deleteKey(key: HiveKey.selectedExerciseType.name);
+              (this as ActivityController).selectedExerciseType.value =
+                  ExerciseType.walking;
+
+              // Reset guard after successful completion
+              _isEndingExercise = false;
+            });
           }
 
           if (newUserState.exercise!.recordState == 'ABNORMAL') {
@@ -1080,12 +1126,16 @@ mixin ActivityMixin {
             await syncExerciseData(newUserState);
             if (retryAttempt > 4) {
               showToastPopup('exercise_end_failed'.tr());
+              _isEndingExercise = false; // Reset guard after max retries
             } else {
+              _isEndingExercise = false; // Reset guard before retry
               endExercise(source: source, retryAttempt: retryAttempt + 1);
             }
           }
         },
         errorCallback: (ErrorResponseDataModel? errorData) {
+          _isEndingExercise = false; // Reset guard on error
+
           if (errorData != null &&
               errorData.errorCode == 'ALREADY_EXERCISE_ENDED') {
             handleAlreadyFinishedExercise();
@@ -1095,6 +1145,7 @@ mixin ActivityMixin {
         },
       );
     } else {
+      _isEndingExercise = false; // Reset guard when no internet
       showToastPopup('check_internet_connection'.tr());
     }
   }
@@ -1112,6 +1163,12 @@ mixin ActivityMixin {
     userState.value.exercise!.state = 'ENDED';
     HiveStore.saveCurrentUserState(userState: userState.value);
     HiveStore.save(key: HiveKey.endExerciseRequested.name, value: true);
+
+    // Clear saved exercise type when exercise ends locally
+    HiveStore.deleteKey(key: HiveKey.selectedExerciseType.name);
+    (this as ActivityController).selectedExerciseType.value =
+        ExerciseType.walking;
+
     resetVariables();
     resetTimer();
     resetSubscriptions();
@@ -1123,6 +1180,7 @@ mixin ActivityMixin {
     (this as ActivityController).stopNearbyTreasureTimer();
 
     Get.until((route) => route.isFirst);
+    _isEndingExercise = false; // Reset guard after local end
   }
 
   void resetVariables() {
@@ -1136,6 +1194,10 @@ mixin ActivityMixin {
     exerciseData.value = List.empty(growable: true);
     coordinates.value = List.empty(growable: true);
     Get.find<ActivityController>().selectedCourse.value = null;
+
+    // Reset exercise type to default
+    Get.find<ActivityController>().selectedExerciseType.value =
+        ExerciseType.walking;
 
     // Reset treasure and circle state
     listTreasureOfSession.clear();
@@ -1178,22 +1240,28 @@ mixin ActivityMixin {
   }
 
   void moveToExerciseDetail(int exerciseId) {
-    Get.until((route) => route.isFirst);
-    // if (Get.isRegistered<HomeMenuController>()) {
-    //   Get.find<HomeMenuController>().selectMenu(0);
-    // } else {
-    //   Get.put(HomeMenuController()).selectMenu(0);
-    // }
+    try {
+      Get.until((route) => route.isFirst);
 
-    if (Get.isRegistered<ArchiveController>()) {
-      Get.find<ArchiveController>().toDetail(exerciseId);
-    } else {
-      Get.put(ArchiveController()).toDetail(exerciseId);
-    }
+      // Add small delay to ensure navigation stack is settled
+      Future.delayed(const Duration(milliseconds: 50), () {
+        if (Get.isRegistered<ArchiveController>()) {
+          Get.find<ArchiveController>().toDetail(exerciseId);
+        } else {
+          Get.put(ArchiveController()).toDetail(exerciseId);
+        }
+      });
+    } catch (e) {}
   }
 
   void handleAlreadyFinishedExercise() {
     exerciseState.value = ExerciseState.ready;
+
+    // Clear saved exercise type when handling already finished exercise
+    HiveStore.deleteKey(key: HiveKey.selectedExerciseType.name);
+    (this as ActivityController).selectedExerciseType.value =
+        ExerciseType.walking;
+
     HiveStore.deleteMultipleKeys(
         keys: [HiveKey.userState.name, HiveKey.endExerciseRequested.name]);
     resetVariables();
@@ -1204,6 +1272,7 @@ mixin ActivityMixin {
     (this as ActivityController).stopNearbyTreasureTimer();
 
     Get.until((route) => route.isFirst);
+    _isEndingExercise = false; // Reset guard after handling already finished
   }
 
   Future<void> showExerciseMap() async {
@@ -1286,7 +1355,6 @@ mixin ActivityMixin {
             ExerciseType.treasureHunting;
 
     if (!isTreasureHuntingMode) {
-      print('Not in treasure hunting mode, skipping fetchExerciseTreasures');
       return;
     }
 
@@ -1340,7 +1408,6 @@ mixin ActivityMixin {
       },
       errorCallback: (_) {
         loaderController.isLoading.value = false;
-        print("error fetching exercise treasures");
       },
     );
   }
@@ -1392,133 +1459,108 @@ mixin ActivityMixin {
 
   /// Start enhanced GPS tracking with ActivityGPSService
   Future<void> _startEnhancedGPSTracking() async {
-    try {
-      // Get ActivityGPSService instance
-      final activityGPSService = Get.isRegistered<ActivityGPSService>()
-          ? Get.find<ActivityGPSService>()
-          : Get.put(ActivityGPSService(), permanent: true);
+    // Get ActivityGPSService instance
+    final activityGPSService = Get.isRegistered<ActivityGPSService>()
+        ? Get.find<ActivityGPSService>()
+        : Get.put(ActivityGPSService(), permanent: true);
 
-      // Start GPS tracking
-      final started = await activityGPSService.startTracking();
-      if (started) {
-        print('Enhanced GPS tracking started successfully');
-
-        // Listen to GPS location updates (ActivityGPSService processes them internally)
-        GPS.locationStream.listen((location) {
-          _handleEnhancedLocationUpdate(location);
-        });
-      } else {
-        print(
-            'Failed to start enhanced GPS tracking, falling back to standard GPS');
-      }
-    } catch (e) {
-      print('Error starting enhanced GPS tracking: $e');
+    // Start GPS tracking
+    final started = await activityGPSService.startTracking();
+    if (started) {
+      // Listen to GPS location updates (ActivityGPSService processes them internally)
+      GPS.locationStream.listen((location) {
+        _handleEnhancedLocationUpdate(location);
+      });
     }
   }
 
   /// Handle enhanced location updates from ActivityGPSService
   void _handleEnhancedLocationUpdate(LocationModel location) {
+    // Update current location
+    currentLocation.value = location;
+
+    // Update treasure visibility circle immediately for real-time sync
+    if (exerciseState.value == ExerciseState.ongoing &&
+        listTreasureOfSession.isNotEmpty) {
+      // For immediate updates, skip debounce and update directly
+      _performCircleUpdateImmediate(location);
+    }
+
+    // Only update coordinates for map display when exercise is ongoing AND network is available
+    // This creates the desired "broken line" effect during network outages while GPS still tracks user position
+    if (exerciseState.value == ExerciseState.ongoing) {
+      final newCoord = LatLng(location.latitude, location.longitude);
+      if (coordinates.isEmpty ||
+          coordinates.last.latitude != location.latitude ||
+          coordinates.last.longitude != location.longitude) {
+        // Only add coordinates to polyline when network is available (business requirement)
+        if (globalController.internetConnection.value) {
+          coordinates.add(newCoord);
+        }
+      }
+    }
+
+    // Update exercise data if ongoing
+    if (exerciseState.value == ExerciseState.ongoing) {
+      exerciseData.add(UserExerciseModel(
+        altitude: location.altitude,
+        speed: location.speed,
+        // store in m/s for consistency
+        steps: exerciseSteps.value,
+        locationUpdateTime: DateTime.now(),
+        lastLatitude: location.latitude,
+        lastLongitude: location.longitude,
+      ));
+    }
+
+    // Update real-time speed and distance from ActivityGPSService
     try {
-      // Update current location
-      currentLocation.value = location;
+      final activityGPS = Get.find<ActivityGPSService>();
+      exerciseDistance.value = activityGPS.totalDistance.value;
+      gpsSpeed.value = activityGPS.currentSpeed.value;
 
-      // Update treasure visibility circle immediately for real-time sync
-      if (exerciseState.value == ExerciseState.ongoing &&
-          listTreasureOfSession.isNotEmpty) {
-        // For immediate updates, skip debounce and update directly
-        _performCircleUpdateImmediate(location);
-      }
+      // Update realTimeSpeed for main UI display with smoothing to prevent flickering
+      double newSpeed = activityGPS.currentSpeed.value;
 
-      // Only update coordinates for map display when exercise is ongoing AND network is available
-      // This creates the desired "broken line" effect during network outages while GPS still tracks user position
-      if (exerciseState.value == ExerciseState.ongoing) {
-        final newCoord = LatLng(location.latitude, location.longitude);
-        if (coordinates.isEmpty ||
-            coordinates.last.latitude != location.latitude ||
-            coordinates.last.longitude != location.longitude) {
-          // Only add coordinates to polyline when network is available (business requirement)
-          if (globalController.internetConnection.value) {
-            coordinates.add(newCoord);
-          }
-        }
-      }
+      // Always update realTimeSpeed for accurate display
+      realTimeSpeed.value = newSpeed;
 
-      // Update exercise data if ongoing
-      if (exerciseState.value == ExerciseState.ongoing) {
-        exerciseData.add(UserExerciseModel(
-          altitude: location.altitude,
-          speed: location.speed,
-          // store in m/s for consistency
-          steps: exerciseSteps.value,
-          locationUpdateTime: DateTime.now(),
-          lastLatitude: location.latitude,
-          lastLongitude: location.longitude,
-        ));
-      }
-
-      // Update real-time speed and distance from ActivityGPSService
-      try {
-        final activityGPS = Get.find<ActivityGPSService>();
-        exerciseDistance.value = activityGPS.totalDistance.value;
-        gpsSpeed.value = activityGPS.currentSpeed.value;
-
-        // Update realTimeSpeed for main UI display with smoothing to prevent flickering
-        double newSpeed = activityGPS.currentSpeed.value;
-
-        // Always update realTimeSpeed for accurate display
-        realTimeSpeed.value = newSpeed;
-
-        // Update smoothedSpeed with more conservative logic for color stability
-        if ((newSpeed - smoothedSpeed.value).abs() > 1.0 ||
-            smoothedSpeed.value == 0) {
-          // Only update smoothedSpeed if speed change is significant (> 1.0 km/h) or first time
-          smoothedSpeed.value = newSpeed;
-          print(
-              'Speed updated: realTime=${realTimeSpeed.value.toStringAsFixed(1)}, smoothed=${smoothedSpeed.value.toStringAsFixed(1)}');
-        }
-      } catch (e) {
-        // Fallback to original speed calculation if ActivityGPSService not available
-        gpsSpeed.value = location.speedKmh;
-        // Don't override realTimeSpeed here, let calRealtimeSpeed() handle it
+      // Update smoothedSpeed with more conservative logic for color stability
+      if ((newSpeed - smoothedSpeed.value).abs() > 1.0 ||
+          smoothedSpeed.value == 0) {
+        // Only update smoothedSpeed if speed change is significant (> 1.0 km/h) or first time
+        smoothedSpeed.value = newSpeed;
       }
     } catch (e) {
-      print('Error handling enhanced location update: $e');
+      // Fallback to original speed calculation if ActivityGPSService not available
+      gpsSpeed.value = location.speedKmh;
+      // Don't override realTimeSpeed here, let calRealtimeSpeed() handle it
     }
   }
 
   /// Stop enhanced GPS tracking and treasure geofencing
   Future<void> _stopEnhancedGPSTracking() async {
-    try {
-      // Stop ActivityGPSService
-      if (Get.isRegistered<ActivityGPSService>()) {
-        final activityGPS = Get.find<ActivityGPSService>();
-        await activityGPS.stopTracking();
-        print('ActivityGPSService stopped');
-      }
-
-      // Stop TreasureGeofencingService
-      if (Get.isRegistered<TreasureGeofencingService>()) {
-        final treasureGeofencing = Get.find<TreasureGeofencingService>();
-        await treasureGeofencing.stopMonitoring();
-        print('TreasureGeofencingService stopped');
-      }
-
-      // Clean up circle update timer
-      _circleUpdateDebounce?.cancel();
-      _circleUpdateDebounce = null;
-
-      print('Enhanced GPS tracking stopped successfully');
-    } catch (e) {
-      print('Error stopping enhanced GPS tracking: $e');
+    // Stop ActivityGPSService
+    if (Get.isRegistered<ActivityGPSService>()) {
+      final activityGPS = Get.find<ActivityGPSService>();
+      await activityGPS.stopTracking();
     }
+
+    // Stop TreasureGeofencingService
+    if (Get.isRegistered<TreasureGeofencingService>()) {
+      final treasureGeofencing = Get.find<TreasureGeofencingService>();
+      await treasureGeofencing.stopMonitoring();
+    }
+
+    // Clean up circle update timer
+    _circleUpdateDebounce?.cancel();
+    _circleUpdateDebounce = null;
   }
 
   Future<void> drawTreasureVisibilityCircle({required bool isUpdate}) async {
     // Only draw treasure visibility circle in treasure hunting mode
     if ((this as ActivityController).selectedExerciseType.value !=
         ExerciseType.treasureHunting) {
-      print(
-          'Not in treasure hunting mode, skipping treasure visibility circle');
       return;
     }
 
@@ -1532,11 +1574,9 @@ mixin ActivityMixin {
         if (loc != null) {
           center = LatLng(loc.latitude, loc.longitude);
         } else {
-          print('Cannot draw treasure circle: GPS manager returned null');
           return;
         }
       } catch (e) {
-        print('Cannot draw treasure circle: GPS manager error - $e');
         return;
       }
     }
@@ -1560,9 +1600,6 @@ mixin ActivityMixin {
     } else {
       (this as ActivityController).updateOrInsertCircle(circle);
     }
-
-    print(
-        'Treasure visibility circle drawn at: ${center.latitude}, ${center.longitude}');
   }
 
   /// Helper: Get the display LatLng from currentLocation

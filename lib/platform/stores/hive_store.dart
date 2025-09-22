@@ -101,6 +101,45 @@ class HiveStore {
         (FileSystemException error, stackTrace) => handleHiveError(error));
   }
 
+  /// Save exercise type to persistent storage
+  static void saveExerciseType(ExerciseType exerciseType) {
+    final Box box = Hive.box('gazaGo');
+    box.put(HiveKey.selectedExerciseType.name, exerciseType.name).onError(
+        (FileSystemException error, stackTrace) => handleHiveError(error));
+    print('💾 HiveStore: Saved exercise type: ${exerciseType.name}');
+  }
+
+  /// Load exercise type from persistent storage
+  static ExerciseType? loadExerciseType() {
+    final Box box = Hive.box('gazaGo');
+    String? savedTypeName = box.get(HiveKey.selectedExerciseType.name);
+    
+    if (savedTypeName == null) {
+      print('📖 HiveStore: No saved exercise type found');
+      return null;
+    }
+    
+    try {
+      ExerciseType exerciseType = ExerciseType.values.firstWhere(
+        (type) => type.name == savedTypeName,
+      );
+      print('📖 HiveStore: Loaded exercise type: ${exerciseType.name}');
+      return exerciseType;
+    } catch (e) {
+      print('⚠️ HiveStore: Invalid exercise type found: $savedTypeName, clearing...');
+      // Clear corrupted data
+      box.delete(HiveKey.selectedExerciseType.name);
+      return null;
+    }
+  }
+
+  /// Clear saved exercise type
+  static void clearExerciseType() {
+    final Box box = Hive.box('gazaGo');
+    box.delete(HiveKey.selectedExerciseType.name);
+    print('🗑️ HiveStore: Cleared saved exercise type');
+  }
+
   static void handleHiveError(FileSystemException e) {
     if (e.osError != null && e.osError!.errorCode == 28) {
       showToastPopup('low_storage'.tr());

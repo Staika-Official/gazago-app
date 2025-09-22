@@ -375,11 +375,28 @@ class ActivityController extends SuperController
     challengeGuideController = AnimationController(vsync: this);
     checkConnectivityStatus();
 
+    // 🔄 RESTORE EXERCISE TYPE if there's ongoing/paused exercise
+    // This is CRITICAL - exercise type must be restored BEFORE showing pending dialog
     if ([ExerciseState.ongoing, ExerciseState.paused]
-            .any((state) => state == exerciseState.value) &&
-        !isFakeGps.value &&
-        !isTestingFakeGps()) {
-      showPendingExerciseAlert(this);
+            .any((state) => state == exerciseState.value)) {
+      
+      ExerciseType? savedExerciseType = HiveStore.loadExerciseType();
+      if (savedExerciseType != null) {
+        print('🔄 Initialize: Restoring exercise type ${savedExerciseType.name}');
+        selectedExerciseType.value = savedExerciseType;
+      } else {
+        print('⚠️ Initialize: No saved exercise type found, defaulting to walking');
+        selectedExerciseType.value = ExerciseType.walking;
+      }
+      
+      // 🔍 VALIDATE CONSISTENCY after restoration
+      validateExerciseTypeConsistency(source: 'initializeExercise');
+      debugLogExerciseState(context: 'before showing pending dialog');
+      
+      // Show pending dialog AFTER restoring exercise type
+      if (!isFakeGps.value && !isTestingFakeGps()) {
+        showPendingExerciseAlert(this);
+      }
     }
     disableActivityButton.value = false;
   }
@@ -804,6 +821,21 @@ class ActivityController extends SuperController
           } else if (state == 'PAUSED' || updateTimer == null) {
             exerciseState.value = ExerciseState.paused;
           }
+          
+          // 🔄 RESTORE EXERCISE TYPE - Critical for session continuity
+          // Only restore when there's an active exercise to ensure proper tracking
+          ExerciseType? savedExerciseType = HiveStore.loadExerciseType();
+          if (savedExerciseType != null) {
+            print('🔄 getUserState: Restoring exercise type: ${savedExerciseType.name}');
+            selectedExerciseType.value = savedExerciseType;
+          } else {
+            print('⚠️ getUserState: No saved exercise type found, defaulting to walking');
+            selectedExerciseType.value = ExerciseType.walking;
+          }
+          
+          // 🔍 VALIDATE CONSISTENCY after restoration
+          validateExerciseTypeConsistency(source: 'getUserState');
+          debugLogExerciseState(context: 'after getUserState restoration');
         }
 
         await retrySavedRequests(source: 'getUserState');
@@ -1087,6 +1119,14 @@ class ActivityController extends SuperController
     }
 
     selectedExerciseType.value = exerciseType;
+    
+    // 💾 BACKUP SAVE - Ensure exercise type is persisted when selected
+    HiveStore.saveExerciseType(exerciseType);
+    print('🎯 SelectExerciseType: Backed up exercise type ${exerciseType.name}');
+    
+    // 🔍 VALIDATE after selection
+    validateExerciseTypeConsistency(source: 'selectExerciseType');
+    debugLogExerciseState(context: 'after exercise type selection');
 
     // AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
     //
@@ -2248,5 +2288,107 @@ class ActivityController extends SuperController
   /// Check if coordinates are invalid (null, 0.0, 0.0, or very inaccurate)
   bool isInvalidCoordinates(LocationModel location) {
     return location.latitude == 0.0 && location.longitude == 0.0;
+  }
+
+  /// 🔍 VALIDATION METHOD - Check exercise type consistency
+  /// This method validates that saved and current exercise types match during active exercise
+  void validateExerciseTypeConsistency({String? source}) {
+    try {
+      ExerciseType? saved = HiveStore.loadExerciseType();
+      ExerciseType current = selectedExerciseType.value;
+      
+      // Only validate during active exercise states
+      if (exerciseState.value != ExerciseState.ready) {
+        if (saved != current) {
+          print('⚠️ WARNING: Exercise type mismatch! Saved: ${saved?.name ?? "null"}, Current: ${current.name}');
+          if (source != null) {
+            print('⚠️ Source: $source');
+          }
+          
+          // Auto-correct by using saved type if available
+          if (saved != null) {
+            print('🔧 Auto-correcting to saved exercise type: ${saved.name}');
+            selectedExerciseType.value = saved;
+          }
+        } else {
+          print('✅ Exercise type consistency check passed: ${current.name}');
+        }
+      }
+      
+      // Additional validation for treasure hunting features
+      if (exerciseState.value != ExerciseState.ready && 
+          current == ExerciseType.treasureHunting) {
+        bool hasTreasures = listTreasureOfSession.isNotEmpty;
+        bool hasTimer = nearbyTreasureTimer?.isActive == true;
+        
+        print('🎮 Treasure hunting validation:');
+        print('   - Has treasures: $hasTreasures');
+        print('   - Timer active: $hasTimer');
+        
+        if (!hasTreasures && exerciseState.value == ExerciseState.ongoing) {
+          print('⚠️ WARNING: Treasure hunting mode but no treasures loaded!');
+        }
+      }
+    } catch (e) {
+      print('❌ Exercise type validation failed: $e');
+    }
+  }
+
+  /// 🛡️ ERROR RECOVERY - Handle corrupted exercise type data
+  void recoverFromCorruptedExerciseType() {
+    try {
+      print('🔧 Attempting exercise type data recovery...');
+      
+      // Try to load saved type
+      ExerciseType? saved = HiveStore.loadExerciseType();
+      
+      if (saved != null) {
+        print('🔧 Found saved exercise type, restoring: ${saved.name}');
+        selectedExerciseType.value = saved;
+      } else {
+        print('🔧 No saved data found, resetting to default walking mode');
+        selectedExerciseType.value = ExerciseType.walking;
+        
+        // Only save if we're not in an active exercise (to avoid overwriting during ongoing session)
+        if (exerciseState.value == ExerciseState.ready) {
+          HiveStore.saveExerciseType(ExerciseType.walking);
+        }
+      }
+      
+      print('✅ Exercise type recovery completed: ${selectedExerciseType.value.name}');
+    } catch (e) {
+      print('❌ Exercise type recovery failed: $e');
+      // Ultimate fallback
+      selectedExerciseType.value = ExerciseType.walking;
+    }
+  }
+
+  /// 📊 DEBUG HELPER - Log current exercise state
+  void debugLogExerciseState({String? context}) {
+    try {
+      String contextStr = context != null ? ' [$context]' : '';
+      print('📊 Exercise State Debug$contextStr:');
+      print('   - Exercise State: ${exerciseState.value}');
+      print('   - Exercise Type (current): ${selectedExerciseType.value.name}');
+      
+      ExerciseType? saved = HiveStore.loadExerciseType();
+      print('   - Exercise Type (saved): ${saved?.name ?? "null"}');
+      
+      if (userState.value.exercise != null) {
+        print('   - Exercise ID: ${userState.value.exercise!.id}');
+        print('   - Exercise Server State: ${userState.value.exercise!.state}');
+        print('   - Exercise Type (server): ${userState.value.exercise!.type}');
+      } else {
+        print('   - No active exercise in userState');
+      }
+      
+      if (selectedExerciseType.value == ExerciseType.treasureHunting) {
+        print('   - Treasures loaded: ${listTreasureOfSession.length}');
+        print('   - Timer active: ${nearbyTreasureTimer?.isActive == true}');
+        print('   - Claimed treasures: ${listClaimedTreasureIdOfSession.length}');
+      }
+    } catch (e) {
+      print('❌ Debug logging failed: $e');
+    }
   }
 }

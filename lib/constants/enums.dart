@@ -124,6 +124,7 @@ enum HiveKey {
   serviceStatus,
   isAlreadySigninUser,
   serviceLanguage,
+  selectedExerciseType,
 }
 
 enum ResponseStatus {
