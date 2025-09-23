@@ -18,8 +18,9 @@ class ActivityActiveMainButtonSection extends GetWidget<ActivityController> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            /// Map button - only for treasure hunting mode
-            if (controller.selectedExerciseType.value == ExerciseType.treasureHunting) ...[
+            /// Map button - for walking and treasure hunting mode
+            if (controller.selectedExerciseType.value == ExerciseType.walking || 
+                controller.selectedExerciseType.value == ExerciseType.treasureHunting) ...[
               CircularButton(
                 radius: 48,
                 color: Colors.white,
