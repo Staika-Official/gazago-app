@@ -122,7 +122,9 @@ mixin ActivityMixin {
   // Speed warning dialog control variables
   final RxBool isSpeedWarningDialogShowing = RxBool(false);
   DateTime? _lastSpeedWarningShownAt;
+  DateTime? _exerciseStartTime; // Track exercise start time for warmup period
   static const int kSpeedWarningCooldownMs = 5000; // 5 seconds cooldown
+  static const int kSpeedWarningWarmupMs = 10000; // 10 seconds warmup period
 
   // End exercise guard to prevent concurrent calls
   bool _isEndingExercise = false;
@@ -623,6 +625,10 @@ mixin ActivityMixin {
           isExerciseInitOnce = true;
           userState.update((state) => state!.exercise = userExerciseData);
           exerciseState.value = ExerciseState.ongoing;
+          
+          // Set exercise start time for warmup period tracking
+          _exerciseStartTime = DateTime.now();
+          
           HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
           HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
           initExerciseStats();
@@ -688,6 +694,10 @@ mixin ActivityMixin {
 
     exerciseData.value = List.empty(growable: true);
     exerciseState.value = ExerciseState.ongoing;
+    
+    // Set exercise start time for warmup period tracking when continuing exercise
+    _exerciseStartTime = DateTime.now();
+    
     userState.value.exercise!.locationUpdateTime = DateTime.now();
     exerciseData.add(userState.value.exercise!);
     exerciseTime.value = userState.value.exercise!.time!;
@@ -1212,6 +1222,7 @@ mixin ActivityMixin {
     isSpeedWarningDialogShowing.value = false;
     _lastSpeedWarningShownAt = null;
     _lastTimeShowSpeedExceedWarning = null;
+    _exerciseStartTime = null; // Reset exercise start time for warmup period
   }
 
   void resetTimer() {
@@ -1780,6 +1791,15 @@ mixin ActivityMixin {
   void _showExceedSpeedLimitWarningBottomSheet() {
     if (isSpeedWarningDialogShowing.value) {
       return;
+    }
+
+    // Check warmup period - only show warning after 10 seconds from exercise start
+    if (_exerciseStartTime != null) {
+      final timeSinceExerciseStart =
+          DateTime.now().difference(_exerciseStartTime!).inMilliseconds;
+      if (timeSinceExerciseStart < kSpeedWarningWarmupMs) {
+        return; // Still in warmup period, don't show warning
+      }
     }
 
     if (_lastSpeedWarningShownAt != null) {
