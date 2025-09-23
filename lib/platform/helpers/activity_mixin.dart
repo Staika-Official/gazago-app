@@ -625,10 +625,10 @@ mixin ActivityMixin {
           isExerciseInitOnce = true;
           userState.update((state) => state!.exercise = userExerciseData);
           exerciseState.value = ExerciseState.ongoing;
-          
+
           // Set exercise start time for warmup period tracking
           _exerciseStartTime = DateTime.now();
-          
+
           HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
           HiveStore.save(key: HiveKey.savedStepCount.name, value: 0);
           initExerciseStats();
@@ -640,9 +640,9 @@ mixin ActivityMixin {
 
           // Only start treasure hunting features for treasure hunting mode
           if (exerciseType == ExerciseType.treasureHunting) {
+            // Use periodic sampling instead of distinct() to allow repeated warnings
             exceedSpeedLimitSubscription = GPS.isExceedSpeedLimit
                 .debounceTime(const Duration(milliseconds: 500))
-                .distinct()
                 .listen(
               (isExceedSpeedLimit) {
                 if (isExceedSpeedLimit && !isSpeedWarningDialogShowing.value) {
@@ -694,10 +694,10 @@ mixin ActivityMixin {
 
     exerciseData.value = List.empty(growable: true);
     exerciseState.value = ExerciseState.ongoing;
-    
+
     // Set exercise start time for warmup period tracking when continuing exercise
     _exerciseStartTime = DateTime.now();
-    
+
     userState.value.exercise!.locationUpdateTime = DateTime.now();
     exerciseData.add(userState.value.exercise!);
     exerciseTime.value = userState.value.exercise!.time!;
@@ -733,9 +733,9 @@ mixin ActivityMixin {
             ExerciseType.treasureHunting;
 
     if (!isExerciseInitOnce && isTreasureHuntingMode) {
+      // Use periodic sampling instead of distinct() to allow repeated warnings
       exceedSpeedLimitSubscription = GPS.isExceedSpeedLimit
           .debounceTime(const Duration(milliseconds: 500))
-          .distinct()
           .listen(
         (isExceedSpeedLimit) {
           if (isExceedSpeedLimit && !isSpeedWarningDialogShowing.value) {
@@ -1371,22 +1371,23 @@ mixin ActivityMixin {
 
     final loaderController = (this as ActivityController).loaderController;
     Timer? treasureLoadingTimeout;
-    
+
     try {
       // Set loading timeout as failsafe (20 seconds)
       treasureLoadingTimeout = Timer(const Duration(seconds: 20), () {
         if (loaderController.isLoading.value) {
-          print('⏰ fetchExerciseTreasures timeout after 20s, force stopping loading');
           loaderController.isLoading.value = false;
         }
       });
 
       // Use manager's current location or get fresh one
       final pos = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high).timeout(
+              desiredAccuracy: LocationAccuracy.high)
+          .timeout(
         const Duration(seconds: 10),
         onTimeout: () {
-          throw TimeoutException('GPS location timeout', const Duration(seconds: 10));
+          throw TimeoutException(
+              'GPS location timeout', const Duration(seconds: 10));
         },
       );
       final loc = LocationCallbackHandler.convertToLocationModel(pos);
@@ -1397,9 +1398,9 @@ mixin ActivityMixin {
         userLat: loc.latitude,
         userLng: loc.longitude,
       );
-      
+
       loaderController.isLoading.value = true;
-      
+
       // Wrap API call with timeout
       await Future.any([
         TreasureService.getTreasureByExerciseId(
@@ -1436,7 +1437,7 @@ mixin ActivityMixin {
                 loc.latitude,
                 loc.longitude,
               ));
-              
+
               print('✅ fetchExerciseTreasures completed successfully');
             } catch (e) {
               print('❌ Error in fetchExerciseTreasures success callback: $e');
@@ -1447,10 +1448,10 @@ mixin ActivityMixin {
           },
         ),
         Future.delayed(const Duration(seconds: 15), () {
-          throw TimeoutException('fetchExerciseTreasures API timeout', const Duration(seconds: 15));
+          throw TimeoutException('fetchExerciseTreasures API timeout',
+              const Duration(seconds: 15));
         }),
       ]);
-      
     } catch (e) {
       print('❌ fetchExerciseTreasures error: $e');
     } finally {
@@ -1458,7 +1459,6 @@ mixin ActivityMixin {
       treasureLoadingTimeout?.cancel();
       if (loaderController.isLoading.value) {
         loaderController.isLoading.value = false;
-        print('🔄 Force stopped fetchExerciseTreasures loading in finally block');
       }
     }
   }
@@ -1810,10 +1810,12 @@ mixin ActivityMixin {
       }
     }
 
-    if (_lastTimeShowSpeedExceedWarning != null &&
-        DateTime.now().difference(_lastTimeShowSpeedExceedWarning!).inMinutes <=
-            2) {
-      return;
+    if (_lastTimeShowSpeedExceedWarning != null) {
+      final minutesSinceLastWarning =
+          DateTime.now().difference(_lastTimeShowSpeedExceedWarning!).inMinutes;
+      if (minutesSinceLastWarning < 2) {
+        return;
+      }
     }
 
     // Set flag và timestamp

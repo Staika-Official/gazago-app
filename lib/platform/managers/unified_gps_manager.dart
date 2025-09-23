@@ -51,6 +51,10 @@ class UnifiedGPSManager extends GetxController {
   final RxString lastGpsSource =
       'unified'.obs; // 'unified', 'fallback', 'direct'
 
+  // Valid Distance Tracking
+  final RxDouble validDistance = 0.0.obs;
+  String _currentActivityType = 'walking';
+
   // GPS Ready State Detection
   final RxBool isReady = false.obs;
   final RxBool isInitializing = false.obs;
@@ -65,9 +69,13 @@ class UnifiedGPSManager extends GetxController {
       StreamController<LocationModel>.broadcast();
   final StreamController<bool> _isExceedSpeedLimitStreamController =
       StreamController<bool>.broadcast();
+  final StreamController<double> _validDistanceStreamController =
+      StreamController<double>.broadcast();
 
   Stream<bool> get isExceedSpeedLimitStream =>
       _isExceedSpeedLimitStreamController.stream;
+  Stream<double> get validDistanceStream =>
+      _validDistanceStreamController.stream;
 
   // Internal state
   LocationModel? _currentLocation;
@@ -90,6 +98,7 @@ class UnifiedGPSManager extends GetxController {
     _performanceTimer?.cancel();
     _locationStreamController.close();
     _isExceedSpeedLimitStreamController.close();
+    _validDistanceStreamController.close();
 
     // Clean up isolate port
     if (_port != null) {
@@ -455,8 +464,13 @@ class UnifiedGPSManager extends GetxController {
         if (timeInterval > 0 && UnifiedGPSConfig.jumpDetectionEnabled) {
           final speed = (distance / timeInterval) * 3.6; // Convert to km/h
 
-          if (speed > UnifiedGPSConfig.speedThreshold) {
+          // Always emit speed exceed status for continuous monitoring
+          final speedThreshold = UnifiedGPSConfig.speedThreshold;
+
+          if (speed > speedThreshold) {
             _isExceedSpeedLimitStreamController.add(true);
+          } else {
+            _isExceedSpeedLimitStreamController.add(false);
           }
 
           // Check for jumps within time window
@@ -470,13 +484,15 @@ class UnifiedGPSManager extends GetxController {
           }
 
           // 5. Speed validation (check for teleportation) - More lenient initially
-          double speedThreshold = UnifiedGPSConfig.speedThreshold;
+          // Only filter out extremely high speeds that indicate GPS jumps/teleportation
+          double teleportationThreshold = UnifiedGPSConfig.speedThreshold * 3.0;
           if (locationHistory.length < 3) {
             // Allow higher speeds initially to prevent filtering out valid positions
-            speedThreshold = speedThreshold * 2.0;
+            teleportationThreshold = teleportationThreshold * 2.0;
           }
 
-          if (speed > speedThreshold) {
+          // Only filter out if speed indicates obvious teleportation (very high speed)
+          if (speed > teleportationThreshold) {
             return null;
           }
         }
@@ -654,6 +670,9 @@ class UnifiedGPSManager extends GetxController {
       // Only add distance when movement exceeds accuracy-based threshold
       if (distance > dynamicMinDistance) {
         totalDistance.value += distance;
+
+        // Calculate valid distance based on speed range
+        _updateValidDistance(location, previousLocation, distance);
       }
     }
   }
@@ -691,6 +710,43 @@ class UnifiedGPSManager extends GetxController {
     }
   }
 
+  /// Update valid distance based on speed range
+  void _updateValidDistance(LocationModel currentLocation,
+      LocationModel previousLocation, double distance) {
+    try {
+      final timeInterval =
+          currentLocation.timeDifferenceInSeconds(previousLocation);
+      if (timeInterval > 0) {
+        final speed = (distance / timeInterval) * 3.6; // Convert to km/h
+
+        // Get speed thresholds from config with fallbacks
+        final minValidSpeed =
+            UnifiedGPSConfig.getMinValidSpeed(_currentActivityType);
+        final maxValidSpeed = UnifiedGPSConfig.maxValidSpeed;
+
+        // Safety check for config values
+        if (minValidSpeed < 0 ||
+            maxValidSpeed <= 0 ||
+            minValidSpeed >= maxValidSpeed) {
+          return; // Skip this update if config is invalid
+        }
+
+        // Only count distance if speed is within valid range
+        if (speed >= minValidSpeed && speed <= maxValidSpeed) {
+          validDistance.value += distance;
+          try {
+            _validDistanceStreamController.add(validDistance.value);
+          } catch (e) {
+            // Ignore stream controller errors
+          }
+        }
+      }
+    } catch (e) {
+      // Ignore valid distance calculation errors to prevent GPS freeze
+      print('Valid distance calculation error: $e');
+    }
+  }
+
   /// Reset metrics for new session
   void _resetMetrics() {
     totalPositions.value = 0;
@@ -698,6 +754,7 @@ class UnifiedGPSManager extends GetxController {
     errorCount.value = 0;
     averageAccuracy.value = 0.0;
     totalDistance.value = 0.0;
+    validDistance.value = 0.0;
     currentSpeed.value = 0.0;
     fallbackUsageCount.value = 0;
     jumpDetectionCount.value = 0;
@@ -883,6 +940,7 @@ class UnifiedGPSManager extends GetxController {
 
   /// Set specific activity type (walking, running, cycling, driving)
   Future<void> setActivityType(String activityType) async {
+    _currentActivityType = activityType;
     final activityConfig = UnifiedGPSConfig.getConfigForActivity(activityType);
     UnifiedGPSConfig.updateAll(activityConfig);
 
@@ -926,21 +984,23 @@ class UnifiedGPSManager extends GetxController {
   }
 
   // GPS Ready State Management Methods
-  
+
   /// Check if GPS is ready with valid coordinates
   bool isGPSReady() {
     if (currentLocation.value == null) return false;
-    
+
     final loc = currentLocation.value!;
     // Check for invalid coordinates (0.0, 0.0)
     if (loc.latitude == 0.0 && loc.longitude == 0.0) return false;
-    
+
     // Check accuracy threshold
-    if (loc.accuracy > UnifiedGPSConfig.accuracyThreshold * 2) return false; // Allow 2x threshold for ready state
-    
+    if (loc.accuracy > UnifiedGPSConfig.accuracyThreshold * 2) {
+      return false; // Allow 2x threshold for ready state
+    }
+
     return true;
   }
-  
+
   /// Wait for GPS to be ready with timeout
   Future<bool> waitForGPSReady({int timeoutSeconds = 15}) async {
     if (isGPSReady()) {
@@ -949,9 +1009,9 @@ class UnifiedGPSManager extends GetxController {
     }
 
     print('Waiting for GPS to be ready (timeout: ${timeoutSeconds}s)...');
-    
+
     Completer<bool> completer = Completer<bool>();
-    
+
     // Set up timeout
     Timer timeoutTimer = Timer(Duration(seconds: timeoutSeconds), () {
       if (!completer.isCompleted) {
@@ -964,7 +1024,8 @@ class UnifiedGPSManager extends GetxController {
     late StreamSubscription<LocationModel> subscription;
     subscription = locationStream.listen((location) {
       if (isGPSReady() && !completer.isCompleted) {
-        print('GPS is now ready: lat=${location.latitude}, lng=${location.longitude}, accuracy=${location.accuracy}m');
+        print(
+            'GPS is now ready: lat=${location.latitude}, lng=${location.longitude}, accuracy=${location.accuracy}m');
         subscription.cancel();
         timeoutTimer.cancel();
         isReady.value = true;
@@ -974,36 +1035,39 @@ class UnifiedGPSManager extends GetxController {
 
     return completer.future;
   }
-  
+
   /// Initialize GPS with warm-up process
-  Future<bool> initializeWithWarmup({String? activityType, int warmupAttempts = 3}) async {
+  Future<bool> initializeWithWarmup(
+      {String? activityType, int warmupAttempts = 3}) async {
     try {
       print('Starting GPS initialization with warm-up...');
       isInitializing.value = true;
       isReady.value = false;
-      
+
       // Start tracking first
       if (!await startTracking(activityType: activityType)) {
         isInitializing.value = false;
         return false;
       }
-      
+
       // Warm-up by getting current location multiple times
       bool validLocationFound = false;
       for (int i = 0; i < warmupAttempts; i++) {
         try {
           final warmupLoc = await getCurrentLocation();
           if (warmupLoc != null && !_isInvalidCoordinates(warmupLoc)) {
-            print('GPS warm-up ${i + 1}/${warmupAttempts}: lat=${warmupLoc.latitude}, lng=${warmupLoc.longitude}, accuracy=${warmupLoc.accuracy}m');
-            
-            if (warmupLoc.accuracy <= UnifiedGPSConfig.accuracyThreshold * 1.5) {
+            print(
+                'GPS warm-up ${i + 1}/${warmupAttempts}: lat=${warmupLoc.latitude}, lng=${warmupLoc.longitude}, accuracy=${warmupLoc.accuracy}m');
+
+            if (warmupLoc.accuracy <=
+                UnifiedGPSConfig.accuracyThreshold * 1.5) {
               print('Valid GPS location found during warm-up');
               isReady.value = true;
               validLocationFound = true;
               break;
             }
           }
-          
+
           // Wait between attempts
           if (i < warmupAttempts - 1) {
             await Future.delayed(const Duration(seconds: 2));
@@ -1012,10 +1076,10 @@ class UnifiedGPSManager extends GetxController {
           print('GPS warm-up attempt ${i + 1} failed: $e');
         }
       }
-      
+
       isInitializing.value = false;
       print('GPS warm-up completed, valid location found: $validLocationFound');
-      
+
       return validLocationFound;
     } catch (e) {
       print('GPS initialization with warm-up failed: $e');
@@ -1023,19 +1087,20 @@ class UnifiedGPSManager extends GetxController {
       return false;
     }
   }
-  
+
   /// Check if coordinates are invalid (0.0, 0.0)
   bool _isInvalidCoordinates(LocationModel location) {
     return location.latitude == 0.0 && location.longitude == 0.0;
   }
-  
+
   /// Update ready state when location changes
   void _updateReadyState(LocationModel location) {
     final wasReady = isReady.value;
     final nowReady = isGPSReady();
-    
+
     if (!wasReady && nowReady) {
-      print('GPS became ready: lat=${location.latitude}, lng=${location.longitude}, accuracy=${location.accuracy}m');
+      print(
+          'GPS became ready: lat=${location.latitude}, lng=${location.longitude}, accuracy=${location.accuracy}m');
       isReady.value = true;
     } else if (wasReady && !nowReady) {
       print('GPS lost ready state - poor signal or invalid coordinates');
@@ -1072,6 +1137,11 @@ class GPS {
   static Future<void> setActivityType(String activityType) =>
       instance.setActivityType(activityType);
 
+  static double get maxValidSpeed => UnifiedGPSConfig.maxValidSpeed;
+  static double getMinValidSpeed(String activityType) =>
+      UnifiedGPSConfig.getMinValidSpeed(activityType);
+  static double get validDistanceKm => instance.validDistance.value / 1000.0;
+
   static void setBatteryOptimization(bool enabled) =>
       instance.setBatteryOptimization(enabled);
 
@@ -1080,6 +1150,8 @@ class GPS {
 
   static Stream<bool> get isExceedSpeedLimit =>
       instance.isExceedSpeedLimitStream;
+
+  static Stream<double> get validDistanceStream => instance.validDistanceStream;
 
   // Quick access to status
   static bool get isActive => instance.isActive.value;
@@ -1100,14 +1172,16 @@ class GPS {
 
   // GPS Ready State Methods
   static bool isGPSReady() => instance.isGPSReady();
-  
-  static Future<bool> waitForGPSReady({int timeoutSeconds = 15}) => 
+
+  static Future<bool> waitForGPSReady({int timeoutSeconds = 15}) =>
       instance.waitForGPSReady(timeoutSeconds: timeoutSeconds);
-      
-  static Future<bool> initializeWithWarmup({String? activityType, int warmupAttempts = 3}) =>
-      instance.initializeWithWarmup(activityType: activityType, warmupAttempts: warmupAttempts);
-      
+
+  static Future<bool> initializeWithWarmup(
+          {String? activityType, int warmupAttempts = 3}) =>
+      instance.initializeWithWarmup(
+          activityType: activityType, warmupAttempts: warmupAttempts);
+
   static bool get isReady => instance.isReady.value;
-  
+
   static bool get isInitializing => instance.isInitializing.value;
 }

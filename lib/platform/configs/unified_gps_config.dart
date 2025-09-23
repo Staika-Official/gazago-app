@@ -10,6 +10,9 @@ class UnifiedGPSConfig {
     'accuracy_threshold':
         25.0, // meters - Balanced threshold for urban environments
     'speed_threshold': 50.0, // km/h - Higher speed threshold to avoid false rejections
+    'max_valid_speed': 14.0, // km/h - Maximum speed for valid distance calculation
+    'min_valid_speed_walking': 1.0, // km/h - Minimum speed for valid distance (walking)
+    'min_valid_speed_hiking': 0.7, // km/h - Minimum speed for valid distance (hiking)
     'distance_filter': 2, // meters - Reduced for better sensitivity to movement
     'update_interval':
         900, // milliseconds - Faster updates to reduce delay (was 1200)
@@ -224,6 +227,26 @@ class UnifiedGPSConfig {
   static void resetToDefaults() {
     _currentConfig = Map<String, dynamic>.from(_defaultConfig);
     print('GPS Config reset to maximum accuracy defaults');
+  }
+
+  /// Get max valid speed for distance calculation
+  static double get maxValidSpeed => get<double>('max_valid_speed');
+  
+  /// Get min valid speed for walking activities
+  static double get minValidSpeedWalking => get<double>('min_valid_speed_walking');
+  
+  /// Get min valid speed for hiking activities  
+  static double get minValidSpeedHiking => get<double>('min_valid_speed_hiking');
+  
+  /// Get min valid speed based on activity type
+  static double getMinValidSpeed(String activityType) {
+    switch (activityType.toLowerCase()) {
+      case 'hiking':
+      case 'famous':
+        return minValidSpeedHiking;
+      default:
+        return minValidSpeedWalking;
+    }
   }
 
   /// Validate current configuration

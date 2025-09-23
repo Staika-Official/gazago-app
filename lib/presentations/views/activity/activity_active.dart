@@ -8,6 +8,7 @@ import 'package:gaza_go/platform/configs/unified_gps_config.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
+import 'package:gaza_go/platform/managers/unified_gps_manager.dart';
 import 'package:gaza_go/platform/services/activity_gps_service.dart';
 
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -29,17 +30,22 @@ class ActivityActive extends StatelessWidget {
 
   List<Widget> renderGauge(ExerciseType exerciseType, Color color) {
     List<Widget> gaugeList = List.empty(growable: true);
+    
+    // Get dynamic valid range indices based on config
+    int validBarsStart = 3; // Start of valid range
+    int validBarsEnd = 22;  // End of valid range (based on 14km/h max)
+    
     for (int i = 0; i < 35; i++) {
-      // 40km / 0.36 ≈ 110 segments for 40km/h max speed
       Widget? gauge;
-      if (i > (exerciseType == ExerciseType.hiking ? 1 : 2) && i < 20) {
-        // hiking? 0.6 : 1 ~ 40km range for gauge display
+      if (i >= validBarsStart && i <= validBarsEnd) {
+        // Valid range bars - highlighted
         gauge = Container(
           width: 3.sp,
           height: 24.sp,
           color: color,
         );
       } else {
+        // Invalid range bars - dimmed
         gauge = Container(
           width: 3.sp,
           height: 20.sp,
@@ -52,33 +58,99 @@ class ActivityActive extends StatelessWidget {
     return gaugeList;
   }
 
-  double calculateGaugePosition(BoxConstraints constraints, double speed) {
-    // 주어진 속도 값을 0에서 15 사이의 값으로 제한합니다.
+  double calculateGaugePosition(BoxConstraints constraints, double speed, ExerciseType exerciseType) {
+    try {
+      // Get dynamic speed range from config
+      final maxValidSpeed = UnifiedGPSConfig.maxValidSpeed;
+      final minValidSpeed = UnifiedGPSConfig.getMinValidSpeed(exerciseType.name);
+      
+      // Safety check for config values
+      if (maxValidSpeed <= 0 || minValidSpeed < 0 || minValidSpeed >= maxValidSpeed) {
+        // Fallback to safe values
+        return _calculateFallbackGaugePosition(constraints, speed, exerciseType);
+      }
+    
     double barWidth = 3.0;
     int totalBars = 35;
-    int validBarsStart = 3; // 3번째 바 (0-indexed, 실제로는 4번째 바)
-    int validBarsEnd = 22; // 21번째 바 (0-indexed, 실제로는 22번째 바)
-    double validSpeedRange = 40.0; // Valid speed range 1-40km/h
-
-    // 전체 너비에서 바의 너비를 뺀 나머지 공간 계산
+    int validBarsStart = 3; // 3rd bar (0-indexed, actually 4th bar)
+    int validBarsEnd = 22; // 21st bar (0-indexed, actually 22nd bar)
+    
+    // Calculate space between bars
     double spaceLeft = constraints.maxWidth - (totalBars * barWidth);
     double spacesBetweenBars = spaceLeft / (totalBars - 1);
 
-    // 속도가 12 이상인 경우 35번째 바에 표시
-    if (speed >= 12) {
-      return (totalBars - 1) * (barWidth + spacesBetweenBars) + (barWidth / 2);
+    // If speed exceeds max valid speed, show beyond valid range  
+    if (speed >= maxValidSpeed) {
+      // Calculate position beyond valid range up to gauge end
+      double excessSpeed = speed - maxValidSpeed;
+      double maxExcessSpeed = 50.0; // Max speed we want to display on gauge
+      double excessRange = (totalBars - 1 - validBarsEnd).toDouble();
+      
+      if (excessSpeed >= maxExcessSpeed - maxValidSpeed) {
+        // At absolute end of gauge
+        return ((totalBars - 1) * (barWidth + spacesBetweenBars)) + (barWidth / 2);
+      } else {
+        // Proportional position beyond valid range
+        double excessRatio = excessSpeed / (maxExcessSpeed - maxValidSpeed);
+        int excessBarStep = (validBarsEnd + (excessRatio * excessRange)).round();
+        return (excessBarStep * (barWidth + spacesBetweenBars)) + (barWidth / 2);
+      }
     }
+    
+    // Clamp speed to valid range for normal calculation
+    speed = speed.clamp(minValidSpeed, maxValidSpeed);
 
-    // 유효 속도 구간 내에서 속도를 유효 바 구간으로 매핑
+    // Map speed to valid bar range
     double validBarRange = (validBarsEnd - validBarsStart).toDouble();
-    double normalizedSpeed = (speed - 1) / validSpeedRange;
+    double validSpeedRange = maxValidSpeed - minValidSpeed;
+    double normalizedSpeed = (speed - minValidSpeed) / validSpeedRange;
     int barStep = (validBarsStart + normalizedSpeed * validBarRange).round();
 
-    // 바 위치 계산
-    double position =
-        (barStep * (barWidth + spacesBetweenBars)) + (barWidth / 2);
+      // Calculate bar position
+      double position = (barStep * (barWidth + spacesBetweenBars)) + (barWidth / 2);
 
-    return position;
+      return position;
+    } catch (e) {
+      // Fallback calculation if config access fails
+      return _calculateFallbackGaugePosition(constraints, speed, exerciseType);
+    }
+  }
+  
+  double _calculateFallbackGaugePosition(BoxConstraints constraints, double speed, ExerciseType exerciseType) {
+    // Fallback calculation with hardcoded safe values
+    double barWidth = 3.0;
+    int totalBars = 35;
+    int validBarsStart = 3;
+    int validBarsEnd = 22;
+    double maxValidSpeed = 14.0; // Safe fallback
+    double minValidSpeed = exerciseType == ExerciseType.hiking ? 0.7 : 1.0; // Safe fallback
+    
+    double spaceLeft = constraints.maxWidth - (totalBars * barWidth);
+    double spacesBetweenBars = spaceLeft / (totalBars - 1);
+    
+    // If speed exceeds max valid speed, show beyond valid range
+    if (speed >= maxValidSpeed) {
+      double excessSpeed = speed - maxValidSpeed;
+      double maxExcessSpeed = 50.0;
+      double excessRange = (totalBars - 1 - validBarsEnd).toDouble();
+      
+      if (excessSpeed >= maxExcessSpeed - maxValidSpeed) {
+        return ((totalBars - 1) * (barWidth + spacesBetweenBars)) + (barWidth / 2);
+      } else {
+        double excessRatio = excessSpeed / (maxExcessSpeed - maxValidSpeed);
+        int excessBarStep = (validBarsEnd + (excessRatio * excessRange)).round();
+        return (excessBarStep * (barWidth + spacesBetweenBars)) + (barWidth / 2);
+      }
+    }
+    
+    speed = speed.clamp(minValidSpeed, maxValidSpeed);
+    
+    double validBarRange = (validBarsEnd - validBarsStart).toDouble();
+    double validSpeedRange = maxValidSpeed - minValidSpeed;
+    double normalizedSpeed = (speed - minValidSpeed) / validSpeedRange;
+    int barStep = (validBarsStart + normalizedSpeed * validBarRange).round();
+    
+    return (barStep * (barWidth + spacesBetweenBars)) + (barWidth / 2);
   }
 
   List<Widget> renderStatList(ActivityController controller, context) {
@@ -653,7 +725,7 @@ class ActivityActive extends StatelessWidget {
                                 } catch (e) {
                                   return controller.realTimeSpeed.value;
                                 }
-                              }()),
+                              }(), controller.selectedExerciseType.value),
                               child: Obx(() {
                                 // Get display speed with same fallback logic
                                 double displaySpeed = 0.0;
@@ -678,7 +750,14 @@ class ActivityActive extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Text(
-                                    '${controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7' : '1'}-${UnifiedGPSConfig.speedThreshold.toInt()}',
+                                    () {
+                                      try {
+                                        return '${UnifiedGPSConfig.getMinValidSpeed(controller.selectedExerciseType.value.name)}-${UnifiedGPSConfig.maxValidSpeed.toInt()}';
+                                      } catch (e) {
+                                        // Fallback display
+                                        return controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7-14' : '1-14';
+                                      }
+                                    }(),
                                     style: AppTextStyleData.regular()
                                         .enBodySemiboldMd
                                         .copyWith(
@@ -792,15 +871,13 @@ class ActivityActive extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Obx(() {
-                                    // Try to get distance from ActivityGPSService first, fallback to totalDistance
+                                    // Use valid distance from GPS manager for accurate distance calculation
                                     double displayDistance = 0.0;
                                     try {
-                                      final activityGPS =
-                                          Get.find<ActivityGPSService>();
-                                      displayDistance =
-                                          activityGPS.distanceKilometers;
+                                      // Get valid distance from UnifiedGPSManager
+                                      displayDistance = GPS.validDistanceKm;
                                     } catch (e) {
-                                      // Fallback to totalDistance if ActivityGPSService not available
+                                      // Fallback to totalDistance if GPS manager not available
                                       displayDistance =
                                           controller.totalDistance.value;
                                     }
@@ -886,10 +963,19 @@ class ActivityActive extends StatelessWidget {
                                                                           crossAxisAlignment:
                                                                               CrossAxisAlignment.start,
                                                                           children: [
-                                                                            Text(
-                                                                              'valid_distance_criteria'.tr(args: [
-                                                                                controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7' : '1'
-                                                                              ]),
+                                                            Text(
+                                                              () {
+                                                                try {
+                                                                  return 'valid_distance_criteria'.tr(args: [
+                                                                    GPS.getMinValidSpeed(controller.selectedExerciseType.value.name).toString(),
+                                                                    GPS.maxValidSpeed.toString()
+                                                                  ]);
+                                                                } catch (e) {
+                                                                  // Fallback with hardcoded values
+                                                                  final minSpeed = controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7' : '1';
+                                                                  return 'valid_distance_criteria'.tr(args: [minSpeed, '14']);
+                                                                }
+                                                              }(),
                                                                               style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                                                                                     color: AppColorData.regular().colorTextPrimary,
                                                                                     height: 1.4,
