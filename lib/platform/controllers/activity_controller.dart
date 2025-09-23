@@ -181,6 +181,10 @@ class ActivityController extends SuperController
   // Treasure pickup loading state
   final pickupLoading = false.obs;
 
+  // Safe getUserState call tracking
+  bool _isGettingUserState = false;
+  Timer? _userStateTimeout;
+
   @override
   void initLocationStream() async {
     print(
@@ -245,10 +249,16 @@ class ActivityController extends SuperController
     gpsAccuracyTimer = null;
     nearbyTreasureTimer?.cancel();
     nearbyTreasureTimer = null;
-    
+    _userStateTimeout?.cancel();
+    _userStateTimeout = null;
+
+    // Reset loading states
+    _isGettingUserState = false;
+    loaderController.isLoading.value = false;
+
     // Reset speed warning dialog state when controller closes
     isSpeedWarningDialogShowing.value = false;
-    
+
     super.onClose();
   }
 
@@ -273,10 +283,16 @@ class ActivityController extends SuperController
     exceedSpeedLimitSubscription = null;
     _serviceStatusStream?.cancel();
     _serviceStatusStream = null;
+    _userStateTimeout?.cancel();
+    _userStateTimeout = null;
     // adTimer?.cancel();
     // adTimer = null;
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    
+
+    // Reset loading states
+    _isGettingUserState = false;
+    loaderController.isLoading.value = false;
+
     // Reset speed warning dialog state when detached
     isSpeedWarningDialogShowing.value = false;
 
@@ -300,7 +316,7 @@ class ActivityController extends SuperController
     // adLoadTimerStop();
     initLuckAnimation();
     HiveStore.save(key: HiveKey.savedStepInitialized.name, value: false);
-    
+
     // Reset speed warning dialog state when app is paused
     isSpeedWarningDialogShowing.value = false;
   }
@@ -315,7 +331,7 @@ class ActivityController extends SuperController
 
     if (Get.currentRoute != Routes.login &&
         Get.currentRoute != Routes.loading) {
-      getUserState(showLoading: true);
+      _safeGetUserState(showLoading: true, source: 'onResumed');
     }
 
     // Listen to network changes to handle polyline gap effect
@@ -378,21 +394,22 @@ class ActivityController extends SuperController
     // 🔄 RESTORE EXERCISE TYPE if there's ongoing/paused exercise
     // This is CRITICAL - exercise type must be restored BEFORE showing pending dialog
     if ([ExerciseState.ongoing, ExerciseState.paused]
-            .any((state) => state == exerciseState.value)) {
-      
+        .any((state) => state == exerciseState.value)) {
       ExerciseType? savedExerciseType = HiveStore.loadExerciseType();
       if (savedExerciseType != null) {
-        print('🔄 Initialize: Restoring exercise type ${savedExerciseType.name}');
+        print(
+            '🔄 Initialize: Restoring exercise type ${savedExerciseType.name}');
         selectedExerciseType.value = savedExerciseType;
       } else {
-        print('⚠️ Initialize: No saved exercise type found, defaulting to walking');
+        print(
+            '⚠️ Initialize: No saved exercise type found, defaulting to walking');
         selectedExerciseType.value = ExerciseType.walking;
       }
-      
+
       // 🔍 VALIDATE CONSISTENCY after restoration
       validateExerciseTypeConsistency(source: 'initializeExercise');
       debugLogExerciseState(context: 'before showing pending dialog');
-      
+
       // Show pending dialog AFTER restoring exercise type
       if (!isFakeGps.value && !isTestingFakeGps()) {
         showPendingExerciseAlert(this);
@@ -445,7 +462,7 @@ class ActivityController extends SuperController
   }
 
   Future<void> refreshController() async {
-    getUserState(showLoading: true);
+    _safeGetUserState(showLoading: true, source: 'refreshController');
     checkNewCollectionStatus();
   }
 
@@ -748,108 +765,168 @@ class ActivityController extends SuperController
   Future<void> getUserState({bool showLoading = false}) async {
     print('getUserStategetUserStategetUserStategetUserStategetUserState');
     await ActivityService.getCurrentUserState(
-      showLoading: showLoading,
-      successCallback: (CurrentUserStateModel currentUserState) async {
-        currentUserState.exercise?.locationUpdateTime = DateTime.now();
-        userState.update((state) {
-          state?.state = currentUserState.state;
-          state?.exercise = currentUserState.exercise;
-          state?.shoes = currentUserState.shoes;
-        });
-        if (currentUserState.exercise != null) {
-          HiveStore.save(
-              key: HiveKey.savedStepCount.name,
-              value: currentUserState.exercise!.steps!);
-        }
-        if (userState.value.exercise == null) {
-          exerciseState.value = ExerciseState.ready;
-        } else {
-          CurrentUserStateModel? savedUserState =
-              HiveStore.loadCurrentUserState();
-          if (savedUserState != null &&
-              savedUserState.exercise!.steps! <
-                  currentUserState.exercise!.steps!) {
-            HiveStore.saveCurrentUserState(
-              userState: CurrentUserStateModel(
-                state: currentUserState.state,
-                exercise: currentUserState.exercise,
-                shoes: currentUserState.shoes,
-              ),
-            );
-            savedUserState =
-                CurrentUserStateModel.fromJson(currentUserState.toJson());
+        showLoading: showLoading,
+        successCallback: (CurrentUserStateModel currentUserState) async {
+          currentUserState.exercise?.locationUpdateTime = DateTime.now();
+          userState.update((state) {
+            state?.state = currentUserState.state;
+            state?.exercise = currentUserState.exercise;
+            state?.shoes = currentUserState.shoes;
+          });
+          if (currentUserState.exercise != null) {
+            HiveStore.save(
+                key: HiveKey.savedStepCount.name,
+                value: currentUserState.exercise!.steps!);
           }
-          if (savedUserState != null &&
-              savedUserState.exercise != null &&
-              savedUserState.exercise!.recordState != null &&
-              savedUserState.exercise!.recordState! == 'NORMAL') {
-            savedUserState.exercise!.locationUpdateTime = DateTime.now();
-            userState.update((state) {
-              state?.exercise = savedUserState!.exercise;
-            });
-
-            int savedSteps =
-                HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
-            if (savedUserState.exercise!.steps! > savedSteps) {
-              HiveStore.save(
-                  key: HiveKey.savedStepCount.name,
-                  value: savedUserState.exercise!.steps!);
-            }
-          }
-
-          if (userState.value.exercise?.challengeCourseId != null) {
-            //  산행중인 정보 가져오기
-            ChallengeCourseModel challenge = await getChallengeCourse(
-                userState.value.exercise!.challengeCourseId!);
-            if (challenge.id != null) {
-              selectedCourse.value = challenge;
-            }
-          }
-          if (updateTimer == null) {
-            exerciseData.value = List.empty(growable: true);
-            exerciseData.add(userState.value.exercise!);
-            await syncExerciseData(userState.value);
-            coordinates.value = List.empty(growable: true);
-            coordinates
-                .addAll(await parseCoordinates(userState.value.exercise!.id));
-          }
-
-          final state = userState.value.exercise!.state!;
-
-          if (state == 'ONGOING' && updateTimer != null) {
-            exerciseState.value = ExerciseState.ongoing;
-          } else if (state == 'PAUSED' || updateTimer == null) {
-            exerciseState.value = ExerciseState.paused;
-          }
-          
-          // 🔄 RESTORE EXERCISE TYPE - Critical for session continuity
-          // Only restore when there's an active exercise to ensure proper tracking
-          ExerciseType? savedExerciseType = HiveStore.loadExerciseType();
-          if (savedExerciseType != null) {
-            print('🔄 getUserState: Restoring exercise type: ${savedExerciseType.name}');
-            selectedExerciseType.value = savedExerciseType;
+          if (userState.value.exercise == null) {
+            exerciseState.value = ExerciseState.ready;
           } else {
-            print('⚠️ getUserState: No saved exercise type found, defaulting to walking');
-            selectedExerciseType.value = ExerciseType.walking;
+            CurrentUserStateModel? savedUserState =
+                HiveStore.loadCurrentUserState();
+            if (savedUserState != null &&
+                savedUserState.exercise!.steps! <
+                    currentUserState.exercise!.steps!) {
+              HiveStore.saveCurrentUserState(
+                userState: CurrentUserStateModel(
+                  state: currentUserState.state,
+                  exercise: currentUserState.exercise,
+                  shoes: currentUserState.shoes,
+                ),
+              );
+              savedUserState =
+                  CurrentUserStateModel.fromJson(currentUserState.toJson());
+            }
+            if (savedUserState != null &&
+                savedUserState.exercise != null &&
+                savedUserState.exercise!.recordState != null &&
+                savedUserState.exercise!.recordState! == 'NORMAL') {
+              savedUserState.exercise!.locationUpdateTime = DateTime.now();
+              userState.update((state) {
+                state?.exercise = savedUserState!.exercise;
+              });
+
+              int savedSteps =
+                  HiveStore.load(key: HiveKey.savedStepCount.name) ?? 0;
+              if (savedUserState.exercise!.steps! > savedSteps) {
+                HiveStore.save(
+                    key: HiveKey.savedStepCount.name,
+                    value: savedUserState.exercise!.steps!);
+              }
+            }
+
+            if (userState.value.exercise?.challengeCourseId != null) {
+              //  산행중인 정보 가져오기
+              ChallengeCourseModel challenge = await getChallengeCourse(
+                  userState.value.exercise!.challengeCourseId!);
+              if (challenge.id != null) {
+                selectedCourse.value = challenge;
+              }
+            }
+            if (updateTimer == null) {
+              exerciseData.value = List.empty(growable: true);
+              exerciseData.add(userState.value.exercise!);
+              await syncExerciseData(userState.value);
+              coordinates.value = List.empty(growable: true);
+              coordinates
+                  .addAll(await parseCoordinates(userState.value.exercise!.id));
+            }
+
+            final state = userState.value.exercise!.state!;
+
+            if (state == 'ONGOING' && updateTimer != null) {
+              exerciseState.value = ExerciseState.ongoing;
+            } else if (state == 'PAUSED' || updateTimer == null) {
+              exerciseState.value = ExerciseState.paused;
+            }
+
+            // 🔄 RESTORE EXERCISE TYPE - Critical for session continuity
+            // Only restore when there's an active exercise to ensure proper tracking
+            ExerciseType? savedExerciseType = HiveStore.loadExerciseType();
+            if (savedExerciseType != null) {
+              print(
+                  '🔄 getUserState: Restoring exercise type: ${savedExerciseType.name}');
+              selectedExerciseType.value = savedExerciseType;
+            } else {
+              print(
+                  '⚠️ getUserState: No saved exercise type found, defaulting to walking');
+              selectedExerciseType.value = ExerciseType.walking;
+            }
+
+            // 🔍 VALIDATE CONSISTENCY after restoration
+            validateExerciseTypeConsistency(source: 'getUserState');
+            debugLogExerciseState(context: 'after getUserState restoration');
           }
-          
-          // 🔍 VALIDATE CONSISTENCY after restoration
-          validateExerciseTypeConsistency(source: 'getUserState');
-          debugLogExerciseState(context: 'after getUserState restoration');
-        }
 
-        await retrySavedRequests(source: 'getUserState');
+          await retrySavedRequests(source: 'getUserState');
 
-        if (Get.isRegistered<LoadingController>())
-          Get.find<LoadingController>()
-              .updateProgress('coming_soon_gazago'.tr());
-      },
-      errorCallback: (int? statusCode) {
-        if (statusCode != null && statusCode == 404) {
-          onLogout();
+          if (Get.isRegistered<LoadingController>())
+            Get.find<LoadingController>()
+                .updateProgress('coming_soon_gazago'.tr());
+        },
+        errorCallback: (int? statusCode) {
+          if (statusCode != null && statusCode == 404) {
+            onLogout();
+          }
+        });
+  }
+
+  /// Safe wrapper for getUserState with timeout and concurrency protection
+  Future<void> _safeGetUserState({
+    bool showLoading = false,
+    String? source,
+    int timeoutSeconds = 15,
+  }) async {
+    // Prevent concurrent calls
+    if (_isGettingUserState) {
+      print('⚠️ getUserState already in progress, skipping call from $source');
+      return;
+    }
+
+    _isGettingUserState = true;
+    print(
+        '🔄 Starting getUserState from $source with timeout ${timeoutSeconds}s');
+
+    try {
+      // Set timeout
+      _userStateTimeout?.cancel();
+      _userStateTimeout = Timer(Duration(seconds: timeoutSeconds), () {
+        if (_isGettingUserState) {
+          print('⏰ getUserState timeout after ${timeoutSeconds}s from $source');
+          _isGettingUserState = false;
+
+          // Force reset loading state if it was enabled
+          if (showLoading && loaderController.isLoading.value) {
+            loaderController.isLoading.value = false;
+            print('🔄 Force stopped loading due to getUserState timeout');
+          }
         }
-      },
-    );
+      });
+
+      // Call the actual getUserState with timeout wrapper
+      await getUserState(showLoading: showLoading).timeout(
+        Duration(seconds: timeoutSeconds),
+        onTimeout: () {
+          print(
+              '⏰ getUserState API timeout after ${timeoutSeconds}s from $source');
+          throw TimeoutException(
+              'getUserState timeout', Duration(seconds: timeoutSeconds));
+        },
+      );
+
+      print('✅ getUserState completed successfully from $source');
+    } catch (e) {
+      print('❌ getUserState error from $source: $e');
+
+      // Force reset loading state on error
+      if (showLoading && loaderController.isLoading.value) {
+        loaderController.isLoading.value = false;
+        print('🔄 Force stopped loading due to getUserState error');
+      }
+    } finally {
+      _isGettingUserState = false;
+      _userStateTimeout?.cancel();
+      _userStateTimeout = null;
+    }
   }
 
   void onLogout() async {
@@ -1119,11 +1196,12 @@ class ActivityController extends SuperController
     }
 
     selectedExerciseType.value = exerciseType;
-    
+
     // 💾 BACKUP SAVE - Ensure exercise type is persisted when selected
     HiveStore.saveExerciseType(exerciseType);
-    print('🎯 SelectExerciseType: Backed up exercise type ${exerciseType.name}');
-    
+    print(
+        '🎯 SelectExerciseType: Backed up exercise type ${exerciseType.name}');
+
     // 🔍 VALIDATE after selection
     validateExerciseTypeConsistency(source: 'selectExerciseType');
     debugLogExerciseState(context: 'after exercise type selection');
@@ -2296,15 +2374,16 @@ class ActivityController extends SuperController
     try {
       ExerciseType? saved = HiveStore.loadExerciseType();
       ExerciseType current = selectedExerciseType.value;
-      
+
       // Only validate during active exercise states
       if (exerciseState.value != ExerciseState.ready) {
         if (saved != current) {
-          print('⚠️ WARNING: Exercise type mismatch! Saved: ${saved?.name ?? "null"}, Current: ${current.name}');
+          print(
+              '⚠️ WARNING: Exercise type mismatch! Saved: ${saved?.name ?? "null"}, Current: ${current.name}');
           if (source != null) {
             print('⚠️ Source: $source');
           }
-          
+
           // Auto-correct by using saved type if available
           if (saved != null) {
             print('🔧 Auto-correcting to saved exercise type: ${saved.name}');
@@ -2314,17 +2393,17 @@ class ActivityController extends SuperController
           print('✅ Exercise type consistency check passed: ${current.name}');
         }
       }
-      
+
       // Additional validation for treasure hunting features
-      if (exerciseState.value != ExerciseState.ready && 
+      if (exerciseState.value != ExerciseState.ready &&
           current == ExerciseType.treasureHunting) {
         bool hasTreasures = listTreasureOfSession.isNotEmpty;
         bool hasTimer = nearbyTreasureTimer?.isActive == true;
-        
+
         print('🎮 Treasure hunting validation:');
         print('   - Has treasures: $hasTreasures');
         print('   - Timer active: $hasTimer');
-        
+
         if (!hasTreasures && exerciseState.value == ExerciseState.ongoing) {
           print('⚠️ WARNING: Treasure hunting mode but no treasures loaded!');
         }
@@ -2338,24 +2417,25 @@ class ActivityController extends SuperController
   void recoverFromCorruptedExerciseType() {
     try {
       print('🔧 Attempting exercise type data recovery...');
-      
+
       // Try to load saved type
       ExerciseType? saved = HiveStore.loadExerciseType();
-      
+
       if (saved != null) {
         print('🔧 Found saved exercise type, restoring: ${saved.name}');
         selectedExerciseType.value = saved;
       } else {
         print('🔧 No saved data found, resetting to default walking mode');
         selectedExerciseType.value = ExerciseType.walking;
-        
+
         // Only save if we're not in an active exercise (to avoid overwriting during ongoing session)
         if (exerciseState.value == ExerciseState.ready) {
           HiveStore.saveExerciseType(ExerciseType.walking);
         }
       }
-      
-      print('✅ Exercise type recovery completed: ${selectedExerciseType.value.name}');
+
+      print(
+          '✅ Exercise type recovery completed: ${selectedExerciseType.value.name}');
     } catch (e) {
       print('❌ Exercise type recovery failed: $e');
       // Ultimate fallback
@@ -2370,10 +2450,10 @@ class ActivityController extends SuperController
       print('📊 Exercise State Debug$contextStr:');
       print('   - Exercise State: ${exerciseState.value}');
       print('   - Exercise Type (current): ${selectedExerciseType.value.name}');
-      
+
       ExerciseType? saved = HiveStore.loadExerciseType();
       print('   - Exercise Type (saved): ${saved?.name ?? "null"}');
-      
+
       if (userState.value.exercise != null) {
         print('   - Exercise ID: ${userState.value.exercise!.id}');
         print('   - Exercise Server State: ${userState.value.exercise!.state}');
@@ -2381,11 +2461,12 @@ class ActivityController extends SuperController
       } else {
         print('   - No active exercise in userState');
       }
-      
+
       if (selectedExerciseType.value == ExerciseType.treasureHunting) {
         print('   - Treasures loaded: ${listTreasureOfSession.length}');
         print('   - Timer active: ${nearbyTreasureTimer?.isActive == true}');
-        print('   - Claimed treasures: ${listClaimedTreasureIdOfSession.length}');
+        print(
+            '   - Claimed treasures: ${listClaimedTreasureIdOfSession.length}');
       }
     } catch (e) {
       print('❌ Debug logging failed: $e');

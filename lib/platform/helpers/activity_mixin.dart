@@ -1358,58 +1358,98 @@ mixin ActivityMixin {
       return;
     }
 
-    // Use manager's current location or get fresh one
-    final pos = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    final loc = LocationCallbackHandler.convertToLocationModel(pos);
-
-    final req = GetTreasureRequestModel(
-      userId: userState.value.state?.userId ?? -1,
-      userExerciseId: userState.value.exercise?.id ?? -1,
-      userLat: loc.latitude,
-      userLng: loc.longitude,
-    );
     final loaderController = (this as ActivityController).loaderController;
-    loaderController.isLoading.value = true;
-    await TreasureService.getTreasureByExerciseId(
-      req: req,
-      successCallback: (treasures) async {
-        listTreasureOfSession = List.from(treasures.treasures
-            .where((element) =>
-                !listClaimedTreasureIdOfSession.contains(element.id))
-            .toList());
-        kMinPickupRadius = treasures.minPickupDistance;
-        kTreasureVisibleRadius = treasures.visibleRadius;
-        kPickupCoolDownTime = treasures.cooldownDuration; // in seconds
-        // Initialize cooldown timer if needed
-        (this as ActivityController)
-            .initCoolDownTimerIfNeeded(treasures.lastClaimTime);
-
-        final myLocationMarker =
-            (this as ActivityController).getMyLocationMarker();
-        (this as ActivityController).clearOverlays();
-        await initTreasureMarker();
-        drawTreasureVisibilityCircle(isUpdate: false);
-
-        // redraw my location blue dot at after draw treasure
-        if (myLocationMarker.length == 2) {
-          (this as ActivityController).addOverlay(myLocationMarker.first);
-          (this as ActivityController)
-              .updateOrInsertCircle(myLocationMarker.last);
+    Timer? treasureLoadingTimeout;
+    
+    try {
+      // Set loading timeout as failsafe (20 seconds)
+      treasureLoadingTimeout = Timer(const Duration(seconds: 20), () {
+        if (loaderController.isLoading.value) {
+          print('⏰ fetchExerciseTreasures timeout after 20s, force stopping loading');
+          loaderController.isLoading.value = false;
         }
+      });
 
-        // Use LatLng version with fetched location coordinates
-        await (this as ActivityController)
-            .compareDistanceWithNearestTreasure(LatLng(
-          loc.latitude,
-          loc.longitude,
-        ));
+      // Use manager's current location or get fresh one
+      final pos = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw TimeoutException('GPS location timeout', const Duration(seconds: 10));
+        },
+      );
+      final loc = LocationCallbackHandler.convertToLocationModel(pos);
+
+      final req = GetTreasureRequestModel(
+        userId: userState.value.state?.userId ?? -1,
+        userExerciseId: userState.value.exercise?.id ?? -1,
+        userLat: loc.latitude,
+        userLng: loc.longitude,
+      );
+      
+      loaderController.isLoading.value = true;
+      
+      // Wrap API call with timeout
+      await Future.any([
+        TreasureService.getTreasureByExerciseId(
+          req: req,
+          successCallback: (treasures) async {
+            try {
+              listTreasureOfSession = List.from(treasures.treasures
+                  .where((element) =>
+                      !listClaimedTreasureIdOfSession.contains(element.id))
+                  .toList());
+              kMinPickupRadius = treasures.minPickupDistance;
+              kTreasureVisibleRadius = treasures.visibleRadius;
+              kPickupCoolDownTime = treasures.cooldownDuration; // in seconds
+              // Initialize cooldown timer if needed
+              (this as ActivityController)
+                  .initCoolDownTimerIfNeeded(treasures.lastClaimTime);
+
+              final myLocationMarker =
+                  (this as ActivityController).getMyLocationMarker();
+              (this as ActivityController).clearOverlays();
+              await initTreasureMarker();
+              drawTreasureVisibilityCircle(isUpdate: false);
+
+              // redraw my location blue dot at after draw treasure
+              if (myLocationMarker.length == 2) {
+                (this as ActivityController).addOverlay(myLocationMarker.first);
+                (this as ActivityController)
+                    .updateOrInsertCircle(myLocationMarker.last);
+              }
+
+              // Use LatLng version with fetched location coordinates
+              await (this as ActivityController)
+                  .compareDistanceWithNearestTreasure(LatLng(
+                loc.latitude,
+                loc.longitude,
+              ));
+              
+              print('✅ fetchExerciseTreasures completed successfully');
+            } catch (e) {
+              print('❌ Error in fetchExerciseTreasures success callback: $e');
+            }
+          },
+          errorCallback: (error) {
+            print('❌ fetchExerciseTreasures API error: $error');
+          },
+        ),
+        Future.delayed(const Duration(seconds: 15), () {
+          throw TimeoutException('fetchExerciseTreasures API timeout', const Duration(seconds: 15));
+        }),
+      ]);
+      
+    } catch (e) {
+      print('❌ fetchExerciseTreasures error: $e');
+    } finally {
+      // Always ensure loading is stopped
+      treasureLoadingTimeout?.cancel();
+      if (loaderController.isLoading.value) {
         loaderController.isLoading.value = false;
-      },
-      errorCallback: (_) {
-        loaderController.isLoading.value = false;
-      },
-    );
+        print('🔄 Force stopped fetchExerciseTreasures loading in finally block');
+      }
+    }
   }
 
   Future<void> initTreasureMarker() async {
