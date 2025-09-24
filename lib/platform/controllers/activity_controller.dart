@@ -188,21 +188,17 @@ class ActivityController extends SuperController
   Timer? _userStateTimeout;
 
   // Treasure hunting configuration
-  final Rxn<TreasureHuntingConfigModel> treasureHuntingConfig = Rxn<TreasureHuntingConfigModel>();
+  final Rxn<TreasureHuntingConfigModel> treasureHuntingConfig =
+      Rxn<TreasureHuntingConfigModel>();
   final RxBool isFetchingTreasureConfig = RxBool(false);
 
   @override
   void initLocationStream() async {
-    print(
-        'Initializing enhanced GPS location stream with UnifiedGPSManager...');
-
     // Clear GPS history when starting new location stream
     UnifiedGPSManager.instance.clearHistory();
 
     try {
       // Determine activity type from selected exercise type
-
-      print('Starting enhanced GPS tracking for activity: $activityType');
 
       // Set activity-specific configuration for maximum accuracy
       await UnifiedGPSManager.instance.setActivityType(activityType);
@@ -215,28 +211,20 @@ class ActivityController extends SuperController
           .startTracking(activityType: activityType);
 
       if (!success) {
-        print(
-            'Failed to start enhanced GPS tracking, falling back to manual stream');
         _startFallbackLocationStream();
         return;
       }
 
-      print('Enhanced GPS tracking started successfully');
-
       // Subscribe to UnifiedGPSManager location stream
       locationSubscription = UnifiedGPSManager.instance.locationStream.listen(
           (LocationModel locationModel) async {
-        print('Received enhanced GPS location: ${locationModel.toString()}');
-
         // Location is already filtered by UnifiedGPSManager with enhanced algorithm
         // Process the location directly
         await _processStravaLikeLocation(locationModel);
       }, onError: (error) {
-        print('Enhanced GPS stream error: $error');
         _handleGPSError(error);
       });
     } catch (e) {
-      print('Failed to initialize enhanced GPS tracking: $e');
       _startFallbackLocationStream();
     }
   }
@@ -301,9 +289,6 @@ class ActivityController extends SuperController
 
     // Reset speed warning dialog state when detached
     isSpeedWarningDialogShowing.value = false;
-
-    print(
-        'ActivityController cleanup completed - Enhanced GPS tracking stopped');
   }
 
   @override
@@ -329,7 +314,6 @@ class ActivityController extends SuperController
 
   @override
   void onResumed() {
-    print('onResumed activity');
     checkNewCollectionStatus();
 
     // Reset GPS ready state when app resumes via UnifiedGPSManager
@@ -356,12 +340,8 @@ class ActivityController extends SuperController
   void _handleNetworkStatusForPolyline(bool isConnected) {
     if (exerciseState.value == ExerciseState.ongoing) {
       if (isConnected) {
-        print(
-            '🌐 Network reconnected during exercise - polyline will resume from current position (creating gap effect)');
         // Don't need to do anything special - coordinates will start being added again
       } else {
-        print(
-            '🚫 Network disconnected during exercise - polyline updates paused (GPS continues tracking)');
         // Coordinates will stop being added, creating the gap effect
       }
     }
@@ -403,18 +383,13 @@ class ActivityController extends SuperController
         .any((state) => state == exerciseState.value)) {
       ExerciseType? savedExerciseType = HiveStore.loadExerciseType();
       if (savedExerciseType != null) {
-        print(
-            '🔄 Initialize: Restoring exercise type ${savedExerciseType.name}');
         selectedExerciseType.value = savedExerciseType;
       } else {
-        print(
-            '⚠️ Initialize: No saved exercise type found, defaulting to walking');
         selectedExerciseType.value = ExerciseType.walking;
       }
 
       // 🔍 VALIDATE CONSISTENCY after restoration
       validateExerciseTypeConsistency(source: 'initializeExercise');
-      debugLogExerciseState(context: 'before showing pending dialog');
 
       // Show pending dialog AFTER restoring exercise type
       if (!isFakeGps.value && !isTestingFakeGps()) {
@@ -473,7 +448,6 @@ class ActivityController extends SuperController
   }
 
   Future<void> initActivityStatus() async {
-    print('11111111111111');
     await initializeActivity();
     await loadMakerImages();
 
@@ -582,10 +556,6 @@ class ActivityController extends SuperController
         CameraUpdate.newLatLngBounds(_createBoundsFromLatLngList(markers), 120),
       );
     } else {
-      print(course.startLat!);
-      print(course.startLon!);
-      print(course.endLat!);
-      print(course.endLon!);
       challengeMapControllers.last.animateCamera(
         CameraUpdate.newLatLngBounds(
             _createBoundsFromLatLngList(
@@ -769,7 +739,6 @@ class ActivityController extends SuperController
   // }
 
   Future<void> getUserState({bool showLoading = false}) async {
-    print('getUserStategetUserStategetUserStategetUserStategetUserState');
     await ActivityService.getCurrentUserState(
         showLoading: showLoading,
         successCallback: (CurrentUserStateModel currentUserState) async {
@@ -867,14 +836,14 @@ class ActivityController extends SuperController
 
             // 🔍 VALIDATE CONSISTENCY after restoration
             validateExerciseTypeConsistency(source: 'getUserState');
-            debugLogExerciseState(context: 'after getUserState restoration');
           }
 
           await retrySavedRequests(source: 'getUserState');
 
-          if (Get.isRegistered<LoadingController>())
+          if (Get.isRegistered<LoadingController>()) {
             Get.find<LoadingController>()
                 .updateProgress('coming_soon_gazago'.tr());
+          }
         },
         errorCallback: (int? statusCode) {
           if (statusCode != null && statusCode == 404) {
@@ -891,26 +860,21 @@ class ActivityController extends SuperController
   }) async {
     // Prevent concurrent calls
     if (_isGettingUserState) {
-      print('⚠️ getUserState already in progress, skipping call from $source');
       return;
     }
 
     _isGettingUserState = true;
-    print(
-        '🔄 Starting getUserState from $source with timeout ${timeoutSeconds}s');
 
     try {
       // Set timeout
       _userStateTimeout?.cancel();
       _userStateTimeout = Timer(Duration(seconds: timeoutSeconds), () {
         if (_isGettingUserState) {
-          print('⏰ getUserState timeout after ${timeoutSeconds}s from $source');
           _isGettingUserState = false;
 
           // Force reset loading state if it was enabled
           if (showLoading && loaderController.isLoading.value) {
             loaderController.isLoading.value = false;
-            print('🔄 Force stopped loading due to getUserState timeout');
           }
         }
       });
@@ -919,21 +883,14 @@ class ActivityController extends SuperController
       await getUserState(showLoading: showLoading).timeout(
         Duration(seconds: timeoutSeconds),
         onTimeout: () {
-          print(
-              '⏰ getUserState API timeout after ${timeoutSeconds}s from $source');
           throw TimeoutException(
               'getUserState timeout', Duration(seconds: timeoutSeconds));
         },
       );
-
-      print('✅ getUserState completed successfully from $source');
     } catch (e) {
-      print('❌ getUserState error from $source: $e');
-
       // Force reset loading state on error
       if (showLoading && loaderController.isLoading.value) {
         loaderController.isLoading.value = false;
-        print('🔄 Force stopped loading due to getUserState error');
       }
     } finally {
       _isGettingUserState = false;
@@ -956,7 +913,6 @@ class ActivityController extends SuperController
     bool systemReady = await checkAvailabilities();
     if (systemReady) {
       if (!isListeningToLocation.value) {
-        print('Initializing activity and GPS...');
         await initializeActivity();
       }
       if (globalController.internetConnection.value) {
@@ -1124,7 +1080,6 @@ class ActivityController extends SuperController
       Get.toNamed(Routes.activityActive);
     } else {
       if (Get.isDialogOpen == null || Get.isDialogOpen == false) {
-        print('exercise_selection'.tr());
         Get.dialog(const ActivitySelect(),
             barrierDismissible: false,
             barrierColor: const Color.fromRGBO(0, 0, 0, 0.85));
@@ -1159,20 +1114,17 @@ class ActivityController extends SuperController
               UnifiedGPSManager.instance.currentLocation.value != null &&
               !isInvalidCoordinates(
                   UnifiedGPSManager.instance.currentLocation.value!)) {
-            print('GPS ready, starting exercise...');
             exerciseStartThr
                 .throttle(() => startExercise(exerciseType, challenge));
             timer.cancel();
             loadingTimer = null;
           } else if (loadingTime.value >= 15) {
             // Timeout after 15 seconds
-            print('GPS not ready after timeout, starting exercise anyway...');
             exerciseStartThr
                 .throttle(() => startExercise(exerciseType, challenge));
             timer.cancel();
             loadingTimer = null;
           } else {
-            print('Waiting for GPS ready... (${loadingTime.value}s)');
             loadingTime.value++;
             activityLoadControl = Control.playFromStart;
           }
@@ -1212,12 +1164,9 @@ class ActivityController extends SuperController
 
     // 💾 BACKUP SAVE - Ensure exercise type is persisted when selected
     HiveStore.saveExerciseType(exerciseType);
-    print(
-        '🎯 SelectExerciseType: Backed up exercise type ${exerciseType.name}');
 
     // 🔍 VALIDATE after selection
     validateExerciseTypeConsistency(source: 'selectExerciseType');
-    debugLogExerciseState(context: 'after exercise type selection');
 
     // AdWatchAvailableModel adWatchAvailableModel = AdWatchAvailableModel(watchAvailable: false);
     //
@@ -1297,155 +1246,128 @@ class ActivityController extends SuperController
 
   /// Process location update (handles coordinate tracking, distance calculation, etc.)
   Future<void> processLocationUpdate(LocationModel locationModel) async {
-    print(
-        '🎯 processLocationUpdate called! accuracy: ${locationModel.accuracy}m, coordinates count: ${coordinates.length}');
-    try {
-      // Only add coordinates for path tracking when exercise is ongoing AND network is available
-      // This creates the desired "broken line" effect during network outages
+    // Only add coordinates for path tracking when exercise is ongoing AND network is available
+    // This creates the desired "broken line" effect during network outages
+    if (exerciseState.value == ExerciseState.ongoing) {
+      if (globalController.internetConnection.value) {
+        coordinates
+            .add(LatLng(locationModel.latitude, locationModel.longitude));
+      } else {}
+    }
+
+    if (coordinates.isNotEmpty && coordinates.length > 1) {
+      // Enhanced filterCoordinates with time validation
+      DateTime currentTime = DateTime.now();
+      filterCoordinates(
+          coordinates[coordinates.length - 2], // Previous position
+          LatLng(locationModel.latitude, locationModel.longitude),
+          userState.value.exercise!.id!,
+          lastTime: lastPositionTime,
+          currentTime: currentTime);
+
+      // Update last position time for next iteration
+      lastPositionTime = currentTime;
+
+      // Only calculate distance when exercise is ongoing
       if (exerciseState.value == ExerciseState.ongoing) {
-        if (globalController.internetConnection.value) {
-          coordinates
-              .add(LatLng(locationModel.latitude, locationModel.longitude));
-          print(
-              '📍 Added coordinate: ${locationModel.latitude}, ${locationModel.longitude} (network available)');
-        } else {
-          print(
-              '🌐 Network unavailable - skipping coordinate addition (GPS still tracking user position)');
-        }
-      } else {
-        print('⏸️ Exercise is paused, skipping coordinate addition');
+        exerciseDistance.value = exerciseDistance.value +
+            Geolocator.distanceBetween(
+                coordinates[coordinates.length - 2].latitude,
+                coordinates[coordinates.length - 2].longitude,
+                coordinates.last.latitude,
+                coordinates.last.longitude);
       }
+    }
 
-      if (coordinates.isNotEmpty && coordinates.length > 1) {
-        // Enhanced filterCoordinates with time validation
-        DateTime currentTime = DateTime.now();
-        filterCoordinates(
-            coordinates[coordinates.length - 2], // Previous position
-            LatLng(locationModel.latitude, locationModel.longitude),
-            userState.value.exercise!.id!,
-            lastTime: lastPositionTime,
-            currentTime: currentTime);
+    // Legacy polyline rendering removed - now handled by segmented polyline in ActivityActiveMiniMapSection
+    // This prevents conflicting red polyline overlaying the blue segmented polylines
+    // if (coordinates.length >= 10) {
+    //   addOverlay(Polyline(
+    //     polylineId: const PolylineId('path'),
+    //     width: 3,
+    //     color: Colors.red,
+    //     points: coordinates,
+    //   ));
+    // }
 
-        // Update last position time for next iteration
-        lastPositionTime = currentTime;
+    // Circle update is now handled in _handleEnhancedLocationUpdate for perfect sync
+    drawTreasureVisibilityCircle(isUpdate: true);
 
-        // Only calculate distance when exercise is ongoing
-        if (exerciseState.value == ExerciseState.ongoing) {
-          exerciseDistance.value = exerciseDistance.value +
-              Geolocator.distanceBetween(
-                  coordinates[coordinates.length - 2].latitude,
-                  coordinates[coordinates.length - 2].longitude,
-                  coordinates.last.latitude,
-                  coordinates.last.longitude);
-        }
-      }
+    // Challenge zone detection logic
+    if (_isRequestingChallenges) return; // Prevent concurrent requests
+    _isRequestingChallenges = true;
 
-      // Legacy polyline rendering removed - now handled by segmented polyline in ActivityActiveMiniMapSection
-      // This prevents conflicting red polyline overlaying the blue segmented polylines
-      // if (coordinates.length >= 10) {
-      //   addOverlay(Polyline(
-      //     polylineId: const PolylineId('path'),
-      //     width: 3,
-      //     color: Colors.red,
-      //     points: coordinates,
-      //   ));
-      // }
+    try {
+      DateTime now = DateTime.now();
 
-      // Circle update is now handled in _handleEnhancedLocationUpdate for perfect sync
-      drawTreasureVisibilityCircle(isUpdate: true);
-
-      // Challenge zone detection logic
-      if (_isRequestingChallenges) return; // Prevent concurrent requests
-      _isRequestingChallenges = true;
-
-      try {
-        DateTime now = DateTime.now();
-
-        print('Get.currentRoute : ${Get.currentRoute}');
-        if (Get.currentRoute == '/laboratory/detect_challenge_course') {
-          LatLng target = LatLng(
-            currentLocation.value?.latitude ?? 0,
-            currentLocation.value?.longitude ?? 0,
-          );
-
-          googleMapController?.animateCamera(
-            CameraUpdate.newLatLngZoom(target, 16),
-          );
-        }
-
-        double prevPositionLat = nearChallengeLocation.value != null
-            ? double.tryParse(
-                    nearChallengeLocation.value!.startLat.toString()) ??
-                locationModel.latitude
-            : locationModel.latitude;
-        double prevPositionLng = nearChallengeLocation.value != null
-            ? double.tryParse(
-                    nearChallengeLocation.value!.startLon.toString()) ??
-                locationModel.longitude
-            : locationModel.longitude;
-
-        betweenDistance.value = calculateDistance(prevPositionLat,
-            prevPositionLng, locationModel.latitude, locationModel.longitude);
-
-        gpsSpeed.value = convertMStoKMH(locationModel.speed);
-
-        compareDistanceWithNearestTreasure(
-          LatLng(
-            locationModel.latitude,
-            locationModel.longitude,
-          ),
+      if (Get.currentRoute == '/laboratory/detect_challenge_course') {
+        LatLng target = LatLng(
+          currentLocation.value?.latitude ?? 0,
+          currentLocation.value?.longitude ?? 0,
         );
 
-        print('posLat : $prevPositionLat, posLng : $prevPositionLng');
-        print('gpsSpeed : ${gpsSpeed.value}');
-        print('betweenDistance : ${betweenDistance.value}');
-        print('title : ${nearChallengeLocation.value?.firstName}');
-        print('title : ${nearChallengeLocation.value?.endPointName}');
-        print('dis : ${betweenDistance.value}');
-        print(
-            'nearChallengeLocation.value : ${nearChallengeLocation.value?.startLat ?? 'N/A'}');
-
-        // 주기적으로 가장 가까운 챌린지 코스 지점 5분마다 재조회
-        if (calcNearCourseTime.value
-            .add(const Duration(seconds: 300))
-            .isBefore(now)) {
-          calculateNearByHierarchyCourse(
-              locationModel.latitude, locationModel.longitude);
-        }
-
-        if (betweenDistance.value < 1000) {
-          detectDelay.value = 30;
-        } else if (betweenDistance.value < 3000) {
-          detectDelay.value = 60;
-        } else if (betweenDistance.value < 5000) {
-          detectDelay.value = 300;
-        } else {
-          detectDelay.value = 600;
-        }
-        print('detectDelay : ${detectDelay}');
-
-        if (receiveLocationTime.value
-            .add(Duration(seconds: detectDelay.value))
-            .isBefore(now)) {
-          if (gpsSpeed.value < 12 && betweenDistance.value < 1000) {
-            await findCourses();
-          }
-          receiveLocationTime.value = now;
-        }
-      } finally {
-        _isRequestingChallenges = false;
+        googleMapController?.animateCamera(
+          CameraUpdate.newLatLngZoom(target, 16),
+        );
       }
 
-      HiveStore.save(
-          key: HiveKey.currentPosition.name,
-          value: '${locationModel.latitude},${locationModel.longitude}');
+      double prevPositionLat = nearChallengeLocation.value != null
+          ? double.tryParse(nearChallengeLocation.value!.startLat.toString()) ??
+              locationModel.latitude
+          : locationModel.latitude;
+      double prevPositionLng = nearChallengeLocation.value != null
+          ? double.tryParse(nearChallengeLocation.value!.startLon.toString()) ??
+              locationModel.longitude
+          : locationModel.longitude;
 
-      locationThr.throttle(() {
-        detectChallengeZone(locationModel);
-      });
-    } catch (e) {
-      print('Error processing location update: $e');
+      betweenDistance.value = calculateDistance(prevPositionLat,
+          prevPositionLng, locationModel.latitude, locationModel.longitude);
+
+      gpsSpeed.value = convertMStoKMH(locationModel.speed);
+      compareDistanceWithNearestTreasure(
+        LatLng(
+          locationModel.latitude,
+          locationModel.longitude,
+        ),
+      );
+
+      // 주기적으로 가장 가까운 챌린지 코스 지점 5분마다 재조회
+      if (calcNearCourseTime.value
+          .add(const Duration(seconds: 300))
+          .isBefore(now)) {
+        calculateNearByHierarchyCourse(
+            locationModel.latitude, locationModel.longitude);
+      }
+
+      if (betweenDistance.value < 1000) {
+        detectDelay.value = 30;
+      } else if (betweenDistance.value < 3000) {
+        detectDelay.value = 60;
+      } else if (betweenDistance.value < 5000) {
+        detectDelay.value = 300;
+      } else {
+        detectDelay.value = 600;
+      }
+
+      if (receiveLocationTime.value
+          .add(Duration(seconds: detectDelay.value))
+          .isBefore(now)) {
+        if (gpsSpeed.value < 12 && betweenDistance.value < 1000) {
+          await findCourses();
+        }
+        receiveLocationTime.value = now;
+      }
+    } finally {
+      _isRequestingChallenges = false;
     }
+
+    HiveStore.save(
+        key: HiveKey.currentPosition.name,
+        value: '${locationModel.latitude},${locationModel.longitude}');
+
+    locationThr.throttle(() {
+      detectChallengeZone(locationModel);
+    });
   }
 
   void calculateNearByHierarchyCourse(currentLat, currentLon) {
@@ -1580,13 +1502,10 @@ class ActivityController extends SuperController
 
   Future<void> getCurrentLocation() async {
     try {
-      print('Getting current location via GPS (UnifiedGPSManager)...');
-
       // Prefer the manager's cached/current location
       final cached = UnifiedGPSManager.instance.currentLocation.value;
       if (cached != null) {
         currentLocation.value = cached;
-        print('Using cached location from UnifiedGPSManager: $cached');
         return;
       }
 
@@ -1599,14 +1518,10 @@ class ActivityController extends SuperController
       if (loc != null) {
         currentLocation.value = loc;
         isListeningToLocation.value = true;
-        print(
-            'Location acquired via UnifiedGPSManager with accuracy: ${loc.accuracy}m');
       } else {
-        print('UnifiedGPSManager.getCurrentLocation returned null');
         showToastPopup('location_info_unavailable'.tr());
       }
     } catch (error) {
-      print('getCurrentLocation error: $error');
       showToastPopup('location_info_unavailable'.tr());
     }
   }
@@ -1614,14 +1529,11 @@ class ActivityController extends SuperController
   /// Phase 2: GPS Warm-up process to improve initial accuracy (using UnifiedGPSManager)
   Future<bool> initializeGPSWithWarmup() async {
     try {
-      print('Starting GPS warm-up process (UnifiedGPSManager)...');
-
       // Check if warm-up is enabled via remote config
       bool warmupEnabled = getConfig(
               dataType: ConfigType.bool, configKey: 'enable_gps_warm_up') ??
           true;
       if (!warmupEnabled) {
-        print('GPS warm-up disabled via remote config');
         return false;
       }
 
@@ -1630,14 +1542,12 @@ class ActivityController extends SuperController
 
       return success;
     } catch (e) {
-      print('GPS warm-up process failed: $e');
       showToastPopup('gps_initialization_failed'.tr());
       return false;
     }
   }
 
   Future<void> initializeActivity() async {
-    print('Initializing activity with Phase 2 improvements...');
     // Phase 2: Use GPS warm-up for better initial accuracy
     await initializeGPSWithWarmup();
     await getChallengesNearByHierarchy();
@@ -1656,7 +1566,6 @@ class ActivityController extends SuperController
         currentLocation.value!.longitude != 0) {
       // lan or lon의 오차범위가 5m 이상일 경우 새로운 코스를 찾는다. (추후 작업 필요)
       await getNearByCourses(currentLocation.value!, exerciseState.value);
-      print('findCourses.Get.currentRoute : ${Get.currentRoute}');
       if (Get.currentRoute == '/laboratory/detect_challenge_course') {
         refreshUpdateCamera();
       }
@@ -1672,7 +1581,6 @@ class ActivityController extends SuperController
         overlays.addAll(renderCircleOverlays(item));
         overlays.addAll(renderMarkers(item));
       }
-      print(overlays);
       clearOverlays();
       addOverlayAll({...overlays});
     }
@@ -1851,8 +1759,7 @@ class ActivityController extends SuperController
       // Check if we've been getting poor GPS for a while - use adaptive threshold
       if (gpsAccuracySensitive.value > runtimeMaxGpsAccuracy) {
         // If current GPS is consistently poor, use maxGpsAccuracy (50m) to ensure tracking continues
-        print(
-            'Using relaxed GPS threshold due to poor signal: ${maxGpsAccuracy}m');
+
         return maxGpsAccuracy; // 50m - very relaxed for poor GPS conditions
       }
       return runtimeMaxGpsAccuracy; // 30m - good balance between accuracy and availability
@@ -1864,19 +1771,11 @@ class ActivityController extends SuperController
 
   /// Initialize GPS services for enhanced activity tracking
   void _initializeGPSServices() {
-    try {
-      // Initialize UnifiedGPSManager with enhanced configuration
-      UnifiedGPSManager.instance; // This will create singleton instance
+    // Initialize UnifiedGPSManager with enhanced configuration
+    UnifiedGPSManager.instance; // This will create singleton instance
 
-      // Load remote configuration for optimal GPS settings
-      UnifiedGPSManager.instance.refreshConfig();
-
-      print(
-          'Enhanced GPS services (UnifiedGPSManager) initialized successfully');
-      print('GPS Config: ${UnifiedGPSManager.instance.config}');
-    } catch (e) {
-      print('Error initializing enhanced GPS services: $e');
-    }
+    // Load remote configuration for optimal GPS settings
+    UnifiedGPSManager.instance.refreshConfig();
   }
 
   LatLngBounds _createBoundsFromLatLngList(List<LatLng> list) {
@@ -1900,77 +1799,58 @@ class ActivityController extends SuperController
 
   /// Process location from Strava-like GPS tracking
   Future<void> _processStravaLikeLocation(LocationModel locationModel) async {
-    try {
-      // Use filtered location model for all subsequent operations
-      currentLocation.value = locationModel;
-      gpsAccuracySensitive.value = locationModel.accuracy;
-      isFakeGps.value = false;
+    // Use filtered location model for all subsequent operations
+    currentLocation.value = locationModel;
+    gpsAccuracySensitive.value = locationModel.accuracy;
+    isFakeGps.value = false;
 
-      print(
-          'Strava-like GPS position updated - accuracy: ${locationModel.accuracy}m');
-      print('Filtered position: ${locationModel.toString()}');
+    detectFakeGps();
 
-      detectFakeGps();
+    if (HiveStore.load(key: HiveKey.isDebuggingMode.name) &&
+        exerciseState.value == ExerciseState.ongoing) {
+      List positionRawData =
+          HiveStore.load(key: HiveKey.positionRawDataLogs.name) ?? [];
 
-      if (HiveStore.load(key: HiveKey.isDebuggingMode.name) &&
-          exerciseState.value == ExerciseState.ongoing) {
-        List positionRawData =
-            HiveStore.load(key: HiveKey.positionRawDataLogs.name) ?? [];
+      var logForm = {
+        'positionRawDataInfo': '===================================='
+            '\nEnhanced GPS - Lat/Lng: ${locationModel.latitude},${locationModel.longitude}, Accuracy: ${locationModel.accuracy}'
+            '\nSteps: ${exerciseSteps.value}'
+            '\nLocationUpdateTime: ${DateTime.now()}'
+            '\nGPS Status: ${UnifiedGPSManager.instance.getStatus()}'
+            '\nGPS Performance Grade: ${UnifiedGPSManager.instance.performanceGrade.value}'
+            '\nGPS Mode: ${UnifiedGPSManager.instance.gpsMode.value}'
+            '\nTotal Distance: ${UnifiedGPSManager.instance.totalDistance.value.toStringAsFixed(1)}m'
+            '\nCurrent Speed: ${UnifiedGPSManager.instance.currentSpeed.value.toStringAsFixed(1)}km/h'
+      };
+      positionRawData.add(logForm);
+      HiveStore.savePositionRawData(value: positionRawData);
+    }
 
-        var logForm = {
-          'positionRawDataInfo': '===================================='
-              '\nEnhanced GPS - Lat/Lng: ${locationModel.latitude},${locationModel.longitude}, Accuracy: ${locationModel.accuracy}'
-              '\nSteps: ${exerciseSteps.value}'
-              '\nLocationUpdateTime: ${DateTime.now()}'
-              '\nGPS Status: ${UnifiedGPSManager.instance.getStatus()}'
-              '\nGPS Performance Grade: ${UnifiedGPSManager.instance.performanceGrade.value}'
-              '\nGPS Mode: ${UnifiedGPSManager.instance.gpsMode.value}'
-              '\nTotal Distance: ${UnifiedGPSManager.instance.totalDistance.value.toStringAsFixed(1)}m'
-              '\nCurrent Speed: ${UnifiedGPSManager.instance.currentSpeed.value.toStringAsFixed(1)}km/h'
-        };
-        positionRawData.add(logForm);
-        HiveStore.savePositionRawData(value: positionRawData);
-      }
+    if (isLockMap.isTrue) {
+      _moveMapToMyLocation();
+    }
 
-      if (isLockMap.isTrue) {
-        _moveMapToMyLocation();
-      }
+    // Use smart accuracy threshold based on exercise state and conditions
+    double effectiveAccuracyThreshold = _getEffectiveAccuracyThreshold();
 
-      // Debug GPS accuracy comparison
-      print(
-          'GPS Accuracy Check: locationModel.accuracy=${locationModel.accuracy}m, gpsAccuracy=${gpsAccuracy}m, maxGpsAccuracy=${maxGpsAccuracy}m, exerciseState=${exerciseState.value}');
+    if (exerciseState.value == ExerciseState.ongoing &&
+        locationModel.accuracy < effectiveAccuracyThreshold) {
+      exerciseData.add(UserExerciseModel(
+        altitude: locationModel.altitude,
+        lastLatitude: locationModel.latitude,
+        lastLongitude: locationModel.longitude,
+        speed: locationModel.speed,
+        // Time will be managed by ActivityMixin
+        time: 0,
+        locationUpdateTime: locationModel.timestamp,
+      ));
 
-      // Use smart accuracy threshold based on exercise state and conditions
-      double effectiveAccuracyThreshold = _getEffectiveAccuracyThreshold();
-
-      if (exerciseState.value == ExerciseState.ongoing &&
-          locationModel.accuracy < effectiveAccuracyThreshold) {
-        print(
-            'Processing location update - accuracy check passed with threshold: ${effectiveAccuracyThreshold}m');
-        exerciseData.add(UserExerciseModel(
-          altitude: locationModel.altitude,
-          lastLatitude: locationModel.latitude,
-          lastLongitude: locationModel.longitude,
-          speed: locationModel.speed,
-          // Time will be managed by ActivityMixin
-          time: 0,
-          locationUpdateTime: locationModel.timestamp,
-        ));
-
-        await processLocationUpdate(locationModel);
-      } else {
-        print(
-            'Location update skipped - exerciseState: ${exerciseState.value}, accuracy: ${locationModel.accuracy}m > threshold: ${effectiveAccuracyThreshold}m');
-      }
-    } catch (e) {
-      print('Error processing Strava-like location: $e');
+      await processLocationUpdate(locationModel);
     }
   }
 
   /// Fallback location stream for when Strava-like GPS fails
   void _startFallbackLocationStream() async {
-    print('Starting fallback location stream via UnifiedGPSManager...');
-
     // Track fallback usage
     UnifiedGPSManager.instance.fallbackUsageCount.value++;
     UnifiedGPSManager.instance.lastGpsSource.value = 'fallback';
@@ -1980,7 +1860,6 @@ class ActivityController extends SuperController
       final started = await UnifiedGPSManager.instance
           .startTracking(activityType: activityType);
       if (!started) {
-        print('Unable to start UnifiedGPSManager in fallback');
         return;
       }
     }
@@ -1989,45 +1868,30 @@ class ActivityController extends SuperController
     locationSubscription ??=
         GPS.locationStream.listen((LocationModel locationModel) async {
       await _processStravaLikeLocation(locationModel);
-    }, onError: (error) {
-      print('Fallback UnifiedGPS stream error: $error');
-    });
+    }, onError: (error) {});
   }
 
   /// Handle GPS error
   void _handleGPSError(dynamic error) async {
-    print('GPS error occurred: $error');
-    try {
-      // Track fallback usage
-      UnifiedGPSManager.instance.fallbackUsageCount.value++;
-      UnifiedGPSManager.instance.lastGpsSource.value = 'fallback';
+    // Track fallback usage
+    UnifiedGPSManager.instance.fallbackUsageCount.value++;
+    UnifiedGPSManager.instance.lastGpsSource.value = 'fallback';
 
-      final fallbackLoc = await GPS.getCurrentLocation();
-      if (fallbackLoc != null) {
-        await _handleGPSFallback(fallbackLoc);
-      } else {
-        print('Fallback getCurrentLocation returned null');
-      }
-    } catch (e) {
-      print('Fallback failed: $e');
+    final fallbackLoc = await GPS.getCurrentLocation();
+    if (fallbackLoc != null) {
+      await _handleGPSFallback(fallbackLoc);
     }
   }
 
   /// GPS Fallback mechanism when GPS signal is poor or filtered out
   Future<void> _handleGPSFallback(LocationModel originalLocation) async {
     try {
-      print(
-          'Attempting GPS fallback - original accuracy: ${originalLocation.accuracy}m');
-      // Fallback is handled automatically by UnifiedGPSManager
-      print('Fallback will be handled by UnifiedGPSManager');
-
       // Check if fallback is enabled via remote config
       bool fallbackEnabled = getConfig(
               dataType: ConfigType.bool,
               configKey: 'enable_gps_fallback_mechanism') ??
           true;
       if (!fallbackEnabled) {
-        print('GPS fallback disabled via remote config');
         return;
       }
 
@@ -2044,18 +1908,12 @@ class ActivityController extends SuperController
 
         currentLocation.value = filteredFallback;
         gpsAccuracySensitive.value = filteredFallback.accuracy;
-        print('Fallback location used: accuracy ${filteredFallback.accuracy}m');
       } else {
-        print(
-            'Fallback location also poor or null (threshold: ${fallbackThreshold}m)');
         // Use original as last resort
         currentLocation.value = originalLocation;
         gpsAccuracySensitive.value = originalLocation.accuracy;
-        print(
-            'Using original location as last resort: accuracy ${originalLocation.accuracy}m');
       }
     } catch (e) {
-      print('GPS fallback failed: $e');
       // Error handling is managed by UnifiedGPSManager
       showToastPopup('gps_signal_unstable'.tr());
     }
@@ -2384,61 +2242,29 @@ class ActivityController extends SuperController
   /// 🔍 VALIDATION METHOD - Check exercise type consistency
   /// This method validates that saved and current exercise types match during active exercise
   void validateExerciseTypeConsistency({String? source}) {
-    try {
-      ExerciseType? saved = HiveStore.loadExerciseType();
-      ExerciseType current = selectedExerciseType.value;
+    ExerciseType? saved = HiveStore.loadExerciseType();
+    ExerciseType current = selectedExerciseType.value;
 
-      // Only validate during active exercise states
-      if (exerciseState.value != ExerciseState.ready) {
-        if (saved != current) {
-          print(
-              '⚠️ WARNING: Exercise type mismatch! Saved: ${saved?.name ?? "null"}, Current: ${current.name}');
-          if (source != null) {
-            print('⚠️ Source: $source');
-          }
-
-          // Auto-correct by using saved type if available
-          if (saved != null) {
-            print('🔧 Auto-correcting to saved exercise type: ${saved.name}');
-            selectedExerciseType.value = saved;
-          }
-        } else {
-          print('✅ Exercise type consistency check passed: ${current.name}');
+    // Only validate during active exercise states
+    if (exerciseState.value != ExerciseState.ready) {
+      if (saved != current) {
+        // Auto-correct by using saved type if available
+        if (saved != null) {
+          selectedExerciseType.value = saved;
         }
       }
-
-      // Additional validation for treasure hunting features
-      if (exerciseState.value != ExerciseState.ready &&
-          current == ExerciseType.treasureHunting) {
-        bool hasTreasures = listTreasureOfSession.isNotEmpty;
-        bool hasTimer = nearbyTreasureTimer?.isActive == true;
-
-        print('🎮 Treasure hunting validation:');
-        print('   - Has treasures: $hasTreasures');
-        print('   - Timer active: $hasTimer');
-
-        if (!hasTreasures && exerciseState.value == ExerciseState.ongoing) {
-          print('⚠️ WARNING: Treasure hunting mode but no treasures loaded!');
-        }
-      }
-    } catch (e) {
-      print('❌ Exercise type validation failed: $e');
     }
   }
 
   /// 🛡️ ERROR RECOVERY - Handle corrupted exercise type data
   void recoverFromCorruptedExerciseType() {
     try {
-      print('🔧 Attempting exercise type data recovery...');
-
       // Try to load saved type
       ExerciseType? saved = HiveStore.loadExerciseType();
 
       if (saved != null) {
-        print('🔧 Found saved exercise type, restoring: ${saved.name}');
         selectedExerciseType.value = saved;
       } else {
-        print('🔧 No saved data found, resetting to default walking mode');
         selectedExerciseType.value = ExerciseType.walking;
 
         // Only save if we're not in an active exercise (to avoid overwriting during ongoing session)
@@ -2446,43 +2272,9 @@ class ActivityController extends SuperController
           HiveStore.saveExerciseType(ExerciseType.walking);
         }
       }
-
-      print(
-          '✅ Exercise type recovery completed: ${selectedExerciseType.value.name}');
     } catch (e) {
-      print('❌ Exercise type recovery failed: $e');
       // Ultimate fallback
       selectedExerciseType.value = ExerciseType.walking;
-    }
-  }
-
-  /// 📊 DEBUG HELPER - Log current exercise state
-  void debugLogExerciseState({String? context}) {
-    try {
-      String contextStr = context != null ? ' [$context]' : '';
-      print('📊 Exercise State Debug$contextStr:');
-      print('   - Exercise State: ${exerciseState.value}');
-      print('   - Exercise Type (current): ${selectedExerciseType.value.name}');
-
-      ExerciseType? saved = HiveStore.loadExerciseType();
-      print('   - Exercise Type (saved): ${saved?.name ?? "null"}');
-
-      if (userState.value.exercise != null) {
-        print('   - Exercise ID: ${userState.value.exercise!.id}');
-        print('   - Exercise Server State: ${userState.value.exercise!.state}');
-        print('   - Exercise Type (server): ${userState.value.exercise!.type}');
-      } else {
-        print('   - No active exercise in userState');
-      }
-
-      if (selectedExerciseType.value == ExerciseType.treasureHunting) {
-        print('   - Treasures loaded: ${listTreasureOfSession.length}');
-        print('   - Timer active: ${nearbyTreasureTimer?.isActive == true}');
-        print(
-            '   - Claimed treasures: ${listClaimedTreasureIdOfSession.length}');
-      }
-    } catch (e) {
-      print('❌ Debug logging failed: $e');
     }
   }
 
@@ -2510,7 +2302,8 @@ class ActivityController extends SuperController
         },
         errorCallback: (error) {
           isFetchingTreasureConfig.value = false;
-          print('❌ Failed to load treasure hunting configuration after retries: ${error?.errorMessage ?? "unknown error"}');
+          print(
+              '❌ Failed to load treasure hunting configuration after retries: ${error?.errorMessage ?? "unknown error"}');
           // Fallback configuration is already provided by the service
         },
       );
@@ -2520,19 +2313,16 @@ class ActivityController extends SuperController
         // Offline - use fallback immediately
         treasureHuntingConfig.value = TreasureHuntingConfigModel.fallback();
         isFetchingTreasureConfig.value = false;
-        print('🌐 Offline mode - using fallback treasure hunting configuration');
         return;
       }
-      
+
       TreasureHuntingConfigService.getTreasureHuntingButtonContent(
         successCallback: (config) {
           treasureHuntingConfig.value = config;
           isFetchingTreasureConfig.value = false;
-          print('✅ Treasure hunting configuration loaded successfully (no retry)');
         },
         errorCallback: (error) {
           isFetchingTreasureConfig.value = false;
-          print('❌ Failed to load treasure hunting configuration: ${error?.errorMessage ?? "unknown error"}');
         },
       );
     }

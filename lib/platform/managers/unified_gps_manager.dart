@@ -402,8 +402,6 @@ class UnifiedGPSManager extends GetxController {
         filteredLocation = _applyLocationFiltering(locationModel);
         if (filteredLocation == null) {
           filteredPositions.value++;
-          print(
-              'GPS: Location filtered out - accuracy: ${locationModel.accuracy}m, source: ${lastGpsSource.value}');
           return;
         }
       } else {
@@ -414,8 +412,6 @@ class UnifiedGPSManager extends GetxController {
       _processValidLocation(filteredLocation);
 
       // Log successful processing
-      print(
-          'GPS: Location processed - accuracy: ${filteredLocation.accuracy}m, source: ${lastGpsSource.value}');
     } catch (e) {
       _handleLocationError(e);
     }
@@ -465,9 +461,21 @@ class UnifiedGPSManager extends GetxController {
           final speed = (distance / timeInterval) * 3.6; // Convert to km/h
 
           // Always emit speed exceed status for continuous monitoring
-          final speedThreshold = UnifiedGPSConfig.speedThreshold;
+          // Use activity-specific speed threshold if available, otherwise use default
+          final activityConfig =
+              UnifiedGPSConfig.getConfigForActivity(_currentActivityType);
+          final speedThreshold = activityConfig['speed_threshold'] ??
+              UnifiedGPSConfig.speedThreshold;
 
-          if (speed > speedThreshold) {
+          // For treasure hunting, always use GPS reported speed to prevent false warnings
+          // For other activities with more dynamic speed ranges, calculated speed is acceptable
+          // to catch potential GPS jumps that aren't caught by the reported speed
+          bool useCalculatedSpeed = _currentActivityType != 'treasure_hunting';
+
+          // Speed to use for validation
+          final validationSpeed =
+              useCalculatedSpeed ? speed : location.speedKmh;
+          if (validationSpeed > speedThreshold) {
             _isExceedSpeedLimitStreamController.add(true);
           } else {
             _isExceedSpeedLimitStreamController.add(false);
@@ -478,8 +486,6 @@ class UnifiedGPSManager extends GetxController {
                   UnifiedGPSConfig.get<double>('jump_detection_time') &&
               distance > UnifiedGPSConfig.maxJumpDistance) {
             jumpDetectionCount.value++;
-            print(
-                'GPS: Jump detected and filtered - distance: ${distance.toStringAsFixed(1)}m in ${timeInterval.toStringAsFixed(1)}s');
             return null; // Filter out GPS jumps
           }
 
@@ -743,7 +749,6 @@ class UnifiedGPSManager extends GetxController {
       }
     } catch (e) {
       // Ignore valid distance calculation errors to prevent GPS freeze
-      print('Valid distance calculation error: $e');
     }
   }
 
@@ -949,26 +954,6 @@ class UnifiedGPSManager extends GetxController {
     }
   }
 
-  /// Debug helper: Print comprehensive GPS status (for troubleshooting)
-  void printDebugStatus() {
-    print('=== UnifiedGPS Debug Status ===');
-    print('Active: ${isActive.value}');
-    print('Permission: ${hasPermission.value}');
-    print('GPS Mode: ${gpsMode.value}');
-    print('Current Location: ${currentLocation.value?.toString() ?? "null"}');
-    print('Performance Grade: ${performanceGrade.value}');
-    print('Total Positions: ${totalPositions.value}');
-    print('Filtered Positions: ${filteredPositions.value}');
-    print('Jump Detection Count: ${jumpDetectionCount.value}');
-    print('Fallback Usage Count: ${fallbackUsageCount.value}');
-    print('Last GPS Source: ${lastGpsSource.value}');
-    print('Average Accuracy: ${averageAccuracy.value.toStringAsFixed(1)}m');
-    print('Current Speed: ${currentSpeed.value.toStringAsFixed(1)} km/h');
-    print('Total Distance: ${totalDistance.value.toStringAsFixed(1)}m');
-    print('Battery Level: ${batteryLevel.value}%');
-    print('==============================');
-  }
-
   /// Enable/disable battery optimization
   void setBatteryOptimization(bool enabled) {
     UnifiedGPSConfig.updateConfig({'enable_battery_optimization': enabled});
@@ -1008,14 +993,11 @@ class UnifiedGPSManager extends GetxController {
       return true;
     }
 
-    print('Waiting for GPS to be ready (timeout: ${timeoutSeconds}s)...');
-
     Completer<bool> completer = Completer<bool>();
 
     // Set up timeout
     Timer timeoutTimer = Timer(Duration(seconds: timeoutSeconds), () {
       if (!completer.isCompleted) {
-        print('GPS ready timeout after ${timeoutSeconds}s');
         completer.complete(false);
       }
     });
@@ -1024,8 +1006,6 @@ class UnifiedGPSManager extends GetxController {
     late StreamSubscription<LocationModel> subscription;
     subscription = locationStream.listen((location) {
       if (isGPSReady() && !completer.isCompleted) {
-        print(
-            'GPS is now ready: lat=${location.latitude}, lng=${location.longitude}, accuracy=${location.accuracy}m');
         subscription.cancel();
         timeoutTimer.cancel();
         isReady.value = true;
@@ -1040,7 +1020,6 @@ class UnifiedGPSManager extends GetxController {
   Future<bool> initializeWithWarmup(
       {String? activityType, int warmupAttempts = 3}) async {
     try {
-      print('Starting GPS initialization with warm-up...');
       isInitializing.value = true;
       isReady.value = false;
 
@@ -1053,36 +1032,25 @@ class UnifiedGPSManager extends GetxController {
       // Warm-up by getting current location multiple times
       bool validLocationFound = false;
       for (int i = 0; i < warmupAttempts; i++) {
-        try {
-          final warmupLoc = await getCurrentLocation();
-          if (warmupLoc != null && !_isInvalidCoordinates(warmupLoc)) {
-            print(
-                'GPS warm-up ${i + 1}/${warmupAttempts}: lat=${warmupLoc.latitude}, lng=${warmupLoc.longitude}, accuracy=${warmupLoc.accuracy}m');
-
-            if (warmupLoc.accuracy <=
-                UnifiedGPSConfig.accuracyThreshold * 1.5) {
-              print('Valid GPS location found during warm-up');
-              isReady.value = true;
-              validLocationFound = true;
-              break;
-            }
+        final warmupLoc = await getCurrentLocation();
+        if (warmupLoc != null && !_isInvalidCoordinates(warmupLoc)) {
+          if (warmupLoc.accuracy <= UnifiedGPSConfig.accuracyThreshold * 1.5) {
+            isReady.value = true;
+            validLocationFound = true;
+            break;
           }
+        }
 
-          // Wait between attempts
-          if (i < warmupAttempts - 1) {
-            await Future.delayed(const Duration(seconds: 2));
-          }
-        } catch (e) {
-          print('GPS warm-up attempt ${i + 1} failed: $e');
+        // Wait between attempts
+        if (i < warmupAttempts - 1) {
+          await Future.delayed(const Duration(seconds: 2));
         }
       }
 
       isInitializing.value = false;
-      print('GPS warm-up completed, valid location found: $validLocationFound');
 
       return validLocationFound;
     } catch (e) {
-      print('GPS initialization with warm-up failed: $e');
       isInitializing.value = false;
       return false;
     }
@@ -1099,11 +1067,8 @@ class UnifiedGPSManager extends GetxController {
     final nowReady = isGPSReady();
 
     if (!wasReady && nowReady) {
-      print(
-          'GPS became ready: lat=${location.latitude}, lng=${location.longitude}, accuracy=${location.accuracy}m');
       isReady.value = true;
     } else if (wasReady && !nowReady) {
-      print('GPS lost ready state - poor signal or invalid coordinates');
       isReady.value = false;
     }
   }
