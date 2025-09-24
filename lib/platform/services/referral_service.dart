@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:gaza_go/platform/apis/referral.dart';
 import 'package:gaza_go/platform/models/referee_model.dart';
+import 'package:gaza_go/platform/models/referral_config_model.dart';
 
 class ReferralService {
   static Future<void> getReferees(
@@ -126,5 +127,21 @@ class ReferralService {
              responseData.containsKey('errorMessage');
     }
     return false;
+  }
+
+  static Future<void> getReferralConfig({
+    required Function(ReferralConfigModel) successCallback,
+    Function? errorCallback,
+  }) async {
+    try {
+      Response res = await ReferralApi.getReferralConfig();
+      if (res.statusCode == 200) {
+        successCallback(ReferralConfigModel.fromJson(res.data));
+      } else {
+        if (errorCallback != null) errorCallback(res.data);
+      }
+    } catch (e) {
+      if (errorCallback != null) errorCallback(e);
+    }
   }
 }

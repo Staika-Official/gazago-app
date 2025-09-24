@@ -19,4 +19,12 @@ class ReferralApi {
       showToastOnError: false, // Disable auto error toast
     ).get('/user-referral/$userId/redeem/$referralCode');
   }
+
+  // API GET /services/gazago/api/user-referral-config
+  static Future<Response> getReferralConfig() async {
+    return await Api.client(
+      serviceUrl: '/services/gazago/api',
+      showLoading: false,
+    ).get('/user-referral-config');
+  }
 }

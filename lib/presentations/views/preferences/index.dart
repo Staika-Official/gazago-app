@@ -216,15 +216,25 @@ class Preferences extends StatelessWidget {
                 height: 6.sp,
                 color: const Color(0xFF23232D),
               ),
-              PreferenceItem(
-                title: 'referral'.tr(),
-                onTap: () => Get.toNamed(Routes.referral),
-              ),
-              Container(
-                width: double.infinity,
-                height: 6.sp,
-                color: const Color(0xFF23232D),
-              ),
+              // Conditionally show referral based on config
+              Obx(() {
+                if (controller.shouldShowReferral) {
+                  return Column(
+                    children: [
+                      PreferenceItem(
+                        title: 'referral'.tr(),
+                        onTap: () => Get.toNamed(Routes.referral),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 6.sp,
+                        color: const Color(0xFF23232D),
+                      ),
+                    ],
+                  );
+                }
+                return const SizedBox.shrink();
+              }),
               PreferenceItem(
                 title: 'terms_and_conditions'.tr(),
                 onTap: () => Get.toNamed(Routes.termsList),
