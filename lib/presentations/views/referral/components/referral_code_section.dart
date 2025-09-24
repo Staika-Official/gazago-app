@@ -24,6 +24,10 @@ class ReferralCodeSection extends GetWidget<ReferralController> {
                 image: AssetImage('assets/images/common/bg_loading.png'),
                 fit: BoxFit.cover,
                 alignment: Alignment(0, -0.45),
+                colorFilter: ColorFilter.mode(
+                  Color(0xFF0EE6F3),
+                  BlendMode.overlay,
+                ),
               ),
             ),
           ),

@@ -189,9 +189,6 @@ class _RefereeItem extends GetWidget<ReferralController> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime referredDate = DateTime.parse(referee.referredAt);
-    String formattedDate = DateFormat('dd/MM/yyyy').format(referredDate);
-
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16.h),
       child: Row(
@@ -243,13 +240,6 @@ class _RefereeItem extends GetWidget<ReferralController> {
                       color: const Color(0xFF0EE6F3),
                     ),
                   ],
-                ),
-                SizedBox(height: 4.h),
-                StyledText(
-                  formattedDate,
-                  fontSize: 10,
-                  fontWeight: 500,
-                  color: const Color(0xFFC9C5C6),
                 ),
               ],
             ),
