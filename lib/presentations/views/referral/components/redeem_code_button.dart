@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/referral_controller.dart';
 import 'package:gaza_go/platform/services/referral_service.dart';
@@ -41,6 +42,19 @@ class RedeemCodeButton extends GetWidget<ReferralController> {
       isScrollControlled: true,
       enableDrag: true,
       ignoreSafeArea: false,
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }
@@ -220,6 +234,13 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                   fontWeight: FontWeight.w500,
                                 ),
                                 maxLength: 8,
+                                inputFormatters: [
+                                  // Prevent spaces and only allow alphanumeric characters
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[A-Z0-9a-z]')),
+                                  // Convert to uppercase automatically
+                                  UpperCaseTextFormatter(),
+                                ],
                                 decoration: InputDecoration(
                                   hintText: 'enter_8_char_code'.tr(),
                                   hintStyle: TextStyle(
@@ -233,8 +254,6 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                   counterText: '', // Hide character counter
                                 ),
                                 textAlign: TextAlign.left,
-                                textCapitalization:
-                                    TextCapitalization.characters,
                                 onChanged: (value) {
                                   hasText.value = value.isNotEmpty;
 
@@ -246,13 +265,13 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
 
                                   // Validate format immediately (exactly 8 characters)
                                   if (value.isNotEmpty) {
-                                    final upperValue = value.toUpperCase();
-                                    if (upperValue.length != 8) {
+                                    // No need to trim since spaces are prevented by input formatter
+                                    if (value.length != 8) {
                                       hasError.value = true;
                                       errorMessage.value =
                                           'code_must_be_8_characters'.tr();
                                     } else if (!RegExp(r'^[A-Z0-9]{8}$')
-                                        .hasMatch(upperValue)) {
+                                        .hasMatch(value)) {
                                       hasError.value = true;
                                       errorMessage.value =
                                           'invalid_code_format'.tr();
@@ -328,9 +347,8 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                             child: InkWell(
                               onTap: canSubmit
                                   ? () async {
-                                      final code = codeController.text
-                                          .trim()
-                                          .toUpperCase();
+                                      // No need to trim or convert to uppercase since input formatters handle this
+                                      final code = codeController.text;
 
                                       // Basic validation
                                       if (code.isEmpty) {
