@@ -840,16 +840,23 @@ class ActivityController extends SuperController
             }
 
             // 🔄 RESTORE EXERCISE TYPE - Critical for session continuity
-            // Only restore when there's an active exercise to ensure proper tracking
-            ExerciseType? savedExerciseType = HiveStore.loadExerciseType();
-            if (savedExerciseType != null) {
-              print(
-                  '🔄 getUserState: Restoring exercise type: ${savedExerciseType.name}');
-              selectedExerciseType.value = savedExerciseType;
+            // Priority: 1. API exercise.type, 2. HiveStore, 3. Default walking
+            if (userState.value.exercise!.type != null) {
+              // Use exercise type from API response (highest priority)
+              ExerciseType apiExerciseType =
+                  ExerciseTypeValue.fromString(userState.value.exercise!.type);
+              selectedExerciseType.value = apiExerciseType;
+
+              // Save to HiveStore for consistency
+              HiveStore.saveExerciseType(apiExerciseType);
             } else {
-              print(
-                  '⚠️ getUserState: No saved exercise type found, defaulting to walking');
-              selectedExerciseType.value = ExerciseType.walking;
+              // Fallback to HiveStore
+              ExerciseType? savedExerciseType = HiveStore.loadExerciseType();
+              if (savedExerciseType != null) {
+                selectedExerciseType.value = savedExerciseType;
+              } else {
+                selectedExerciseType.value = ExerciseType.walking;
+              }
             }
 
             // 🔍 VALIDATE CONSISTENCY after restoration

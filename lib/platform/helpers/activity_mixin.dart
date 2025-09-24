@@ -713,19 +713,30 @@ mixin ActivityMixin {
     _startEnhancedGPSTracking();
 
     // 🔄 CRITICAL: Load and restore exercise type FIRST
-    // This ensures we have the correct exercise type before checking treasure hunting features
-    ExerciseType? savedExerciseType = HiveStore.loadExerciseType();
-    if (savedExerciseType != null) {
-      (this as ActivityController).selectedExerciseType.value =
-          savedExerciseType;
+    // Priority: 1. API exercise.type, 2. HiveStore, 3. Default walking
+    if (userState.value.exercise!.type != null) {
+      // Use exercise type from API response (highest priority)
+      ExerciseType apiExerciseType =
+          ExerciseTypeValue.fromString(userState.value.exercise!.type);
+      (this as ActivityController).selectedExerciseType.value = apiExerciseType;
 
-      // 🎯 Set correct GPS activity type based on restored exercise type
-      String activityType = (this as ActivityController).activityType;
-      await UnifiedGPSManager.instance.setActivityType(activityType);
+      // Save to HiveStore for consistency
+      HiveStore.saveExerciseType(apiExerciseType);
     } else {
-      (this as ActivityController).selectedExerciseType.value =
-          ExerciseType.walking;
+      // Fallback to HiveStore
+      ExerciseType? savedExerciseType = HiveStore.loadExerciseType();
+      if (savedExerciseType != null) {
+        (this as ActivityController).selectedExerciseType.value =
+            savedExerciseType;
+      } else {
+        (this as ActivityController).selectedExerciseType.value =
+            ExerciseType.walking;
+      }
     }
+
+    // 🎯 Set correct GPS activity type based on restored exercise type
+    String activityType = (this as ActivityController).activityType;
+    await UnifiedGPSManager.instance.setActivityType(activityType);
 
     // NOW check treasure hunting mode with restored type
     bool isTreasureHuntingMode =
