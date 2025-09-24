@@ -107,7 +107,7 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
       padding: const EdgeInsets.only(bottom: 0),
       duration: const Duration(milliseconds: 300),
       child: Container(
-        height: 420.h,
+        height: 440.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(AppDoubleData.regular().numberRadius20),
@@ -249,10 +249,13 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                     final upperValue = value.toUpperCase();
                                     if (upperValue.length != 8) {
                                       hasError.value = true;
-                                      errorMessage.value = 'code_must_be_8_characters'.tr();
-                                    } else if (!RegExp(r'^[A-Z0-9]{8}$').hasMatch(upperValue)) {
+                                      errorMessage.value =
+                                          'code_must_be_8_characters'.tr();
+                                    } else if (!RegExp(r'^[A-Z0-9]{8}$')
+                                        .hasMatch(upperValue)) {
                                       hasError.value = true;
-                                      errorMessage.value = 'invalid_code_format'.tr();
+                                      errorMessage.value =
+                                          'invalid_code_format'.tr();
                                     } else {
                                       hasError.value = false;
                                       errorMessage.value = '';
@@ -341,7 +344,8 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                       if (code.length != 8) {
                                         hasError.value = true;
                                         errorMessage.value =
-                                            'code_must_be_exactly_8_characters'.tr();
+                                            'code_must_be_exactly_8_characters'
+                                                .tr();
                                         return;
                                       }
 
@@ -399,6 +403,7 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                           Get.back();
                         },
                       ),
+                      const SizedBox(height: 24),
                     ],
                   ),
                 ],
