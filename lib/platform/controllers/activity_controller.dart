@@ -36,11 +36,13 @@ import 'package:gaza_go/platform/models/promotion_ad_model.dart';
 import 'package:gaza_go/platform/models/request/pick_up_treasure_request_model.dart';
 import 'package:gaza_go/platform/models/stat_model.dart';
 import 'package:gaza_go/platform/models/treasure_model.dart';
+import 'package:gaza_go/platform/models/treasure_hunting_config_model.dart';
 import 'package:gaza_go/platform/models/treasure_nearby_request_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/services/activity_service.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/services/treasure_service.dart';
+import 'package:gaza_go/platform/services/treasure_hunting_config_service.dart';
 import 'package:gaza_go/platform/services/uaa_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
 import 'package:gaza_go/presentations/components/alert_ui_list.dart';
@@ -184,6 +186,10 @@ class ActivityController extends SuperController
   // Safe getUserState call tracking
   bool _isGettingUserState = false;
   Timer? _userStateTimeout;
+
+  // Treasure hunting configuration
+  final Rxn<TreasureHuntingConfigModel> treasureHuntingConfig = Rxn<TreasureHuntingConfigModel>();
+  final RxBool isFetchingTreasureConfig = RxBool(false);
 
   @override
   void initLocationStream() async {
@@ -2478,5 +2484,62 @@ class ActivityController extends SuperController
     } catch (e) {
       print('❌ Debug logging failed: $e');
     }
+  }
+
+  /// Fetch treasure hunting button content configuration from API
+  void fetchTreasureHuntingConfig({bool useRetry = true}) {
+    if (isFetchingTreasureConfig.value) {
+      return; // Prevent concurrent requests
+    }
+
+    isFetchingTreasureConfig.value = true;
+
+    // Use retry logic if requested and internet is available
+    if (useRetry && globalController.internetConnection.value) {
+      TreasureHuntingConfigService.getTreasureHuntingButtonContentWithRetry(
+        successCallback: (config) {
+          treasureHuntingConfig.value = config;
+          isFetchingTreasureConfig.value = false;
+          print('✅ Treasure hunting configuration loaded successfully');
+          print('   - Title: ${config.treasureHuntTitle}');
+          print('   - Description: ${config.treasureHuntDescription}');
+          if (config.isValidDuration) {
+            print('   - Duration: ${config.formattedDuration}');
+            print('   - Is Active: ${config.isActive}');
+          }
+        },
+        errorCallback: (error) {
+          isFetchingTreasureConfig.value = false;
+          print('❌ Failed to load treasure hunting configuration after retries: ${error?.errorMessage ?? "unknown error"}');
+          // Fallback configuration is already provided by the service
+        },
+      );
+    } else {
+      // No internet or retry not requested, use basic fetch
+      if (!globalController.internetConnection.value) {
+        // Offline - use fallback immediately
+        treasureHuntingConfig.value = TreasureHuntingConfigModel.fallback();
+        isFetchingTreasureConfig.value = false;
+        print('🌐 Offline mode - using fallback treasure hunting configuration');
+        return;
+      }
+      
+      TreasureHuntingConfigService.getTreasureHuntingButtonContent(
+        successCallback: (config) {
+          treasureHuntingConfig.value = config;
+          isFetchingTreasureConfig.value = false;
+          print('✅ Treasure hunting configuration loaded successfully (no retry)');
+        },
+        errorCallback: (error) {
+          isFetchingTreasureConfig.value = false;
+          print('❌ Failed to load treasure hunting configuration: ${error?.errorMessage ?? "unknown error"}');
+        },
+      );
+    }
+  }
+
+  /// Get treasure hunting configuration (with fallback if not loaded)
+  TreasureHuntingConfigModel get treasureHuntingConfigOrFallback {
+    return treasureHuntingConfig.value ?? TreasureHuntingConfigModel.fallback();
   }
 }

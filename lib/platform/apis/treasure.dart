@@ -56,4 +56,12 @@ class TreasureApi {
       showLoading: false,
     ).get('/$userExerciseId?userId=$userId&page=$page&size=$size');
   }
+
+  /// Get treasure hunting button content configuration
+  static Future<Response> getTreasureHuntingButtonContent() async {
+    return await Api.client(
+      serviceUrl: ServiceUrl.treasureService,
+      showLoading: false,
+    ).get('-hunting/button-content');
+  }
 }
