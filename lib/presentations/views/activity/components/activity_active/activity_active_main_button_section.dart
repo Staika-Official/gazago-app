@@ -25,10 +25,8 @@ class ActivityActiveMainButtonSection extends GetWidget<ActivityController> {
                 radius: 48,
                 color: Colors.white,
                 onTap: () async {
-                  controller.isLockMap.value = true;
-                  controller
-                      .showExerciseMap()
-                      .whenComplete(() => controller.isLockMap.toggle());
+                  controller.isLockMap.value = false;
+                  controller.showExerciseMap();
                 },
                 padding: const EdgeInsets.all(8),
                 child: SvgPicture.asset(
