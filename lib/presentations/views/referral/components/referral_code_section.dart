@@ -21,13 +21,8 @@ class ReferralCodeSection extends GetWidget<ReferralController> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(16.r)),
               image: const DecorationImage(
-                image: AssetImage('assets/images/common/bg_loading.png'),
+                image: AssetImage('assets/images/referral/ico_referral_background.png'),
                 fit: BoxFit.cover,
-                alignment: Alignment(0, -0.45),
-                colorFilter: ColorFilter.mode(
-                  Color(0xFF0EE6F3),
-                  BlendMode.overlay,
-                ),
               ),
             ),
           ),

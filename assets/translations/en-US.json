@@ -215,7 +215,7 @@
   "token_expired": "Token expired.\nPlease log in again.",
   "poor_connection": "Poor connection.\nPlease try again later.",
   "unstable_connection": "Unstable connection. Please try again later.",
-  "success": "Success",
+  "success": "Success!",
   "signature_error": "Signature error",
   "low_storage": "Low storage space.",
   "loading_error": "An error occurred during loading",

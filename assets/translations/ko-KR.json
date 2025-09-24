@@ -214,7 +214,7 @@
   "token_expired": "토큰이 만료되었습니다.\n다시 로그인해주세요.",
   "poor_connection": "통신이 원활하지 않습니다.\n잠시후 다시 시도해주세요",
   "unstable_connection": "연결이 불안정합니다. 잠시 후 재시도 해주세요",
-  "success": "성공",
+  "success": "성공!",
   "signature_error": "서명 오류",
   "low_storage": "저장공간이 부족합니다.",
   "loading_error": "로딩 중 오류가 발생했습니다",

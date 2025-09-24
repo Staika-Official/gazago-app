@@ -68,8 +68,8 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
           Get.back();
           // Show success overlay dialog
           OverlayDialog.showSuccess(
-            title: 'awesome'.tr(),
-            description: 'referral_redeem_success'.tr(),
+            title: 'success'.tr(),
+            description: 'success_redeemed_code'.tr(),
           );
           // Refresh referees list
           controller.refreshReferees();

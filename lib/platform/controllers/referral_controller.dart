@@ -178,8 +178,8 @@ class ReferralController extends GetxController with PreferenceMixin {
         refreshReferees();
         // Show success dialog
         OverlayDialog.showSuccess(
-          title: 'awesome'.tr(),
-          description: 'referral_redeem_success'.tr(),
+          title: 'success'.tr(),
+          description: 'success_redeemed_code'.tr(),
         );
       },
       errorCallback: (String errorMessage, bool isCodeNotFound) {
