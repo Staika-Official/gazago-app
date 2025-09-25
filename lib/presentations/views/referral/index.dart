@@ -6,6 +6,7 @@ import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/views/referral/components/redeem_code_button.dart';
 import 'package:gaza_go/presentations/views/referral/components/referral_code_section.dart';
 import 'package:gaza_go/presentations/views/referral/components/referral_history_list.dart';
+import 'package:gaza_go/presentations/views/referral/components/referred_by_message.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:easy_localization/easy_localization.dart';
 
@@ -43,6 +44,14 @@ class _ReferralPageState extends State<ReferralPage> {
             SizedBox(height: 18.h),
             const ReferralCodeSection(),
             SizedBox(height: 18.h),
+            const ReferredByMessage(),
+            Obx(() {
+              // Add spacing only if referred by message is shown
+              if (Get.find<ReferralController>().referredBy.value != null) {
+                return SizedBox(height: 18.h);
+              }
+              return const SizedBox.shrink();
+            }),
             const RedeemCodeButton(),
             SizedBox(height: 32.h),
             const ReferralHistoryList(),

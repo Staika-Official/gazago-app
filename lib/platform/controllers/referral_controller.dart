@@ -19,6 +19,7 @@ class ReferralController extends GetxController with PreferenceMixin {
   var refereesList = <RefereeModel>[].obs;
   var refereesLoading = false.obs;
   var isRedeemingReferralCode = false.obs;
+  var referredBy = Rxn<String>();
 
   // Add TextEditingController for referral code input
   late TextEditingController referralCodeController;
@@ -86,15 +87,19 @@ class ReferralController extends GetxController with PreferenceMixin {
       page: requestPage,
       size: requestSize,
       successCallback: (RefereeResponseModel response) {
-        currentPage.value = response.meta.page;
-        totalPages.value = response.meta.totalPages;
-        hasMoreData.value = response.meta.hasNext;
+        // Set referredBy information
+        referredBy.value = response.referredBy;
+
+        // Update pagination data based on new structure
+        currentPage.value = response.referees.number;
+        totalPages.value = response.referees.totalPages;
+        hasMoreData.value = !response.referees.last;
 
         if (requestPage == 0) {
-          refereesList.value = response.data;
+          refereesList.value = response.referees.content;
           refereesLoading.value = false;
         } else {
-          refereesList.addAll(response.data);
+          refereesList.addAll(response.referees.content);
           isLoadingMore.value = false;
         }
       },

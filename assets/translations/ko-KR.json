@@ -994,6 +994,7 @@
   "copied": "복사됨",
   "redeem_code": "코드 사용하기",
   "referral_history": "추천 내역",
+  "referred_by": "추천인: {username}",
   "claim": "받기",
   "claimed": "수령 완료",
   "rewards_x_go_points": "보상: {} GO 포인트",

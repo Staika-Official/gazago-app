@@ -16,23 +16,30 @@ class RedeemCodeButton extends GetWidget<ReferralController> {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-        padding: EdgeInsets.all(AppDoubleData.regular().numberSpacing12),
-        side: BorderSide(
-            width: 2,
-            color: AppColorData.regular().colorBorderInteractiveSecondary),
-      ),
-      child: Text(
-        'redeem_code'.tr(),
-        style: AppTextStyleData.regular()
-            .koBodyMediumXl
-            .copyWith(color: Colors.white),
-      ),
-      onPressed: () {
-        _showRedeemDialog();
-      },
-    );
+    return Obx(() {
+      // Hide button if user has already redeemed a code (referredBy is not null)
+      if (controller.referredBy.value != null) {
+        return const SizedBox.shrink();
+      }
+
+      return OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          padding: EdgeInsets.all(AppDoubleData.regular().numberSpacing12),
+          side: BorderSide(
+              width: 2,
+              color: AppColorData.regular().colorBorderInteractiveSecondary),
+        ),
+        child: Text(
+          'redeem_code'.tr(),
+          style: AppTextStyleData.regular()
+              .koBodyMediumXl
+              .copyWith(color: Colors.white),
+        ),
+        onPressed: () {
+          _showRedeemDialog();
+        },
+      );
+    });
   }
 
   void _showRedeemDialog() {

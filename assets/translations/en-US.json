@@ -995,6 +995,7 @@
   "copied": "Copied",
   "redeem_code": "Redeem Code",
   "referral_history": "Referral History",
+  "referred_by": "Referred by: \n{username}",
   "claim": "Claim",
   "claimed": "Claimed",
   "rewards_x_go_points": "Rewards: {} GO Points",
