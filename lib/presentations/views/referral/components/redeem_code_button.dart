@@ -66,6 +66,20 @@ class UpperCaseTextFormatter extends TextInputFormatter {
   }
 }
 
+class NoSpaceTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final newText = newValue.text.replaceAll(' ', '');
+    return TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
+  }
+}
+
 class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
   const RedeemCodeBottomSheet({super.key});
 
@@ -242,9 +256,8 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                 ),
                                 maxLength: 8,
                                 inputFormatters: [
-                                  // Prevent spaces and only allow alphanumeric characters
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'[A-Z0-9a-z]')),
+                                  // Chỉ xóa khoảng trắng, không xóa tiếng Việt
+                                  NoSpaceTextFormatter(),
                                   // Convert to uppercase automatically
                                   UpperCaseTextFormatter(),
                                 ],
@@ -272,17 +285,13 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
 
                                   // Validate format immediately (exactly 8 characters)
                                   if (value.isNotEmpty) {
-                                    // No need to trim since spaces are prevented by input formatter
+                                    // Không cần trim vì spaces đã bị xóa bởi input formatter
                                     if (value.length != 8) {
                                       hasError.value = true;
                                       errorMessage.value =
                                           'code_must_be_8_characters'.tr();
-                                    } else if (!RegExp(r'^[A-Z0-9]{8}$')
-                                        .hasMatch(value)) {
-                                      hasError.value = true;
-                                      errorMessage.value =
-                                          'invalid_code_format'.tr();
                                     } else {
+                                      // Chấp nhận tất cả ký tự (bao gồm tiếng Việt), chỉ kiểm tra độ dài
                                       hasError.value = false;
                                       errorMessage.value = '';
                                     }
@@ -374,14 +383,8 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                         return;
                                       }
 
-                                      // Validate format: uppercase alphanumeric only
-                                      final regex = RegExp(r'^[A-Z0-9]{8}$');
-                                      if (!regex.hasMatch(code)) {
-                                        hasError.value = true;
-                                        errorMessage.value =
-                                            'invalid_code_format'.tr();
-                                        return;
-                                      }
+                                      // Chỉ kiểm tra độ dài, chấp nhận tất cả ký tự (bao gồm tiếng Việt)
+                                      // Không cần regex strict nữa
 
                                       // Call API for all codes (no more mock/test cases)
                                       await _handleReferralCodeSubmission(
