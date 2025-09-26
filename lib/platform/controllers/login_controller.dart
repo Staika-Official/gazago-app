@@ -29,6 +29,11 @@ import 'package:easy_localization/easy_localization.dart';
 
 class LoginController extends GetxController {
   RxBool isAlreadySigninUser = RxBool(false);
+
+  // Temporary variables to store referral code info during login flow
+  String? _tempReferralCode;
+  String? _tempUserId;
+
   @override
   void onInit() async {
     // await checkInspectionNotice();
@@ -143,16 +148,18 @@ class LoginController extends GetxController {
             key: HiveKey.certified.name,
             value: user.authorities!.contains('ROLE_CERTIFIED_USER'));
 
-        // Handle referral code if present in account info
+        // NOTE: Don't handle referral code here anymore - moved to initUserInfo to ensure proper order
+        // Store referral code to handle it later in initUserInfo
         if (user.userCode != null && user.userCode!.isNotEmpty) {
-          _handleReferralCodeFromAccount(user.userCode!, user.id.toString());
+          _tempReferralCode = user.userCode!;
+          _tempUserId = user.id.toString();
         }
       },
     );
   }
 
   /// Handle referral code received from account API after login
-  void _handleReferralCodeFromAccount(
+  Future<void> _handleReferralCodeFromAccount(
       String referralCode, String userId) async {
     try {
       // Check if we already processed this referral code to avoid duplicate processing
@@ -199,6 +206,8 @@ class LoginController extends GetxController {
     String? email = HiveStore.loadString(key: HiveKey.email.name);
     // String? profileImageUrl = HiveStore.loadString(key: HiveKey.profileImageUrl.name);
     // String? nickname = HiveStore.loadString(key: HiveKey.nickname.name);
+
+    // First, ensure user is initialized with POST /init
     await MemberService.initializeUserData(email, errorCallback: () {
       HiveStore.deleteMultipleKeys(keys: [
         HiveKey.accessToken.name,
@@ -206,6 +215,14 @@ class LoginController extends GetxController {
       ]);
       Get.offAllNamed(Routes.login);
     });
+
+    // Then, handle referral code if present (PATCH /user-infos)
+    if (_tempReferralCode != null && _tempUserId != null) {
+      await _handleReferralCodeFromAccount(_tempReferralCode!, _tempUserId!);
+      // Clear temporary variables after use
+      _tempReferralCode = null;
+      _tempUserId = null;
+    }
   }
 
   Future<void> requestLogin(LoginType loginType, String accessToken,
