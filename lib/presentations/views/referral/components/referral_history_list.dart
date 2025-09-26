@@ -109,7 +109,9 @@ class CheckerboardPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
-    final squareSize = size.width / 4;
+    // Use the smaller dimension to ensure squares fit properly in circular bounds
+    final dimension = size.width < size.height ? size.width : size.height;
+    final squareSize = dimension / 4;
 
     for (int i = 0; i < 4; i++) {
       for (int j = 0; j < 4; j++) {
@@ -195,7 +197,8 @@ class _RefereeItem extends GetWidget<ReferralController> {
         children: [
           Container(
             width: 40.w,
-            height: 40.h,
+            height: 40
+                .w, // Use .w for both dimensions to maintain square aspect ratio
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.white,
@@ -207,8 +210,11 @@ class _RefereeItem extends GetWidget<ReferralController> {
                   shape: BoxShape.circle,
                   color: Colors.black,
                 ),
-                child: CustomPaint(
-                  painter: CheckerboardPainter(),
+                child: AspectRatio(
+                  aspectRatio: 1.0, // Ensure 1:1 aspect ratio
+                  child: CustomPaint(
+                    painter: CheckerboardPainter(),
+                  ),
                 ),
               ),
             ),
