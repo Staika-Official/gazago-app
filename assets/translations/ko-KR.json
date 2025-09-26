@@ -1030,6 +1030,7 @@
   "referral_already_redeemed": "이미 사용한\n추천 코드입니다.",
   "referral_code_not_found": "코드가 존재하지 않습니다",
   "self_referral_not_allowed": "본인의 추천 코드는\n사용할 수 없습니다.",
+  "this_code_cannot_be_redeemed": "이 코드는 사용할 수 없습니다",
   "referees_exceeds_maximum": "최대 추천 인원을\n초과했습니다.",
   "referral_redeem_success": "추천 코드가\n성공적으로 사용되었습니다!",
   "referral_redeem_failed": "추천 코드 사용에\n실패했습니다",

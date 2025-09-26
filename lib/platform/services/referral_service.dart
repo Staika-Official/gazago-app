@@ -76,7 +76,7 @@ class ReferralService {
           case 'REFERRAL_CODE_NOT_FOUND':
             return 'referral_code_not_found'.tr();
           case 'SELF_REFERRAL_NOT_ALLOWED':
-            return 'self_referral_not_allowed'.tr();
+            return 'this_code_cannot_be_redeemed'.tr();
           case 'NUMBER_REFEREES_EXCEEDS_MAXIMUM':
             return 'referees_exceeds_maximum'.tr();
           default:
@@ -91,7 +91,7 @@ class ReferralService {
         case 'REFERRAL_CODE_NOT_FOUND':
           return 'referral_code_not_found'.tr();
         case 'SELF_REFERRAL_NOT_ALLOWED':
-          return 'self_referral_not_allowed'.tr();
+          return 'this_code_cannot_be_redeemed'.tr();
         case 'NUMBER_REFEREES_EXCEEDS_MAXIMUM':
           return 'referees_exceeds_maximum'.tr();
         default:

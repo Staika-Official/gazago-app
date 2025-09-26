@@ -256,7 +256,6 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                 ),
                                 maxLength: 8,
                                 inputFormatters: [
-                                  // Chỉ xóa khoảng trắng, không xóa tiếng Việt
                                   NoSpaceTextFormatter(),
                                   // Convert to uppercase automatically
                                   UpperCaseTextFormatter(),
@@ -285,13 +284,11 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
 
                                   // Validate format immediately (exactly 8 characters)
                                   if (value.isNotEmpty) {
-                                    // Không cần trim vì spaces đã bị xóa bởi input formatter
                                     if (value.length != 8) {
                                       hasError.value = true;
                                       errorMessage.value =
                                           'code_must_be_8_characters'.tr();
                                     } else {
-                                      // Chấp nhận tất cả ký tự (bao gồm tiếng Việt), chỉ kiểm tra độ dài
                                       hasError.value = false;
                                       errorMessage.value = '';
                                     }
@@ -382,9 +379,6 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                                 .tr();
                                         return;
                                       }
-
-                                      // Chỉ kiểm tra độ dài, chấp nhận tất cả ký tự (bao gồm tiếng Việt)
-                                      // Không cần regex strict nữa
 
                                       // Call API for all codes (no more mock/test cases)
                                       await _handleReferralCodeSubmission(

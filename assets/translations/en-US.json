@@ -1032,6 +1032,7 @@
   "referral_already_redeemed": "You have already used\nthis referral code.",
   "referral_code_not_found": "Code does not exist",
   "self_referral_not_allowed": "You cannot use\nyour own referral code.",
+  "this_code_cannot_be_redeemed": "This code cannot be redeemed",
   "referees_exceeds_maximum": "This referral code has reached\nits limit",
   "referral_redeem_success": "Referral code redeemed\nsuccessfully!",
   "referral_redeem_failed": "Failed to redeem\nreferral code",
