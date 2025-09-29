@@ -752,10 +752,10 @@ class ActivityActive extends StatelessWidget {
                                   Text(
                                     () {
                                       try {
-                                        return '${UnifiedGPSConfig.getMinValidSpeed(controller.selectedExerciseType.value.name)}-${UnifiedGPSConfig.maxValidSpeed.toInt()}';
+                                        return '${UnifiedGPSConfig.getMinValidSpeed(controller.selectedExerciseType.value.name).toInt()}-${UnifiedGPSConfig.maxValidSpeed.toInt()}km/h';
                                       } catch (e) {
                                         // Fallback display
-                                        return controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7-14' : '1-14';
+                                        return controller.selectedExerciseType.value == ExerciseType.hiking ? '1-14km/h' : '1-14km/h';
                                       }
                                     }(),
                                     style: AppTextStyleData.regular()
@@ -767,21 +767,6 @@ class ActivityActive extends StatelessWidget {
                                           height: 14 / 12,
                                           fontWeight: FontWeight.w500,
                                         ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 3.sp),
-                                    child: Text(
-                                      'km/h',
-                                      style: AppTextStyleData.regular()
-                                          .enBodySemiboldSm
-                                          .copyWith(
-                                            color: AppColorData.regular()
-                                                .colorTextTertiary,
-                                            fontSize: 12.sp,
-                                            height: 14 / 12,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                    ),
                                   ),
                                 ],
                               ),

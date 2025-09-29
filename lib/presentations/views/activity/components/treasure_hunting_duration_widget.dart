@@ -30,7 +30,7 @@ class TreasureHuntingDurationWidget extends StatelessWidget {
     final startFormatted = _formatDate(startDate!);
     final endFormatted = _formatDate(endDate!);
 
-    return '$startFormatted - $endFormatted';
+    return '$startFormatted ~ $endFormatted';
   }
 
   /// Format a single date in YYYY-MM-DD format
