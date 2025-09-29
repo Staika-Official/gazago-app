@@ -53,30 +53,17 @@ class _RewardTabContentState extends State<RewardTabContent>
       ),
       child: Obx(
         () {
-          // Show anti-cheat violation message only if there are violations AND actual rewards were collected
-          if (controller.hasAntiCheatViolation() && controller.hasActualRewards()) {
+          // Show anti-cheat violation message if there are violations
+          if (controller.hasAntiCheatViolation()) {
             return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.warning_amber_rounded,
-                  size: 48.sp,
-                  color: AppColorData.regular().colorTextWarning,
-                ),
+                SizedBox(height: 24.sp),
+                iconEmpty,
                 SizedBox(height: 20.sp),
-                Text(
-                  'anti_cheat_violation'.tr(),
-                  textAlign: TextAlign.center,
-                  style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
-                        color: AppColorData.regular().colorTextWarning,
-                      ),
-                ),
-                SizedBox(height: 12.sp),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40.sp),
+                  padding: EdgeInsets.symmetric(horizontal: 60.sp),
                   child: Text(
-                    controller.getAntiCheatMessage(
-                        controller.selectedItem.value.antiCheatType ?? ''),
+                    "${'anti_cheat_violation'.tr()}\n${controller.getAntiCheatMessage(controller.selectedItem.value.antiCheatType ?? '')}",
                     textAlign: TextAlign.center,
                     style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                           color: AppColorData.regular().colorTextPrimary,
