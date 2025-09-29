@@ -240,12 +240,21 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
         selectedItem.value.antiCheatType != 'VALID';
   }
 
+  /// Check if there are actual rewards with value (not "No reward" treasures)
+  bool hasActualRewards() {
+    return rewards.any((reward) => 
+      reward.amount > 0 && 
+      reward.treasureSymbol != null && 
+      reward.treasureSymbol!.trim().isNotEmpty
+    );
+  }
+
   Future<void> fetchRewards({bool refresh = false}) async {
     if (isLoading.value) return;
     if (!refresh && rewardPage >= totalPages) return;
 
-    // Don't fetch rewards if exercise has anti-cheat violations
-    if (hasAntiCheatViolation()) return;
+    // Note: We now fetch rewards regardless of anti-cheat violations
+    // The UI will handle the display logic based on violations and reward content
 
     isLoading.value = true;
 

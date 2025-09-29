@@ -53,7 +53,8 @@ class _RewardTabContentState extends State<RewardTabContent>
       ),
       child: Obx(
         () {
-          if (controller.hasAntiCheatViolation()) {
+          // Show anti-cheat violation message only if there are violations AND actual rewards were collected
+          if (controller.hasAntiCheatViolation() && controller.hasActualRewards()) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
