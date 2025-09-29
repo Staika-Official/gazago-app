@@ -53,6 +53,39 @@ class _RewardTabContentState extends State<RewardTabContent>
       ),
       child: Obx(
         () {
+          if (controller.hasAntiCheatViolation()) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.warning_amber_rounded,
+                  size: 48.sp,
+                  color: AppColorData.regular().colorTextWarning,
+                ),
+                SizedBox(height: 20.sp),
+                Text(
+                  'anti_cheat_violation'.tr(),
+                  textAlign: TextAlign.center,
+                  style: AppTextStyleData.regular().koHeadingMediumSm.copyWith(
+                        color: AppColorData.regular().colorTextWarning,
+                      ),
+                ),
+                SizedBox(height: 12.sp),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40.sp),
+                  child: Text(
+                    controller.getAntiCheatMessage(
+                        controller.selectedItem.value.antiCheatType ?? ''),
+                    textAlign: TextAlign.center,
+                    style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                          color: AppColorData.regular().colorTextPrimary,
+                        ),
+                  ),
+                ),
+              ],
+            );
+          }
+
           if (controller.rewards.isEmpty && controller.isLoading.value) {
             return const Center(child: CircularProgressIndicator());
           }

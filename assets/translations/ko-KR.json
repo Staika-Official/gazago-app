@@ -1045,5 +1045,16 @@
   "gps_warmup_failed": "GPS 준비 실패",
   "gps_initialization_failed": "GPS 초기화 실패",
   "acquiring_gps_signal": "GPS 신호 수신 중...",
-  "ready": "준비 완료!"
+  "ready": "준비 완료!",
+  "anti_cheat_violation": "게임 규정을 위반하였습니다:",
+  "anti_cheat_region_mismatch": "등록된 지역과 위치가 일치하지 않습니다.",
+  "anti_cheat_speed_too_low": "평균 속도가 허용 범위를 벗어났습니다.",
+  "anti_cheat_speed_too_high": "평균 속도가 허용 범위를 벗어났습니다.",
+  "anti_cheat_distance_not_increased": "비정상적인 거리가 감지되어 세션이 종료되었습니다.",
+  "anti_cheat_distance_inconsistent": "체크포인트가 누락되거나 잘못된 순서로 통과되었습니다.",
+  "anti_cheat_min_steps_not_met": "최소 스텝 요구사항을 충족하지 못했습니다.",
+  "anti_cheat_invalid_state_transition": "비정상적인 거리가 감지되어 세션이 종료되었습니다.",
+  "anti_cheat_shoes_broken": "이 세션에 필요한 내구성이 부족했습니다.",
+  "anti_cheat_no_stamina": "이 세션에 필요한 스태미나가 부족했습니다.",
+  "anti_cheat_daily_distance_limit": "보상을 받을 수 있는 일일 거리 제한을 초과했습니다."
 }

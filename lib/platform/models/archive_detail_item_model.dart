@@ -41,6 +41,7 @@ class ArchiveDetailItemModel {
   String? locationsStr;
   ChallengeCourseModel? challengeCourse;
   bool? isTwoMonthAgo;
+  String? antiCheatType;
 
   ArchiveDetailItemModel({
     this.id,
@@ -79,6 +80,7 @@ class ArchiveDetailItemModel {
     this.locationsStr,
     this.challengeCourse,
     this.isTwoMonthAgo,
+    this.antiCheatType,
   });
 
   factory ArchiveDetailItemModel.fromJson(Map<String, dynamic> json) =>

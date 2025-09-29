@@ -206,9 +206,46 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
     locations.addAll(coordinates);
   }
 
+  /// Get anti-cheat violation message based on antiCheatType
+  String getAntiCheatMessage(String antiCheatType) {
+    switch (antiCheatType) {
+      case 'CHEAT_REGION_MISMATCH':
+        return 'anti_cheat_region_mismatch'.tr();
+      case 'CHEAT_SPEED_TOO_LOW':
+        return 'anti_cheat_speed_too_low'.tr();
+      case 'CHEAT_SPEED_TOO_HIGH':
+        return 'anti_cheat_speed_too_high'.tr();
+      case 'CHEAT_DISTANCE_NOT_INCREASED':
+        return 'anti_cheat_distance_not_increased'.tr();
+      case 'CHEAT_DISTANCE_INCONSISTENT':
+        return 'anti_cheat_distance_inconsistent'.tr();
+      case 'CHEAT_MIN_STEPS_NOT_MET':
+        return 'anti_cheat_min_steps_not_met'.tr();
+      case 'CHEAT_INVALID_STATE_TRANSITION':
+        return 'anti_cheat_invalid_state_transition'.tr();
+      case 'CHEAT_SHOES_BROKEN':
+        return 'anti_cheat_shoes_broken'.tr();
+      case 'CHEAT_NO_STAMINA':
+        return 'anti_cheat_no_stamina'.tr();
+      case 'CHEAT_DAILY_DISTANCE_LIMIT':
+        return 'anti_cheat_daily_distance_limit'.tr();
+      default:
+        return 'anti_cheat_violation'.tr();
+    }
+  }
+
+  /// Check if the exercise has anti-cheat violations
+  bool hasAntiCheatViolation() {
+    return selectedItem.value.antiCheatType != null &&
+        selectedItem.value.antiCheatType != 'VALID';
+  }
+
   Future<void> fetchRewards({bool refresh = false}) async {
     if (isLoading.value) return;
     if (!refresh && rewardPage >= totalPages) return;
+
+    // Don't fetch rewards if exercise has anti-cheat violations
+    if (hasAntiCheatViolation()) return;
 
     isLoading.value = true;
 

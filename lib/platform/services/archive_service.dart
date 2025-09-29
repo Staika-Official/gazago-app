@@ -28,7 +28,15 @@ class ArchiveService {
   static Future<void> getArchiveItem(int archiveId, String platform, {required Function successCallback, Function? errorCallback}) async {
     Response res = await ArchiveApi.getArchiveItem(userId!, archiveId, platform);
     if (res.statusCode == 200) {
-      successCallback(ArchiveDetailItemModel.fromJson(res.data));
+      if (res.data is List) {
+        if (res.data.isNotEmpty) {
+          final archiveDetail = ArchiveDetailItemModel.fromJson(res.data[0]);
+          successCallback(archiveDetail);
+        }
+      } else if (res.data is Map) {
+        final archiveDetail = ArchiveDetailItemModel.fromJson(res.data);
+        successCallback(archiveDetail);
+      }
     } else {
       if (errorCallback != null) errorCallback();
     }

@@ -1047,5 +1047,16 @@
   "gps_warmup_failed": "GPS warmup failed",
   "gps_initialization_failed": "GPS initialization failed",
   "acquiring_gps_signal": "Acquiring GPS signal...",
-  "ready": "Ready!"
+  "ready": "Ready!",
+  "anti_cheat_violation": "You have violated a rule:",
+  "anti_cheat_region_mismatch": "Your location does not match your registered region.",
+  "anti_cheat_speed_too_low": "Your average speed was outside the allowed range.",
+  "anti_cheat_speed_too_high": "Your average speed was outside the allowed range.",
+  "anti_cheat_distance_not_increased": "An abnormal distance was detected, and the session was ended.",
+  "anti_cheat_distance_inconsistent": "Checkpoints were missed or passed in the wrong order.",
+  "anti_cheat_min_steps_not_met": "You did not meet the minimum step requirement.",
+  "anti_cheat_invalid_state_transition": "An abnormal distance was detected, and the session was ended.",
+  "anti_cheat_shoes_broken": "You had insufficient Durability for this session.",
+  "anti_cheat_no_stamina": "You had insufficient Stamina for this session.",
+  "anti_cheat_daily_distance_limit": "You have exceeded the daily distance limit for earning rewards."
 }
