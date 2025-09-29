@@ -1015,10 +1015,17 @@ mixin ActivityMixin {
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;
 
-    // Cancel exceed speed limit subscription and reset dialog state
     exceedSpeedLimitSubscription?.cancel();
     exceedSpeedLimitSubscription = null;
     isSpeedWarningDialogShowing.value = false;
+
+    if (Get.isDialogOpen == true) {
+      try {
+        Get.back(); // Close dialog if open
+      } catch (e) {
+        // Ignore dialog close errors
+      }
+    }
 
     // Stop GPS tracking when paused to prevent route drawing during pause
     _stopEnhancedGPSTracking();
@@ -1053,6 +1060,19 @@ mixin ActivityMixin {
     }
 
     _isEndingExercise = true;
+
+    // This prevents race condition where GPS events arrive after exercise ends
+    exceedSpeedLimitSubscription?.cancel();
+    exceedSpeedLimitSubscription = null;
+    isSpeedWarningDialogShowing.value = false;
+
+    if (Get.isDialogOpen == true) {
+      try {
+        Get.back(); // Close dialog if open
+      } catch (e) {
+        // Ignore dialog close errors
+      }
+    }
 
     bool adjustFirstEndedExerciseEvent =
         HiveStore.load(key: HiveKey.adjustFirstEndedExerciseEvent.name) ??
@@ -1172,6 +1192,18 @@ mixin ActivityMixin {
   }
 
   void endExerciseLocally() {
+    exceedSpeedLimitSubscription?.cancel();
+    exceedSpeedLimitSubscription = null;
+    isSpeedWarningDialogShowing.value = false;
+
+    if (Get.isDialogOpen == true) {
+      try {
+        Get.back(); // Close dialog if open
+      } catch (e) {
+        // Ignore dialog close errors
+      }
+    }
+
     exerciseState.value = ExerciseState.ready;
     CurrentUserStateModel? savedState = HiveStore.loadCurrentUserState();
     if (savedState != null) {
@@ -1229,11 +1261,18 @@ mixin ActivityMixin {
     _circleUpdateDebounce?.cancel();
     _circleUpdateDebounce = null;
 
-    // Reset speed warning dialog state
     isSpeedWarningDialogShowing.value = false;
     _lastSpeedWarningShownAt = null;
     _lastTimeShowSpeedExceedWarning = null;
     _exerciseStartTime = null; // Reset exercise start time for warmup period
+
+    if (Get.isDialogOpen == true) {
+      try {
+        Get.back(); // Close dialog if open
+      } catch (e) {
+        // Ignore dialog close errors
+      }
+    }
   }
 
   void resetTimer() {
@@ -1277,6 +1316,18 @@ mixin ActivityMixin {
   }
 
   void handleAlreadyFinishedExercise() {
+    exceedSpeedLimitSubscription?.cancel();
+    exceedSpeedLimitSubscription = null;
+    isSpeedWarningDialogShowing.value = false;
+
+    if (Get.isDialogOpen == true) {
+      try {
+        Get.back(); // Close dialog if open
+      } catch (e) {
+        // Ignore dialog close errors
+      }
+    }
+
     exerciseState.value = ExerciseState.ready;
 
     // Clear saved exercise type when handling already finished exercise
@@ -1802,6 +1853,16 @@ mixin ActivityMixin {
   void _showExceedSpeedLimitWarningBottomSheet() {
     if (isSpeedWarningDialogShowing.value) {
       return;
+    }
+
+    // This fixes the race condition where GPS stream emits speed events after session cleanup
+    if (exerciseState.value != ExerciseState.ongoing) {
+      return; // Only show warning during active exercise
+    }
+
+    if ((this as ActivityController).selectedExerciseType.value !=
+        ExerciseType.treasureHunting) {
+      return; // Speed warnings only apply to treasure hunting mode
     }
 
     // Check warmup period - only show warning after 10 seconds from exercise start
