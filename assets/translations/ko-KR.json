@@ -1034,6 +1034,7 @@
   "referees_exceeds_maximum": "최대 추천 인원을\n초과했습니다.",
   "referral_redeem_success": "추천 코드가\n성공적으로 사용되었습니다!",
   "referral_redeem_failed": "추천 코드 사용에\n실패했습니다",
+  "referral_no_longer_available": "추천 기능을 더 이상 사용할 수 없습니다",
   "rewards_colon": "보상: ",
   "gem_unit": "TIK",
   "faq": "FAQ",

@@ -79,6 +79,8 @@ class ReferralService {
             return 'this_code_cannot_be_redeemed'.tr();
           case 'NUMBER_REFEREES_EXCEEDS_MAXIMUM':
             return 'referees_exceeds_maximum'.tr();
+          case 'USER_REFERRAL_IS_NOT_AVAILABLE':
+            return 'referral_no_longer_available'.tr();
           default:
             return errorMessage; // Use server message as-is for unknown errors
         }
@@ -94,6 +96,8 @@ class ReferralService {
           return 'this_code_cannot_be_redeemed'.tr();
         case 'NUMBER_REFEREES_EXCEEDS_MAXIMUM':
           return 'referees_exceeds_maximum'.tr();
+        case 'USER_REFERRAL_IS_NOT_AVAILABLE':
+          return 'referral_no_longer_available'.tr();
         default:
           return responseData['message'] ?? 'referral_redeem_failed'.tr();
       }

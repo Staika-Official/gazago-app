@@ -66,7 +66,8 @@ class ArchiveListItemModel {
     this.antiCheatType,
   });
 
-  factory ArchiveListItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveListItemModelFromJson(json);
+  factory ArchiveListItemModel.fromJson(Map<String, dynamic> json) =>
+      _$ArchiveListItemModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ArchiveListItemModelToJson(this);
 }

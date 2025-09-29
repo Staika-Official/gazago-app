@@ -1036,6 +1036,7 @@
   "referees_exceeds_maximum": "This referral code has reached\nits limit",
   "referral_redeem_success": "Referral code redeemed\nsuccessfully!",
   "referral_redeem_failed": "Failed to redeem\nreferral code",
+  "referral_no_longer_available": "Referral is no longer available",
   "rewards_colon": "Rewards: ",
   "gem_unit": "TIK",
   "faq": "FAQ",
