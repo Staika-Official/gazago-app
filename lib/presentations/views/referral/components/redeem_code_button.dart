@@ -80,8 +80,31 @@ class NoSpaceTextFormatter extends TextInputFormatter {
   }
 }
 
+class AlphanumericTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // Allow alphanumeric characters (A-Z, 0-9) and Vietnamese characters
+    // This pattern allows: A-Z, 0-9, Vietnamese characters (àáảãạăắằẳẵặâấầẩẫậđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵ)
+    final filteredText = newValue.text.replaceAll(
+        RegExp(
+            r'[^A-Za-z0-9àáảãạăắằẳẵặâấầẩẫậđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵÀÁẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ]'),
+        '');
+    return TextEditingValue(
+      text: filteredText,
+      selection: TextSelection.collapsed(offset: filteredText.length),
+    );
+  }
+}
+
 class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
   const RedeemCodeBottomSheet({super.key});
+
+  // Regex pattern for Vietnamese characters validation
+  static const String _regexPattern =
+      r'^[A-Za-z0-9àáảãạăắằẳẵặâấầẩẫậđéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵÀÁẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴ]{8}$';
 
   Future<void> _handleReferralCodeSubmission(
       String code,
@@ -93,7 +116,9 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
     isSubmitting.value = true;
 
     try {
-      // Call referral service directly with custom error handling
+      // Call referral service directly
+      // All API errors (including code not found) will show overlay dialog
+      // Only format validation errors are handled in bottom sheet
       await ReferralService.redeemReferralCode(
         controller.profile.value.id.toString(),
         code,
@@ -110,18 +135,13 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
           controller.refreshReferees();
         },
         errorCallback: (String errorMsg, bool isCodeNotFound) {
-          if (isCodeNotFound) {
-            // Show error in current dialog, don't close
-            hasError.value = true;
-            errorMessage.value = errorMsg;
-          } else {
-            // Close dialog and show overlay for other errors
-            Get.back();
-            OverlayDialog.showFailure(
-              title: 'failed'.tr(),
-              description: errorMsg,
-            );
-          }
+          // Close dialog and show overlay for all API errors
+          // Only validation errors (invalid format) should be shown in the bottom sheet
+          Get.back();
+          OverlayDialog.showFailure(
+            title: 'failed'.tr(),
+            description: errorMsg,
+          );
         },
       );
     } finally {
@@ -256,9 +276,11 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                 ),
                                 maxLength: 8,
                                 inputFormatters: [
-                                  NoSpaceTextFormatter(),
-                                  // Convert to uppercase automatically
+                                  // Convert to uppercase first
                                   UpperCaseTextFormatter(),
+                                  // Remove spaces
+                                  NoSpaceTextFormatter(),
+                                  AlphanumericTextFormatter(),
                                 ],
                                 decoration: InputDecoration(
                                   hintText: 'enter_8_char_code'.tr(),
@@ -289,8 +311,16 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                       errorMessage.value =
                                           'code_must_be_8_characters'.tr();
                                     } else {
-                                      hasError.value = false;
-                                      errorMessage.value = '';
+                                      final isValidFormat =
+                                          RegExp(_regexPattern).hasMatch(value);
+                                      if (!isValidFormat) {
+                                        hasError.value = true;
+                                        errorMessage.value =
+                                            'invalid_code_format'.tr();
+                                      } else {
+                                        hasError.value = false;
+                                        errorMessage.value = '';
+                                      }
                                     }
                                   }
                                 },
@@ -377,6 +407,15 @@ class RedeemCodeBottomSheet extends GetWidget<ReferralController> {
                                         errorMessage.value =
                                             'code_must_be_exactly_8_characters'
                                                 .tr();
+                                        return;
+                                      }
+
+                                      final isValidFormat =
+                                          RegExp(_regexPattern).hasMatch(code);
+                                      if (!isValidFormat) {
+                                        hasError.value = true;
+                                        errorMessage.value =
+                                            'invalid_code_format'.tr();
                                         return;
                                       }
 
