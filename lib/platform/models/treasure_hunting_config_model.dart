@@ -80,8 +80,20 @@ class TreasureHuntingConfigModel {
     }
 
     final now = DateTime.now();
-    return now.isAfter(treasureHuntDurationStart!) &&
-        now.isBefore(treasureHuntDurationEnd!);
+    final today = DateTime(now.year, now.month, now.day);
+    final start = DateTime(
+      treasureHuntDurationStart!.year,
+      treasureHuntDurationStart!.month,
+      treasureHuntDurationStart!.day,
+    );
+    final end = DateTime(
+      treasureHuntDurationEnd!.year,
+      treasureHuntDurationEnd!.month,
+      treasureHuntDurationEnd!.day,
+    );
+
+    return (today.isAfter(start) || today.isAtSameMomentAs(start)) &&
+        (today.isBefore(end) || today.isAtSameMomentAs(end));
   }
 
   /// Get formatted duration string in Korean format (YYYY-MM-DD)
@@ -97,12 +109,20 @@ class TreasureHuntingConfigModel {
   }
 
   /// Check if the treasure hunting event should be visible
-  /// Hide if the current date is past the end date
+  /// Hide if the current date is past the end date (date-only comparison)
   bool get shouldShowEvent {
     if (!isValidDuration) return true; // If no duration is set, always show
 
     final now = DateTime.now();
-    return now.isBefore(treasureHuntDurationEnd!);
+    final today = DateTime(now.year, now.month, now.day);
+    final end = DateTime(
+      treasureHuntDurationEnd!.year,
+      treasureHuntDurationEnd!.month,
+      treasureHuntDurationEnd!.day,
+    );
+
+    // Show if today is before or equal to end date
+    return today.isBefore(end) || today.isAtSameMomentAs(end);
   }
 
   /// Get title with maximum length to prevent UI overflow

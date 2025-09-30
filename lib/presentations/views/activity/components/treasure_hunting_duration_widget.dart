@@ -20,7 +20,15 @@ class TreasureHuntingDurationWidget extends StatelessWidget {
     if (!hasValidDates) return false;
 
     final now = DateTime.now();
-    return now.isBefore(endDate!);
+    final today = DateTime(now.year, now.month, now.day);
+    final end = DateTime(
+      endDate!.year,
+      endDate!.month,
+      endDate!.day,
+    );
+
+    // Show if today is before or equal to end date
+    return today.isBefore(end) || today.isAtSameMomentAs(end);
   }
 
   /// Format dates in Korean format (YYYY-MM-DD)
