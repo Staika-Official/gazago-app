@@ -53,8 +53,14 @@ class _RewardTabContentState extends State<RewardTabContent>
       ),
       child: Obx(
         () {
-          // Show anti-cheat violation message if there are violations
-          if (controller.hasAntiCheatViolation()) {
+          // Show loading indicator while fetching rewards
+          if (controller.rewards.isEmpty && controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // Check if there are no actual valuable rewards (empty or only "No reward" treasures)
+          // In this case, show the standard "no treasure collected" message regardless of anti-cheat status
+          if (controller.rewards.isEmpty || !controller.hasActualRewards()) {
             return Column(
               children: [
                 SizedBox(height: 24.sp),
@@ -63,7 +69,7 @@ class _RewardTabContentState extends State<RewardTabContent>
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 60.sp),
                   child: Text(
-                    "${'anti_cheat_violation'.tr()}\n${controller.getAntiCheatMessage(controller.selectedItem.value.antiCheatType ?? '')}",
+                    'no_treasure_was_collected_during_this_exercise'.tr(),
                     textAlign: TextAlign.center,
                     style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                           color: AppColorData.regular().colorTextPrimary,
@@ -74,11 +80,8 @@ class _RewardTabContentState extends State<RewardTabContent>
             );
           }
 
-          if (controller.rewards.isEmpty && controller.isLoading.value) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (controller.rewards.isEmpty) {
+          // Show anti-cheat violation message ONLY if there are actual rewards AND violations exist
+          if (controller.hasAntiCheatViolation()) {
             return Column(
               children: [
                 SizedBox(height: 24.sp),
@@ -87,7 +90,7 @@ class _RewardTabContentState extends State<RewardTabContent>
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 60.sp),
                   child: Text(
-                    'no_treasure_was_collected_during_this_exercise'.tr(),
+                    "${'anti_cheat_violation'.tr()}\n${controller.getAntiCheatMessage(controller.selectedItem.value.antiCheatType ?? '')}",
                     textAlign: TextAlign.center,
                     style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                           color: AppColorData.regular().colorTextPrimary,
