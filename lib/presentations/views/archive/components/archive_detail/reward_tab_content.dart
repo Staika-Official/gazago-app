@@ -58,29 +58,8 @@ class _RewardTabContentState extends State<RewardTabContent>
             return const Center(child: CircularProgressIndicator());
           }
 
-          // Check if there are no actual valuable rewards (empty or only "No reward" treasures)
-          // In this case, show the standard "no treasure collected" message regardless of anti-cheat status
-          if (controller.rewards.isEmpty || !controller.hasActualRewards()) {
-            return Column(
-              children: [
-                SizedBox(height: 24.sp),
-                iconEmpty,
-                SizedBox(height: 20.sp),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 60.sp),
-                  child: Text(
-                    'no_treasure_was_collected_during_this_exercise'.tr(),
-                    textAlign: TextAlign.center,
-                    style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
-                          color: AppColorData.regular().colorTextPrimary,
-                        ),
-                  ),
-                ),
-              ],
-            );
-          }
-
-          // Show anti-cheat violation message ONLY if there are actual rewards AND violations exist
+          // Check for anti-cheat violations FIRST (info available from record API)
+          // Show anti-cheat violation message if violations exist
           if (controller.hasAntiCheatViolation()) {
             return Column(
               children: [
@@ -91,6 +70,28 @@ class _RewardTabContentState extends State<RewardTabContent>
                   padding: EdgeInsets.symmetric(horizontal: 60.sp),
                   child: Text(
                     "${'anti_cheat_violation'.tr()}\n${controller.getAntiCheatMessage(controller.selectedItem.value.antiCheatType ?? '')}",
+                    textAlign: TextAlign.center,
+                    style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
+                          color: AppColorData.regular().colorTextPrimary,
+                        ),
+                  ),
+                ),
+              ],
+            );
+          }
+
+          // If no anti-cheat violations, check if there are no actual valuable rewards
+          // Show empty state only when there are no violations AND no rewards
+          if (controller.rewards.isEmpty || !controller.hasActualRewards()) {
+            return Column(
+              children: [
+                SizedBox(height: 24.sp),
+                iconEmpty,
+                SizedBox(height: 20.sp),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 60.sp),
+                  child: Text(
+                    'no_treasure_was_collected_during_this_exercise'.tr(),
                     textAlign: TextAlign.center,
                     style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                           color: AppColorData.regular().colorTextPrimary,
