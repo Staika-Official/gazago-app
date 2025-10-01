@@ -460,27 +460,6 @@ class UnifiedGPSManager extends GetxController {
         if (timeInterval > 0 && UnifiedGPSConfig.jumpDetectionEnabled) {
           final speed = (distance / timeInterval) * 3.6; // Convert to km/h
 
-          // Always emit speed exceed status for continuous monitoring
-          // Use activity-specific speed threshold if available, otherwise use default
-          final activityConfig =
-              UnifiedGPSConfig.getConfigForActivity(_currentActivityType);
-          final speedThreshold = activityConfig['speed_threshold'] ??
-              UnifiedGPSConfig.speedThreshold;
-
-          // For treasure hunting, always use GPS reported speed to prevent false warnings
-          // For other activities with more dynamic speed ranges, calculated speed is acceptable
-          // to catch potential GPS jumps that aren't caught by the reported speed
-          bool useCalculatedSpeed = _currentActivityType != 'treasure_hunting';
-
-          // Speed to use for validation
-          final validationSpeed =
-              useCalculatedSpeed ? speed : location.speedKmh;
-          if (validationSpeed > speedThreshold) {
-            _isExceedSpeedLimitStreamController.add(true);
-          } else {
-            _isExceedSpeedLimitStreamController.add(false);
-          }
-
           // Check for jumps within time window
           if (timeInterval <=
                   UnifiedGPSConfig.get<double>('jump_detection_time') &&
@@ -630,6 +609,9 @@ class UnifiedGPSManager extends GetxController {
     // Update metrics
     _updateLocationMetrics(location);
 
+    // Check speed only for valid locations (after filtering)
+    _checkSpeedExceedance(location);
+
     // Emit to stream
     _locationStreamController.add(location);
 
@@ -713,6 +695,34 @@ class UnifiedGPSManager extends GetxController {
       }
     } catch (e) {
       // Ignore recovery errors
+    }
+  }
+
+  /// Check if speed exceeds threshold for valid locations only
+  void _checkSpeedExceedance(LocationModel location) {
+    try {
+      // Only check speed for treasure hunting mode
+      if (_currentActivityType != 'treasure_hunting') {
+        return;
+      }
+
+      // Get activity-specific speed threshold
+      final activityConfig =
+          UnifiedGPSConfig.getConfigForActivity(_currentActivityType);
+      final speedThreshold = activityConfig['speed_threshold'] ??
+          UnifiedGPSConfig.speedThreshold;
+
+      // For treasure hunting, use GPS reported speed
+      // Only emit warning if speed clearly exceeds threshold
+      final validationSpeed = location.speedKmh;
+      
+      if (validationSpeed > speedThreshold) {
+        _isExceedSpeedLimitStreamController.add(true);
+      } else {
+        _isExceedSpeedLimitStreamController.add(false);
+      }
+    } catch (e) {
+      // Ignore speed check errors
     }
   }
 
