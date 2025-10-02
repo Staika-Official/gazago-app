@@ -193,11 +193,6 @@ class _DetailTabContentState extends State<DetailTabContent>
           secondPostFix: controller.selectedItem.value.spendStamina.toString(),
         ),
         _buildRowInfo(
-          title: 'available_user_stamina'.tr(),
-          secondPostFix:
-              controller.selectedItem.value.availableStamina?.toString(),
-        ),
-        _buildRowInfo(
           title: 'durability_used'.tr(),
           secondPostFix:
               controller.selectedItem.value.spendDurability.toString(),
