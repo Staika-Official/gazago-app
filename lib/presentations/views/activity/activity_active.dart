@@ -951,13 +951,24 @@ class ActivityActive extends StatelessWidget {
                                                             Text(
                                                               () {
                                                                 try {
+                                                                  final minSpeed = GPS.getMinValidSpeed(controller.selectedExerciseType.value.name);
+                                                                  final maxSpeed = GPS.maxValidSpeed;
+                                                                  
+                                                                  // Format speeds as integers if they are whole numbers
+                                                                  final minSpeedStr = minSpeed == minSpeed.toInt() 
+                                                                      ? minSpeed.toInt().toString() 
+                                                                      : minSpeed.toString();
+                                                                  final maxSpeedStr = maxSpeed == maxSpeed.toInt() 
+                                                                      ? maxSpeed.toInt().toString() 
+                                                                      : maxSpeed.toString();
+                                                                  
                                                                   return 'valid_distance_criteria'.tr(args: [
-                                                                    GPS.getMinValidSpeed(controller.selectedExerciseType.value.name).toString(),
-                                                                    GPS.maxValidSpeed.toString()
+                                                                    minSpeedStr,
+                                                                    maxSpeedStr
                                                                   ]);
                                                                 } catch (e) {
                                                                   // Fallback with hardcoded values
-                                                                  final minSpeed = controller.selectedExerciseType.value == ExerciseType.hiking ? '0.7' : '1';
+                                                                  final minSpeed = controller.selectedExerciseType.value == ExerciseType.hiking ? '1' : '1';
                                                                   return 'valid_distance_criteria'.tr(args: [minSpeed, '14']);
                                                                 }
                                                               }(),
