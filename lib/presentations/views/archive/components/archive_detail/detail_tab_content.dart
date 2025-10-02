@@ -65,7 +65,7 @@ class _DetailTabContentState extends State<DetailTabContent>
                       child: iconArchiveDistanceDetail,
                     ),
                     Text(
-                      '${formatDecimalPlaces(convertMetersToKm(controller.selectedItem.value.rewardDistance!), 3, isAutoDecimal: true)} km',
+                      '${formatDecimalPlaces(convertMetersToKm(controller.selectedItem.value.distance ?? controller.selectedItem.value.rewardDistance ?? 0), 3, isAutoDecimal: true)} km',
                       style: AppTextStyleData.regular().koBodyMediumLg.copyWith(
                             color: AppColorData.regular()
                                 .colorTextInteractivePrimary,
