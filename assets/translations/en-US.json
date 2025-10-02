@@ -649,7 +649,7 @@
   "lucky_effect": "Lucky Effect",
   "press_button": "Press the button",
   "valid_distance_guide": "Valid Distance Guide",
-  "valid_distance_criteria": "Valid distance is measured only for distances traveled at speeds of {}~{} km/h, Using transportation may result in inaccurate valid distance measurements.",
+  "valid_distance_criteria": "Valid distance is measured only for distances traveled at speeds of {}~{} km/h. Using transportation may result in inaccurate valid distance measurements.",
   "crew_buff_applied": "{} Crew Buff Applied",
   "start_end_points": "Start: {} - End: {}",
   "select_challenge": "Select Challenge",
