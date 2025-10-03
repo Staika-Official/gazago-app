@@ -91,6 +91,19 @@ class UnifiedGPSManager extends GetxController {
     _initializeManager();
   }
 
+  /// Clear speed limit stream to prevent queued events from triggering
+  void clearSpeedLimitStream() {
+    try {
+      // Note: We can't directly drain a broadcast stream, but we can
+      // ensure no new events are added and listeners handle state properly
+      if (_isExceedSpeedLimitStreamController.hasListener) {
+        _isExceedSpeedLimitStreamController.add(false);
+      }
+    } catch (e) {
+      // Ignore errors when clearing stream
+    }
+  }
+
   @override
   void onClose() {
     stopTracking();
@@ -361,6 +374,9 @@ class UnifiedGPSManager extends GetxController {
   Future<void> stopTracking() async {
     try {
       if (!isActive.value) return;
+
+      // Clear speed limit stream to prevent queued events
+      clearSpeedLimitStream();
 
       // Stop geolocator subscription
       await _positionSubscription?.cancel();
@@ -701,6 +717,9 @@ class UnifiedGPSManager extends GetxController {
   /// Check if speed exceeds threshold for valid locations only
   void _checkSpeedExceedance(LocationModel location) {
     try {
+      if (!isActive.value) {
+        return;
+      }
       // Only check speed for treasure hunting mode
       if (_currentActivityType != 'treasure_hunting') {
         return;
@@ -709,13 +728,13 @@ class UnifiedGPSManager extends GetxController {
       // Get activity-specific speed threshold
       final activityConfig =
           UnifiedGPSConfig.getConfigForActivity(_currentActivityType);
-      final speedThreshold = activityConfig['speed_threshold'] ??
-          UnifiedGPSConfig.speedThreshold;
+      final speedThreshold =
+          activityConfig['speed_threshold'] ?? UnifiedGPSConfig.speedThreshold;
 
       // For treasure hunting, use GPS reported speed
       // Only emit warning if speed clearly exceeds threshold
       final validationSpeed = location.speedKmh;
-      
+
       if (validationSpeed > speedThreshold) {
         _isExceedSpeedLimitStreamController.add(true);
       } else {

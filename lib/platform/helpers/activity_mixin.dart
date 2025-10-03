@@ -1015,6 +1015,8 @@ mixin ActivityMixin {
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;
 
+    UnifiedGPSManager.instance.clearSpeedLimitStream();
+
     exceedSpeedLimitSubscription?.cancel();
     exceedSpeedLimitSubscription = null;
     isSpeedWarningDialogShowing.value = false;
@@ -1060,6 +1062,8 @@ mixin ActivityMixin {
     }
 
     _isEndingExercise = true;
+
+    UnifiedGPSManager.instance.clearSpeedLimitStream();
 
     // This prevents race condition where GPS events arrive after exercise ends
     exceedSpeedLimitSubscription?.cancel();
@@ -1192,6 +1196,8 @@ mixin ActivityMixin {
   }
 
   void endExerciseLocally() {
+    UnifiedGPSManager.instance.clearSpeedLimitStream();
+
     exceedSpeedLimitSubscription?.cancel();
     exceedSpeedLimitSubscription = null;
     isSpeedWarningDialogShowing.value = false;
@@ -1296,6 +1302,9 @@ mixin ActivityMixin {
     HiveStore.initializeExerciseCoordinates();
     pedestrianStatusSubscription?.cancel();
     pedestrianStatusSubscription = null;
+
+    UnifiedGPSManager.instance.clearSpeedLimitStream();
+
     exceedSpeedLimitSubscription?.cancel();
     exceedSpeedLimitSubscription = null;
   }
@@ -1316,6 +1325,8 @@ mixin ActivityMixin {
   }
 
   void handleAlreadyFinishedExercise() {
+    UnifiedGPSManager.instance.clearSpeedLimitStream();
+
     exceedSpeedLimitSubscription?.cancel();
     exceedSpeedLimitSubscription = null;
     isSpeedWarningDialogShowing.value = false;
@@ -1851,13 +1862,18 @@ mixin ActivityMixin {
   }
 
   void _showExceedSpeedLimitWarningBottomSheet() {
-    if (isSpeedWarningDialogShowing.value) {
-      return;
-    }
-
-    // This fixes the race condition where GPS stream emits speed events after session cleanup
+    // This prevents race condition where stream events trigger after session ends
     if (exerciseState.value != ExerciseState.ongoing) {
       return; // Only show warning during active exercise
+    }
+
+    // Check if GPS tracking is still active
+    if (!UnifiedGPSManager.instance.isActive.value) {
+      return; // Don't show warning if GPS tracking has stopped
+    }
+
+    if (isSpeedWarningDialogShowing.value) {
+      return;
     }
 
     if ((this as ActivityController).selectedExerciseType.value !=
