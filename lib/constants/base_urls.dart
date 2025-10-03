@@ -3,7 +3,7 @@ class BaseUrl {
   static const String dev = 'https://api-qc-gazago.sotatek.works';
   // static const String dev = 'http://ci-ext.staika.io:8081';
   static const String stage = 'https://api.stage.staika.io';
-  static const String prod = 'https://api-qc-gazago.sotatek.works';
+  static const prod = 'https://api.staika.io';
 }
 
 class ServiceUrl {
