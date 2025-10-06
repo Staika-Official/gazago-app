@@ -59,6 +59,7 @@ class Api {
     bool isFile = false,
     bool allowCustomErrorHandler = false,
     bool showLoading = true,
+    bool showToastOnError = true,
   }) {
     _dio.options.baseUrl = '${F.baseUrl}$serviceUrl';
     // _dio.options.connectTimeout = 2000;
@@ -67,6 +68,7 @@ class Api {
     _dio.options.extra = {
       'allowCustomErrorHandler': allowCustomErrorHandler,
       'showLoading': showLoading,
+      'showToastOnError': showToastOnError,
     };
     _dio.options.headers['Content-Type'] = 'application/json; charset=utf-8';
 
@@ -132,41 +134,7 @@ class Api {
       }
     }
 
-    if (HiveStore.load(key: HiveKey.isDebuggingMode.name)) {
-      List requestLogs = HiveStore.load(key: HiveKey.requestLogs.name) ?? [];
-      dynamic logForm;
-      if (options.data != null &&
-          options.headers['Content-Type'] != null &&
-          options.headers['Content-Type'].contains('multipart')) {
-        final Map optData = json.decode(json.encode(options.data));
-        if (optData["locations"] != null) {
-          optData["locations"] = null;
-        }
-        logForm = {
-          'logInfo': '==================================================='
-              '\nREQUEST'
-              '\nTime: ${DateTime.now()}'
-              '\nMethods: ${options.method}'
-              '\nPath: ${options.baseUrl + options.path}'
-              '\nQueries: ${(options.queryParameters)}'
-              '\nData: ${jsonEncode(optData)}',
-          'path': options.baseUrl + options.path,
-        };
-      } else {
-        logForm = {
-          'logInfo': '==================================================='
-              '\nREQUEST'
-              '\nTime: ${DateTime.now()}'
-              '\nMethods: ${options.method}'
-              '\nPath: ${options.baseUrl + options.path}'
-              '\nQueries: ${(options.queryParameters)}',
-          'path': options.baseUrl + options.path,
-        };
-      }
-
-      requestLogs.add(logForm);
-      HiveStore.save(key: HiveKey.requestLogs.name, value: requestLogs);
-    }
+    final curl = _buildCurl(options);
 
     _logger.i(
       '------------->'
@@ -175,9 +143,10 @@ class Api {
       '\nHeader Content-Type: ${options.headers['Content-Type']}'
       '\nHeader Accept-Language: ${options.headers['Accept-Language']}'
       '\nHeader Authorization: ${options.headers['Authorization']}'
-      '\nPath: ${options.baseUrl + options.path}'
-      '\nQueries: ${(options.queryParameters)}'
-      '\nData: ${options.headers['Content-Type'] != null && options.headers['Content-Type'].contains('multipart') ? 'multipart data!' : jsonEncode(options.data)}',
+      '\nPath: ${options.uri}'
+      '\nQueries: ${options.queryParameters}'
+      '\nData: ${options.headers['Content-Type'] != null && options.headers['Content-Type'].contains('multipart') ? 'multipart data!' : jsonEncode(options.data)}'
+      '\nCURL: $curl',
     );
 
     handler.next(options);
@@ -265,7 +234,9 @@ class Api {
 
         if (errorData.errorMessage != null &&
             !e.requestOptions.extra['allowCustomErrorHandler']) {
-          showToastPopup(errorData.errorMessage!);
+          if (e.requestOptions.extra['showToastOnError'] == true) {
+            showToastPopup(errorData.errorMessage!);
+          }
         }
       } else if ([
         DioExceptionType.connectionTimeout,
@@ -494,5 +465,27 @@ class Api {
 
     if (getx.Get.currentRoute != Routes.login)
       getx.Get.offAllNamed(Routes.login);
+  }
+
+  static String _buildCurl(RequestOptions options) {
+    final method = options.method;
+    final url = options.uri.toString();
+
+    // Headers
+    final headers = options.headers.entries
+        .map((e) => "-H '${e.key}: ${e.value}'")
+        .join(' ');
+
+    // Data
+    String data = '';
+    if (options.data != null) {
+      if (options.data is Map || options.data is List) {
+        data = "-d '${jsonEncode(options.data)}'";
+      } else {
+        data = "-d '${options.data.toString()}'";
+      }
+    }
+
+    return "curl -X $method $headers $data '$url'";
   }
 }

@@ -57,11 +57,8 @@ class DefaultContainer extends StatelessWidget {
             ),
       ),
       body: disableSafeArea
-          ? Container(
-              child: child,
-            )
+          ? child
           : SafeArea(
-              bottom: false,
               child: child,
             ),
     );

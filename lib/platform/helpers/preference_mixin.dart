@@ -1,5 +1,6 @@
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
+import 'package:gaza_go/platform/models/member_user_model.dart';
 import 'package:gaza_go/platform/models/user_account_model.dart';
 import 'package:gaza_go/platform/services/member_service.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
@@ -23,18 +24,23 @@ mixin PreferenceMixin {
 
   Future<void> getProfileInfo() async {
     await MemberService.getMemberUserInfo(
-      successCallback: (account) {
+      successCallback: (MemberUserModel account) {
         profile.update(
           (state) {
+            // Map from MemberUserModel to UserAccountModel
             state?.nickname = account.nickname;
             state?.profileImageUrl = account.profileImageUrl;
             state?.availableChangeNickname = account.availableChangeNickname;
             state?.provider = account.provider;
-            state?.email = account.email;
+            state?.email = account.email ?? '';
             state?.id = account.id;
+            state?.userCode = account.userCode;
+            state?.marketingChecked = account.marketingChecked;
+            state?.alarmEvent = account.alarmEvent;
+            state?.alarmTransaction = account.alarmTransaction;
           },
         );
-        originalNickname.value = account.nickname!;
+        originalNickname.value = account.nickname ?? '';
       },
       errorCallback: (message) {
         showToastPopup(message);

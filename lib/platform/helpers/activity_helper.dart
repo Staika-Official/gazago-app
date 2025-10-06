@@ -1,10 +1,9 @@
 import 'dart:math';
 
-import 'package:geolocator/geolocator.dart';
-
 double calculateAvgSpeed(List<double> speedList) {
   if (speedList.isNotEmpty) {
-    double sumSpeed = speedList.fold(0, (summedValue, speed) => summedValue + speed);
+    double sumSpeed =
+        speedList.fold(0, (summedValue, speed) => summedValue + speed);
     return sumSpeed / speedList.length >= 0 ? sumSpeed / speedList.length : 0;
   } else {
     return 0;
@@ -12,7 +11,8 @@ double calculateAvgSpeed(List<double> speedList) {
 }
 
 double convertMStoKMH(double avgSpeedMS) {
-  return (avgSpeedMS * 3600 / 1000);
+  double result = (avgSpeedMS * 3600 / 1000);
+  return result;
 }
 
 double convertMetersToKm(double meters) {
@@ -24,14 +24,27 @@ double convertKmToMeters(double km) {
 }
 
 double calculateTotalDistance(List<double> distanceList) {
-  return distanceList.fold(0, (summedValue, distance) => summedValue + distance);
+  return distanceList.fold(
+      0, (summedValue, distance) => summedValue + distance);
 }
 
 double calculateDistance(lat1, lon1, lat2, lon2) {
-  // var p = 0.017453292519943295;
-  // var a = 0.5 - cos((lat2 - lat1) * p) / 2 + cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p)) / 2;
-  // return 12742 * asin(sqrt(a));
-  return convertMetersToKm(Geolocator.distanceBetween(lat1, lon1, lat2, lon2));
+  // Haversine formula implementation
+  const double earthRadius = 6371000; // Earth radius in meters
+
+  double lat1Rad = lat1 * (pi / 180);
+  double lat2Rad = lat2 * (pi / 180);
+  double deltaLatRad = (lat2 - lat1) * (pi / 180);
+  double deltaLngRad = (lon2 - lon1) * (pi / 180);
+
+  double a = (sin(deltaLatRad / 2) * sin(deltaLatRad / 2)) +
+      (cos(lat1Rad) *
+          cos(lat2Rad) *
+          sin(deltaLngRad / 2) *
+          sin(deltaLngRad / 2));
+  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+  return convertMetersToKm(earthRadius * c);
 }
 
 double highestClimbed(List<double> altitudeList) {
@@ -40,9 +53,12 @@ double highestClimbed(List<double> altitudeList) {
 
 bool batchIsInProgress() {
   DateTime currentDateTime = DateTime.now().toUtc();
-  DateTime batchProcessStartDateTime = DateTime.utc(currentDateTime.year, currentDateTime.month, currentDateTime.day, 14, 55);
-  DateTime batchProcessEndDateTime = DateTime.utc(currentDateTime.year, currentDateTime.month, currentDateTime.day, 15, 5);
-  if (currentDateTime.isAfter(batchProcessStartDateTime) && currentDateTime.isBefore(batchProcessEndDateTime)) {
+  DateTime batchProcessStartDateTime = DateTime.utc(
+      currentDateTime.year, currentDateTime.month, currentDateTime.day, 14, 55);
+  DateTime batchProcessEndDateTime = DateTime.utc(
+      currentDateTime.year, currentDateTime.month, currentDateTime.day, 15, 5);
+  if (currentDateTime.isAfter(batchProcessStartDateTime) &&
+      currentDateTime.isBefore(batchProcessEndDateTime)) {
     return true;
   } else {
     return false;

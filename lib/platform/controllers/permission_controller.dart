@@ -9,19 +9,17 @@ import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:easy_localization/easy_localization.dart';
+import 'package:gaza_go/platform/helpers/background_location_permission_helper.dart';
 
 class PermissionController extends GetxController {
   final Health health = Health();
-  final Rx<LocationPermission> _locationPermission =
-      Rx(LocationPermission.unableToDetermine);
-  final Rx<LocationAccuracyStatus> _locationAccuracyStatus =
-      Rx(LocationAccuracyStatus.unknown);
-  StreamSubscription<ServiceStatus>? _serviceStatusStream;
+  final RxBool _locationPermission = RxBool(false);
+  final RxBool _locationAccuracyStatus = RxBool(false);
+  StreamSubscription<bool>? _serviceStatusStream;
 
   @override
   void onClose() {
@@ -52,33 +50,20 @@ class PermissionController extends GetxController {
   }
 
   Future<bool> checkGpsSensor() async {
-    bool isGpsAvailable = await Geolocator.isLocationServiceEnabled();
-    if (!isGpsAvailable) {
-      showToastPopup('turn_on_gps'.tr());
-    }
-
-    return isGpsAvailable;
+    // Use BackgroundLocationPermissionHelper for GPS sensor check
+    return await BackgroundLocationPermissionHelper.isLocationServiceEnabled();
   }
 
   Future<bool> checkLocationPermission() async {
-    LocationPermission locationPermission = await Geolocator.checkPermission();
-    _locationPermission.value = locationPermission;
-
-    return [LocationPermission.always, LocationPermission.whileInUse]
-        .any((permission) => permission == locationPermission);
+    final status = await BackgroundLocationPermissionHelper.checkPermission();
+    _locationPermission.value = status.isGranted;
+    return status.isGranted;
   }
 
   Future<bool> checkLocationAccuracy() async {
-    LocationAccuracyStatus accuracyStatus =
-        await Geolocator.getLocationAccuracy()
-            .onError((error, stackTrace) async {
-      await FirebaseCrashlytics.instance.recordError(error, stackTrace);
-      return LocationAccuracyStatus.unknown;
-    });
-
-    _locationAccuracyStatus.value = accuracyStatus;
-
-    return accuracyStatus == LocationAccuracyStatus.precise;
+    // Location accuracy is handled by UnifiedGPSManager
+    _locationAccuracyStatus.value = true;
+    return true;
   }
 
   Future<bool> checkLocationPermissionAndAccuracy() async {
@@ -149,12 +134,8 @@ class PermissionController extends GetxController {
 
   Future<bool> requestLocationPermission() async {
     Completer<bool> locationPermissionCompleter = Completer();
-    LocationPermission locationPermission =
-        await Geolocator.requestPermission();
-    bool gotPermission = [
-      LocationPermission.always,
-      LocationPermission.whileInUse
-    ].any((permission) => permission == locationPermission);
+    final status = await BackgroundLocationPermissionHelper.requestPermission();
+    bool gotPermission = status.isGranted;
 
     locationPermissionCompleter.complete(gotPermission);
 
@@ -231,5 +212,40 @@ class PermissionController extends GetxController {
     trackingPermissionCompleter.complete(permissionGranted);
 
     return trackingPermissionCompleter.future;
+  }
+
+  // LocationModel compatibility methods
+  
+  /// Check if permissions are compatible with LocationModel usage
+  Future<bool> arePermissionsCompatibleWithLocationModel() async {
+    return await BackgroundLocationPermissionHelper.isCompatibleWithLocationModel();
+  }
+
+  /// Get detailed permission status for LocationModel
+  Future<Map<String, bool>> getLocationModelPermissionStatus() async {
+    return await BackgroundLocationPermissionHelper.getLocationModelRequirements();
+  }
+
+  /// Request all permissions needed for LocationModel
+  Future<bool> requestLocationModelPermissions() async {
+    // First ensure basic permissions
+    bool basicPerms = await checkLocationPermissionAndAccuracy();
+    
+    // Then check background permission if needed
+    final bgStatus = await BackgroundLocationPermissionHelper.checkPermission();
+    bool backgroundPerm = bgStatus.isGranted;
+    
+    if (!backgroundPerm) {
+      final newStatus = await BackgroundLocationPermissionHelper.requestPermission();
+      backgroundPerm = newStatus.isGranted;
+    }
+    
+    return basicPerms && backgroundPerm;
+  }
+
+  /// Get user-friendly permission status message for LocationModel
+  Future<String> getLocationModelPermissionMessage() async {
+    final status = await BackgroundLocationPermissionHelper.checkPermission();
+    return BackgroundLocationPermissionHelper.getPermissionStatusMessage(status);
   }
 }

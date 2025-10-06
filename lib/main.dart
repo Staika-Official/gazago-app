@@ -6,7 +6,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/flavors.dart';
@@ -14,6 +13,8 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/controllers/global_controller.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/controllers/wallet_master_controller.dart';
+import 'package:gaza_go/platform/configs/unified_gps_config.dart';
+import 'package:gaza_go/platform/managers/unified_gps_manager.dart';
 import 'package:gaza_go/platform/firebase/core.dart';
 import 'package:gaza_go/platform/firebase/crashlytics.dart';
 import 'package:gaza_go/platform/helpers/login_helper.dart';
@@ -121,7 +122,6 @@ Future<void> checkRegion() async {
 
 void main() async {
   await runZonedGuarded(() async {
-    int isServiceInspection = 0;
     WidgetsFlutterBinding.ensureInitialized(); // async로 할 때 반드시 호출
     await EasyLocalization.ensureInitialized();
 
@@ -156,6 +156,18 @@ void main() async {
     await initializeDateFormatting();
     await requestNotificationPermission();
     await requestTrackingPermission();
+
+    // Initialize UnifiedGPSManager early in app lifecycle
+    print('🌍 Initializing Unified GPS System...');
+    UnifiedGPSConfig.initialize();
+    // Initialize GPS manager and request permissions
+    final gpsPermissionGranted = await GPS.checkAndRequestPermissions();
+    if (gpsPermissionGranted) {
+      print('✅ GPS System initialized with permissions');
+    } else {
+      print('⚠️ GPS System initialized but permissions not granted');
+    }
+
     await checkInspectionNotice();
 
     runApp(EasyLocalization(

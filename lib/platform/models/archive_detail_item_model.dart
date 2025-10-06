@@ -26,6 +26,7 @@ class ArchiveDetailItemModel {
   String? badgeImageUrl;
   double? spendDurability;
   double? spendStamina;
+  double? availableStamina;
   String? title;
   String? firstName;
   String? secondName;
@@ -40,6 +41,7 @@ class ArchiveDetailItemModel {
   String? locationsStr;
   ChallengeCourseModel? challengeCourse;
   bool? isTwoMonthAgo;
+  String? antiCheatType;
 
   ArchiveDetailItemModel({
     this.id,
@@ -63,6 +65,7 @@ class ArchiveDetailItemModel {
     this.badgeImageUrl,
     this.spendDurability,
     this.spendStamina,
+    this.availableStamina,
     this.title,
     this.firstName,
     this.secondName,
@@ -77,9 +80,11 @@ class ArchiveDetailItemModel {
     this.locationsStr,
     this.challengeCourse,
     this.isTwoMonthAgo,
+    this.antiCheatType,
   });
 
-  factory ArchiveDetailItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveDetailItemModelFromJson(json);
+  factory ArchiveDetailItemModel.fromJson(Map<String, dynamic> json) =>
+      _$ArchiveDetailItemModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ArchiveDetailItemModelToJson(this);
 }

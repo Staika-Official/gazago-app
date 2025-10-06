@@ -10,6 +10,7 @@ enum ExerciseType {
   famous,
   hiking,
   walking,
+  treasureHunting,
 }
 
 enum Nationality { local, foreigner, none }
@@ -23,6 +24,26 @@ extension ExerciseTypeValue on ExerciseType {
         return 'WALKING';
       case ExerciseType.famous:
         return 'FAMOUS_MOUNTAIN_100';
+      case ExerciseType.treasureHunting:
+        return 'TREASURE_HUNTING';
+    }
+  }
+  
+  /// Convert string type from API to ExerciseType enum
+  static ExerciseType fromString(String? type) {
+    if (type == null) return ExerciseType.walking;
+    
+    switch (type.toUpperCase()) {
+      case 'HIKING':
+        return ExerciseType.hiking;
+      case 'WALKING':
+        return ExerciseType.walking;
+      case 'FAMOUS_MOUNTAIN_100':
+        return ExerciseType.famous;
+      case 'TREASURE_HUNTING':
+        return ExerciseType.treasureHunting;
+      default:
+        return ExerciseType.walking; // Default fallback
     }
   }
 }
@@ -121,6 +142,7 @@ enum HiveKey {
   serviceStatus,
   isAlreadySigninUser,
   serviceLanguage,
+  selectedExerciseType,
 }
 
 enum ResponseStatus {
@@ -272,6 +294,7 @@ enum NotificationType {
   durabilityLow,
   durabilityDepleted,
   gpsLow,
+  treasure,
   normal,
 }
 
@@ -290,6 +313,8 @@ extension NotificationId on NotificationType {
         return 3;
       case NotificationType.gpsLow:
         return 4;
+      case NotificationType.treasure:
+        return 6;
       case NotificationType.normal:
         return 5;
     }

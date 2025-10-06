@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gaza_go/presentations/widgets/custom_user_location_layer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gaza_go/constants/config.dart';
@@ -19,8 +20,22 @@ import 'package:gaza_go/presentations/styles/styled_text.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:easy_localization/easy_localization.dart';
 
-class ActivityChallengeCourses extends StatelessWidget {
+class ActivityChallengeCourses extends StatefulWidget {
   const ActivityChallengeCourses({super.key});
+
+  @override
+  State<ActivityChallengeCourses> createState() =>
+      _ActivityChallengeCoursesState();
+}
+
+class _ActivityChallengeCoursesState extends State<ActivityChallengeCourses> {
+  ActivityController controller = Get.find();
+
+  @override
+  void dispose() {
+    controller.challengeMapControllers.removeLast();
+    super.dispose();
+  }
 
   List<Widget> renderCourseList(ActivityController controller) {
     if (controller.doableCoursesByChallenge.isNotEmpty) {
@@ -85,8 +100,6 @@ class ActivityChallengeCourses extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ActivityController controller = Get.find();
-
     return Scaffold(
       body: Obx(() {
         return Stack(
@@ -94,15 +107,18 @@ class ActivityChallengeCourses extends StatelessWidget {
           alignment: Alignment.topCenter,
           children: [
             Obx(
-              () => GoogleMap(
+              () => EnhancedGoogleMap(
                 markers: Set.of(controller.drawingMarkers),
                 polylines: Set.of(controller.drawingPolylines),
                 polygons: Set.of(controller.drawingPolygons),
                 circles: Set.of(controller.drawingCircles),
+                useCustomLocationLayer: true,
                 mapType: MapType.normal,
                 initialCameraPosition: CameraPosition(
-                  target: LatLng(controller.currentLocation.value.latitude,
-                      controller.currentLocation.value.longitude),
+                  target: LatLng(
+                    controller.currentLocation.value?.latitude ?? 31.5,
+                    controller.currentLocation.value?.longitude ?? 34.4
+                  ),
                   zoom: 14,
                 ),
                 gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
@@ -111,7 +127,7 @@ class ActivityChallengeCourses extends StatelessWidget {
                   ),
                 },
                 onMapCreated: (mapController) {
-                  controller.challengeMapController = mapController;
+                  controller.challengeMapControllers.add(mapController);
                   controller.onChallengeMapCreated();
                   Future.delayed(const Duration(milliseconds: 100), () {
                     controller.addOverlayAll(

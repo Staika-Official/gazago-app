@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+import 'package:gaza_go/presentations/widgets/custom_user_location_layer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/models/challenge_course_model.dart';
@@ -14,9 +16,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart' hide Trans;
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 
-class ChallengeMap extends StatelessWidget {
+class ChallengeMap extends StatefulWidget {
   const ChallengeMap({super.key});
 
+  @override
+  State<ChallengeMap> createState() => _ChallengeMapState();
+}
+
+class _ChallengeMapState extends State<ChallengeMap> {
   List<Circle> renderStartPoint(ActivityController controller) {
     List<Circle> centerCircles = controller.allCoursesList
         .map(
@@ -132,13 +139,19 @@ class ChallengeMap extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    ActivityController controller = Get.find();
+  void dispose() {
+    controller.challengeMapControllers.removeLast();
+    super.dispose();
+  }
 
+  ActivityController controller = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: ExpandableBottomSheet(
         //use the key to get access to expand(), contract() and expansionStatus
-        key: key,
+        key: widget.key,
 
         //optional; default: Duration(milliseconds: 250)
         //The durations of the animations.
@@ -163,11 +176,12 @@ class ChallengeMap extends StatelessWidget {
           alignment: Alignment.topCenter,
           children: [
             Obx(
-              () => GoogleMap(
+              () => EnhancedGoogleMap(
                 markers: Set.of(controller.drawingMarkers),
                 polylines: Set.of(controller.drawingPolylines),
                 polygons: Set.of(controller.drawingPolygons),
                 circles: Set.of(controller.drawingCircles),
+                useCustomLocationLayer: true,
                 tiltGesturesEnabled: true,
                 padding: const EdgeInsets.only(bottom: 150),
                 mapType: MapType.normal,
@@ -177,11 +191,11 @@ class ChallengeMap extends StatelessWidget {
                   ),
                 },
                 initialCameraPosition:
-                    controller.currentLocation.value.latitude > 0
+                    controller.currentLocation.value != null && controller.currentLocation.value!.latitude > 0
                         ? CameraPosition(
                             target: LatLng(
-                                controller.currentLocation.value.latitude,
-                                controller.currentLocation.value.longitude),
+                                controller.currentLocation.value!.latitude,
+                                controller.currentLocation.value!.longitude),
                             zoom: 14,
                           )
                         : const CameraPosition(
@@ -189,7 +203,7 @@ class ChallengeMap extends StatelessWidget {
                             zoom: 14,
                           ),
                 onMapCreated: (mapController) {
-                  controller.challengeMapController = mapController;
+                  controller.challengeMapControllers.add(mapController);
                   controller.onChallengeMapCreated();
                   Future.delayed(const Duration(milliseconds: 100), () {
                     controller.addOverlayAll(

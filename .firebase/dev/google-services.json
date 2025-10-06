@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "232716676384-0ejb9r5kfbf13bnvdh0h72harr0ucekg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo.dev",
+            "certificate_hash": "5f9400c6971163c4280bc537e4dc2a146eb1db9f"
+          }
+        },
+        {
+          "client_id": "232716676384-4a1rfed042fukdpp6jnptqd5au6gkt68.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo.dev",
+            "certificate_hash": "9424f2144388cd01d3625f2df518da599926d2f3"
+          }
+        },
+        {
           "client_id": "232716676384-5giv1u5kkis42383904rmbrvsh4ukm23.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -23,11 +39,27 @@
           }
         },
         {
+          "client_id": "232716676384-907p8vjjibr0f07p1m1pb6s720q1nd90.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo.dev",
+            "certificate_hash": "9c453099e59e2debca3872afca8e32a4e2095336"
+          }
+        },
+        {
           "client_id": "232716676384-dcu40b5ttfklj1s8d1kocg3cr8i1uaum.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "kr.co.eztechfin.gazaGo.dev",
             "certificate_hash": "c5576cfbd23e87b508d8dcbf1c0346d94a71657f"
+          }
+        },
+        {
+          "client_id": "232716676384-f8a8fmkade25el9pfs05dn1egl5v7tce.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo.dev",
+            "certificate_hash": "ff18b6e851d8cfc8ffdade8cdd7943b2ea9fbbd0"
           }
         },
         {
@@ -84,6 +116,14 @@
           "android_info": {
             "package_name": "kr.co.eztechfin.gazaGo.dev",
             "certificate_hash": "f2af0eb98fd77960cfc438c580a47f58c2c09ff5"
+          }
+        },
+        {
+          "client_id": "232716676384-u2hq58fc47k3enbsf1mmjik9g7v7m14r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo.dev",
+            "certificate_hash": "b10a8c793448734f91491a8c186048e971ce5669"
           }
         },
         {

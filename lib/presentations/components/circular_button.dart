@@ -8,6 +8,7 @@ class CircularButton extends StatelessWidget {
   final Function? onTapDown;
   final Function? onTapUp;
   final Widget child;
+  final EdgeInsetsGeometry? padding;
 
   const CircularButton({
     super.key,
@@ -17,18 +18,22 @@ class CircularButton extends StatelessWidget {
     this.onTapDown,
     this.onTapUp,
     required this.child,
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      onTapDown: onTapDown != null ? (tapDownDetail) => onTapDown!(tapDownDetail) : null,
+      onTapDown: onTapDown != null
+          ? (tapDownDetail) => onTapDown!(tapDownDetail)
+          : null,
       onTapUp: onTapUp != null ? (tapUpDetail) => onTapUp!(tapUpDetail) : null,
       child: Container(
         width: radius,
         height: radius,
-        padding: EdgeInsets.symmetric(vertical: 10.sp, horizontal: 12.sp),
+        padding:
+            padding ?? EdgeInsets.symmetric(vertical: 10.sp, horizontal: 12.sp),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius),
           color: color,

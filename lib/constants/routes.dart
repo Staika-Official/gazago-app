@@ -55,6 +55,7 @@ import 'package:gaza_go/presentations/views/preferences/preference_board.dart';
 import 'package:gaza_go/presentations/views/preferences/terms_list.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_completed.dart';
 import 'package:gaza_go/presentations/views/preferences/withdraw_confirm.dart';
+import 'package:gaza_go/presentations/views/referral/index.dart';
 import 'package:gaza_go/presentations/views/shop/shop_item_detail.dart';
 import 'package:gaza_go/presentations/views/term.dart';
 import 'package:gaza_go/presentations/views/verification/verification_cert_code.dart';
@@ -129,12 +130,15 @@ class Routes {
   static const userExerciseDataLogs = '/debugging/user_exercise_data_logs';
   static const positionRawDataLogs = '/debugging/position_raw_data_logs';
   static const laboratory = '/laboratory';
-  static const laboratorySolanaCreateWallet = '/laboratory/laboratory_solana_create_wallet';
-  static const laboratorySolanaTransfer = '/laboratory/laboratory_solana_transfer';
+  static const laboratorySolanaCreateWallet =
+      '/laboratory/laboratory_solana_create_wallet';
+  static const laboratorySolanaTransfer =
+      '/laboratory/laboratory_solana_transfer';
   static const laboratoryEndPoint = '/laboratory/end_point';
   static const laboratoryFakeGps = '/laboratory/fake_gps';
   static const laboratoryKakaoShare = '/laboratory/kakao_share';
-  static const laboratoryDetectChallengeCourse = '/laboratory/detect_challenge_course';
+  static const laboratoryDetectChallengeCourse =
+      '/laboratory/detect_challenge_course';
   static const laboratoryChangeLanguage = '/laboratory/change_language';
   static const shopItemDetail = '/shop/item/detail';
   static const adMobRewarded = '/admob/reward';
@@ -146,7 +150,8 @@ class Routes {
   static const sendStikGoWallet = '/wallet/send_stik_go_wallet';
   static const sendStikStaikaWallet = '/wallet/send_stik_staika_wallet';
   static const challengeDetail = '/challenges/challenge_detail/:id';
-  static const companyChallengeDetail = '/challenges/company_challenge_detail/:id';
+  static const companyChallengeDetail =
+      '/challenges/company_challenge_detail/:id';
   static const challengeCourseDetail = '/activity/challenge_course_detail';
   static const leaderboard = '/leaderboard';
   static const fairPlayView = '/fair_play_view';
@@ -158,6 +163,8 @@ class Routes {
   static const collectionDetail = '/collection_detail';
   static const collectionRewardDetail = '/collection_reward_detail';
   static const createWalletWebview = '/create_wallet_webview';
+  static const referral = '/referral';
+  static const gpsDebug = '/gps_debug';
 
   static List<GetPage> pages = [
     stepPage(name: Routes.login, page: const Login()),
@@ -177,7 +184,9 @@ class Routes {
     stepPage(name: Routes.term, page: const Term()),
     stepPage(name: Routes.termsList, page: const TermsList()),
     stepPage(name: Routes.archiveDetail, page: const ArchiveDetail()),
-    stepPage(name: Routes.activityChallenges, page: const ActivityChallengeCourses()),
+    stepPage(
+        name: Routes.activityChallenges,
+        page: const ActivityChallengeCourses()),
     stepPage(name: Routes.activityActive, page: const ActivityActive()),
     stepPage(name: Routes.challengeMap, page: const ChallengeMap()),
     stepPage(name: Routes.activityMap, page: const ActivityMap()),
@@ -190,7 +199,8 @@ class Routes {
     stepPage(name: Routes.verificationName, page: const VerificationName()),
     stepPage(name: Routes.verificationDetail, page: const VerificationDetail()),
     stepPage(name: Routes.verificationPhone, page: const VerificationPhone()),
-    stepPage(name: Routes.verificationCertCode, page: const VerificationCertCode()),
+    stepPage(
+        name: Routes.verificationCertCode, page: const VerificationCertCode()),
     stepPage(name: Routes.myPage, page: const MyPage()),
     stepPage(name: Routes.editBiometrics, page: const EditBiometrics()),
     stepPage(name: Routes.withdrawConfirm, page: const WithdrawConfirm()),
@@ -200,7 +210,8 @@ class Routes {
     stepPage(name: Routes.buyTik, page: const BuyTik()),
     stepPage(name: Routes.walletActions, page: const WalletActions()),
     stepPage(name: Routes.walletNftList, page: const NftList()),
-    stepPage(name: Routes.walletOnChainNftDetail, page: const OnChainNftDetail()),
+    stepPage(
+        name: Routes.walletOnChainNftDetail, page: const OnChainNftDetail()),
     stepPage(name: Routes.taikaPay, page: const TaikaPay()),
     stepPage(name: Routes.inventory, page: const InventoryHome()),
     stepPage(name: Routes.itemDetail, page: const InventoryItemDetail()),
@@ -213,27 +224,45 @@ class Routes {
     stepPage(name: Routes.requestInfo, page: const RequestInfo()),
     stepPage(name: Routes.responseErrorLogs, page: const ResponseErrorLogs()),
     stepPage(name: Routes.activityLogs, page: const ActivityLogs()),
-    stepPage(name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
-    stepPage(name: Routes.positionRawDataLogs, page: const PositionRawDataLogs()),
+    stepPage(
+        name: Routes.userExerciseDataLogs, page: const UserExerciseDataLogs()),
+    stepPage(
+        name: Routes.positionRawDataLogs, page: const PositionRawDataLogs()),
     stepPage(name: Routes.shopItemDetail, page: const ShopItemDetail()),
     stepPage(name: Routes.laboratory, page: const Laboratory()),
-    stepPage(name: Routes.laboratorySolanaCreateWallet, page: const LaboratorySolanaCreateWallet()),
-    stepPage(name: Routes.laboratorySolanaTransfer, page: const LaboratorySolanaTransfer()),
-    stepPage(name: Routes.laboratoryDetectChallengeCourse, page: const LaboratoryDetectChallengeCourse()),
-    stepPage(name: Routes.laboratoryChangeLanguage, page: const LaboratoryChangeLanguage()),
+    stepPage(
+        name: Routes.laboratorySolanaCreateWallet,
+        page: const LaboratorySolanaCreateWallet()),
+    stepPage(
+        name: Routes.laboratorySolanaTransfer,
+        page: const LaboratorySolanaTransfer()),
+    stepPage(
+        name: Routes.laboratoryDetectChallengeCourse,
+        page: const LaboratoryDetectChallengeCourse()),
+    stepPage(
+        name: Routes.laboratoryChangeLanguage,
+        page: const LaboratoryChangeLanguage()),
     stepPage(name: Routes.webView, page: const WebView()),
     stepPage(name: Routes.noticeWebView, page: const NoticeWebView()),
     stepPage(name: Routes.laboratoryEndPoint, page: const LaboratoryEndPoint()),
     stepPage(name: Routes.laboratoryFakeGps, page: const LaboratoryFakeGps()),
-    stepPage(name: Routes.laboratoryKakaoShare, page: const LaboratoryKakaoShare()),
-    stepPage(name: Routes.createWalletPassword, page: const CreateWalletPassword()),
+    stepPage(
+        name: Routes.laboratoryKakaoShare, page: const LaboratoryKakaoShare()),
+    stepPage(
+        name: Routes.createWalletPassword, page: const CreateWalletPassword()),
     stepPage(name: Routes.createWallet, page: const CreateWallet()),
-    stepPage(name: Routes.createWalletWebview, page: const CreateWalletWebview()),
+    stepPage(
+        name: Routes.createWalletWebview, page: const CreateWalletWebview()),
     stepPage(name: Routes.sendStikGoWallet, page: const SendStikGoWallet()),
-    stepPage(name: Routes.sendStikStaikaWallet, page: const SendStikStaikaWallet()),
+    stepPage(
+        name: Routes.sendStikStaikaWallet, page: const SendStikStaikaWallet()),
     stepPage(name: Routes.challengeDetail, page: const ChallengeDetail()),
-    stepPage(name: Routes.companyChallengeDetail, page: const CompanyChallengeDetail()),
-    stepPage(name: Routes.challengeCourseDetail, page: const ChallengeCourseDetail()),
+    stepPage(
+        name: Routes.companyChallengeDetail,
+        page: const CompanyChallengeDetail()),
+    stepPage(
+        name: Routes.challengeCourseDetail,
+        page: const ChallengeCourseDetail()),
     stepPage(name: Routes.leaderboard, page: const RankingHome()),
     stepPage(name: Routes.fairPlayView, page: const FairPlayView()),
     stepPage(name: Routes.crewDetail, page: const CrewDetail()),
@@ -242,11 +271,20 @@ class Routes {
     stepPage(name: Routes.inAppModalWebView, page: const InAppModalWebView()),
     stepPage(name: Routes.collectionHome, page: const CollectionHome()),
     stepPage(name: Routes.collectionDetail, page: const CollectionDetail()),
-    stepPage(name: Routes.collectionRewardDetail, page: const CollectionRewardDetail()),
+    stepPage(
+        name: Routes.collectionRewardDetail,
+        page: const CollectionRewardDetail()),
+    stepPage(name: Routes.referral, page: const ReferralPage()),
   ];
 }
 
-GetPage stepPage({required String name, required Widget page, Transition? transition, Duration? transitionDuration, List<GetMiddleware>? middlewares, BindingsBuilder? binding}) {
+GetPage stepPage(
+    {required String name,
+    required Widget page,
+    Transition? transition,
+    Duration? transitionDuration,
+    List<GetMiddleware>? middlewares,
+    BindingsBuilder? binding}) {
   return GetPage(
       name: name,
       page: () => _flavorBanner(child: page, show: F.name != 'prod'),
@@ -267,7 +305,10 @@ Widget _flavorBanner({
             location: BannerLocation.topStart,
             message: F.name,
             color: Colors.green.withOpacity(0.6),
-            textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.0, letterSpacing: 1.0),
+            textStyle: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 12.0,
+                letterSpacing: 1.0),
             textDirection: TextDirection.ltr,
             child: child,
           )

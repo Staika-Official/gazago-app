@@ -5,12 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "dev",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main_dev.dart",
+            "flutterMode": "debug",
+            "args": [
+                "--flavor",
+                "dev"
+            ]
+        },
+        {
             "name": "production",
             "type": "dart",
             "request": "launch",
             "program": "lib/main_prod.dart",
             "flutterMode": "debug",
-            "args": ["--flavor", "prod"]
+            "args": [
+                "--flavor",
+                "prod"
+            ]
         },
         {
             "name": "stage",
@@ -18,7 +32,10 @@
             "request": "launch",
             "program": "lib/main_stage.dart",
             "flutterMode": "debug",
-            "args": ["--flavor", "stage"]
+            "args": [
+                "--flavor",
+                "stage"
+            ]
         }
     ]
 }

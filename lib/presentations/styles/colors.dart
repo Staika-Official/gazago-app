@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const Color mainBg01Color = Color(0xFF191921);
 const Color mainBg02Color = Color(0xFF32333C);
+const Color mainBg03Color = Color(0xFF23232D);
 const Color subBg01Color = Color(0xFF1D1D26);
 const Color subBg02Color = Color(0xFF2A2B33);
 const Color popupBgColor = Color(0xFF363841);
@@ -38,3 +39,5 @@ const Color dangerColor = Color(0xFFFF4D4D);
 const Color stikColor = Color(0xFFFF8A43);
 const Color tikColor = Color(0xFFFF8FB4);
 const Color bonusTikColor = Color(0xFFFFB6CE);
+const Color buttonBgBlue = Color(0xFF4B90E2);
+const Color bgAlertGreen = Color(0xff4DAE51);

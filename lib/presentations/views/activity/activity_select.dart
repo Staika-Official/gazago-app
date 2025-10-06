@@ -9,6 +9,9 @@ import 'package:gaza_go/platform/controllers/activity_controller.dart';
 import 'package:gaza_go/platform/helpers/base_helper.dart';
 import 'package:gaza_go/presentations/styles/colors.dart';
 import 'package:gaza_go/presentations/styles/styled_text.dart';
+import 'package:gaza_go/presentations/views/activity/components/treasure_hunting_duration_widget.dart';
+import 'package:gaza_go/presentations/views/activity/components/auto_scale_text.dart';
+import 'package:gaza_go/presentations/components/shimmer_effect.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:get/get.dart' hide Trans;
 
@@ -177,6 +180,14 @@ class ActivitySelect extends StatelessWidget {
   Widget build(BuildContext context) {
     ActivityController controller = Get.find();
 
+    // Fetch treasure hunting configuration when the screen is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!controller.isFetchingTreasureConfig.value &&
+          controller.treasureHuntingConfig.value == null) {
+        controller.fetchTreasureHuntingConfig();
+      }
+    });
+
     return Material(
       color: Colors.transparent,
       child: Obx(() {
@@ -209,7 +220,7 @@ class ActivitySelect extends StatelessWidget {
                     ),
                     Ink(
                       width: 302.sp,
-                      height: 118.sp,
+                      height: 135.sp,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(14),
                         color: const Color(0xff2EFF75),
@@ -227,8 +238,8 @@ class ActivitySelect extends StatelessWidget {
                             controller.selectExerciseType(ExerciseType.walking),
                         borderRadius: BorderRadius.circular(14),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 26.sp, vertical: 24.sp),
+                          padding: EdgeInsets.only(
+                              left: 26.sp, right: 18.sp, top: 24.sp, bottom: 24.sp),
                           child: Row(
                             children: [
                               ClipRRect(
@@ -239,50 +250,65 @@ class ActivitySelect extends StatelessWidget {
                                   height: 74.sp,
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 22.sp),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 9.sp, vertical: 4.sp),
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(9.sp),
-                                        color: const Color(0xff0E2627),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 22.sp),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 9.sp, vertical: 4.sp),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(9.sp),
+                                          color: const Color(0xff0E2627),
+                                        ),
+                                        child: AutoScaleText(
+                                          text: 'general'.tr(),
+                                          color: const Color(0xff2EFF75),
+                                          baseFontSize: 10.sp,
+                                          fontWeight: FontWeight.w600,
+                                          maxLines: 1,
+                                          minFontSizeFactor: 0.75,
+                                        ),
                                       ),
-                                      child: StyledText(
-                                        'general'.tr(),
-                                        color: const Color(0xff2EFF75),
-                                        fontSize: 10,
-                                        fontWeight: 600,
-                                        lineHeight: 10,
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 9),
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          child: AutoScaleText(
+                                            text: 'walking'.tr(),
+                                            color: Colors.black,
+                                            baseFontSize: 19.sp,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: -0.3,
+                                            maxLines: 1,
+                                            minFontSizeFactor: 0.8,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 9),
-                                      child: StyledText(
-                                        'walking'.tr(),
-                                        color: Colors.black,
-                                        fontSize: 19,
-                                        fontWeight: 600,
-                                        lineHeight: 19,
-                                        letterSpacing: -0.3,
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          child: Text(
+                                            'healthy_walk'.tr(),
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 11.sp,
+                                              fontWeight: FontWeight.w600,
+                                              height: 11.sp / 11.sp,
+                                              letterSpacing: 0.3,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10),
-                                      child: StyledText(
-                                        'healthy_walk'.tr(),
-                                        color: Colors.black,
-                                        fontSize: 11,
-                                        fontWeight: 600,
-                                        lineHeight: 11,
-                                        letterSpacing: 0.3,
-                                      ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               )
                             ],
@@ -290,6 +316,154 @@ class ActivitySelect extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0.sp),
+                      child: Ink(
+                        width: 302.sp,
+                        height: 135.sp,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          color: popupBgColor,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.25),
+                              offset: Offset(0, 0),
+                              blurRadius: 4,
+                              spreadRadius: 4,
+                            )
+                          ],
+                        ),
+                        child: InkWell(
+                          onTap: () => controller
+                              .selectExerciseType(ExerciseType.treasureHunting),
+                          borderRadius: BorderRadius.circular(14),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: 26.sp, right: 18.sp, top: 24.sp, bottom: 24.sp),
+                            child: Obx(() {
+                              final isLoading =
+                                  controller.isFetchingTreasureConfig.value;
+                              return ShimmerEffect(
+                                enabled: isLoading,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 74.sp,
+                                      height: 74.sp,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: const Color(0xff0EE6F3),
+                                          width: 3,
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(14.sp),
+                                        child: SvgPicture.asset(
+                                          'assets/images/activity/ico_treasure_event.svg',
+                                          width: 20.sp,
+                                          height: 22.sp,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 22.sp),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 9.sp,
+                                                  vertical: 4.sp),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(9.sp),
+                                                color: const Color(0xff0E2627),
+                                              ),
+                                              child: AutoScaleText(
+                                                text: 'treasure_hunting_challenge'.tr(),
+                                                color: const Color(0xff0EE6F3),
+                                                baseFontSize: 10.sp,
+                                                fontWeight: FontWeight.w600,
+                                                maxLines: 1,
+                                                minFontSizeFactor: 0.75,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 9),
+                                              child: Obx(() {
+                                                final config = controller
+                                                    .treasureHuntingConfigOrFallback;
+                                                return SizedBox(
+                                                  width: double.infinity,
+                                                  child: AutoScaleText(
+                                                    text: config.displayTitle,
+                                                    color: Colors.white,
+                                                    baseFontSize: 19.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    letterSpacing: -0.3,
+                                                    maxLines: 1,
+                                                    minFontSizeFactor: 0.8,
+                                                  ),
+                                                );
+                                              }),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.only(top: 8),
+                                              child: Obx(() {
+                                                final config = controller
+                                                    .treasureHuntingConfigOrFallback;
+                                                return SizedBox(
+                                                  width: double.infinity,
+                                                  child: Text(
+                                                    config.displayDescription,
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 11.sp,
+                                                      fontWeight: FontWeight.w600,
+                                                      height: 11.sp / 11.sp,
+                                                      letterSpacing: 0.3,
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                );
+                                              }),
+                                            ),
+                                            // Duration widget - only show if valid dates exist
+                                            Obx(() {
+                                              final config = controller
+                                                  .treasureHuntingConfigOrFallback;
+                                              // Only show duration if we have valid dates and the event hasn't expired
+                                              if (config.isValidDuration && config.shouldShowEvent) {
+                                                return TreasureHuntingDurationWidget(
+                                                  startDate: config
+                                                      .treasureHuntDurationStart,
+                                                  endDate: config
+                                                      .treasureHuntDurationEnd,
+                                                );
+                                              }
+                                              return const SizedBox.shrink();
+                                            }),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
+                    ),
+
                     Padding(
                       padding: EdgeInsets.only(top: 10.0.sp),
                       child: const Divider(

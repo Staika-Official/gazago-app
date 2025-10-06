@@ -17,6 +17,7 @@ class GlobalController extends SuperController {
 
   // Create customized instance which can be registered via dependency injection
   final RxBool internetConnection = RxBool(false);
+  bool _isFirstConnectionCheck = true;
   final InternetConnectionChecker customInstance =
       InternetConnectionChecker.createInstance(
     checkTimeout: const Duration(seconds: 1),
@@ -80,10 +81,18 @@ class GlobalController extends SuperController {
         switch (status) {
           case InternetConnectionStatus.connected:
             internetConnection.value = true;
+            // Only show toast if it's not the first connection check
+            if (!_isFirstConnectionCheck) {
+              showStickyNetworkToast(isConnected: true);
+            } else {
+              _isFirstConnectionCheck = false;
+            }
             break;
           case InternetConnectionStatus.disconnected:
             internetConnection.value = false;
-            showToastPopup('check_internet_connection'.tr());
+            // Always show toast for disconnected status
+            showStickyNetworkToast(isConnected: false);
+            _isFirstConnectionCheck = false;
             break;
         }
       },

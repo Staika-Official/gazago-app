@@ -8,7 +8,7 @@ import 'package:gaza_go/platform/models/challenge_join_model.dart';
 import 'package:gaza_go/platform/models/user_exercise_model.dart';
 import 'package:gaza_go/platform/models/user_stamina_recharge_model.dart';
 import 'package:gaza_go/platform/stores/hive_store.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:gaza_go/platform/models/location_model.dart';
 
 class ActivityApi {
   static Future<Response> getCourses() async {
@@ -18,7 +18,7 @@ class ActivityApi {
     ).get('/challenge-courses?size=9999&page=0');
   }
 
-  static Future<Response> getChallengesHierarchy(Position currentLocation, int challengeId) async {
+  static Future<Response> getChallengesHierarchy(LocationModel currentLocation, int challengeId) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
@@ -27,7 +27,7 @@ class ActivityApi {
     );
   }
 
-  static Future<Response> getChallengesNearByHierarchy(Position currentLocation) async {
+  static Future<Response> getChallengesNearByHierarchy(LocationModel currentLocation) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,
@@ -79,7 +79,7 @@ class ActivityApi {
   }
 
   // static Future<Response> getNearByChallenges(LocationData currentLocation) async {
-  static Future<Response> getNearByCourses(Position currentLocation) async {
+  static Future<Response> getNearByCourses(LocationModel currentLocation) async {
     return await Api.client(
       serviceUrl: '/services/gazago/api',
       showLoading: false,

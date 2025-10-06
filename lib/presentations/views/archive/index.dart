@@ -155,7 +155,7 @@ class ArchiveHome extends StatelessWidget {
                                 child: iconArchiveDistance,
                               ),
                               Text(
-                                '${formatDecimalPlaces(convertMetersToKm(archive.rewardDistance!), 3, isAutoDecimal: true)} km',
+                                '${formatDecimalPlaces(convertMetersToKm(archive.distance ?? archive.rewardDistance ?? 0), 3, isAutoDecimal: true)} km',
                                 style: AppTextStyleData.regular()
                                     .koBodyMediumMd
                                     .copyWith(

@@ -1,0 +1,166 @@
+# Simple Codemagic configuration for iOS build only
+# Updated with correct versions, schemes, and bundle identifier
+
+workflows:
+  ios-build:
+    name: iOS Build - gazago-app
+    instance_type: mac_mini_m1
+    max_build_duration: 60
+    
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+          source: true
+        - pattern: 'develop'
+          include: true
+          source: true
+        - pattern: 'features'
+          include: true
+          source: true
+    
+    integrations:
+      app_store_connect: codemagic-api-key-gazago
+    
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: kr.co.eztechfin.gazaGo
+      vars:
+        FLUTTER_VERSION: 3.24.4  # Match local Flutter version
+        COCOAPODS_VERSION: 1.16.2  # Match local CocoaPods version
+        XCODE_SCHEME: prod  # Use prod scheme which matches kr.co.eztechfin.gazaGo
+      
+      flutter: $FLUTTER_VERSION
+      xcode: 16.4  # Match local Xcode version
+      cocoapods: $COCOAPODS_VERSION
+    
+    scripts:
+      - name: Get Flutter packages
+        script: |
+          flutter packages pub get
+      
+      - name: Install and generate design tokens
+        script: |
+          # Install style-dictionary-figma-flutter globally
+          npm install -g style-dictionary-figma-flutter
+          # Generate theme files from design tokens
+          style-dictionary-figma-flutter
+          # Fix gallery.g.dart - remove _Vector class if it exists
+          if [ -f "lib/theme/gallery.g.dart" ]; then
+            if grep -q "class _Vector extends StatelessWidget" lib/theme/gallery.g.dart; then
+              echo "Fixing gallery.g.dart - removing _Vector class..."
+              # Use sed to remove the _Vector class block
+              sed -i.bak '/^class _Vector extends StatelessWidget {/,/^}$/d' lib/theme/gallery.g.dart
+              echo "_Vector class removed from gallery.g.dart"
+            else
+              echo "No _Vector class found in gallery.g.dart - no fix needed"
+            fi
+          fi
+          # Verify theme files generated successfully
+          if [ -f "lib/theme/theme.g.dart" ]; then
+            echo "Theme files generated successfully"
+            ls -la lib/theme/
+          else
+            echo "Warning: theme.g.dart not found after generation"
+          fi
+      
+      - name: Generate localization files
+        script: |
+          # Generate easy_localization files (modern syntax)
+          dart run easy_localization:generate -S assets/translations -O lib/generated
+          # Generate other code generation files
+          dart run build_runner build --delete-conflicting-outputs
+      
+      - name: Debug - Check provisioning profiles
+        script: |
+          echo "=== Available provisioning profiles ==="
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/ || echo "No profiles in user library"
+          
+          echo "=== Available certificates ==="
+          security find-identity -v -p codesigning || echo "No codesigning identities"
+          
+          echo "=== Keychain list ==="
+          security list-keychains
+      
+      - name: Create ExportOptions.plist
+        script: |
+          cat > /tmp/ExportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store</string>
+              <key>teamID</key>
+              <string>M5SBD2APPJ</string>
+              <key>uploadBitcode</key>
+              <false/>
+              <key>uploadSymbols</key>
+              <true/>
+              <key>compileBitcode</key>
+              <false/>
+              <key>signingStyle</key>
+              <string>automatic</string>
+              <key>provisioningProfiles</key>
+              <dict>
+                  <key>kr.co.eztechfin.gazaGo</key>
+                  <string></string>
+              </dict>
+          </dict>
+          </plist>
+          EOF
+      
+      - name: Build iOS for App Store
+        script: |
+          # Use the prod scheme for production build
+          echo "Building iOS app with prod scheme for App Store distribution..."
+          flutter build ipa --release --flavor prod --target lib/main_prod.dart --export-options-plist=/tmp/ExportOptions.plist || {
+            echo "Flutter build ipa failed, trying with xcodebuild directly..."
+            cd ios
+            
+            # First, clean any previous builds
+            xcodebuild clean -workspace Runner.xcworkspace -scheme prod
+            
+            # Build and archive with explicit scheme
+            echo "Creating archive with prod scheme..."
+            xcodebuild -workspace Runner.xcworkspace \
+              -scheme prod \
+              -configuration Release-prod \
+              -destination generic/platform=iOS \
+              -archivePath build/Runner.xcarchive \
+              -allowProvisioningUpdates \
+              PROVISIONING_PROFILE_SPECIFIER="" \
+              CODE_SIGN_IDENTITY="Apple Distribution" \
+              DEVELOPMENT_TEAM="M5SBD2APPJ" \
+              archive
+            
+            # Export IPA from archive
+            echo "Exporting IPA..."
+            xcodebuild -exportArchive \
+              -archivePath build/Runner.xcarchive \
+              -exportPath build/ \
+              -exportOptionsPlist /tmp/ExportOptions.plist \
+              -allowProvisioningUpdates
+              
+            # Move the IPA to Flutter's expected location
+            mkdir -p ../build/ios/ipa/
+            find build -name "*.ipa" -exec cp {} ../build/ios/ipa/ \;
+            
+            cd ..
+          }
+    
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - build/**/*.app
+      - flutter_drive.log
+    
+    publishing:
+      app_store_connect:
+        # Inherit App Store Connect API key from Codemagic integrations
+        auth: integration
+        submit_to_testflight: true
+        # Optional: submit to App Store review
+        submit_to_app_store: false

@@ -2,11 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:gaza_go/platform/models/error_response_data_model.dart';
+import 'package:gaza_go/platform/models/request/get_exercise_reward_request_model.dart';
+import 'package:gaza_go/platform/models/treasure_model.dart';
+import 'package:gaza_go/platform/services/treasure_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:gaza_go/constants/routes.dart';
 import 'package:gaza_go/platform/controllers/loader_controller.dart';
 import 'package:gaza_go/platform/helpers/alert_helper.dart';
@@ -30,6 +31,12 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
   RxBool dataGetLoading = RxBool(false);
   Rx<ArchiveDetailItemModel> selectedItem = Rx(ArchiveDetailItemModel());
   RxList<LatLng> locations = RxList.empty();
+
+  /// reward tab content fields
+  RxList<TreasureModel> rewards = <TreasureModel>[].obs;
+  var rewardPage = 0;
+  var totalPages = 1;
+  var isLoading = false.obs;
 
   @override
   void onInit() async {
@@ -80,7 +87,8 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
       dataGetLoading.value = false;
       if (archive != null) {
         selectedItem.value = archive;
-        final targetDate = Jiffy.parse(archive.endedDate!);
+        final targetDate =
+            Jiffy.parse(archive.endedDate ?? DateTime.now().toString());
         selectedItem.value.isTwoMonthAgo = targetDate.isBefore(twoMonthAgo);
         if (targetDate.isBefore(twoMonthAgo)) {
           locations.value = RxList.empty();
@@ -196,6 +204,84 @@ class ArchiveController extends GetxController with ScrollMixin, MapMixin {
       coordinates.add(coordinate);
     }
     locations.addAll(coordinates);
+  }
+
+  /// Get anti-cheat violation message based on antiCheatType
+  String getAntiCheatMessage(String antiCheatType) {
+    switch (antiCheatType) {
+      case 'CHEAT_REGION_MISMATCH':
+        return 'anti_cheat_region_mismatch'.tr();
+      case 'CHEAT_SPEED_TOO_LOW':
+        return 'anti_cheat_speed_too_low'.tr();
+      case 'CHEAT_SPEED_TOO_HIGH':
+        return 'anti_cheat_speed_too_high'.tr();
+      case 'CHEAT_DISTANCE_NOT_INCREASED':
+        return 'anti_cheat_distance_not_increased'.tr();
+      case 'CHEAT_DISTANCE_INCONSISTENT':
+        return 'anti_cheat_distance_inconsistent'.tr();
+      case 'CHEAT_MIN_STEPS_NOT_MET':
+        return 'anti_cheat_min_steps_not_met'.tr();
+      case 'CHEAT_INVALID_STATE_TRANSITION':
+        return 'anti_cheat_invalid_state_transition'.tr();
+      case 'CHEAT_SHOES_BROKEN':
+        return 'anti_cheat_shoes_broken'.tr();
+      case 'CHEAT_NO_STAMINA':
+        return 'anti_cheat_no_stamina'.tr();
+      case 'CHEAT_DAILY_DISTANCE_LIMIT':
+        return 'anti_cheat_daily_distance_limit'.tr();
+      default:
+        return 'anti_cheat_violation'.tr();
+    }
+  }
+
+  /// Check if the exercise has anti-cheat violations
+  bool hasAntiCheatViolation() {
+    return selectedItem.value.antiCheatType != null &&
+        selectedItem.value.antiCheatType != 'VALID';
+  }
+
+  /// Check if there are actual rewards with value (not "No reward" treasures)
+  bool hasActualRewards() {
+    return rewards.any((reward) => 
+      reward.amount > 0 && 
+      reward.treasureSymbol != null && 
+      reward.treasureSymbol!.trim().isNotEmpty
+    );
+  }
+
+  Future<void> fetchRewards({bool refresh = false}) async {
+    if (isLoading.value) return;
+    if (!refresh && rewardPage >= totalPages) return;
+
+    // Note: We now fetch rewards regardless of anti-cheat violations
+    // The UI will handle the display logic based on violations and reward content
+
+    isLoading.value = true;
+
+    try {
+      if (refresh) {
+        rewardPage = 0;
+        rewards.clear();
+      }
+
+      final req = GetExerciseRewardRequestModel(
+        userId: selectedItem.value.userId ?? -1,
+        userExerciseId: selectedItem.value.id ?? -1,
+        page: rewardPage,
+      );
+
+      await TreasureService.getExerciseRewards(
+        req: req,
+        successCallback: (response) {
+          rewards.addAll(response.content);
+          totalPages = response.totalPages;
+          rewardPage++;
+        },
+        errorCallback: (ErrorResponseDataModel? error) {},
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   @override

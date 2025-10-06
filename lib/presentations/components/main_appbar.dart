@@ -208,17 +208,18 @@ class MainAppbar extends StatelessWidget implements PreferredSizeWidget {
                     })
                   ],
                 ),
-                IconButton(
-                  padding: EdgeInsets.symmetric(horizontal: 9.sp),
-                  onPressed: () {
+                GestureDetector(
+                  onTap: () {
                     Get.toNamed(Routes.preferences);
                     Adjust.trackEvent(AdjustEvent('j66t7q'));
                   },
-                  icon: iconHeaderGear,
-                  splashRadius: 15.sp,
-                  iconSize: 21,
-                  constraints: BoxConstraints(
-                    minWidth: 21.sp,
+                  onLongPress: () {
+                    // Hold 3s to access GPS Debug page
+                    Get.toNamed(Routes.gpsDebug);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 9.sp),
+                    child: iconHeaderGear,
                   ),
                 ),
               ],

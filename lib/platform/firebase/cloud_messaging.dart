@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gaza_go/constants/enums.dart';
 import 'package:gaza_go/platform/controllers/activity_controller.dart';
@@ -24,21 +25,33 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 Future<void> initFcm() async {
   await requestPermission();
 
-  await FirebaseMessaging.instance.getToken().then((fcmToken) async {
+  // Handle FCM token with proper error handling for emulator
+  try {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
     if (fcmToken != null && fcmToken.isNotEmpty) {
       HiveStore.save(key: HiveKey.fcmToken.name, value: fcmToken);
+      Logger().i('FCM Token obtained: ${fcmToken.substring(0, 20)}...');
     }
-  });
+  } catch (e) {
+    // This is normal on emulator - FCM services not available
+    Logger().w('FCM Token error (normal on emulator): $e');
+    // Continue without FCM token - app should still work
+  }
 
-  FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
-    if (fcmToken.isNotEmpty) {
-      HiveStore.save(key: HiveKey.fcmToken.name, value: fcmToken);
-    }
-    Logger().i('refresh fcmToken : $fcmToken');
-    // Note: 이 콜백은 매번 앱이 실행되거나 새로운 토큰이 생성되었을 때 실행된다.
-  }).onError((err) {
-    Logger().e('onTokenRefreshErr $err');
-  });
+  // Setup FCM token refresh listener with error handling
+  try {
+    FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) async {
+      if (fcmToken.isNotEmpty) {
+        HiveStore.save(key: HiveKey.fcmToken.name, value: fcmToken);
+      }
+      Logger().i('refresh fcmToken : $fcmToken');
+      // Note: 이 콜백은 매번 앱이 실행되거나 새로운 토큰이 생성되었을 때 실행된다.
+    }).onError((err) {
+      Logger().e('onTokenRefreshErr $err');
+    });
+  } catch (e) {
+    Logger().w('FCM token refresh listener setup failed (normal on emulator): $e');
+  }
 
   await setForegroundConfig();
   handleMessage();
@@ -73,7 +86,9 @@ void handleMessage() {
     // }
     if (message.data['notificationKey'] == 'DAILY_REWARD_COMPLETED') {
       // Get.find<WalletMasterController>().moveToWallet();
-      Get.isRegistered<WalletMasterController>() ? Get.find<WalletMasterController>().moveToWallet() : Get.put(WalletMasterController()).moveToWallet();
+      Get.isRegistered<WalletMasterController>()
+          ? Get.find<WalletMasterController>().moveToWallet()
+          : Get.put(WalletMasterController()).moveToWallet();
     }
 
     if (message.data['notificationKey'] == 'MY_ITEM') {
@@ -86,12 +101,22 @@ void handleMessage() {
     }
 
     if (message.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
-      PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(message.data);
+      PushMessageChallengeSuccessModel data =
+          PushMessageChallengeSuccessModel.fromJson(message.data);
       showChallengeBadgeAcquisitionAlert(data);
     }
 
     if (message.data['notificationKey'] == 'EXPIRED_ITEM') {
-      if (Get.isRegistered<InventoryController>()) Get.find<InventoryController>().refreshController();
+      if (Get.isRegistered<InventoryController>()) {
+        Get.find<InventoryController>().refreshController();
+      }
+    }
+
+    if (message.data['notificationKey'] == 'NEARBY_TREASURE_FOUND') {}
+
+    if (message.data['notificationKey'] == 'TREASURE_COOLDOWN_DONE') {
+      // Treasure cooldown has ended, user can pickup treasures again
+      // No additional action needed - just show notification
     }
   });
 
@@ -118,7 +143,8 @@ void handleNotification(RemoteMessage message) {
   }
 
   if (message.data['notificationKey'] == 'CHALLENGE_REWARD_BADGE_ISSUED') {
-    PushMessageChallengeSuccessModel data = PushMessageChallengeSuccessModel.fromJson(message.data);
+    PushMessageChallengeSuccessModel data =
+        PushMessageChallengeSuccessModel.fromJson(message.data);
     // showLocalNotification(
     //   notificationType: NotificationType.badge,
     //   title: 'challenge_badge_awarded'.tr(),
@@ -126,6 +152,14 @@ void handleNotification(RemoteMessage message) {
     //   payload: 'NAV-INVENTORY_BADGE',
     // );
     showChallengeBadgeAcquisitionAlert(data);
+  }
+
+  if (message.data['notificationKey'] == 'NEARBY_TREASURE_FOUND') {}
+
+  if (message.data['notificationKey'] == 'TREASURE_COOLDOWN_DONE') {
+    // Navigate to activity screen when user taps cooldown notification
+    Get.until((route) => route.isFirst);
+    Get.find<HomeMenuController>().selectMenu(2); // Activity tab
   }
 }
 
@@ -138,16 +172,22 @@ Future<void> requestPermission() async {
 
 Future<void> setForegroundConfig() async {
   if (defaultTargetPlatform == TargetPlatform.iOS) {
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
       alert: true, // Required to display a heads up notification
       badge: true,
       sound: true,
     );
   }
 
-  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(requestAlertPermission: true, requestBadgePermission: true, requestSoundPermission: true);
+  const DarwinInitializationSettings initializationSettingsIOS =
+      DarwinInitializationSettings(
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true);
 
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
@@ -156,12 +196,19 @@ Future<void> setForegroundConfig() async {
 
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings, onDidReceiveNotificationResponse: onSelectNotification);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onDidReceiveNotificationResponse: onSelectNotification);
 
   if (defaultTargetPlatform == TargetPlatform.android) {
-    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
   } else {
-    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
           alert: true,
           badge: true,
           sound: true,
@@ -170,27 +217,75 @@ Future<void> setForegroundConfig() async {
 }
 
 void onSelectNotification(NotificationResponse? notificationResponse) {
-  if (notificationResponse != null && (notificationResponse.payload == null || notificationResponse.payload != '')) {
-    List<String> payload = notificationResponse.payload!.split('-');
-    String action = payload[0];
-    String route = payload[1];
+  if (notificationResponse != null &&
+      (notificationResponse.payload == null ||
+          notificationResponse.payload != '')) {
+    String payload = notificationResponse.payload!;
+
+    // Handle treasure notification - UC-006 requirement
+    if (payload.startsWith('TREASURE_NEARBY:')) {
+      String treasureId = payload.split(':')[1];
+      _handleTreasureNotificationClick(treasureId);
+      return;
+    }
+
+    // Handle existing navigation payloads
+    List<String> payloadParts = payload.split('-');
+    String action = payloadParts[0];
+    String route = payloadParts[1];
     if (action == 'NAV') {
       Get.until((route) => route.isFirst);
       switch (route) {
         case 'INVENTORY_BADGE':
-          HomeMenuController homeMenuController = Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>() : Get.put(HomeMenuController());
-          InventoryHomeController inventoryHomeController = Get.isRegistered<InventoryHomeController>() ? Get.find<InventoryHomeController>() : Get.put(InventoryHomeController());
+          HomeMenuController homeMenuController =
+              Get.isRegistered<HomeMenuController>()
+                  ? Get.find<HomeMenuController>()
+                  : Get.put(HomeMenuController());
+          InventoryHomeController inventoryHomeController =
+              Get.isRegistered<InventoryHomeController>()
+                  ? Get.find<InventoryHomeController>()
+                  : Get.put(InventoryHomeController());
           homeMenuController.selectMenu(1);
           inventoryHomeController.tabController.animateTo(1);
           break;
         case 'INVENTORY_ITEM':
-          HomeMenuController homeMenuController = Get.isRegistered<HomeMenuController>() ? Get.find<HomeMenuController>() : Get.put(HomeMenuController());
-          InventoryHomeController inventoryHomeController = Get.isRegistered<InventoryHomeController>() ? Get.find<InventoryHomeController>() : Get.put(InventoryHomeController());
+          HomeMenuController homeMenuController =
+              Get.isRegistered<HomeMenuController>()
+                  ? Get.find<HomeMenuController>()
+                  : Get.put(HomeMenuController());
+          InventoryHomeController inventoryHomeController =
+              Get.isRegistered<InventoryHomeController>()
+                  ? Get.find<InventoryHomeController>()
+                  : Get.put(InventoryHomeController());
           homeMenuController.selectMenu(1);
           inventoryHomeController.tabController.animateTo(0);
           break;
       }
     }
+  }
+}
+
+/// Handle treasure notification click - Navigate to treasure map (UC-005)
+void _handleTreasureNotificationClick(String treasureId) {
+  try {
+    // Navigate to home first
+    Get.until((route) => route.isFirst);
+
+    // Navigate to activity/treasure map - UC-005: View treasures on map
+    HomeMenuController homeMenuController =
+        Get.isRegistered<HomeMenuController>()
+            ? Get.find<HomeMenuController>()
+            : Get.put(HomeMenuController());
+
+    // Select activity tab (index 0 based on typical app structure)
+    homeMenuController.selectMenu(0);
+
+    // Optional: Store treasure ID for highlighting on map
+    HiveStore.save(key: 'highlighted_treasure_id', value: treasureId);
+
+    print('Navigated to treasure map for treasure ID: $treasureId');
+  } catch (e) {
+    print('Error handling treasure notification click: $e');
   }
 }
 
@@ -239,13 +334,34 @@ NotificationDetails badgeAcquiredNotificationDetail = NotificationDetails(
   iOS: const DarwinNotificationDetails(sound: 'badge_acquired.mp3'),
 );
 
+NotificationDetails treasureNotificationDetail = NotificationDetails(
+  android: AndroidNotificationDetails(
+    '${channel.id}4',
+    '${channel.name}4',
+    importance: Importance.max,
+    priority: Priority.max,
+    playSound: true,
+    // Use default sound instead of custom sound to avoid missing resource error
+  ),
+  iOS: const DarwinNotificationDetails(
+      // Use default sound for iOS as well
+      ),
+);
+
 //
 // badge,
 // stamina,
 // durability,
 
-void showLocalNotification({required NotificationType notificationType, required String title, required String message, String? payload, bool allowSeparatePush = false, int separatePushId = -1}) {
-  FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
+void showLocalNotification(
+    {required NotificationType notificationType,
+    required String title,
+    required String message,
+    String? payload,
+    bool allowSeparatePush = false,
+    int separatePushId = -1}) {
+  FlutterLocalNotificationsPlugin notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   NotificationDetails details;
   switch (notificationType) {
     case NotificationType.durabilityLow:
@@ -259,8 +375,16 @@ void showLocalNotification({required NotificationType notificationType, required
     case NotificationType.badge:
       details = badgeAcquiredNotificationDetail;
       break;
+    case NotificationType.treasure:
+      details = treasureNotificationDetail;
+      break;
     default:
       details = notificationDetail;
   }
-  notificationsPlugin.show(allowSeparatePush ? separatePushId : notificationType.id, title, message, details, payload: payload);
+  notificationsPlugin.show(
+      allowSeparatePush ? separatePushId : notificationType.id,
+      title,
+      message,
+      details,
+      payload: payload);
 }

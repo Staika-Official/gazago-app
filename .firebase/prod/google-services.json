@@ -55,6 +55,14 @@
           }
         },
         {
+          "client_id": "321889905131-diovvodlml47ntlrp94lhqbltdb2e2l0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo",
+            "certificate_hash": "9424f2144388cd01d3625f2df518da599926d2f3"
+          }
+        },
+        {
           "client_id": "321889905131-mk3ugmj872umhlmgj78sipicj1ii5tas.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -63,11 +71,35 @@
           }
         },
         {
+          "client_id": "321889905131-nk5vabmu1g4fklpgmmhltq4cm4lk7bl6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo",
+            "certificate_hash": "83ed9ba9ce46052b0923e85ba2d9d7dfa333ae29"
+          }
+        },
+        {
           "client_id": "321889905131-om4vs4v3mtjbaf4a79h9oao4ou5vda1r.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "kr.co.eztechfin.gazaGo",
             "certificate_hash": "16a8e4e41892bc2065d2a7e3083b7023c230233e"
+          }
+        },
+        {
+          "client_id": "321889905131-oqvl3qhbqmqj2pceteeaormj9g1s74bt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo",
+            "certificate_hash": "9c453099e59e2debca3872afca8e32a4e2095336"
+          }
+        },
+        {
+          "client_id": "321889905131-p06drli11dvouslq9iart3boqn7b29qk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo",
+            "certificate_hash": "b10a8c793448734f91491a8c186048e971ce5669"
           }
         },
         {
@@ -113,7 +145,95 @@
           ]
         }
       },
-      "admob_app_id": "ca-app-pub-3467340260114612~4655329175"
+      "admob_app_id": "ca-app-pub-4234536720874912~8391712480"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321889905131:android:945691702c6a0df10a11ae",
+        "android_client_info": {
+          "package_name": "kr.co.eztechfin.gazaGo.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321889905131-0rc3j4vaf51g239ruleth269dvhh62s7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo.dev",
+            "certificate_hash": "e4338754b89933c36f2963023cb47ab2c5aaa86f"
+          }
+        },
+        {
+          "client_id": "321889905131-c5s3l116v9qtsk8i5gtqbq6jinjhf2l7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.eztechfin.gazaGo.dev",
+            "certificate_hash": "e26df413cd9a32a58b1196fa51c64358967dd055"
+          }
+        },
+        {
+          "client_id": "321889905131-9u6fi7vnrvv000skm2pe0uggpn7b8tvs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHmS0LwPeoXpiZqW42qDFZ5iOth-VovAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321889905131-9u6fi7vnrvv000skm2pe0uggpn7b8tvs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321889905131-22r952df5n2g5i3qehb6dgcg5o4188dt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kr.co.eztechfin.gazaGo"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321889905131:android:a425777cbe841ca80a11ae",
+        "android_client_info": {
+          "package_name": "kr.co.eztechfin.gazago"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321889905131-9u6fi7vnrvv000skm2pe0uggpn7b8tvs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHmS0LwPeoXpiZqW42qDFZ5iOth-VovAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321889905131-9u6fi7vnrvv000skm2pe0uggpn7b8tvs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321889905131-22r952df5n2g5i3qehb6dgcg5o4188dt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kr.co.eztechfin.gazaGo"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

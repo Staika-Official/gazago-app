@@ -78,8 +78,8 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
                         mapType: MapType.normal,
                         initialCameraPosition: CameraPosition(
                           target: LatLng(
-                              controller.currentLocation.value.latitude,
-                              controller.currentLocation.value.longitude),
+                              controller.currentLocation.value?.latitude ?? 31.5,
+                              controller.currentLocation.value?.longitude ?? 34.4),
                           zoom: 14,
                           tilt: 1,
                         ),
@@ -144,7 +144,7 @@ class LaboratoryDetectChallengeCourse extends StatelessWidget {
                       children: [
                         StyledText('my_location'.tr()),
                         StyledText(
-                            '${controller.currentLocation.value.latitude.toString()} - ${controller.currentLocation.value.longitude.toString()}'),
+                            '${controller.currentLocation.value?.latitude.toString() ?? 'Unknown'} - ${controller.currentLocation.value?.longitude.toString() ?? 'Unknown'}'),
                       ],
                     ),
                   ),

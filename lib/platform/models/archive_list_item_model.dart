@@ -32,6 +32,7 @@ class ArchiveListItemModel {
   double? degreeSpendStamina;
   int? luckOccurredCount;
   double? luckApplyRewardGo;
+  String? antiCheatType;
 
   ArchiveListItemModel({
     this.id,
@@ -62,9 +63,11 @@ class ArchiveListItemModel {
     this.degreeSpendStamina,
     this.luckOccurredCount,
     this.luckApplyRewardGo,
+    this.antiCheatType,
   });
 
-  factory ArchiveListItemModel.fromJson(Map<String, dynamic> json) => _$ArchiveListItemModelFromJson(json);
+  factory ArchiveListItemModel.fromJson(Map<String, dynamic> json) =>
+      _$ArchiveListItemModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ArchiveListItemModelToJson(this);
 }
